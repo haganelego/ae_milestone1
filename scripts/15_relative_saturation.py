@@ -293,25 +293,30 @@ def main() -> None:
         # Main threshold stop
         rel_oracle_map[img_id] = int(row[f"rel_oracle_{main_rel_threshold}"])
 
-        # Gain-based saturation
+        # Gain-based saturation (REAL transitions only, no artificial zero)
         sg_scores = [
             rel_sg_map.get((img_id, lvl), float("nan"))
             for lvl in range(1, max_level + 1)
         ]
-        gains = [0.0]
+        # gains[i] is the transition FROM level i+1 TO level i+2 (0-indexed)
+        gains: list[float] = []
         for i in range(1, len(sg_scores)):
             if math.isnan(sg_scores[i]) or math.isnan(sg_scores[i - 1]):
-                gains.append(0.0)
+                gains.append(float("nan"))
             else:
                 gains.append(sg_scores[i] - sg_scores[i - 1])
 
         gain_stop = max_level
         consecutive = 0
         for i, g in enumerate(gains):
+            if math.isnan(g):
+                consecutive = 0
+                continue
             if abs(g) < gain_epsilon:
                 consecutive += 1
                 if consecutive >= gain_k:
-                    gain_stop = i + 1 - (gain_k - 1)
+                    # Run of k transitions ends at level (i+2); first level = (i+2-k+1)
+                    gain_stop = i + 2 - (gain_k - 1)
                     break
             else:
                 consecutive = 0

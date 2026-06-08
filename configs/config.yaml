@@ -125,6 +125,11 @@ ablation:
     llm_weight: 0.5
     threshold: 0.6
 
+convergence:
+  epsilon: 0.02
+  k: 3
+  min_level: 5
+
 analysis:
   # which methods to analyze "what was missing at the stop level" for
   stop_methods: [oracle, baseline, llm, vlm_single, vlm_sequence]

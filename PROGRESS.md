@@ -4,6 +4,28 @@ Rolling micro-progress (latest 5 checkpoints). Newest first.
 
 ---
 
+## 2026-06-08 — Git checkpoint + convergence-based stop (Plan B-1)
+
+### Git
+- Initial checkpoint commit `e1b8e56` (357 files; bulky regenerable artifacts gitignored: degraded_images, egtr_predictions, llm/vlm score JSONs). Restore point before B-1 dev.
+
+### Codex review (no plugin; danger-full-access bypasses broken bwrap)
+- bwrap (codex's command sandbox) can't create namespaces in this env → codex can't read files via its shell. Workaround: `codex exec --sandbox danger-full-access` (verified) or feed code via stdin. `/codex:review` plugin is installed but would hit the same bwrap wall unless configured.
+- Findings: #1 relation-ranking truncation = **no practical impact** (L20 rels avg 4.1, never hits the 90-pair buffer). Real issue = relation export over-filters: person nodes score ~0.2-0.25 < object_conf 0.3, so person relations are dropped → 23/100 images have 0 rels at L20. **EGTR is fine** (ranks "man-wearing-shirt" 0.13); it's our export gating. Also gain-based artificial-zero bug (#2/#3), never-vs-20 sentinel (#5), bool("false") (#7), VLM missing num_ctx.
+
+### Plan B-1 (deployable convergence stop) — DONE
+- New `src/milestone1/convergence.py`: stop when last-k transitions all < epsilon (past-only; deployable). Oracle-only `relative_to_max_stop` kept separate. Fixed gain-based artificial-zero in scripts 07/15.
+- Results (vs RelOracle 0.8, n=100): **conf_convergence stops 99/100** (vs absolute baseline 70/100) and MAE **7.46 → 5.22** (−30%). LLM-convergence too noisy at epsilon=0.02/k=3 (only 9-25% trigger). Best overall still the LLM/hybrid threshold methods (~4.2-4.9, need LLM each level); conf_convergence is the best LLM-free deployable baseline.
+- Confidence signal insight: `mean_object_confidence` plateaus ~0.40 → absolute thresholds ≥0.5 dead (orig baseline=0.7 → 0/100). Convergence removes the absolute-threshold fragility.
+- Refs: `.claude/docs/research/m1-convergence.md`, `m1-codex-review.md`; `outputs/metrics/method_comparison_convergence_100.csv`.
+
+### Next actions
+1. (Optional) relation-export decouple (top-K, endpoints below 0.3) to fix the 23 zero-rel images — needs EGTR re-export + recompute (and LLM re-score for relation inputs). Keeps mean_object_confidence (node track) unchanged.
+2. (Optional) tune LLM-convergence epsilon/k; or adopt hybrid threshold as primary.
+3. Commit B-1 if accepted (currently uncommitted; revert point = e1b8e56).
+
+---
+
 ## 2026-06-05 (100-image scale-up)
 
 ### Done

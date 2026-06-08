@@ -47,10 +47,10 @@ def main() -> None:
             row[f"oracle_{t}"] = stop_level
 
         # Gain-based saturation: min level where gain < epsilon for k consecutive
+        # REAL transitions only (level 2..N); no artificial zero at the start.
         sg_scores = [float(lv["sg_score"]) for lv in levels]
-        gains = [0.0] + [
-            sg_scores[i] - sg_scores[i - 1] for i in range(1, len(sg_scores))
-        ]
+        # gains[i] is the transition FROM level i+1 TO level i+2 (0-indexed)
+        gains = [sg_scores[i] - sg_scores[i - 1] for i in range(1, len(sg_scores))]
 
         gain_stop = float("nan")
         consecutive = 0
@@ -58,7 +58,9 @@ def main() -> None:
             if abs(g) < gain_epsilon:
                 consecutive += 1
                 if consecutive >= gain_k:
-                    gain_stop = i + 1 - (gain_k - 1)  # first level of the run
+                    # The run of k low-gain transitions ends at level (i+2).
+                    # The first level of that run started at level (i+2 - k + 1).
+                    gain_stop = i + 2 - (gain_k - 1)
                     break
             else:
                 consecutive = 0
