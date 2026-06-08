@@ -4,6 +4,21 @@ Rolling micro-progress (latest 5 checkpoints). Newest first.
 
 ---
 
+## 2026-06-08 — Geometric (log-spaced) schedule re-run + reproducible driver
+
+### Change
+- `config` scales → geometric `0.05·20^((t-1)/19)` (ratio ~1.171/level): equal relative/perceptual resolution gain per level (motivation: hand-picked near-linear list was unprincipled; per-level change was big at low scale, flat at L15+). Added `scripts/run_all.sh` (single reproducible driver; `--force` wipes regenerable artifacts; past runs reproducible via `git checkout <commit>` + run_all.sh --force).
+- Full `--force` re-run: 2000 degraded + 2000 EGTR preds + LLM(4b/9b) + **VLM(4b/9b) re-scored** (images changed); parse failures 0.
+
+### Results (geometric, n=100)
+- **Saturation SCALE is schedule-invariant**: RelOracle(0.8) now mean L16.7 ≈ **scale 0.62** (manual was L14.6 ≈ scale 0.60). Level moved later but the underlying scale (~0.6) is stable → saturation is a real data/model property, not a sampling artifact. 70/100 saturate.
+- **MAEs improved across the board** (smoother schedule → more predictable stops). vs RelOracle(0.8): hybrid_4b_k2 **3.25 (#1)**, **vlm_9b_single_k2 3.89 (#2)**, hybrid_9b_k2 4.04, llm_sgg_4b_h5_k2 4.14, baseline 5.65.
+- ⚠️ **Nuance**: VLM_9b_single_k2 rose to #2 — best VLM now competitive with/ahead of several LLM-SGG variants. "hybrid (SGG+LLM+conf) is best" HOLDS; "structured-SGG strictly > image-VLM" is WEAKER under the smoother schedule.
+- conf_convergence (ε/k tuned for manual) now fires too early (MAE 7.06, 94% trigger); absolute baseline_0.4 better here (5.65). → convergence ε/k needs re-tuning per schedule.
+- Checkpoint `cb7abcf` (config+driver); results committed next. Prior: b464646(write-up) 9c8c305(decouple) c3441fc(B-1) e1b8e56(init).
+
+---
+
 ## 2026-06-08 — Relation-decouple (proper top-K SGG usage)
 
 ### Change
