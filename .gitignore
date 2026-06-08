@@ -64,6 +64,7 @@ logs/
 # Tracked results: outputs/metrics (CSVs), outputs/figures (PNGs), outputs/analysis,
 # data/processed/{selected_images.json,gt_scene_graphs} — small and define the experiment.
 data/processed/degraded_images/
+data/processed/schedule_compare/
 outputs/egtr_predictions/
 outputs/llm_ablation/
 outputs/vlm_scores/
