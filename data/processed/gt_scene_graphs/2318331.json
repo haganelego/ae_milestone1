@@ -1,0 +1,172 @@
+{
+  "image_id": 2318331,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        162,
+        47,
+        196,
+        103
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "chair",
+      "bbox": [
+        77,
+        103,
+        132,
+        163
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hand",
+      "bbox": [
+        109,
+        126,
+        163,
+        143
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "jacket",
+      "bbox": [
+        67,
+        103,
+        118,
+        161
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leg",
+      "bbox": [
+        54,
+        265,
+        196,
+        375
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "letter",
+      "bbox": [
+        106,
+        33,
+        332,
+        91
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "logo",
+      "bbox": [
+        30,
+        14,
+        104,
+        118
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        150,
+        32,
+        209,
+        262
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "person",
+      "bbox": [
+        91,
+        57,
+        164,
+        191
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "player",
+      "bbox": [
+        37,
+        162,
+        215,
+        410
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        112,
+        73,
+        164,
+        118
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "shirt",
+      "bbox": [
+        163,
+        75,
+        201,
+        145
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shirt",
+      "bbox": [
+        98,
+        194,
+        180,
+        275
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "short",
+      "bbox": [
+        78,
+        259,
+        184,
+        321
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "sneaker",
+      "bbox": [
+        37,
+        380,
+        215,
+        411
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "jacket",
+      "predicate": "on",
+      "object_label": "chair"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "with",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "player"
+    }
+  ]
+}

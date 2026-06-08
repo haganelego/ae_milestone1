@@ -1,0 +1,3 @@
+[submodule "egtr"]
+	path = egtr
+	url = git@github.com:haganelego/egtr.git

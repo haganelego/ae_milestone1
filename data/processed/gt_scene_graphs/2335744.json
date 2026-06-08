@@ -1,0 +1,162 @@
+{
+  "image_id": 2335744,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        127,
+        501,
+        201
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bus",
+      "bbox": [
+        231,
+        156,
+        309,
+        227
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "car",
+      "bbox": [
+        346,
+        193,
+        435,
+        236
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "car",
+      "bbox": [
+        0,
+        248,
+        37,
+        269
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "railing",
+      "bbox": [
+        46,
+        190,
+        202,
+        329
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "roof",
+      "bbox": [
+        0,
+        131,
+        191,
+        155
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sidewalk",
+      "bbox": [
+        168,
+        198,
+        408,
+        328
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "street",
+      "bbox": [
+        157,
+        198,
+        498,
+        328
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        407,
+        132,
+        472,
+        204
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "windshield",
+      "bbox": [
+        252,
+        171,
+        303,
+        194
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "pole",
+      "bbox": [
+        181,
+        0,
+        194,
+        199
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "building",
+      "bbox": [
+        449,
+        151,
+        498,
+        208
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "tree",
+      "bbox": [
+        404,
+        129,
+        468,
+        179
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "tree",
+      "bbox": [
+        337,
+        147,
+        379,
+        204
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "near",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "car",
+      "predicate": "near",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "windshield",
+      "predicate": "on",
+      "object_label": "bus"
+    }
+  ]
+}

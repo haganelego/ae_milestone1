@@ -1,0 +1,247 @@
+{
+  "image_id": 2411572,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "branch",
+      "bbox": [
+        164,
+        157,
+        496,
+        225
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "branch",
+      "bbox": [
+        179,
+        2,
+        377,
+        85
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "tree",
+      "bbox": [
+        237,
+        0,
+        492,
+        197
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "bbox": [
+        255,
+        132,
+        274,
+        168
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "horse",
+      "bbox": [
+        184,
+        115,
+        320,
+        218
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leaf",
+      "bbox": [
+        0,
+        4,
+        49,
+        69
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leaf",
+      "bbox": [
+        0,
+        196,
+        93,
+        270
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tail",
+      "bbox": [
+        192,
+        148,
+        205,
+        194
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        23,
+        0,
+        235,
+        244
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        0,
+        0,
+        289,
+        254
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        0,
+        0,
+        73,
+        195
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "tree",
+      "bbox": [
+        0,
+        1,
+        497,
+        266
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "branch",
+      "bbox": [
+        142,
+        165,
+        314,
+        188
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "leaf",
+      "bbox": [
+        173,
+        269,
+        196,
+        307
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "leaf",
+      "bbox": [
+        396,
+        298,
+        426,
+        329
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "leaf",
+      "bbox": [
+        94,
+        245,
+        137,
+        268
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "leaf",
+      "bbox": [
+        418,
+        221,
+        459,
+        238
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "leaf",
+      "bbox": [
+        31,
+        278,
+        67,
+        301
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "tree",
+      "bbox": [
+        247,
+        0,
+        496,
+        232
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "horse",
+      "bbox": [
+        203,
+        131,
+        289,
+        212
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "on",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "under",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "horse"
+    }
+  ]
+}

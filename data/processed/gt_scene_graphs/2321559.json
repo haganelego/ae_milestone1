@@ -1,0 +1,157 @@
+{
+  "image_id": 2321559,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "beach",
+      "bbox": [
+        2,
+        201,
+        497,
+        312
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "bbox": [
+        248,
+        54,
+        316,
+        148
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "elephant",
+      "bbox": [
+        139,
+        46,
+        439,
+        334
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "mouth",
+      "bbox": [
+        200,
+        155,
+        229,
+        206
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "tree",
+      "bbox": [
+        22,
+        0,
+        212,
+        221
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "trunk",
+      "bbox": [
+        153,
+        126,
+        216,
+        322
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leg",
+      "bbox": [
+        384,
+        221,
+        412,
+        331
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "bbox": [
+        236,
+        202,
+        420,
+        325
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "leg",
+      "bbox": [
+        258,
+        201,
+        332,
+        333
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "leg",
+      "bbox": [
+        226,
+        199,
+        278,
+        319
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "eye",
+      "bbox": [
+        214,
+        98,
+        231,
+        126
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "mouth",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "trunk",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "eye",
+      "predicate": "of",
+      "object_label": "elephant"
+    }
+  ]
+}

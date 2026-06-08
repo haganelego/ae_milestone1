@@ -1,0 +1,152 @@
+{
+  "image_id": 2336163,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "plane",
+      "bbox": [
+        61,
+        137,
+        491,
+        399
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "plane",
+      "bbox": [
+        110,
+        127,
+        496,
+        408
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "plane",
+      "bbox": [
+        94,
+        125,
+        406,
+        427
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "plane",
+      "bbox": [
+        64,
+        191,
+        380,
+        366
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "plane",
+      "bbox": [
+        178,
+        220,
+        432,
+        293
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tail",
+      "bbox": [
+        393,
+        146,
+        425,
+        228
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tower",
+      "bbox": [
+        8,
+        10,
+        94,
+        233
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "truck",
+      "bbox": [
+        19,
+        309,
+        140,
+        352
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "window",
+      "bbox": [
+        191,
+        272,
+        252,
+        300
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        18,
+        72,
+        93,
+        117
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "windshield",
+      "bbox": [
+        172,
+        273,
+        244,
+        294
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "zebra",
+      "bbox": [
+        166,
+        139,
+        434,
+        354
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "airplane",
+      "bbox": [
+        134,
+        214,
+        491,
+        359
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "tail",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "windshield",
+      "predicate": "on",
+      "object_label": "plane"
+    }
+  ]
+}

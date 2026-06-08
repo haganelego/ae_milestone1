@@ -1,0 +1,242 @@
+{
+  "image_id": 2343387,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boat",
+      "bbox": [
+        301,
+        78,
+        457,
+        132
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "boat",
+      "bbox": [
+        3,
+        95,
+        41,
+        127
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "boat",
+      "bbox": [
+        340,
+        121,
+        498,
+        280
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "boat",
+      "bbox": [
+        464,
+        122,
+        499,
+        164
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "head",
+      "bbox": [
+        104,
+        138,
+        188,
+        241
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hill",
+      "bbox": [
+        0,
+        42,
+        78,
+        93
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hill",
+      "bbox": [
+        46,
+        64,
+        149,
+        92
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        42,
+        128,
+        225,
+        331
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "man",
+      "bbox": [
+        363,
+        155,
+        468,
+        252
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "bbox": [
+        461,
+        126,
+        493,
+        177
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "mountain",
+      "bbox": [
+        50,
+        63,
+        150,
+        96
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "people",
+      "bbox": [
+        350,
+        98,
+        413,
+        113
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "people",
+      "bbox": [
+        53,
+        123,
+        496,
+        329
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shirt",
+      "bbox": [
+        52,
+        209,
+        209,
+        331
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "short",
+      "bbox": [
+        401,
+        199,
+        444,
+        220
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "hat",
+      "bbox": [
+        104,
+        131,
+        195,
+        191
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "mountain",
+      "bbox": [
+        62,
+        57,
+        159,
+        104
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "hat",
+      "bbox": [
+        99,
+        135,
+        189,
+        213
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "bbox": [
+        27,
+        96,
+        330,
+        328
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "head",
+      "predicate": "has",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "sitting on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "boat"
+    }
+  ]
+}

@@ -1,0 +1,137 @@
+{
+  "image_id": 2341367,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bag",
+      "bbox": [
+        139,
+        213,
+        194,
+        302
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        250,
+        130,
+        278,
+        212
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hair",
+      "bbox": [
+        142,
+        164,
+        182,
+        221
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shirt",
+      "bbox": [
+        141,
+        211,
+        185,
+        256
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "shoe",
+      "bbox": [
+        165,
+        416,
+        203,
+        439
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sign",
+      "bbox": [
+        286,
+        140,
+        305,
+        165
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "bbox": [
+        248,
+        16,
+        332,
+        214
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "umbrella",
+      "bbox": [
+        103,
+        109,
+        271,
+        256
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "woman",
+      "bbox": [
+        86,
+        166,
+        204,
+        442
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "carrying",
+      "object_label": "bag"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "has",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "carrying",
+      "object_label": "umbrella"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "has",
+      "object_label": "umbrella"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "holding",
+      "object_label": "umbrella"
+    }
+  ]
+}

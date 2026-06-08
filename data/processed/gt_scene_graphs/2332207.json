@@ -1,0 +1,212 @@
+{
+  "image_id": 2332207,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        153,
+        164,
+        240,
+        239
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "car",
+      "bbox": [
+        176,
+        12,
+        295,
+        82
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "engine",
+      "bbox": [
+        233,
+        28,
+        325,
+        179
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "light",
+      "bbox": [
+        5,
+        53,
+        27,
+        74
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "roof",
+      "bbox": [
+        154,
+        171,
+        193,
+        205
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "track",
+      "bbox": [
+        235,
+        15,
+        444,
+        332
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "train",
+      "bbox": [
+        14,
+        129,
+        195,
+        212
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "train",
+      "bbox": [
+        0,
+        193,
+        183,
+        301
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "train",
+      "bbox": [
+        168,
+        6,
+        384,
+        211
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        264,
+        79,
+        293,
+        104
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "track",
+      "bbox": [
+        220,
+        137,
+        352,
+        330
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "train",
+      "bbox": [
+        0,
+        12,
+        333,
+        178
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "track",
+      "bbox": [
+        470,
+        176,
+        497,
+        268
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "light",
+      "bbox": [
+        7,
+        63,
+        49,
+        107
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "track",
+      "bbox": [
+        186,
+        25,
+        488,
+        311
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "track",
+      "bbox": [
+        0,
+        30,
+        333,
+        331
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "near",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "car",
+      "predicate": "behind",
+      "object_label": "engine"
+    },
+    {
+      "subject_label": "track",
+      "predicate": "near",
+      "object_label": "light"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    }
+  ]
+}

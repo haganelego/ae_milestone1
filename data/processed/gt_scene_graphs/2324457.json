@@ -1,0 +1,332 @@
+{
+  "image_id": 2324457,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        13,
+        13,
+        484,
+        440
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bus",
+      "bbox": [
+        36,
+        205,
+        465,
+        457
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "coat",
+      "bbox": [
+        211,
+        369,
+        250,
+        425
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "door",
+      "bbox": [
+        352,
+        316,
+        386,
+        389
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "flag",
+      "bbox": [
+        285,
+        75,
+        340,
+        218
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "girl",
+      "bbox": [
+        210,
+        349,
+        255,
+        481
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "jean",
+      "bbox": [
+        219,
+        421,
+        240,
+        462
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "wheel",
+      "bbox": [
+        361,
+        392,
+        417,
+        454
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "window",
+      "bbox": [
+        165,
+        338,
+        218,
+        368
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        342,
+        223,
+        413,
+        267
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "window",
+      "bbox": [
+        285,
+        333,
+        346,
+        364
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        283,
+        233,
+        344,
+        269
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        108,
+        337,
+        162,
+        370
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "window",
+      "bbox": [
+        223,
+        239,
+        281,
+        274
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "window",
+      "bbox": [
+        209,
+        332,
+        281,
+        366
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "window",
+      "bbox": [
+        45,
+        250,
+        107,
+        283
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "window",
+      "bbox": [
+        112,
+        245,
+        165,
+        279
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "window",
+      "bbox": [
+        164,
+        14,
+        216,
+        143
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "window",
+      "bbox": [
+        167,
+        242,
+        219,
+        274
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "jacket",
+      "bbox": [
+        204,
+        367,
+        265,
+        438
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "woman",
+      "bbox": [
+        209,
+        353,
+        262,
+        470
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "bag",
+      "bbox": [
+        200,
+        419,
+        238,
+        459
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "person",
+      "bbox": [
+        197,
+        348,
+        264,
+        476
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "bag",
+      "bbox": [
+        198,
+        406,
+        232,
+        467
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "flag",
+      "predicate": "hanging from",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "girl",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "holding",
+      "object_label": "bag"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "jean"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "holding",
+      "object_label": "bag"
+    }
+  ]
+}

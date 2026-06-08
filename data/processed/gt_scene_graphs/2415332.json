@@ -1,0 +1,207 @@
+{
+  "image_id": 2415332,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "snow",
+      "bbox": [
+        0,
+        178,
+        498,
+        328
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "glove",
+      "bbox": [
+        244,
+        189,
+        260,
+        215
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "head",
+      "bbox": [
+        139,
+        87,
+        185,
+        138
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "helmet",
+      "bbox": [
+        135,
+        86,
+        191,
+        139
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hill",
+      "bbox": [
+        396,
+        141,
+        499,
+        182
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "jacket",
+      "bbox": [
+        137,
+        117,
+        256,
+        206
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        113,
+        82,
+        314,
+        271
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pant",
+      "bbox": [
+        199,
+        155,
+        302,
+        238
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "shoe",
+      "bbox": [
+        250,
+        229,
+        273,
+        248
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shoe",
+      "bbox": [
+        281,
+        225,
+        313,
+        262
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        244,
+        158,
+        262,
+        182
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "tree",
+      "bbox": [
+        73,
+        160,
+        94,
+        181
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "tree",
+      "bbox": [
+        251,
+        149,
+        384,
+        182
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "tree",
+      "bbox": [
+        317,
+        163,
+        390,
+        185
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "board",
+      "bbox": [
+        234,
+        231,
+        357,
+        280
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "snow",
+      "bbox": [
+        58,
+        227,
+        469,
+        318
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "snow",
+      "bbox": [
+        12,
+        190,
+        238,
+        314
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "helmet",
+      "predicate": "on",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "glove"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "shoe",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "shoe",
+      "predicate": "of",
+      "object_label": "man"
+    }
+  ]
+}

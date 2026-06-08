@@ -1,0 +1,162 @@
+{
+  "image_id": 2415349,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "door",
+      "bbox": [
+        130,
+        156,
+        161,
+        241
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "sign",
+      "bbox": [
+        61,
+        71,
+        86,
+        94
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "track",
+      "bbox": [
+        0,
+        0,
+        500,
+        264
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "train",
+      "bbox": [
+        0,
+        24,
+        419,
+        266
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "window",
+      "bbox": [
+        175,
+        148,
+        193,
+        187
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "bbox": [
+        18,
+        233,
+        44,
+        264
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "window",
+      "bbox": [
+        76,
+        183,
+        101,
+        241
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "window",
+      "bbox": [
+        97,
+        193,
+        127,
+        232
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "track",
+      "bbox": [
+        139,
+        35,
+        482,
+        265
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        172,
+        150,
+        198,
+        191
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "train",
+      "bbox": [
+        53,
+        81,
+        318,
+        223
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        153,
+        157,
+        182,
+        196
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "door",
+      "predicate": "near",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    }
+  ]
+}

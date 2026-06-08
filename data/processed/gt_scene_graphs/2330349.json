@@ -1,0 +1,127 @@
+{
+  "image_id": 2330349,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "helmet",
+      "bbox": [
+        181,
+        42,
+        228,
+        86
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "snow",
+      "bbox": [
+        0,
+        95,
+        499,
+        330
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "snow",
+      "bbox": [
+        0,
+        0,
+        499,
+        334
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "tree",
+      "bbox": [
+        447,
+        72,
+        499,
+        222
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "woman",
+      "bbox": [
+        107,
+        35,
+        280,
+        250
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tree",
+      "bbox": [
+        394,
+        73,
+        462,
+        194
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "bbox": [
+        303,
+        0,
+        385,
+        198
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tree",
+      "bbox": [
+        189,
+        1,
+        247,
+        52
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        44,
+        44,
+        77,
+        112
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "snow",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "covered in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "covered in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "covered in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "covered in",
+      "object_label": "snow"
+    }
+  ]
+}

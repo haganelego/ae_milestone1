@@ -1,0 +1,122 @@
+{
+  "image_id": 2341962,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "vegetable",
+      "bbox": [
+        298,
+        197,
+        397,
+        297
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "vegetable",
+      "bbox": [
+        333,
+        330,
+        498,
+        422
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "vegetable",
+      "bbox": [
+        257,
+        309,
+        336,
+        423
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "table",
+      "bbox": [
+        0,
+        177,
+        501,
+        442
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "vegetable",
+      "bbox": [
+        119,
+        145,
+        239,
+        242
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "table",
+      "bbox": [
+        0,
+        0,
+        448,
+        73
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "table",
+      "bbox": [
+        0,
+        295,
+        498,
+        439
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "table",
+      "bbox": [
+        2,
+        216,
+        483,
+        440
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "vegetable",
+      "bbox": [
+        73,
+        182,
+        141,
+        239
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "vegetable",
+      "predicate": "sitting on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "vegetable",
+      "predicate": "sitting on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "vegetable",
+      "predicate": "sitting on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "vegetable",
+      "predicate": "sitting on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "vegetable",
+      "predicate": "sitting on",
+      "object_label": "table"
+    }
+  ]
+}

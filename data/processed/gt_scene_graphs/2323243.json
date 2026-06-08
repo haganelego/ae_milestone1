@@ -1,0 +1,107 @@
+{
+  "image_id": 2323243,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        230,
+        112,
+        281,
+        156
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "elephant",
+      "bbox": [
+        310,
+        125,
+        367,
+        227
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "elephant",
+      "bbox": [
+        122,
+        102,
+        211,
+        189
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "elephant",
+      "bbox": [
+        136,
+        99,
+        366,
+        221
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "fence",
+      "bbox": [
+        0,
+        102,
+        404,
+        190
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "light",
+      "bbox": [
+        119,
+        41,
+        162,
+        53
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "trunk",
+      "bbox": [
+        286,
+        123,
+        310,
+        176
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "trunk",
+      "bbox": [
+        347,
+        158,
+        366,
+        226
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "belonging to",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "trunk",
+      "predicate": "belonging to",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "trunk",
+      "predicate": "on",
+      "object_label": "elephant"
+    }
+  ]
+}

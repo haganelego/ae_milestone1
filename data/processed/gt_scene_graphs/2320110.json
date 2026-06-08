@@ -1,0 +1,172 @@
+{
+  "image_id": 2320110,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "plane",
+      "bbox": [
+        7,
+        114,
+        494,
+        262
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        0,
+        130,
+        498,
+        250
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "engine",
+      "bbox": [
+        147,
+        210,
+        192,
+        230
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "engine",
+      "bbox": [
+        174,
+        202,
+        221,
+        223
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "flower",
+      "bbox": [
+        408,
+        138,
+        459,
+        183
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "logo",
+      "bbox": [
+        136,
+        185,
+        219,
+        197
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "wing",
+      "bbox": [
+        193,
+        180,
+        257,
+        204
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tail",
+      "bbox": [
+        386,
+        113,
+        489,
+        242
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "plane",
+      "bbox": [
+        0,
+        76,
+        493,
+        293
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tail",
+      "bbox": [
+        352,
+        86,
+        472,
+        209
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "airplane",
+      "bbox": [
+        9,
+        73,
+        465,
+        280
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "tail",
+      "bbox": [
+        379,
+        115,
+        480,
+        188
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "behind",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "engine",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "engine",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "tail"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "plane"
+    }
+  ]
+}

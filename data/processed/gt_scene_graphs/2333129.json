@@ -1,0 +1,142 @@
+{
+  "image_id": 2333129,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "cap",
+      "bbox": [
+        301,
+        161,
+        327,
+        191
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "head",
+      "bbox": [
+        306,
+        165,
+        332,
+        187
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "letter",
+      "bbox": [
+        207,
+        14,
+        310,
+        69
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "letter",
+      "bbox": [
+        349,
+        31,
+        421,
+        148
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        299,
+        142,
+        431,
+        258
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shirt",
+      "bbox": [
+        325,
+        155,
+        388,
+        212
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "short",
+      "bbox": [
+        361,
+        178,
+        402,
+        243
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "skateboard",
+      "bbox": [
+        401,
+        194,
+        435,
+        262
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "head",
+      "bbox": [
+        294,
+        160,
+        328,
+        193
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "bbox": [
+        283,
+        154,
+        384,
+        223
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        319,
+        155,
+        405,
+        193
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "cap",
+      "predicate": "on",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "cap"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "on",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    }
+  ]
+}

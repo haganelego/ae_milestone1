@@ -1,0 +1,217 @@
+{
+  "image_id": 2340550,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "bbox": [
+        99,
+        352,
+        166,
+        383
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "boy",
+      "bbox": [
+        165,
+        353,
+        197,
+        452
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "clock",
+      "bbox": [
+        127,
+        23,
+        235,
+        424
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "pole",
+      "bbox": [
+        158,
+        154,
+        204,
+        443
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        131,
+        27,
+        235,
+        448
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sidewalk",
+      "bbox": [
+        0,
+        296,
+        59,
+        316
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sidewalk",
+      "bbox": [
+        237,
+        343,
+        374,
+        401
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tile",
+      "bbox": [
+        214,
+        453,
+        276,
+        479
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        62,
+        108,
+        246,
+        309
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        243,
+        106,
+        374,
+        336
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        0,
+        146,
+        58,
+        302
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "tree",
+      "bbox": [
+        39,
+        176,
+        104,
+        292
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "tree",
+      "bbox": [
+        190,
+        146,
+        275,
+        318
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "pole",
+      "bbox": [
+        151,
+        163,
+        201,
+        434
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bench",
+      "predicate": "near",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "boy",
+      "predicate": "near",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "clock",
+      "predicate": "above",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "clock",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "clock",
+      "predicate": "above",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "clock",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "for",
+      "object_label": "clock"
+    },
+    {
+      "subject_label": "sidewalk",
+      "predicate": "near",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "growing on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "near",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "growing on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "growing on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "growing on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "with",
+      "object_label": "clock"
+    }
+  ]
+}

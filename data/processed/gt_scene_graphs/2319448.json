@@ -1,0 +1,132 @@
+{
+  "image_id": 2319448,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "banana",
+      "bbox": [
+        17,
+        56,
+        202,
+        396
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "chair",
+      "bbox": [
+        277,
+        340,
+        374,
+        493
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "chair",
+      "bbox": [
+        3,
+        285,
+        211,
+        477
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "window",
+      "bbox": [
+        290,
+        3,
+        372,
+        290
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "room",
+      "bbox": [
+        0,
+        1,
+        367,
+        491
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tree",
+      "bbox": [
+        184,
+        76,
+        209,
+        159
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "bbox": [
+        259,
+        97,
+        280,
+        160
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tree",
+      "bbox": [
+        230,
+        67,
+        249,
+        127
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "umbrella",
+      "bbox": [
+        176,
+        288,
+        245,
+        447
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        65,
+        1,
+        373,
+        291
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "chair",
+      "bbox": [
+        6,
+        272,
+        135,
+        379
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "banana",
+      "predicate": "in",
+      "object_label": "chair"
+    },
+    {
+      "subject_label": "chair",
+      "predicate": "in",
+      "object_label": "room"
+    },
+    {
+      "subject_label": "chair",
+      "predicate": "under",
+      "object_label": "banana"
+    }
+  ]
+}

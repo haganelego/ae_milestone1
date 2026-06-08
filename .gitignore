@@ -1,0 +1,71 @@
+# Claude Code local settings
+.claude/settings.local.json
+CLAUDE.local.md
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Secrets
+*.pem
+*.key
+credentials*
+*secret*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+.ruff_cache/
+.eggs/
+*.egg-info/
+dist/
+build/
+
+# Test / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+.claude/logs/
+
+# Checkpoints (session-specific, may contain sensitive info)
+.claude/checkpoints/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Large regenerable experiment artifacts (kept out of git; reproducible via scripts/)
+# Tracked results: outputs/metrics (CSVs), outputs/figures (PNGs), outputs/analysis,
+# data/processed/{selected_images.json,gt_scene_graphs} — small and define the experiment.
+data/processed/degraded_images/
+outputs/egtr_predictions/
+outputs/llm_ablation/
+outputs/vlm_scores/
+outputs/llm_scores/
+outputs/llm_inputs/

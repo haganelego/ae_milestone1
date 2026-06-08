@@ -1,0 +1,192 @@
+{
+  "image_id": 2339565,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        0,
+        371,
+        446
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "sign",
+      "bbox": [
+        128,
+        92,
+        233,
+        196
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "light",
+      "bbox": [
+        110,
+        196,
+        241,
+        321
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        390,
+        335,
+        408,
+        407
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        253,
+        348,
+        319,
+        486
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "bbox": [
+        152,
+        340,
+        187,
+        430
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        77,
+        360,
+        101,
+        410
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        197,
+        342,
+        220,
+        404
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "shirt",
+      "bbox": [
+        153,
+        356,
+        185,
+        394
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        264,
+        369,
+        294,
+        425
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        388,
+        344,
+        408,
+        379
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "sign",
+      "bbox": [
+        358,
+        223,
+        418,
+        281
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sign",
+      "bbox": [
+        327,
+        346,
+        365,
+        380
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sign",
+      "bbox": [
+        348,
+        137,
+        423,
+        237
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "street",
+      "bbox": [
+        2,
+        388,
+        421,
+        496
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "man",
+      "bbox": [
+        230,
+        336,
+        323,
+        455
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "shirt"
+    }
+  ]
+}

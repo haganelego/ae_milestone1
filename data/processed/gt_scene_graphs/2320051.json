@@ -1,0 +1,202 @@
+{
+  "image_id": 2320051,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        233,
+        105,
+        288,
+        137
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "bbox": [
+        228,
+        92,
+        329,
+        301
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        52,
+        73,
+        218,
+        144
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "cap",
+      "bbox": [
+        285,
+        107,
+        318,
+        132
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hand",
+      "bbox": [
+        226,
+        95,
+        250,
+        112
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hand",
+      "bbox": [
+        463,
+        123,
+        497,
+        144
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        465,
+        120,
+        499,
+        320
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        226,
+        86,
+        343,
+        307
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pant",
+      "bbox": [
+        244,
+        181,
+        334,
+        303
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        256,
+        124,
+        308,
+        187
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shoe",
+      "bbox": [
+        305,
+        275,
+        331,
+        305
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "tree",
+      "bbox": [
+        0,
+        96,
+        496,
+        138
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "wheel",
+      "bbox": [
+        25,
+        265,
+        66,
+        316
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "man",
+      "bbox": [
+        256,
+        85,
+        327,
+        308
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "player",
+      "bbox": [
+        196,
+        149,
+        211,
+        176
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "helmet",
+      "bbox": [
+        282,
+        107,
+        314,
+        133
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "player",
+      "bbox": [
+        194,
+        145,
+        269,
+        174
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "cap"
+    },
+    {
+      "subject_label": "helmet",
+      "predicate": "on",
+      "object_label": "man"
+    }
+  ]
+}

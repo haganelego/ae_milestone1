@@ -1,0 +1,272 @@
+{
+  "image_id": 2342548,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        157,
+        174,
+        230,
+        357
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "arm",
+      "bbox": [
+        313,
+        150,
+        447,
+        325
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "glass",
+      "bbox": [
+        254,
+        86,
+        344,
+        121
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shirt",
+      "bbox": [
+        214,
+        152,
+        415,
+        356
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "cup",
+      "bbox": [
+        206,
+        199,
+        278,
+        300
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "girl",
+      "bbox": [
+        131,
+        29,
+        443,
+        355
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hand",
+      "bbox": [
+        218,
+        223,
+        305,
+        285
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "lady",
+      "bbox": [
+        426,
+        157,
+        499,
+        358
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "neck",
+      "bbox": [
+        257,
+        136,
+        322,
+        189
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        448,
+        173,
+        499,
+        358
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "glass",
+      "bbox": [
+        251,
+        61,
+        379,
+        142
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "person",
+      "bbox": [
+        85,
+        36,
+        492,
+        357
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "hand",
+      "bbox": [
+        214,
+        205,
+        272,
+        289
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "neck",
+      "bbox": [
+        247,
+        146,
+        333,
+        191
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "plate",
+      "bbox": [
+        44,
+        172,
+        215,
+        282
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "person",
+      "bbox": [
+        433,
+        173,
+        498,
+        356
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "glass",
+      "bbox": [
+        248,
+        80,
+        349,
+        123
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "person",
+      "bbox": [
+        154,
+        34,
+        444,
+        355
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "plate",
+      "bbox": [
+        54,
+        210,
+        214,
+        251
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "arm",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "arm",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "cup",
+      "predicate": "in",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "girl",
+      "predicate": "holding",
+      "object_label": "cup"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "lady",
+      "predicate": "in",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "neck",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "near",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "holding",
+      "object_label": "cup"
+    }
+  ]
+}

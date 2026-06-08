@@ -1,0 +1,182 @@
+{
+  "image_id": 2316325,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bike",
+      "bbox": [
+        101,
+        417,
+        123,
+        437
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "face",
+      "bbox": [
+        88,
+        125,
+        134,
+        174
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "fence",
+      "bbox": [
+        0,
+        0,
+        334,
+        415
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "woman",
+      "bbox": [
+        68,
+        94,
+        238,
+        485
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hair",
+      "bbox": [
+        75,
+        125,
+        164,
+        194
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "racket",
+      "bbox": [
+        190,
+        4,
+        276,
+        149
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shirt",
+      "bbox": [
+        94,
+        178,
+        178,
+        291
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "shoe",
+      "bbox": [
+        80,
+        414,
+        179,
+        489
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "shoe",
+      "bbox": [
+        92,
+        418,
+        128,
+        470
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "short",
+      "bbox": [
+        99,
+        282,
+        197,
+        349
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sneaker",
+      "bbox": [
+        124,
+        445,
+        176,
+        478
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "sneaker",
+      "bbox": [
+        89,
+        417,
+        128,
+        466
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "woman",
+      "bbox": [
+        24,
+        105,
+        250,
+        452
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sock",
+      "bbox": [
+        84,
+        406,
+        171,
+        457
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "fence",
+      "predicate": "behind",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "sock"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "short",
+      "predicate": "on",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "sock"
+    }
+  ]
+}

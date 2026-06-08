@@ -1,0 +1,97 @@
+{
+  "image_id": 2331313,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "bbox": [
+        22,
+        314,
+        191,
+        499
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "coat",
+      "bbox": [
+        33,
+        227,
+        175,
+        398
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        34,
+        192,
+        304,
+        472
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shoe",
+      "bbox": [
+        195,
+        433,
+        267,
+        470
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pant",
+      "bbox": [
+        131,
+        297,
+        268,
+        443
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "person",
+      "bbox": [
+        175,
+        161,
+        277,
+        394
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shoe",
+      "bbox": [
+        193,
+        339,
+        304,
+        472
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "sitting on",
+      "object_label": "bench"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "coat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shoe"
+    }
+  ]
+}

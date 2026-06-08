@@ -1,0 +1,31 @@
+image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extra_node_count,missing_nodes,extra_nodes,gt_triplet_count,pred_triplet_count,missing_triplet_count,extra_triplet_count,missing_triplets,extra_triplets
+2318597,oracle,6,4,4,1,1,light,eye,4,6,2,4,elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-eye;eye-of-elephant;trunk-of-elephant
+2321559,oracle,8,8,6,3,1,beach;eye;tree,hair,5,4,3,2,eye-of-elephant;leg-of-elephant;mouth-of-elephant,elephant-has-ear;elephant-has-trunk
+2322708,oracle,20,8,5,4,1,hair;pant;person;street,bag,6,0,6,0,man-in-shirt;man-in-street;man-standing on-street;man-wearing-shirt;person-standing on-street;shirt-of-person,
+2329909,oracle,19,7,8,2,3,ear;nose,mouth;neck;wave,5,7,2,4,ear-of-horse;nose-of-horse,horse-has-head;horse-has-leg;horse-has-mouth;horse-has-tail
+2331313,oracle,20,6,11,3,8,coat;man;person,building;flag;hair;leg;pole;sidewalk;sign;tree,4,1,4,1,man-sitting on-bench;man-wearing-coat;man-wearing-pant;man-wearing-shoe,sign-on-pole
+2332990,oracle,7,6,6,2,2,kite;neck,face;head,5,5,3,3,man-with-shirt;neck-between-hair;neck-between-shirt,man-has-hair;man-has-head;man-wearing-shirt
+2333129,oracle,20,7,3,4,0,cap;head;letter;shirt,,5,2,4,1,cap-on-head;head-of-man;man-wearing-cap;man-wearing-shirt,man-wearing-short
+2334997,oracle,20,15,8,8,1,box;cap;glass;hat;head;pizza;short;sign,tree,12,3,11,2,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-short;shirt-on-man;sign-in-window,bench-in front of-building;window-on-building
+2335659,oracle,20,13,9,7,3,hat;pant;pole;post;shirt;street;window,bag;jean;tree,6,2,4,0,man-standing on-sidewalk;pant-on-man;pole-on-sidewalk;woman-wearing-shirt,
+2341363,oracle,20,3,3,1,1,person,hand,3,3,3,3,finger-attached to-person;finger-on-person;person-has-finger,finger-on-hand;hand-has-finger;hand-on-table
+2318597,baseline,6,4,4,1,1,light,eye,4,6,2,4,elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-eye;eye-of-elephant;trunk-of-elephant
+2321559,baseline,5,8,4,4,0,beach;eye;mouth;tree,,5,4,3,2,ear-of-elephant;eye-of-elephant;mouth-of-elephant,elephant-has-leg;elephant-has-trunk
+2322708,baseline,20,8,5,4,1,hair;pant;person;street,bag,6,0,6,0,man-in-shirt;man-in-street;man-standing on-street;man-wearing-shirt;person-standing on-street;shirt-of-person,
+2329909,baseline,8,7,3,5,1,ear;hair;head;horse;nose,wave,5,0,5,0,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,
+2331313,baseline,20,6,11,3,8,coat;man;person,building;flag;hair;leg;pole;sidewalk;sign;tree,4,1,4,1,man-sitting on-bench;man-wearing-coat;man-wearing-pant;man-wearing-shoe,sign-on-pole
+2332990,baseline,7,6,6,2,2,kite;neck,face;head,5,5,3,3,man-with-shirt;neck-between-hair;neck-between-shirt,man-has-hair;man-has-head;man-wearing-shirt
+2333129,baseline,20,7,3,4,0,cap;head;letter;shirt,,5,2,4,1,cap-on-head;head-of-man;man-wearing-cap;man-wearing-shirt,man-wearing-short
+2334997,baseline,11,15,6,10,1,bench;box;cap;glass;hat;head;pizza;short;sidewalk;sign,tree,12,4,11,3,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-short;shirt-on-man;sign-in-window,building-has-door;door-on-building;window-on-building
+2335659,baseline,3,13,3,12,2,building;hat;pant;pole;post;shirt;sidewalk;skateboard;street;truck;window;woman,jean;leg,6,1,6,1,man-on-sidewalk;man-on-skateboard;man-standing on-sidewalk;pant-on-man;pole-on-sidewalk;woman-wearing-shirt,man-wearing-jean
+2341363,baseline,20,3,3,1,1,person,hand,3,3,3,3,finger-attached to-person;finger-on-person;person-has-finger,finger-on-hand;hand-has-finger;hand-on-table
+2318597,llm,7,4,4,1,1,light,eye,4,6,2,4,elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-eye;eye-of-elephant;trunk-of-elephant
+2321559,llm,20,8,7,2,1,beach;mouth,head,5,7,2,4,eye-of-elephant;mouth-of-elephant,elephant-has-ear;elephant-has-head;elephant-has-leg;elephant-has-trunk
+2322708,llm,8,8,3,5,0,hair;man;pant;person;street,,6,0,6,0,man-in-shirt;man-in-street;man-standing on-street;man-wearing-shirt;person-standing on-street;shirt-of-person,
+2329909,llm,11,7,5,4,2,ear;hair;horse;nose,neck;wave,5,0,5,0,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,
+2331313,llm,12,6,7,6,7,bench;coat;man;pant;person;shoe,building;flag;hair;pole;sidewalk;sign;tree,4,0,4,0,man-sitting on-bench;man-wearing-coat;man-wearing-pant;man-wearing-shoe,
+2332990,llm,5,6,4,3,1,kite;man;neck,face,5,0,5,0,hair-on-man;man-with-shirt;neck-between-hair;neck-between-shirt;shirt-on-man,
+2333129,llm,13,7,7,5,5,cap;head;letter;shirt;short,kite;leg;person;sidewalk;tile,5,0,5,0,cap-on-head;head-of-man;man-on-skateboard;man-wearing-cap;man-wearing-shirt,
+2334997,llm,9,15,7,9,1,bench;box;cap;door;glass;hat;head;pizza;short,tree,12,3,11,2,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-short;shirt-on-man;sign-in-window,sign-on-building;window-on-building
+2335659,llm,10,13,6,9,2,hat;pant;pole;post;shirt;skateboard;street;truck;woman,jean;tree,6,2,5,1,man-on-skateboard;man-standing on-sidewalk;pant-on-man;pole-on-sidewalk;woman-wearing-shirt,tree-on-sidewalk
+2341363,llm,7,3,1,2,0,person;table,,3,0,3,0,finger-attached to-person;finger-on-person;person-has-finger,

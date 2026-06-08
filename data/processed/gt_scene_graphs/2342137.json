@@ -1,0 +1,92 @@
+{
+  "image_id": 2342137,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "door",
+      "bbox": [
+        328,
+        160,
+        427,
+        378
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "pole",
+      "bbox": [
+        241,
+        0,
+        321,
+        458
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "tire",
+      "bbox": [
+        160,
+        353,
+        237,
+        435
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "truck",
+      "bbox": [
+        44,
+        143,
+        480,
+        434
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "trunk",
+      "bbox": [
+        0,
+        0,
+        97,
+        383
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "bbox": [
+        336,
+        0,
+        440,
+        69
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "window",
+      "bbox": [
+        333,
+        168,
+        411,
+        254
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "truck",
+      "predicate": "has",
+      "object_label": "door"
+    },
+    {
+      "subject_label": "truck",
+      "predicate": "has",
+      "object_label": "tire"
+    },
+    {
+      "subject_label": "truck",
+      "predicate": "has",
+      "object_label": "window"
+    }
+  ]
+}

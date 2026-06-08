@@ -1,0 +1,262 @@
+{
+  "image_id": 2320090,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        157,
+        52,
+        201,
+        83
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "bbox": [
+        128,
+        20,
+        222,
+        210
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        1,
+        0,
+        106,
+        140
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "building",
+      "bbox": [
+        166,
+        0,
+        253,
+        119
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "building",
+      "bbox": [
+        223,
+        74,
+        495,
+        131
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "cap",
+      "bbox": [
+        166,
+        21,
+        195,
+        43
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "fence",
+      "bbox": [
+        0,
+        0,
+        499,
+        154
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "head",
+      "bbox": [
+        165,
+        21,
+        194,
+        57
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "letter",
+      "bbox": [
+        351,
+        270,
+        463,
+        298
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "railing",
+      "bbox": [
+        16,
+        170,
+        217,
+        267
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        135,
+        41,
+        185,
+        110
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "shoe",
+      "bbox": [
+        125,
+        184,
+        150,
+        208
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shoe",
+      "bbox": [
+        165,
+        183,
+        197,
+        203
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "skateboard",
+      "bbox": [
+        127,
+        190,
+        193,
+        216
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "tree",
+      "bbox": [
+        5,
+        68,
+        146,
+        143
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "guy",
+      "bbox": [
+        113,
+        20,
+        236,
+        219
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "shoe",
+      "bbox": [
+        122,
+        187,
+        169,
+        230
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "hat",
+      "bbox": [
+        162,
+        22,
+        194,
+        45
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "bbox": [
+        52,
+        4,
+        268,
+        252
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "jean",
+      "bbox": [
+        130,
+        107,
+        197,
+        186
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "skateboard",
+      "bbox": [
+        134,
+        194,
+        185,
+        207
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "cap"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "fence",
+      "predicate": "near",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "guy",
+      "predicate": "has",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "guy",
+      "predicate": "has",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "jean"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "riding",
+      "object_label": "skateboard"
+    }
+  ]
+}

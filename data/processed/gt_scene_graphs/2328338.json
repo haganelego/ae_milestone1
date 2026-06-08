@@ -1,0 +1,197 @@
+{
+  "image_id": 2328338,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boot",
+      "bbox": [
+        228,
+        222,
+        296,
+        282
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bike",
+      "bbox": [
+        110,
+        88,
+        435,
+        267
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "glove",
+      "bbox": [
+        280,
+        167,
+        313,
+        189
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hand",
+      "bbox": [
+        262,
+        86,
+        287,
+        107
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hill",
+      "bbox": [
+        0,
+        92,
+        501,
+        189
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "people",
+      "bbox": [
+        192,
+        60,
+        209,
+        98
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "track",
+      "bbox": [
+        186,
+        233,
+        262,
+        255
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "track",
+      "bbox": [
+        0,
+        291,
+        500,
+        316
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "track",
+      "bbox": [
+        0,
+        270,
+        500,
+        291
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "wheel",
+      "bbox": [
+        109,
+        178,
+        218,
+        251
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "helmet",
+      "bbox": [
+        293,
+        48,
+        374,
+        124
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "bike",
+      "bbox": [
+        60,
+        118,
+        461,
+        284
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "helmet",
+      "bbox": [
+        276,
+        54,
+        389,
+        117
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "wheel",
+      "bbox": [
+        328,
+        195,
+        429,
+        279
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "helmet",
+      "bbox": [
+        304,
+        43,
+        400,
+        132
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "bike",
+      "bbox": [
+        113,
+        119,
+        429,
+        280
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "people",
+      "predicate": "standing on",
+      "object_label": "hill"
+    },
+    {
+      "subject_label": "track",
+      "predicate": "from",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "track",
+      "predicate": "from",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "track",
+      "predicate": "from",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "wheel",
+      "predicate": "on",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "wheel",
+      "predicate": "of",
+      "object_label": "bike"
+    }
+  ]
+}

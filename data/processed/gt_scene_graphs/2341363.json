@@ -1,0 +1,142 @@
+{
+  "image_id": 2341363,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "table",
+      "bbox": [
+        0,
+        59,
+        376,
+        499
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "finger",
+      "bbox": [
+        229,
+        71,
+        292,
+        91
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "finger",
+      "bbox": [
+        69,
+        77,
+        344,
+        262
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "finger",
+      "bbox": [
+        188,
+        74,
+        279,
+        112
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "finger",
+      "bbox": [
+        263,
+        191,
+        372,
+        292
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "person",
+      "bbox": [
+        73,
+        49,
+        373,
+        301
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "table",
+      "bbox": [
+        70,
+        322,
+        279,
+        456
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "finger",
+      "bbox": [
+        104,
+        94,
+        355,
+        286
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "finger",
+      "predicate": "attached to",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "attached to",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "attached to",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "finger"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "finger"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "finger"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "finger"
+    },
+    {
+      "subject_label": "finger",
+      "predicate": "attached to",
+      "object_label": "person"
+    }
+  ]
+}

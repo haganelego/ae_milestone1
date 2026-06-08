@@ -1,0 +1,147 @@
+{
+  "image_id": 2316954,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boot",
+      "bbox": [
+        182,
+        306,
+        243,
+        331
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "head",
+      "bbox": [
+        204,
+        131,
+        235,
+        160
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        63,
+        108,
+        103,
+        161
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        173,
+        125,
+        270,
+        330
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "surfboard",
+      "bbox": [
+        209,
+        164,
+        276,
+        300
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "surfboard",
+      "bbox": [
+        41,
+        123,
+        134,
+        164
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "wave",
+      "bbox": [
+        279,
+        129,
+        455,
+        180
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "person",
+      "bbox": [
+        161,
+        128,
+        280,
+        329
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "person",
+      "bbox": [
+        64,
+        109,
+        98,
+        167
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "surfboard",
+      "bbox": [
+        190,
+        179,
+        293,
+        299
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "holding",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "boot"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "carrying",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "holding",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "holding",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "carrying",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "holding",
+      "object_label": "surfboard"
+    }
+  ]
+}

@@ -1,0 +1,167 @@
+{
+  "image_id": 2337019,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        427,
+        59,
+        452,
+        77
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "bbox": [
+        448,
+        56,
+        468,
+        79
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "head",
+      "bbox": [
+        225,
+        158,
+        290,
+        216
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "bbox": [
+        429,
+        50,
+        498,
+        140
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leaf",
+      "bbox": [
+        13,
+        43,
+        52,
+        109
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "neck",
+      "bbox": [
+        238,
+        110,
+        305,
+        188
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "zebra",
+      "bbox": [
+        0,
+        62,
+        491,
+        219
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "zebra",
+      "bbox": [
+        455,
+        95,
+        499,
+        203
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "zebra",
+      "bbox": [
+        423,
+        52,
+        498,
+        143
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "zebra",
+      "bbox": [
+        172,
+        130,
+        240,
+        204
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "zebra",
+      "bbox": [
+        121,
+        149,
+        172,
+        217
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "zebra",
+      "bbox": [
+        199,
+        62,
+        386,
+        230
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "zebra",
+      "bbox": [
+        292,
+        78,
+        463,
+        207
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "zebra",
+      "bbox": [
+        424,
+        46,
+        497,
+        172
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "on",
+      "object_label": "zebra"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "on",
+      "object_label": "zebra"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "head"
+    }
+  ]
+}

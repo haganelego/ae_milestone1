@@ -1,0 +1,117 @@
+{
+  "image_id": 2324510,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "board",
+      "bbox": [
+        126,
+        42,
+        294,
+        68
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "board",
+      "bbox": [
+        146,
+        138,
+        320,
+        285
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "board",
+      "bbox": [
+        84,
+        325,
+        118,
+        415
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "box",
+      "bbox": [
+        14,
+        5,
+        334,
+        499
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "door",
+      "bbox": [
+        286,
+        0,
+        374,
+        501
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "toilet",
+      "bbox": [
+        164,
+        269,
+        246,
+        325
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "toilet",
+      "bbox": [
+        71,
+        95,
+        298,
+        474
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "toilet",
+      "bbox": [
+        77,
+        142,
+        313,
+        473
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "board",
+      "predicate": "behind",
+      "object_label": "toilet"
+    },
+    {
+      "subject_label": "board",
+      "predicate": "for",
+      "object_label": "toilet"
+    },
+    {
+      "subject_label": "board",
+      "predicate": "on",
+      "object_label": "toilet"
+    },
+    {
+      "subject_label": "board",
+      "predicate": "on",
+      "object_label": "toilet"
+    },
+    {
+      "subject_label": "board",
+      "predicate": "on",
+      "object_label": "toilet"
+    },
+    {
+      "subject_label": "board",
+      "predicate": "on",
+      "object_label": "toilet"
+    }
+  ]
+}

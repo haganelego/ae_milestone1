@@ -1,0 +1,257 @@
+{
+  "image_id": 2317010,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "animal",
+      "bbox": [
+        223,
+        205,
+        255,
+        276
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "cat",
+      "bbox": [
+        472,
+        211,
+        498,
+        265
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "cat",
+      "bbox": [
+        53,
+        190,
+        106,
+        264
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "curtain",
+      "bbox": [
+        119,
+        0,
+        175,
+        233
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "curtain",
+      "bbox": [
+        440,
+        0,
+        498,
+        248
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "flower",
+      "bbox": [
+        114,
+        0,
+        474,
+        158
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "flower",
+      "bbox": [
+        262,
+        18,
+        290,
+        46
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "flower",
+      "bbox": [
+        252,
+        46,
+        277,
+        74
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "flower",
+      "bbox": [
+        297,
+        0,
+        322,
+        19
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "flower",
+      "bbox": [
+        363,
+        30,
+        396,
+        56
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "flower",
+      "bbox": [
+        329,
+        21,
+        348,
+        53
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "flower",
+      "bbox": [
+        302,
+        34,
+        331,
+        67
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "flower",
+      "bbox": [
+        425,
+        66,
+        468,
+        96
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "flower",
+      "bbox": [
+        180,
+        30,
+        213,
+        51
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "flower",
+      "bbox": [
+        116,
+        43,
+        183,
+        99
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "lady",
+      "bbox": [
+        410,
+        138,
+        460,
+        243
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "man",
+      "bbox": [
+        113,
+        127,
+        163,
+        227
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "table",
+      "bbox": [
+        8,
+        344,
+        482,
+        365
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "tree",
+      "bbox": [
+        81,
+        11,
+        499,
+        174
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "vase",
+      "bbox": [
+        33,
+        46,
+        498,
+        361
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "window",
+      "bbox": [
+        160,
+        0,
+        387,
+        238
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "tree",
+      "bbox": [
+        180,
+        2,
+        251,
+        212
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "curtain",
+      "predicate": "near",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "curtain",
+      "predicate": "near",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "in",
+      "object_label": "window"
+    }
+  ]
+}

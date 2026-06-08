@@ -1,0 +1,227 @@
+{
+  "image_id": 2414226,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "letter",
+      "bbox": [
+        29,
+        91,
+        56,
+        126
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "letter",
+      "bbox": [
+        49,
+        86,
+        66,
+        128
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "letter",
+      "bbox": [
+        62,
+        87,
+        90,
+        134
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "light",
+      "bbox": [
+        24,
+        12,
+        198,
+        34
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        61,
+        167,
+        76,
+        400
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sidewalk",
+      "bbox": [
+        114,
+        339,
+        296,
+        416
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sign",
+      "bbox": [
+        13,
+        48,
+        122,
+        178
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "bbox": [
+        20,
+        56,
+        120,
+        407
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "street",
+      "bbox": [
+        2,
+        206,
+        351,
+        377
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        255,
+        0,
+        500,
+        398
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        0,
+        1,
+        51,
+        232
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "wire",
+      "bbox": [
+        2,
+        5,
+        294,
+        58
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sidewalk",
+      "bbox": [
+        152,
+        355,
+        271,
+        417
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sidewalk",
+      "bbox": [
+        156,
+        323,
+        376,
+        417
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "pole",
+      "bbox": [
+        56,
+        182,
+        81,
+        397
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "sidewalk",
+      "bbox": [
+        20,
+        321,
+        346,
+        414
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "post",
+      "bbox": [
+        51,
+        174,
+        80,
+        407
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "sidewalk",
+      "bbox": [
+        84,
+        212,
+        337,
+        413
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "letter",
+      "predicate": "on",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "letter",
+      "predicate": "on",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "letter",
+      "predicate": "on",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "holding",
+      "object_label": "post"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "post"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "street",
+      "predicate": "between",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "covering",
+      "object_label": "street"
+    }
+  ]
+}

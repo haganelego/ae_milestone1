@@ -1,0 +1,172 @@
+{
+  "image_id": 2316000,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bag",
+      "bbox": [
+        438,
+        211,
+        469,
+        274
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bench",
+      "bbox": [
+        141,
+        65,
+        170,
+        93
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bus",
+      "bbox": [
+        79,
+        33,
+        431,
+        304
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "car",
+      "bbox": [
+        0,
+        70,
+        123,
+        127
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "door",
+      "bbox": [
+        368,
+        110,
+        424,
+        245
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leaf",
+      "bbox": [
+        240,
+        0,
+        406,
+        47
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        230,
+        280,
+        311,
+        373
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "person",
+      "bbox": [
+        13,
+        36,
+        34,
+        83
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "person",
+      "bbox": [
+        0,
+        38,
+        14,
+        78
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "person",
+      "bbox": [
+        30,
+        32,
+        52,
+        75
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "person",
+      "bbox": [
+        55,
+        35,
+        74,
+        76
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "person",
+      "bbox": [
+        409,
+        163,
+        470,
+        275
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "pole",
+      "bbox": [
+        417,
+        3,
+        447,
+        267
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shirt",
+      "bbox": [
+        236,
+        300,
+        301,
+        363
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "tree",
+      "bbox": [
+        240,
+        0,
+        412,
+        94
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "door",
+      "predicate": "of",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    }
+  ]
+}

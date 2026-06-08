@@ -1,0 +1,272 @@
+{
+  "image_id": 2417298,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "coat",
+      "bbox": [
+        202,
+        65,
+        356,
+        212
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "glove",
+      "bbox": [
+        201,
+        75,
+        232,
+        97
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "glove",
+      "bbox": [
+        318,
+        146,
+        346,
+        181
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hand",
+      "bbox": [
+        319,
+        148,
+        347,
+        176
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hand",
+      "bbox": [
+        203,
+        73,
+        232,
+        105
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hat",
+      "bbox": [
+        254,
+        27,
+        299,
+        65
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "helmet",
+      "bbox": [
+        255,
+        35,
+        302,
+        75
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "hill",
+      "bbox": [
+        15,
+        13,
+        196,
+        99
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "jacket",
+      "bbox": [
+        207,
+        56,
+        361,
+        215
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "pant",
+      "bbox": [
+        212,
+        185,
+        278,
+        262
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "person",
+      "bbox": [
+        161,
+        18,
+        414,
+        281
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "pole",
+      "bbox": [
+        333,
+        165,
+        495,
+        217
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "pole",
+      "bbox": [
+        95,
+        75,
+        213,
+        205
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "skier",
+      "bbox": [
+        186,
+        10,
+        363,
+        281
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "snow",
+      "bbox": [
+        31,
+        18,
+        497,
+        279
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "snow",
+      "bbox": [
+        22,
+        236,
+        211,
+        279
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "tree",
+      "bbox": [
+        436,
+        15,
+        495,
+        166
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "glove",
+      "bbox": [
+        196,
+        69,
+        230,
+        108
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "snow",
+      "bbox": [
+        442,
+        52,
+        493,
+        120
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "snow",
+      "bbox": [
+        77,
+        175,
+        432,
+        263
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "glove",
+      "predicate": "on",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "coat"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "glove"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "in",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "holding",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "glove"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "on",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "wearing",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "snow",
+      "predicate": "on",
+      "object_label": "hill"
+    }
+  ]
+}

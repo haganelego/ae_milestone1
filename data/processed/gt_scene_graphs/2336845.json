@@ -1,0 +1,77 @@
+{
+  "image_id": 2336845,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        366,
+        166,
+        394,
+        183
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "head",
+      "bbox": [
+        331,
+        165,
+        395,
+        260
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "leg",
+      "bbox": [
+        265,
+        131,
+        300,
+        256
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leg",
+      "bbox": [
+        72,
+        113,
+        139,
+        230
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "zebra",
+      "bbox": [
+        72,
+        32,
+        398,
+        269
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "leg"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "leg"
+    }
+  ]
+}

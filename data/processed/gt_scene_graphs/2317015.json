@@ -1,0 +1,302 @@
+{
+  "image_id": 2317015,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "sign",
+      "bbox": [
+        0,
+        205,
+        247,
+        330
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "arm",
+      "bbox": [
+        270,
+        130,
+        371,
+        331
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        155,
+        34,
+        387,
+        329
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hair",
+      "bbox": [
+        209,
+        35,
+        312,
+        104
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "eye",
+      "bbox": [
+        218,
+        104,
+        242,
+        122
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hand",
+      "bbox": [
+        119,
+        67,
+        278,
+        181
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "head",
+      "bbox": [
+        204,
+        28,
+        323,
+        145
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "mouth",
+      "bbox": [
+        229,
+        121,
+        258,
+        173
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "neck",
+      "bbox": [
+        269,
+        82,
+        315,
+        145
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "nose",
+      "bbox": [
+        221,
+        127,
+        258,
+        145
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "racket",
+      "bbox": [
+        110,
+        55,
+        200,
+        239
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "seat",
+      "bbox": [
+        125,
+        0,
+        183,
+        42
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shirt",
+      "bbox": [
+        238,
+        106,
+        389,
+        331
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "racket",
+      "bbox": [
+        86,
+        17,
+        230,
+        237
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "player",
+      "bbox": [
+        205,
+        162,
+        393,
+        332
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "person",
+      "bbox": [
+        100,
+        39,
+        413,
+        332
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "man",
+      "bbox": [
+        156,
+        33,
+        416,
+        330
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "hand",
+      "bbox": [
+        154,
+        73,
+        226,
+        138
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "bbox": [
+        202,
+        110,
+        394,
+        332
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "man",
+      "bbox": [
+        200,
+        48,
+        321,
+        185
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "seat",
+      "bbox": [
+        147,
+        124,
+        248,
+        224
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "arm",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "arm"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "holding",
+      "object_label": "racket"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "eye",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "holding",
+      "object_label": "racket"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "mouth",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "mouth",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "nose",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "racket",
+      "predicate": "in",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "neck"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "of",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "hair"
+    }
+  ]
+}

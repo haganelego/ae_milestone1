@@ -1,0 +1,107 @@
+{
+  "image_id": 2325932,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bottle",
+      "bbox": [
+        131,
+        169,
+        160,
+        233
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "face",
+      "bbox": [
+        209,
+        110,
+        244,
+        158
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "fence",
+      "bbox": [
+        24,
+        31,
+        325,
+        96
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hair",
+      "bbox": [
+        187,
+        91,
+        294,
+        223
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "jacket",
+      "bbox": [
+        148,
+        118,
+        291,
+        293
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "jean",
+      "bbox": [
+        141,
+        280,
+        242,
+        488
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pole",
+      "bbox": [
+        160,
+        3,
+        185,
+        163
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "woman",
+      "bbox": [
+        127,
+        91,
+        301,
+        485
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "woman",
+      "predicate": "holding",
+      "object_label": "bottle"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "with",
+      "object_label": "bottle"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "jean"
+    }
+  ]
+}

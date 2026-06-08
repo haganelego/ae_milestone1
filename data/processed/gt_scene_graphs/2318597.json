@@ -1,0 +1,77 @@
+{
+  "image_id": 2318597,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        236,
+        0,
+        419,
+        154
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "elephant",
+      "bbox": [
+        82,
+        0,
+        433,
+        218
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "elephant",
+      "bbox": [
+        132,
+        52,
+        395,
+        260
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "light",
+      "bbox": [
+        0,
+        283,
+        151,
+        332
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "trunk",
+      "bbox": [
+        132,
+        52,
+        189,
+        173
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "elephant",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "elephant",
+      "predicate": "near",
+      "object_label": "elephant"
+    },
+    {
+      "subject_label": "elephant",
+      "predicate": "has",
+      "object_label": "trunk"
+    },
+    {
+      "subject_label": "trunk",
+      "predicate": "on",
+      "object_label": "elephant"
+    }
+  ]
+}

@@ -1,0 +1,267 @@
+{
+  "image_id": 2322837,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bag",
+      "bbox": [
+        405,
+        279,
+        496,
+        348
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "shirt",
+      "bbox": [
+        42,
+        183,
+        212,
+        373
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bottle",
+      "bbox": [
+        190,
+        280,
+        229,
+        372
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "box",
+      "bbox": [
+        150,
+        217,
+        406,
+        351
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "chair",
+      "bbox": [
+        0,
+        105,
+        88,
+        264
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "chair",
+      "bbox": [
+        0,
+        188,
+        75,
+        373
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "ear",
+      "bbox": [
+        140,
+        161,
+        162,
+        194
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "finger",
+      "bbox": [
+        177,
+        203,
+        203,
+        226
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "food",
+      "bbox": [
+        232,
+        289,
+        271,
+        314
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "glass",
+      "bbox": [
+        224,
+        72,
+        293,
+        107
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "hair",
+      "bbox": [
+        47,
+        99,
+        231,
+        283
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "hand",
+      "bbox": [
+        218,
+        200,
+        271,
+        246
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "head",
+      "bbox": [
+        122,
+        101,
+        230,
+        220
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "man",
+      "bbox": [
+        178,
+        22,
+        332,
+        268
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "mouth",
+      "bbox": [
+        181,
+        192,
+        218,
+        217
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "shirt",
+      "bbox": [
+        187,
+        92,
+        332,
+        264
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "table",
+      "bbox": [
+        58,
+        204,
+        499,
+        374
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "woman",
+      "bbox": [
+        24,
+        94,
+        252,
+        372
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "bbox": [
+        190,
+        42,
+        293,
+        200
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "glass",
+      "bbox": [
+        235,
+        74,
+        293,
+        122
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "cap",
+      "bbox": [
+        331,
+        286,
+        365,
+        312
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "table",
+      "bbox": [
+        328,
+        207,
+        424,
+        265
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bottle",
+      "predicate": "in",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wears",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "cap",
+      "predicate": "on",
+      "object_label": "table"
+    }
+  ]
+}

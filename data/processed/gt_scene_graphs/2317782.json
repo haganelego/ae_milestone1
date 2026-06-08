@@ -1,0 +1,162 @@
+{
+  "image_id": 2317782,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        66,
+        127,
+        82,
+        156
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "arm",
+      "bbox": [
+        92,
+        129,
+        113,
+        155
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        0,
+        0,
+        500,
+        223
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "desk",
+      "bbox": [
+        357,
+        166,
+        499,
+        235
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "door",
+      "bbox": [
+        225,
+        71,
+        253,
+        202
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "head",
+      "bbox": [
+        78,
+        98,
+        97,
+        125
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "light",
+      "bbox": [
+        0,
+        83,
+        497,
+        262
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        67,
+        98,
+        124,
+        235
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pant",
+      "bbox": [
+        83,
+        159,
+        125,
+        228
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        66,
+        114,
+        115,
+        165
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sign",
+      "bbox": [
+        271,
+        0,
+        499,
+        16
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        350,
+        64,
+        459,
+        145
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "woman",
+      "bbox": [
+        450,
+        115,
+        492,
+        218
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "arm"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "arm"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    }
+  ]
+}

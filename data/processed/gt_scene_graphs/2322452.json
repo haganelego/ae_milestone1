@@ -1,0 +1,97 @@
+{
+  "image_id": 2322452,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bottle",
+      "bbox": [
+        52,
+        66,
+        67,
+        104
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "desk",
+      "bbox": [
+        115,
+        319,
+        188,
+        371
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "drawer",
+      "bbox": [
+        18,
+        380,
+        394,
+        483
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "flower",
+      "bbox": [
+        60,
+        220,
+        83,
+        246
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pot",
+      "bbox": [
+        64,
+        312,
+        93,
+        337
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shelf",
+      "bbox": [
+        28,
+        176,
+        383,
+        183
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bottle",
+      "predicate": "on",
+      "object_label": "desk"
+    },
+    {
+      "subject_label": "drawer",
+      "predicate": "on",
+      "object_label": "desk"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "desk"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "pot"
+    },
+    {
+      "subject_label": "pot",
+      "predicate": "above",
+      "object_label": "desk"
+    },
+    {
+      "subject_label": "pot",
+      "predicate": "on",
+      "object_label": "desk"
+    }
+  ]
+}

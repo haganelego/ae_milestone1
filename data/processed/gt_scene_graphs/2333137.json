@@ -1,0 +1,242 @@
+{
+  "image_id": 2333137,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "woman",
+      "bbox": [
+        164,
+        318,
+        205,
+        410
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        8,
+        103,
+        254,
+        341
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "car",
+      "bbox": [
+        78,
+        327,
+        177,
+        364
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "dog",
+      "bbox": [
+        167,
+        347,
+        194,
+        389
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "door",
+      "bbox": [
+        143,
+        279,
+        158,
+        323
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pant",
+      "bbox": [
+        171,
+        361,
+        199,
+        411
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "bbox": [
+        68,
+        219,
+        173,
+        382
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tree",
+      "bbox": [
+        24,
+        258,
+        78,
+        357
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "window",
+      "bbox": [
+        141,
+        217,
+        157,
+        249
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        89,
+        270,
+        105,
+        311
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "window",
+      "bbox": [
+        49,
+        207,
+        67,
+        243
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        195,
+        219,
+        212,
+        249
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        178,
+        275,
+        193,
+        308
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "window",
+      "bbox": [
+        75,
+        209,
+        88,
+        244
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "window",
+      "bbox": [
+        178,
+        216,
+        192,
+        249
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "window",
+      "bbox": [
+        117,
+        138,
+        159,
+        162
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "woman",
+      "bbox": [
+        162,
+        314,
+        210,
+        412
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "railing",
+      "bbox": [
+        171,
+        304,
+        243,
+        322
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "girl",
+      "bbox": [
+        162,
+        315,
+        208,
+        413
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "door",
+      "predicate": "of",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "building"
+    }
+  ]
+}

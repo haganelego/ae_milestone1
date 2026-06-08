@@ -1,0 +1,82 @@
+{
+  "image_id": 2327947,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bus",
+      "bbox": [
+        78,
+        158,
+        306,
+        271
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "sidewalk",
+      "bbox": [
+        279,
+        202,
+        498,
+        265
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "street",
+      "bbox": [
+        0,
+        206,
+        500,
+        331
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "tree",
+      "bbox": [
+        264,
+        89,
+        385,
+        225
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "window",
+      "bbox": [
+        260,
+        211,
+        284,
+        236
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "bbox": [
+        106,
+        185,
+        254,
+        215
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "tree",
+      "predicate": "behind",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "of",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    }
+  ]
+}

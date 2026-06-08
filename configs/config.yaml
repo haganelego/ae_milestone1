@@ -1,0 +1,130 @@
+# Milestone 1: Semantic information saturation detection from SGG output
+# All paths are relative to repository root (milestone_1/).
+
+paths:
+  vg_root: /home/kanaoka/usr/dataset/vg          # images/, train.json, val.json, test.json, rel.json
+  vg_split: test                                  # which VG split to draw GT + images from
+  egtr_repo: egtr                                 # EGTR submodule (imported, never modified)
+  egtr_artifact: egtr/checkpoint/egtr__pretrained_detr__SenseTime__deformable-detr__batch__32__epochs__150_50__lr__1e-05_0.0001__visual_genome__finetune__version_0/batch__64__epochs__50_25__lr__2e-07_2e-06_0.0002__visual_genome__finetune/version_0
+  egtr_architecture: SenseTime/deformable-detr
+  selected_images: data/processed/selected_images.json
+  degraded_images: data/processed/degraded_images
+  gt_scene_graphs: data/processed/gt_scene_graphs
+  egtr_predictions: outputs/egtr_predictions
+  metrics: outputs/metrics
+  llm_inputs: outputs/llm_inputs
+  llm_scores: outputs/llm_scores
+  figures: outputs/figures
+
+dataset:
+  name: visual_genome
+  num_images: 100           # scaled up after 10-image validation
+  min_gt_objects: 5
+  min_gt_relationships: 3
+  use_person_subset: false
+  seed: 42
+
+resolution_levels:
+  num_levels: 20
+  scales:
+    - 0.05
+    - 0.075
+    - 0.10
+    - 0.125
+    - 0.15
+    - 0.175
+    - 0.20
+    - 0.25
+    - 0.30
+    - 0.35
+    - 0.40
+    - 0.45
+    - 0.50
+    - 0.55
+    - 0.60
+    - 0.65
+    - 0.70
+    - 0.80
+    - 0.90
+    - 1.00
+  interpolation: bilinear
+
+egtr:
+  object_conf_threshold: 0.3
+  relation_conf_threshold: 0.005
+  top_k_objects: 20
+  top_k_relationships: 30
+
+metrics:
+  sg_score:
+    node_weight: 0.5
+    relation_weight: 0.5
+  sg_score_rel_heavy:
+    node_weight: 0.4
+    relation_weight: 0.6
+  oracle_thresholds: [0.3, 0.4, 0.5, 0.6]
+  main_oracle_threshold: 0.5
+  gain_epsilon: 0.02
+  gain_k: 3
+
+baseline:
+  mean_object_conf_threshold: 0.4
+  mean_object_conf_thresholds: [0.3, 0.4, 0.5]
+  consecutive_k: 1
+
+llm:
+  provider: ollama
+  model: qwen3.5:4b
+  endpoint: http://localhost:11434/api/generate
+  start_level: 5
+  history_length: 5
+  saturation_threshold: 0.7
+  use_consecutive_stop: false
+  consecutive_k: 2
+  input_object_conf_threshold: 0.3
+  input_relation_conf_threshold: 0.005
+  input_top_k_objects: 20
+  input_top_k_relationships: 30
+  request_timeout: 120
+
+# ── Evaluation extensions (VLM baseline / ablation / analysis) ──
+
+# ollama chat endpoint (supports text + images via "images" field, "think": false)
+ollama_chat_endpoint: http://localhost:11434/api/chat
+
+vlm:
+  # qwen3.5:4b and :9b are both vision-capable -> same model family as the LLM-on-SGG
+  # approach, giving a capability-controlled "image vs structured-SG-text" comparison.
+  models: [qwen3.5:4b, qwen3.5:9b]
+  modes: [single, sequence]      # single = current-level image; sequence = recent history images
+  sequence_history: 3            # number of recent level-images for sequence mode (cost-bounded)
+  start_level: 5
+  saturation_threshold: 0.7
+  consecutive_k: 2
+  max_image_side: 512            # downscale images sent to VLM for transport speed (blur already baked in)
+  request_timeout: 300
+
+ablation:
+  # One-factor-at-a-time (OFAT) from this base config; LLM-input factors require new
+  # scored runs, post-hoc factors (consecutive_k, sg weights, hybrid) are computed from cache.
+  base:
+    model: qwen3.5:9b
+    history_length: 5
+    relation_on: true
+    confidence_on: true
+  llm_models: [qwen3.5:4b, qwen3.5:9b]       # model-size axis (at base config)
+  history_lengths: [1, 3, 5]                  # history axis (at base, 9b)
+  relation_on_options: [true, false]          # node-only vs node+relation (at base, 9b)
+  confidence_on_options: [true, false]        # include confidences in LLM input (at base, 9b)
+  consecutive_k_options: [1, 2]               # post-hoc stop rule
+  sg_score_weights:                           # post-hoc SGScore recomputation
+    balanced: [0.5, 0.5]
+    rel_heavy: [0.4, 0.6]
+  hybrid:                                      # fusion of node-confidence + LLM saturation_score
+    conf_weight: 0.5
+    llm_weight: 0.5
+    threshold: 0.6
+
+analysis:
+  # which methods to analyze "what was missing at the stop level" for
+  stop_methods: [oracle, baseline, llm, vlm_single, vlm_sequence]

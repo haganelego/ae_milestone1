@@ -1,0 +1,261 @@
+predicate,level,recall
+attached to,1,0.0
+attached to,2,0.0
+attached to,3,0.0
+attached to,4,0.0
+attached to,5,0.0
+attached to,6,0.0
+attached to,7,0.0
+attached to,8,0.0
+attached to,9,0.0
+attached to,10,0.0
+attached to,11,0.0
+attached to,12,0.0
+attached to,13,0.0
+attached to,14,0.0
+attached to,15,0.0
+attached to,16,0.0
+attached to,17,0.0
+attached to,18,0.0
+attached to,19,0.0
+attached to,20,0.0
+between,1,0.0
+between,2,0.0
+between,3,0.0
+between,4,0.0
+between,5,0.0
+between,6,0.0
+between,7,0.0
+between,8,0.0
+between,9,0.0
+between,10,0.0
+between,11,0.0
+between,12,0.0
+between,13,0.0
+between,14,0.0
+between,15,0.0
+between,16,0.0
+between,17,0.0
+between,18,0.0
+between,19,0.0
+between,20,0.0
+carrying,1,0.0
+carrying,2,0.0
+carrying,3,0.0
+carrying,4,0.0
+carrying,5,0.0
+carrying,6,0.0
+carrying,7,0.0
+carrying,8,0.0
+carrying,9,0.0
+carrying,10,0.0
+carrying,11,0.0
+carrying,12,0.0
+carrying,13,0.0
+carrying,14,0.0
+carrying,15,0.0
+carrying,16,0.0
+carrying,17,0.0
+carrying,18,0.0
+carrying,19,0.0
+carrying,20,0.0
+has,1,0.0
+has,2,0.0
+has,3,0.0
+has,4,0.0
+has,5,0.3333333333333333
+has,6,0.6666666666666666
+has,7,0.6666666666666666
+has,8,0.3333333333333333
+has,9,0.3333333333333333
+has,10,0.3333333333333333
+has,11,0.3333333333333333
+has,12,0.3333333333333333
+has,13,0.3333333333333333
+has,14,0.3333333333333333
+has,15,0.6666666666666666
+has,16,0.6666666666666666
+has,17,0.6666666666666666
+has,18,0.6666666666666666
+has,19,0.6666666666666666
+has,20,0.3333333333333333
+in,1,0.0
+in,2,0.0
+in,3,0.0
+in,4,0.0
+in,5,0.0
+in,6,0.0
+in,7,0.0
+in,8,0.0
+in,9,0.0
+in,10,0.0
+in,11,0.0
+in,12,0.0
+in,13,0.0
+in,14,0.0
+in,15,0.0
+in,16,0.0
+in,17,0.0
+in,18,0.0
+in,19,0.0
+in,20,0.0
+near,1,0.0
+near,2,0.0
+near,3,0.0
+near,4,0.0
+near,5,0.0
+near,6,0.0
+near,7,0.0
+near,8,0.0
+near,9,0.0
+near,10,0.0
+near,11,0.0
+near,12,0.0
+near,13,0.0
+near,14,0.0
+near,15,0.0
+near,16,0.0
+near,17,0.0
+near,18,0.0
+near,19,0.0
+near,20,0.0
+of,1,0.0
+of,2,0.0
+of,3,0.0
+of,4,0.0
+of,5,0.16666666666666666
+of,6,0.16666666666666666
+of,7,0.16666666666666666
+of,8,0.16666666666666666
+of,9,0.25
+of,10,0.25
+of,11,0.25
+of,12,0.25
+of,13,0.25
+of,14,0.25
+of,15,0.25
+of,16,0.25
+of,17,0.25
+of,18,0.25
+of,19,0.5
+of,20,0.5
+on,1,0.0
+on,2,0.0
+on,3,0.0
+on,4,0.0
+on,5,0.0
+on,6,0.14285714285714285
+on,7,0.21428571428571427
+on,8,0.21428571428571427
+on,9,0.14285714285714285
+on,10,0.21428571428571427
+on,11,0.2857142857142857
+on,12,0.21428571428571427
+on,13,0.21428571428571427
+on,14,0.21428571428571427
+on,15,0.2857142857142857
+on,16,0.21428571428571427
+on,17,0.35714285714285715
+on,18,0.35714285714285715
+on,19,0.21428571428571427
+on,20,0.35714285714285715
+sitting on,1,0.0
+sitting on,2,0.0
+sitting on,3,0.0
+sitting on,4,0.0
+sitting on,5,0.0
+sitting on,6,0.0
+sitting on,7,0.0
+sitting on,8,0.0
+sitting on,9,0.0
+sitting on,10,0.0
+sitting on,11,0.0
+sitting on,12,0.0
+sitting on,13,0.0
+sitting on,14,0.0
+sitting on,15,0.0
+sitting on,16,0.0
+sitting on,17,0.0
+sitting on,18,0.0
+sitting on,19,0.0
+sitting on,20,0.0
+standing on,1,0.0
+standing on,2,0.0
+standing on,3,0.0
+standing on,4,0.0
+standing on,5,0.0
+standing on,6,0.0
+standing on,7,0.0
+standing on,8,0.0
+standing on,9,0.0
+standing on,10,0.0
+standing on,11,0.0
+standing on,12,0.0
+standing on,13,0.0
+standing on,14,0.0
+standing on,15,0.0
+standing on,16,0.0
+standing on,17,0.0
+standing on,18,0.0
+standing on,19,0.0
+standing on,20,0.0
+walking on,1,0.0
+walking on,2,0.0
+walking on,3,0.0
+walking on,4,0.0
+walking on,5,0.0
+walking on,6,0.0
+walking on,7,0.0
+walking on,8,0.0
+walking on,9,0.0
+walking on,10,0.0
+walking on,11,0.0
+walking on,12,0.0
+walking on,13,0.0
+walking on,14,0.0
+walking on,15,0.0
+walking on,16,0.0
+walking on,17,0.0
+walking on,18,0.0
+walking on,19,0.0
+walking on,20,0.0
+wearing,1,0.0
+wearing,2,0.0
+wearing,3,0.0
+wearing,4,0.0
+wearing,5,0.0
+wearing,6,0.0
+wearing,7,0.09090909090909091
+wearing,8,0.0
+wearing,9,0.18181818181818182
+wearing,10,0.09090909090909091
+wearing,11,0.09090909090909091
+wearing,12,0.09090909090909091
+wearing,13,0.18181818181818182
+wearing,14,0.09090909090909091
+wearing,15,0.18181818181818182
+wearing,16,0.09090909090909091
+wearing,17,0.09090909090909091
+wearing,18,0.09090909090909091
+wearing,19,0.09090909090909091
+wearing,20,0.09090909090909091
+with,1,0.0
+with,2,0.0
+with,3,0.0
+with,4,0.0
+with,5,0.0
+with,6,0.0
+with,7,0.0
+with,8,0.0
+with,9,0.0
+with,10,0.0
+with,11,0.0
+with,12,0.0
+with,13,0.0
+with,14,0.0
+with,15,0.0
+with,16,0.0
+with,17,0.0
+with,18,0.0
+with,19,0.0
+with,20,0.0

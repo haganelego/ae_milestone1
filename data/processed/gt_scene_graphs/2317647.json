@@ -1,0 +1,442 @@
+{
+  "image_id": 2317647,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "bbox": [
+        79,
+        265,
+        484,
+        495
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "book",
+      "bbox": [
+        19,
+        296,
+        175,
+        404
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "face",
+      "bbox": [
+        400,
+        100,
+        476,
+        186
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "girl",
+      "bbox": [
+        343,
+        45,
+        486,
+        403
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "glass",
+      "bbox": [
+        391,
+        123,
+        476,
+        156
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "bbox": [
+        37,
+        88,
+        327,
+        487
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hand",
+      "bbox": [
+        392,
+        196,
+        452,
+        251
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "hand",
+      "bbox": [
+        38,
+        337,
+        89,
+        381
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "hand",
+      "bbox": [
+        89,
+        335,
+        162,
+        390
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "hand",
+      "bbox": [
+        362,
+        199,
+        406,
+        260
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "hat",
+      "bbox": [
+        100,
+        83,
+        205,
+        178
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "head",
+      "bbox": [
+        89,
+        89,
+        221,
+        230
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shirt",
+      "bbox": [
+        80,
+        132,
+        337,
+        355
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "jean",
+      "bbox": [
+        35,
+        323,
+        327,
+        484
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "shirt",
+      "bbox": [
+        10,
+        194,
+        108,
+        370
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "shirt",
+      "bbox": [
+        345,
+        140,
+        492,
+        364
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "window",
+      "bbox": [
+        57,
+        23,
+        226,
+        261
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "window",
+      "bbox": [
+        249,
+        22,
+        479,
+        271
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "phone",
+      "bbox": [
+        378,
+        191,
+        433,
+        253
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "man",
+      "bbox": [
+        23,
+        68,
+        383,
+        489
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "woman",
+      "bbox": [
+        308,
+        39,
+        491,
+        497
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "woman",
+      "bbox": [
+        365,
+        46,
+        483,
+        231
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "phone",
+      "bbox": [
+        392,
+        188,
+        423,
+        245
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "person",
+      "bbox": [
+        15,
+        189,
+        112,
+        491
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "person",
+      "bbox": [
+        333,
+        46,
+        483,
+        485
+      ]
+    },
+    {
+      "object_id": 25,
+      "label": "jacket",
+      "bbox": [
+        94,
+        144,
+        313,
+        350
+      ]
+    },
+    {
+      "object_id": 26,
+      "label": "glass",
+      "bbox": [
+        429,
+        122,
+        480,
+        165
+      ]
+    },
+    {
+      "object_id": 27,
+      "label": "phone",
+      "bbox": [
+        398,
+        198,
+        446,
+        256
+      ]
+    },
+    {
+      "object_id": 28,
+      "label": "pant",
+      "bbox": [
+        28,
+        319,
+        336,
+        497
+      ]
+    },
+    {
+      "object_id": 29,
+      "label": "person",
+      "bbox": [
+        351,
+        168,
+        491,
+        340
+      ]
+    },
+    {
+      "object_id": 30,
+      "label": "people",
+      "bbox": [
+        69,
+        40,
+        497,
+        448
+      ]
+    },
+    {
+      "object_id": 31,
+      "label": "bench",
+      "bbox": [
+        261,
+        239,
+        377,
+        367
+      ]
+    },
+    {
+      "object_id": 32,
+      "label": "window",
+      "bbox": [
+        47,
+        33,
+        496,
+        273
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "girl",
+      "predicate": "on",
+      "object_label": "phone"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "on",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "sitting on",
+      "object_label": "bench"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "holding",
+      "object_label": "book"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "hat",
+      "predicate": "on",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "sitting on",
+      "object_label": "bench"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "sitting on",
+      "object_label": "face"
+    },
+    {
+      "subject_label": "people",
+      "predicate": "has",
+      "object_label": "bench"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "behind",
+      "object_label": "people"
+    }
+  ]
+}

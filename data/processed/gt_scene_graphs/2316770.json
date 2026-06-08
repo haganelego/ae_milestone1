@@ -1,0 +1,157 @@
+{
+  "image_id": 2316770,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        161,
+        56,
+        244,
+        116
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "bbox": [
+        199,
+        56,
+        244,
+        115
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "zebra",
+      "bbox": [
+        161,
+        59,
+        489,
+        328
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hair",
+      "bbox": [
+        450,
+        160,
+        497,
+        187
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hair",
+      "bbox": [
+        221,
+        97,
+        298,
+        165
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "head",
+      "bbox": [
+        164,
+        56,
+        240,
+        212
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leg",
+      "bbox": [
+        245,
+        281,
+        290,
+        332
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "bbox": [
+        294,
+        293,
+        334,
+        331
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "neck",
+      "bbox": [
+        214,
+        120,
+        282,
+        225
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "nose",
+      "bbox": [
+        163,
+        174,
+        206,
+        215
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "eye",
+      "bbox": [
+        173,
+        119,
+        194,
+        141
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "eye",
+      "bbox": [
+        172,
+        122,
+        230,
+        143
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "zebra"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "zebra"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "zebra",
+      "predicate": "has",
+      "object_label": "eye"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "zebra"
+    },
+    {
+      "subject_label": "nose",
+      "predicate": "of",
+      "object_label": "zebra"
+    }
+  ]
+}

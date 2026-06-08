@@ -1,0 +1,102 @@
+{
+  "image_id": 2332990,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "man",
+      "bbox": [
+        4,
+        288,
+        186,
+        496
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hair",
+      "bbox": [
+        13,
+        287,
+        92,
+        376
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "kite",
+      "bbox": [
+        119,
+        123,
+        182,
+        202
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "neck",
+      "bbox": [
+        44,
+        357,
+        88,
+        398
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "shirt",
+      "bbox": [
+        1,
+        362,
+        177,
+        495
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tree",
+      "bbox": [
+        319,
+        436,
+        370,
+        493
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        6,
+        270,
+        205,
+        496
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "hair",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "neck",
+      "predicate": "between",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "neck",
+      "predicate": "between",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "man"
+    }
+  ]
+}

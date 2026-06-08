@@ -1,0 +1,157 @@
+{
+  "image_id": 2417333,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bottle",
+      "bbox": [
+        0,
+        0,
+        71,
+        85
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "table",
+      "bbox": [
+        0,
+        5,
+        498,
+        371
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "leaf",
+      "bbox": [
+        75,
+        118,
+        181,
+        215
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leaf",
+      "bbox": [
+        221,
+        12,
+        286,
+        107
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leaf",
+      "bbox": [
+        173,
+        138,
+        256,
+        179
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leaf",
+      "bbox": [
+        250,
+        114,
+        337,
+        209
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "vegetable",
+      "bbox": [
+        316,
+        98,
+        391,
+        131
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pizza",
+      "bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "plate",
+      "bbox": [
+        0,
+        11,
+        498,
+        334
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bottle",
+      "predicate": "behind",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "table",
+      "predicate": "on",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "table",
+      "predicate": "with",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "pizza"
+    },
+    {
+      "subject_label": "pizza",
+      "predicate": "on",
+      "object_label": "plate"
+    }
+  ]
+}

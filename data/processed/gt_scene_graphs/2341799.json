@@ -1,0 +1,267 @@
+{
+  "image_id": 2341799,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        44,
+        130,
+        76,
+        186
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bus",
+      "bbox": [
+        0,
+        0,
+        265,
+        501
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "guy",
+      "bbox": [
+        56,
+        55,
+        97,
+        111
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        54,
+        125,
+        329,
+        494
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hair",
+      "bbox": [
+        69,
+        40,
+        171,
+        178
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hand",
+      "bbox": [
+        48,
+        186,
+        69,
+        224
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hat",
+      "bbox": [
+        212,
+        119,
+        331,
+        247
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "hat",
+      "bbox": [
+        271,
+        73,
+        313,
+        108
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "head",
+      "bbox": [
+        104,
+        46,
+        151,
+        113
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "bbox": [
+        159,
+        69,
+        243,
+        423
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "person",
+      "bbox": [
+        45,
+        39,
+        202,
+        460
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "letter",
+      "bbox": [
+        191,
+        281,
+        260,
+        499
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shirt",
+      "bbox": [
+        176,
+        237,
+        331,
+        499
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shoe",
+      "bbox": [
+        170,
+        377,
+        204,
+        423
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "shoe",
+      "bbox": [
+        67,
+        397,
+        133,
+        421
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "short",
+      "bbox": [
+        80,
+        216,
+        176,
+        298
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "umbrella",
+      "bbox": [
+        38,
+        410,
+        159,
+        498
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "woman",
+      "bbox": [
+        271,
+        72,
+        316,
+        124
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "bbox": [
+        28,
+        37,
+        200,
+        259
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "person",
+      "bbox": [
+        52,
+        39,
+        222,
+        331
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "lady",
+      "bbox": [
+        155,
+        69,
+        248,
+        256
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "arm",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "hair",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "hand",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "with",
+      "object_label": "letter"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "in",
+      "object_label": "hat"
+    }
+  ]
+}

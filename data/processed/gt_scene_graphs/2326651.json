@@ -1,0 +1,162 @@
+{
+  "image_id": 2326651,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "basket",
+      "bbox": [
+        236,
+        287,
+        314,
+        334
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        0,
+        9,
+        266,
+        213
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        210,
+        46,
+        493,
+        210
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "elephant",
+      "bbox": [
+        77,
+        100,
+        298,
+        374
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leaf",
+      "bbox": [
+        0,
+        0,
+        181,
+        65
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "bbox": [
+        110,
+        5,
+        215,
+        158
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pant",
+      "bbox": [
+        137,
+        79,
+        211,
+        130
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "bbox": [
+        343,
+        150,
+        363,
+        185
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "sign",
+      "bbox": [
+        295,
+        147,
+        318,
+        183
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "sign",
+      "bbox": [
+        323,
+        156,
+        348,
+        188
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sign",
+      "bbox": [
+        391,
+        152,
+        423,
+        186
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "trunk",
+      "bbox": [
+        235,
+        128,
+        298,
+        163
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "person",
+      "bbox": [
+        114,
+        4,
+        218,
+        146
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "sign",
+      "predicate": "near",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "near",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "near",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "near",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "pant"
+    }
+  ]
+}

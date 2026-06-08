@@ -1,0 +1,162 @@
+{
+  "image_id": 2414199,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "house",
+      "bbox": [
+        438,
+        75,
+        498,
+        198
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "bbox": [
+        331,
+        8,
+        437,
+        144
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "pant",
+      "bbox": [
+        333,
+        57,
+        405,
+        124
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "person",
+      "bbox": [
+        388,
+        177,
+        415,
+        218
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        470,
+        0,
+        483,
+        243
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "street",
+      "bbox": [
+        393,
+        199,
+        498,
+        223
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shirt",
+      "bbox": [
+        330,
+        16,
+        398,
+        66
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "shoe",
+      "bbox": [
+        383,
+        122,
+        409,
+        141
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "skateboard",
+      "bbox": [
+        336,
+        97,
+        401,
+        149
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        0,
+        0,
+        501,
+        241
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "house",
+      "predicate": "behind",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "house",
+      "predicate": "across",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "on",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "riding",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "near",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "near",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "near",
+      "object_label": "street"
+    }
+  ]
+}

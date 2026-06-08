@@ -1,0 +1,152 @@
+{
+  "image_id": 2323166,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "bbox": [
+        289,
+        135,
+        305,
+        179
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "board",
+      "bbox": [
+        275,
+        216,
+        340,
+        233
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        278,
+        107,
+        347,
+        223
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "bbox": [
+        284,
+        110,
+        303,
+        134
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leg",
+      "bbox": [
+        287,
+        169,
+        320,
+        212
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leg",
+      "bbox": [
+        311,
+        174,
+        339,
+        209
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shirt",
+      "bbox": [
+        289,
+        123,
+        341,
+        170
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "short",
+      "bbox": [
+        292,
+        162,
+        338,
+        193
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "skateboard",
+      "bbox": [
+        275,
+        213,
+        344,
+        231
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "person",
+      "bbox": [
+        275,
+        102,
+        343,
+        239
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "man",
+      "bbox": [
+        283,
+        110,
+        336,
+        230
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "arm",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "riding",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "belonging to",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "belonging to",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "belonging to",
+      "object_label": "man"
+    }
+  ]
+}

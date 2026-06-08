@@ -1,0 +1,292 @@
+{
+  "image_id": 2320621,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "beach",
+      "bbox": [
+        0,
+        0,
+        336,
+        500
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "board",
+      "bbox": [
+        4,
+        288,
+        317,
+        360
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "woman",
+      "bbox": [
+        231,
+        98,
+        305,
+        298
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "person",
+      "bbox": [
+        95,
+        307,
+        285,
+        424
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hair",
+      "bbox": [
+        182,
+        383,
+        234,
+        428
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "jean",
+      "bbox": [
+        250,
+        209,
+        273,
+        236
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "jean",
+      "bbox": [
+        109,
+        305,
+        215,
+        384
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "bbox": [
+        111,
+        308,
+        201,
+        382
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "logo",
+      "bbox": [
+        73,
+        136,
+        130,
+        160
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "logo",
+      "bbox": [
+        189,
+        112,
+        237,
+        132
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        234,
+        140,
+        297,
+        219
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "surfboard",
+      "bbox": [
+        56,
+        58,
+        162,
+        307
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "surfboard",
+      "bbox": [
+        162,
+        46,
+        265,
+        315
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "short",
+      "bbox": [
+        234,
+        204,
+        295,
+        244
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "person",
+      "bbox": [
+        79,
+        312,
+        271,
+        447
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "jean",
+      "bbox": [
+        95,
+        303,
+        240,
+        371
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "surfboard",
+      "bbox": [
+        3,
+        283,
+        324,
+        377
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "woman",
+      "bbox": [
+        238,
+        95,
+        298,
+        297
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "woman",
+      "bbox": [
+        235,
+        101,
+        322,
+        312
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "woman",
+      "bbox": [
+        120,
+        349,
+        310,
+        429
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "woman",
+      "bbox": [
+        95,
+        304,
+        304,
+        439
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "jean"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "laying on",
+      "object_label": "beach"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "with",
+      "object_label": "board"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "jean"
+    },
+    {
+      "subject_label": "jean",
+      "predicate": "on",
+      "object_label": "leg"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "woman"
+    },
+    {
+      "subject_label": "surfboard",
+      "predicate": "behind",
+      "object_label": "board"
+    },
+    {
+      "subject_label": "surfboard",
+      "predicate": "behind",
+      "object_label": "board"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "wearing",
+      "object_label": "jean"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "near",
+      "object_label": "surfboard"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "jean"
+    }
+  ]
+}

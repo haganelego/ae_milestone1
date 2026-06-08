@@ -1,0 +1,247 @@
+{
+  "image_id": 2324445,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boy",
+      "bbox": [
+        392,
+        172,
+        404,
+        212
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "door",
+      "bbox": [
+        235,
+        121,
+        261,
+        196
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "fence",
+      "bbox": [
+        0,
+        159,
+        201,
+        233
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hill",
+      "bbox": [
+        407,
+        160,
+        456,
+        177
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        423,
+        167,
+        444,
+        212
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "bbox": [
+        37,
+        173,
+        47,
+        224
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "track",
+      "bbox": [
+        0,
+        207,
+        346,
+        373
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "train",
+      "bbox": [
+        192,
+        96,
+        350,
+        243
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "window",
+      "bbox": [
+        269,
+        121,
+        293,
+        156
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        205,
+        114,
+        229,
+        159
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "fence",
+      "bbox": [
+        37,
+        156,
+        198,
+        219
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "track",
+      "bbox": [
+        71,
+        238,
+        272,
+        297
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sidewalk",
+      "bbox": [
+        378,
+        149,
+        498,
+        371
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "people",
+      "bbox": [
+        423,
+        164,
+        447,
+        214
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "post",
+      "bbox": [
+        74,
+        170,
+        92,
+        219
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "person",
+      "bbox": [
+        388,
+        174,
+        410,
+        210
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "sidewalk",
+      "bbox": [
+        388,
+        210,
+        496,
+        363
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "mountain",
+      "bbox": [
+        0,
+        3,
+        479,
+        197
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "fence",
+      "predicate": "near",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "fence",
+      "predicate": "between",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "fence",
+      "predicate": "near",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "fence",
+      "predicate": "between",
+      "object_label": "mountain"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "on",
+      "object_label": "fence"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "people",
+      "predicate": "walking on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "post",
+      "predicate": "on",
+      "object_label": "fence"
+    },
+    {
+      "subject_label": "post",
+      "predicate": "on",
+      "object_label": "fence"
+    },
+    {
+      "subject_label": "sidewalk",
+      "predicate": "near",
+      "object_label": "track"
+    }
+  ]
+}

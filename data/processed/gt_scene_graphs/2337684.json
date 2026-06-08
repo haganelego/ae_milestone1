@@ -1,0 +1,77 @@
+{
+  "image_id": 2337684,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        155,
+        0,
+        498,
+        233
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "dog",
+      "bbox": [
+        318,
+        209,
+        370,
+        333
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "logo",
+      "bbox": [
+        160,
+        125,
+        210,
+        148
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "truck",
+      "bbox": [
+        2,
+        0,
+        331,
+        284
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "window",
+      "bbox": [
+        288,
+        0,
+        406,
+        65
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "near",
+      "object_label": "truck"
+    },
+    {
+      "subject_label": "logo",
+      "predicate": "on",
+      "object_label": "truck"
+    },
+    {
+      "subject_label": "truck",
+      "predicate": "near",
+      "object_label": "dog"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "building"
+    }
+  ]
+}

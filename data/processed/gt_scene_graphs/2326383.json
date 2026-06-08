@@ -1,0 +1,152 @@
+{
+  "image_id": 2326383,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        40,
+        226,
+        275
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        435,
+        171,
+        499,
+        224
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        215,
+        118,
+        375,
+        261
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "building",
+      "bbox": [
+        369,
+        126,
+        443,
+        237
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "bus",
+      "bbox": [
+        251,
+        169,
+        418,
+        283
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "door",
+      "bbox": [
+        0,
+        204,
+        22,
+        264
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "people",
+      "bbox": [
+        145,
+        232,
+        159,
+        269
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "person",
+      "bbox": [
+        459,
+        224,
+        498,
+        299
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pole",
+      "bbox": [
+        297,
+        79,
+        312,
+        237
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "window",
+      "bbox": [
+        193,
+        211,
+        212,
+        241
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "street",
+      "bbox": [
+        6,
+        220,
+        483,
+        372
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "sign",
+      "bbox": [
+        141,
+        190,
+        175,
+        246
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "woman",
+      "bbox": [
+        458,
+        224,
+        496,
+        301
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "has",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "bus",
+      "predicate": "with",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "door",
+      "predicate": "with",
+      "object_label": "building"
+    }
+  ]
+}

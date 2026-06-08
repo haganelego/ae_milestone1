@@ -1,0 +1,112 @@
+{
+  "image_id": 2333913,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bed",
+      "bbox": [
+        0,
+        247,
+        95,
+        446
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "cat",
+      "bbox": [
+        0,
+        312,
+        59,
+        341
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "desk",
+      "bbox": [
+        99,
+        256,
+        225,
+        343
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "drawer",
+      "bbox": [
+        103,
+        269,
+        139,
+        291
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "light",
+      "bbox": [
+        193,
+        224,
+        210,
+        246
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "light",
+      "bbox": [
+        104,
+        226,
+        123,
+        246
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pillow",
+      "bbox": [
+        0,
+        255,
+        55,
+        301
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pillow",
+      "bbox": [
+        265,
+        256,
+        330,
+        338
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "desk",
+      "bbox": [
+        92,
+        258,
+        260,
+        305
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bed",
+      "predicate": "with",
+      "object_label": "pillow"
+    },
+    {
+      "subject_label": "cat",
+      "predicate": "laying on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    }
+  ]
+}

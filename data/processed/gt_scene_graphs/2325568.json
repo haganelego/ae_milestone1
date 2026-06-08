@@ -1,0 +1,97 @@
+{
+  "image_id": 2325568,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "light",
+      "bbox": [
+        220,
+        226,
+        402,
+        321
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "sign",
+      "bbox": [
+        220,
+        92,
+        342,
+        184
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "pole",
+      "bbox": [
+        245,
+        57,
+        342,
+        330
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "sign",
+      "bbox": [
+        218,
+        60,
+        352,
+        227
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "light",
+      "bbox": [
+        214,
+        215,
+        415,
+        325
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sign",
+      "bbox": [
+        214,
+        87,
+        349,
+        191
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "light",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "holding",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "holding",
+      "object_label": "light"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "above",
+      "object_label": "light"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "under",
+      "object_label": "sign"
+    }
+  ]
+}

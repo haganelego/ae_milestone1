@@ -1,0 +1,157 @@
+{
+  "image_id": 2412125,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "branch",
+      "bbox": [
+        17,
+        100,
+        88,
+        139
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "coat",
+      "bbox": [
+        125,
+        52,
+        211,
+        97
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "head",
+      "bbox": [
+        140,
+        30,
+        172,
+        61
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "snow",
+      "bbox": [
+        0,
+        0,
+        497,
+        373
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        202,
+        91,
+        220,
+        146
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "bbox": [
+        90,
+        88,
+        124,
+        139
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "skier",
+      "bbox": [
+        105,
+        23,
+        223,
+        134
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "ski",
+      "bbox": [
+        40,
+        119,
+        101,
+        162
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        241,
+        0,
+        414,
+        118
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        0,
+        0,
+        123,
+        128
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "branch",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "wears",
+      "object_label": "coat"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "has",
+      "object_label": "head"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "holding",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "holding",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "skier",
+      "predicate": "wears",
+      "object_label": "ski"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "has",
+      "object_label": "branch"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "in",
+      "object_label": "snow"
+    }
+  ]
+}

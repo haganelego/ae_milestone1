@@ -1,0 +1,132 @@
+{
+  "image_id": 2333505,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "bbox": [
+        0,
+        151,
+        494,
+        315
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hair",
+      "bbox": [
+        226,
+        71,
+        298,
+        147
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hand",
+      "bbox": [
+        207,
+        232,
+        232,
+        253
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hand",
+      "bbox": [
+        366,
+        227,
+        403,
+        257
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        169,
+        71,
+        328,
+        332
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "bbox": [
+        306,
+        65,
+        496,
+        330
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pant",
+      "bbox": [
+        308,
+        239,
+        497,
+        332
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "shirt",
+      "bbox": [
+        372,
+        130,
+        415,
+        235
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tree",
+      "bbox": [
+        121,
+        0,
+        213,
+        159
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "people",
+      "bbox": [
+        172,
+        70,
+        498,
+        306
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "with",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "behind",
+      "object_label": "bench"
+    },
+    {
+      "subject_label": "people",
+      "predicate": "on",
+      "object_label": "bench"
+    }
+  ]
+}

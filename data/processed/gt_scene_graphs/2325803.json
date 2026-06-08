@@ -1,0 +1,97 @@
+{
+  "image_id": 2325803,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bus",
+      "bbox": [
+        179,
+        97,
+        355,
+        228
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "street",
+      "bbox": [
+        238,
+        236,
+        498,
+        374
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "street",
+      "bbox": [
+        0,
+        142,
+        201,
+        372
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "window",
+      "bbox": [
+        271,
+        106,
+        287,
+        140
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "window",
+      "bbox": [
+        229,
+        112,
+        252,
+        141
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "bbox": [
+        200,
+        113,
+        223,
+        140
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "windshield",
+      "bbox": [
+        286,
+        163,
+        354,
+        202
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "windshield",
+      "predicate": "on",
+      "object_label": "bus"
+    }
+  ]
+}

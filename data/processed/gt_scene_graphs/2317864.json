@@ -1,0 +1,212 @@
+{
+  "image_id": 2317864,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "beach",
+      "bbox": [
+        0,
+        190,
+        500,
+        239
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bird",
+      "bbox": [
+        241,
+        183,
+        278,
+        253
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bird",
+      "bbox": [
+        115,
+        180,
+        157,
+        256
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "bird",
+      "bbox": [
+        93,
+        205,
+        132,
+        256
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "bird",
+      "bbox": [
+        270,
+        193,
+        316,
+        254
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "boat",
+      "bbox": [
+        89,
+        235,
+        307,
+        300
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "building",
+      "bbox": [
+        103,
+        139,
+        415,
+        197
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "roof",
+      "bbox": [
+        237,
+        141,
+        417,
+        160
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "table",
+      "bbox": [
+        214,
+        161,
+        497,
+        207
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        272,
+        0,
+        352,
+        146
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        346,
+        0,
+        409,
+        161
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "roof",
+      "bbox": [
+        228,
+        129,
+        416,
+        169
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "bird",
+      "bbox": [
+        119,
+        189,
+        312,
+        262
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "boat",
+      "bbox": [
+        100,
+        222,
+        351,
+        318
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "bird",
+      "bbox": [
+        182,
+        184,
+        215,
+        255
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "boat",
+      "bbox": [
+        86,
+        252,
+        298,
+        311
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bird",
+      "predicate": "standing on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "standing on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "standing on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "standing on",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "roof",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "in",
+      "object_label": "boat"
+    },
+    {
+      "subject_label": "bird",
+      "predicate": "on",
+      "object_label": "boat"
+    }
+  ]
+}

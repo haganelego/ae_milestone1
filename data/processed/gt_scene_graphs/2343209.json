@@ -1,0 +1,267 @@
+{
+  "image_id": 2343209,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "leaf",
+      "bbox": [
+        0,
+        0,
+        501,
+        313
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "flower",
+      "bbox": [
+        0,
+        130,
+        185,
+        311
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "ear",
+      "bbox": [
+        216,
+        60,
+        338,
+        115
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "ear",
+      "bbox": [
+        275,
+        62,
+        336,
+        115
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "ear",
+      "bbox": [
+        110,
+        161,
+        165,
+        208
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "fence",
+      "bbox": [
+        77,
+        105,
+        499,
+        311
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "giraffe",
+      "bbox": [
+        2,
+        140,
+        209,
+        311
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "giraffe",
+      "bbox": [
+        195,
+        31,
+        396,
+        311
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "head",
+      "bbox": [
+        220,
+        41,
+        353,
+        202
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "head",
+      "bbox": [
+        81,
+        141,
+        209,
+        265
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "neck",
+      "bbox": [
+        233,
+        124,
+        306,
+        311
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "neck",
+      "bbox": [
+        3,
+        199,
+        111,
+        311
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "post",
+      "bbox": [
+        425,
+        282,
+        454,
+        310
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "tree",
+      "bbox": [
+        0,
+        0,
+        191,
+        143
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "giraffe",
+      "bbox": [
+        212,
+        26,
+        343,
+        226
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "giraffe",
+      "bbox": [
+        28,
+        85,
+        226,
+        299
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "nose",
+      "bbox": [
+        174,
+        229,
+        209,
+        270
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "giraffe",
+      "bbox": [
+        53,
+        136,
+        169,
+        309
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "giraffe",
+      "bbox": [
+        185,
+        35,
+        327,
+        301
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "on",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "on",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "has",
+      "object_label": "neck"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "eating",
+      "object_label": "leaf"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "has",
+      "object_label": "ear"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "near",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "giraffe",
+      "predicate": "has",
+      "object_label": "neck"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "on",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "on",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "neck",
+      "predicate": "of",
+      "object_label": "giraffe"
+    },
+    {
+      "subject_label": "nose",
+      "predicate": "of",
+      "object_label": "giraffe"
+    }
+  ]
+}

@@ -1,0 +1,212 @@
+{
+  "image_id": 2316707,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "person",
+      "bbox": [
+        384,
+        52,
+        440,
+        155
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "person",
+      "bbox": [
+        310,
+        29,
+        357,
+        130
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "person",
+      "bbox": [
+        338,
+        31,
+        376,
+        138
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "board",
+      "bbox": [
+        6,
+        151,
+        497,
+        177
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "fence",
+      "bbox": [
+        0,
+        0,
+        499,
+        178
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hand",
+      "bbox": [
+        46,
+        168,
+        63,
+        189
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "helmet",
+      "bbox": [
+        68,
+        122,
+        97,
+        150
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "boy",
+      "bbox": [
+        244,
+        35,
+        334,
+        252
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "helmet",
+      "bbox": [
+        274,
+        46,
+        315,
+        81
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "boy",
+      "bbox": [
+        44,
+        116,
+        157,
+        244
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "child",
+      "bbox": [
+        252,
+        53,
+        325,
+        246
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "child",
+      "bbox": [
+        165,
+        20,
+        211,
+        106
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "stand",
+      "bbox": [
+        111,
+        29,
+        497,
+        157
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "boy",
+      "bbox": [
+        167,
+        29,
+        232,
+        111
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "helmet",
+      "bbox": [
+        274,
+        50,
+        326,
+        89
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "shirt",
+      "bbox": [
+        54,
+        147,
+        123,
+        203
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "boy",
+      "bbox": [
+        79,
+        24,
+        127,
+        151
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "shirt",
+      "bbox": [
+        79,
+        50,
+        119,
+        93
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "board",
+      "predicate": "behind",
+      "object_label": "fence"
+    },
+    {
+      "subject_label": "boy",
+      "predicate": "wearing",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "boy",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "child",
+      "predicate": "on",
+      "object_label": "stand"
+    },
+    {
+      "subject_label": "boy",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    }
+  ]
+}

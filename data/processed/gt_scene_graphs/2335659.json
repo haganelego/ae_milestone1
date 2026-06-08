@@ -1,0 +1,232 @@
+{
+  "image_id": 2335659,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        16,
+        0,
+        400,
+        255
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hat",
+      "bbox": [
+        0,
+        0,
+        85,
+        62
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        195,
+        136,
+        269,
+        304
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        115,
+        133,
+        205,
+        286
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pant",
+      "bbox": [
+        136,
+        195,
+        169,
+        265
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "bbox": [
+        343,
+        281,
+        366,
+        342
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "post",
+      "bbox": [
+        217,
+        357,
+        253,
+        372
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "post",
+      "bbox": [
+        277,
+        317,
+        305,
+        372
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "post",
+      "bbox": [
+        312,
+        294,
+        339,
+        372
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        356,
+        169,
+        396,
+        216
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sidewalk",
+      "bbox": [
+        0,
+        188,
+        439,
+        373
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "skateboard",
+      "bbox": [
+        133,
+        262,
+        167,
+        278
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        0,
+        25,
+        153,
+        236
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "truck",
+      "bbox": [
+        339,
+        14,
+        497,
+        371
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "woman",
+      "bbox": [
+        355,
+        149,
+        400,
+        282
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "woman",
+      "bbox": [
+        333,
+        134,
+        416,
+        272
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "street",
+      "bbox": [
+        44,
+        217,
+        407,
+        354
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "window",
+      "bbox": [
+        78,
+        71,
+        135,
+        222
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "pant",
+      "bbox": [
+        122,
+        194,
+        211,
+        252
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "on",
+      "object_label": "skateboard"
+    },
+    {
+      "subject_label": "pant",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    }
+  ]
+}

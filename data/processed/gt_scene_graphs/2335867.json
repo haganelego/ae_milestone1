@@ -1,0 +1,182 @@
+{
+  "image_id": 2335867,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        424,
+        272,
+        498,
+        331
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        361,
+        272,
+        416,
+        320
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "bbox": [
+        0,
+        194,
+        144,
+        330
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "car",
+      "bbox": [
+        244,
+        311,
+        319,
+        330
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        247,
+        281,
+        257,
+        324
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "bbox": [
+        254,
+        84,
+        488,
+        111
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pole",
+      "bbox": [
+        347,
+        0,
+        374,
+        332
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "post",
+      "bbox": [
+        315,
+        250,
+        356,
+        331
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "rock",
+      "bbox": [
+        186,
+        312,
+        248,
+        330
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "roof",
+      "bbox": [
+        8,
+        243,
+        96,
+        270
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sign",
+      "bbox": [
+        310,
+        219,
+        350,
+        251
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "trunk",
+      "bbox": [
+        147,
+        152,
+        191,
+        330
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        99,
+        288,
+        125,
+        328
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "window",
+      "bbox": [
+        438,
+        298,
+        462,
+        315
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "house",
+      "bbox": [
+        1,
+        182,
+        156,
+        328
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "roof",
+      "bbox": [
+        0,
+        198,
+        130,
+        246
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "building",
+      "predicate": "with",
+      "object_label": "roof"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "with",
+      "object_label": "roof"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "in",
+      "object_label": "building"
+    }
+  ]
+}

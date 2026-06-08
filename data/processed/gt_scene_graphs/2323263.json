@@ -1,0 +1,172 @@
+{
+  "image_id": 2323263,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "plant",
+      "bbox": [
+        0,
+        29,
+        499,
+        288
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "leaf",
+      "bbox": [
+        0,
+        26,
+        501,
+        332
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "leaf",
+      "bbox": [
+        0,
+        167,
+        38,
+        214
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leaf",
+      "bbox": [
+        0,
+        33,
+        24,
+        112
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leaf",
+      "bbox": [
+        116,
+        260,
+        155,
+        281
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leaf",
+      "bbox": [
+        0,
+        29,
+        33,
+        51
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leaf",
+      "bbox": [
+        4,
+        29,
+        497,
+        257
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leaf",
+      "bbox": [
+        5,
+        317,
+        95,
+        331
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "leaf",
+      "bbox": [
+        143,
+        303,
+        188,
+        314
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "leaf",
+      "bbox": [
+        184,
+        225,
+        242,
+        247
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "leaf",
+      "bbox": [
+        277,
+        206,
+        321,
+        236
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "leaf",
+      "bbox": [
+        204,
+        87,
+        374,
+        171
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "plant",
+      "bbox": [
+        0,
+        9,
+        497,
+        330
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "leaf",
+      "bbox": [
+        245,
+        245,
+        351,
+        306
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "leaf",
+      "bbox": [
+        340,
+        142,
+        493,
+        221
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "plant",
+      "predicate": "with",
+      "object_label": "leaf"
+    },
+    {
+      "subject_label": "plant",
+      "predicate": "with",
+      "object_label": "leaf"
+    },
+    {
+      "subject_label": "plant",
+      "predicate": "with",
+      "object_label": "leaf"
+    }
+  ]
+}

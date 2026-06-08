@@ -1,0 +1,102 @@
+{
+  "image_id": 2324488,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "beach",
+      "bbox": [
+        283,
+        117,
+        476,
+        306
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "boat",
+      "bbox": [
+        0,
+        117,
+        48,
+        131
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        84,
+        85,
+        304,
+        374
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shirt",
+      "bbox": [
+        88,
+        137,
+        185,
+        300
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "track",
+      "bbox": [
+        300,
+        269,
+        481,
+        366
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "short",
+      "bbox": [
+        101,
+        230,
+        242,
+        371
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        126,
+        81,
+        245,
+        338
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sneaker",
+      "bbox": [
+        221,
+        318,
+        300,
+        359
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "sneaker"
+    }
+  ]
+}

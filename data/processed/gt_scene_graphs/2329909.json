@@ -1,0 +1,152 @@
+{
+  "image_id": 2329909,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        349,
+        84,
+        375,
+        110
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hair",
+      "bbox": [
+        321,
+        80,
+        416,
+        166
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "head",
+      "bbox": [
+        341,
+        80,
+        429,
+        221
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "horse",
+      "bbox": [
+        14,
+        53,
+        440,
+        339
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leg",
+      "bbox": [
+        247,
+        203,
+        278,
+        264
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leg",
+      "bbox": [
+        178,
+        211,
+        228,
+        283
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "nose",
+      "bbox": [
+        400,
+        173,
+        425,
+        213
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tail",
+      "bbox": [
+        30,
+        149,
+        101,
+        267
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "ear",
+      "bbox": [
+        360,
+        80,
+        399,
+        110
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "horse",
+      "bbox": [
+        87,
+        101,
+        367,
+        332
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "horse",
+      "bbox": [
+        58,
+        137,
+        307,
+        318
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "nose",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "horse"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "horse"
+    }
+  ]
+}

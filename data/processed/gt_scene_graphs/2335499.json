@@ -1,0 +1,267 @@
+{
+  "image_id": 2335499,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "branch",
+      "bbox": [
+        207,
+        249,
+        218,
+        298
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "bbox": [
+        0,
+        0,
+        335,
+        501
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "food",
+      "bbox": [
+        182,
+        350,
+        266,
+        386
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "glass",
+      "bbox": [
+        273,
+        316,
+        308,
+        380
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "glass",
+      "bbox": [
+        137,
+        176,
+        177,
+        195
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hair",
+      "bbox": [
+        114,
+        152,
+        181,
+        204
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hand",
+      "bbox": [
+        138,
+        297,
+        170,
+        320
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "bbox": [
+        171,
+        390,
+        208,
+        498
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "leg",
+      "bbox": [
+        213,
+        417,
+        240,
+        476
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "logo",
+      "bbox": [
+        134,
+        235,
+        185,
+        272
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "pant",
+      "bbox": [
+        73,
+        299,
+        202,
+        495
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "person",
+      "bbox": [
+        44,
+        149,
+        208,
+        498
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "plate",
+      "bbox": [
+        191,
+        364,
+        252,
+        390
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shirt",
+      "bbox": [
+        105,
+        207,
+        217,
+        318
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "shoe",
+      "bbox": [
+        45,
+        453,
+        109,
+        497
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "table",
+      "bbox": [
+        166,
+        348,
+        332,
+        499
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "tree",
+      "bbox": [
+        87,
+        166,
+        285,
+        348
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "tree",
+      "bbox": [
+        288,
+        244,
+        330,
+        334
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "truck",
+      "bbox": [
+        1,
+        315,
+        234,
+        361
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "tree",
+      "bbox": [
+        240,
+        216,
+        320,
+        328
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "cup",
+      "bbox": [
+        269,
+        318,
+        307,
+        379
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "food",
+      "predicate": "on",
+      "object_label": "plate"
+    },
+    {
+      "subject_label": "food",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "glass",
+      "predicate": "on",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "logo",
+      "predicate": "on",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "with",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "has",
+      "object_label": "hand"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "with",
+      "object_label": "branch"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "image_id": 2343409,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "plane",
+      "bbox": [
+        3,
+        93,
+        493,
+        236
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "nose",
+      "bbox": [
+        462,
+        166,
+        492,
+        203
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "plane",
+      "bbox": [
+        1,
+        58,
+        497,
+        281
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "plane",
+      "bbox": [
+        453,
+        222,
+        496,
+        246
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "plane",
+      "bbox": [
+        408,
+        220,
+        457,
+        244
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "plane",
+      "bbox": [
+        2,
+        75,
+        493,
+        237
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "plane",
+      "bbox": [
+        332,
+        218,
+        382,
+        239
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tail",
+      "bbox": [
+        2,
+        94,
+        123,
+        205
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "wing",
+      "bbox": [
+        170,
+        139,
+        339,
+        204
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "plane",
+      "predicate": "has",
+      "object_label": "nose"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "part of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "plane"
+    }
+  ]
+}

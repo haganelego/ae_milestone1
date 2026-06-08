@@ -1,0 +1,92 @@
+{
+  "image_id": 2325782,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bike",
+      "bbox": [
+        286,
+        22,
+        491,
+        198
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bike",
+      "bbox": [
+        0,
+        12,
+        293,
+        209
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "helmet",
+      "bbox": [
+        100,
+        38,
+        147,
+        80
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "light",
+      "bbox": [
+        385,
+        0,
+        436,
+        16
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "stand",
+      "bbox": [
+        278,
+        76,
+        345,
+        166
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tile",
+      "bbox": [
+        258,
+        195,
+        315,
+        208
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tire",
+      "bbox": [
+        227,
+        112,
+        292,
+        193
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bike",
+      "predicate": "near",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "bike",
+      "predicate": "has",
+      "object_label": "tire"
+    },
+    {
+      "subject_label": "helmet",
+      "predicate": "on",
+      "object_label": "bike"
+    }
+  ]
+}

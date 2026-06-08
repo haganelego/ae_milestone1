@@ -1,0 +1,222 @@
+{
+  "image_id": 2317790,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bed",
+      "bbox": [
+        0,
+        0,
+        501,
+        375
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "box",
+      "bbox": [
+        308,
+        34,
+        329,
+        66
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "shelf",
+      "bbox": [
+        267,
+        1,
+        418,
+        74
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "flag",
+      "bbox": [
+        194,
+        141,
+        345,
+        216
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pillow",
+      "bbox": [
+        171,
+        81,
+        302,
+        167
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pillow",
+      "bbox": [
+        37,
+        95,
+        207,
+        201
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pillow",
+      "bbox": [
+        91,
+        217,
+        234,
+        328
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pillow",
+      "bbox": [
+        33,
+        81,
+        299,
+        192
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pillow",
+      "bbox": [
+        75,
+        69,
+        114,
+        88
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "pillow",
+      "bbox": [
+        24,
+        84,
+        288,
+        186
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "pillow",
+      "bbox": [
+        286,
+        277,
+        449,
+        372
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "shelf",
+      "bbox": [
+        0,
+        0,
+        191,
+        134
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "towel",
+      "bbox": [
+        292,
+        276,
+        444,
+        372
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "pillow",
+      "bbox": [
+        123,
+        248,
+        244,
+        296
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "pillow",
+      "bbox": [
+        36,
+        121,
+        161,
+        180
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "pillow",
+      "bbox": [
+        49,
+        86,
+        170,
+        189
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "box",
+      "predicate": "in",
+      "object_label": "shelf"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "under",
+      "object_label": "pillow"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "behind",
+      "object_label": "pillow"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "behind",
+      "object_label": "pillow"
+    },
+    {
+      "subject_label": "shelf",
+      "predicate": "behind",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    }
+  ]
+}

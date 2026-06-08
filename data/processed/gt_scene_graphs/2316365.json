@@ -1,0 +1,167 @@
+{
+  "image_id": 2316365,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "bbox": [
+        336,
+        12,
+        375,
+        43
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "head",
+      "bbox": [
+        97,
+        102,
+        168,
+        156
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "leg",
+      "bbox": [
+        426,
+        158,
+        445,
+        208
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leg",
+      "bbox": [
+        29,
+        105,
+        52,
+        157
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "sheep",
+      "bbox": [
+        251,
+        1,
+        499,
+        227
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sheep",
+      "bbox": [
+        5,
+        1,
+        496,
+        204
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "ear",
+      "bbox": [
+        135,
+        97,
+        166,
+        117
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "ear",
+      "bbox": [
+        94,
+        106,
+        122,
+        121
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "nose",
+      "bbox": [
+        271,
+        59,
+        292,
+        87
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "mouth",
+      "bbox": [
+        277,
+        70,
+        310,
+        95
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "ear",
+      "bbox": [
+        138,
+        100,
+        165,
+        122
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "eye",
+      "bbox": [
+        297,
+        25,
+        335,
+        56
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "sheep",
+      "predicate": "with",
+      "object_label": "eye"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "nose",
+      "predicate": "of",
+      "object_label": "sheep"
+    },
+    {
+      "subject_label": "mouth",
+      "predicate": "of",
+      "object_label": "sheep"
+    }
+  ]
+}

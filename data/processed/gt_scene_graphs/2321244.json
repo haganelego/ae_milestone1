@@ -1,0 +1,182 @@
+{
+  "image_id": 2321244,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "cat",
+      "bbox": [
+        143,
+        11,
+        403,
+        374
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "bbox": [
+        299,
+        49,
+        328,
+        81
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "ear",
+      "bbox": [
+        250,
+        28,
+        275,
+        64
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leg",
+      "bbox": [
+        170,
+        290,
+        269,
+        340
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leg",
+      "bbox": [
+        142,
+        159,
+        241,
+        214
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leg",
+      "bbox": [
+        167,
+        240,
+        249,
+        297
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "paw",
+      "bbox": [
+        143,
+        180,
+        178,
+        215
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tail",
+      "bbox": [
+        292,
+        322,
+        369,
+        372
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "shoe",
+      "bbox": [
+        137,
+        19,
+        251,
+        97
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "eye",
+      "bbox": [
+        243,
+        71,
+        311,
+        106
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "cat",
+      "bbox": [
+        194,
+        17,
+        380,
+        231
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "mouth",
+      "bbox": [
+        246,
+        100,
+        290,
+        130
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "eye",
+      "bbox": [
+        250,
+        66,
+        301,
+        103
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "cat",
+      "predicate": "with",
+      "object_label": "eye"
+    },
+    {
+      "subject_label": "cat",
+      "predicate": "has",
+      "object_label": "eye"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "paw",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "eye",
+      "predicate": "of",
+      "object_label": "cat"
+    },
+    {
+      "subject_label": "mouth",
+      "predicate": "of",
+      "object_label": "cat"
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "image_id": 2321594,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bear",
+      "bbox": [
+        120,
+        36,
+        419,
+        373
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "bbox": [
+        267,
+        37,
+        330,
+        108
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bed",
+      "bbox": [
+        0,
+        0,
+        499,
+        374
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leg",
+      "bbox": [
+        128,
+        246,
+        228,
+        332
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pillow",
+      "bbox": [
+        0,
+        0,
+        254,
+        263
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "ear",
+      "bbox": [
+        145,
+        60,
+        211,
+        124
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pillow",
+      "bbox": [
+        58,
+        31,
+        462,
+        329
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "flower",
+      "bbox": [
+        119,
+        105,
+        142,
+        128
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bear",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "bear"
+    },
+    {
+      "subject_label": "leg",
+      "predicate": "of",
+      "object_label": "bear"
+    },
+    {
+      "subject_label": "ear",
+      "predicate": "of",
+      "object_label": "bear"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "pillow"
+    }
+  ]
+}

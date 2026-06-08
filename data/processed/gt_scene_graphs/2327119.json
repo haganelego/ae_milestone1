@@ -1,0 +1,122 @@
+{
+  "image_id": 2327119,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "clock",
+      "bbox": [
+        184,
+        123,
+        321,
+        329
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "letter",
+      "bbox": [
+        202,
+        287,
+        271,
+        320
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "fence",
+      "bbox": [
+        282,
+        294,
+        416,
+        351
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "flag",
+      "bbox": [
+        244,
+        121,
+        261,
+        156
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "rock",
+      "bbox": [
+        191,
+        313,
+        273,
+        378
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sign",
+      "bbox": [
+        187,
+        273,
+        309,
+        339
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "clock",
+      "bbox": [
+        153,
+        125,
+        347,
+        287
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pole",
+      "bbox": [
+        201,
+        121,
+        292,
+        164
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "letter",
+      "bbox": [
+        190,
+        273,
+        307,
+        319
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "letter",
+      "predicate": "on",
+      "object_label": "sign"
+    },
+    {
+      "subject_label": "flag",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "under",
+      "object_label": "clock"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "says",
+      "object_label": "letter"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "with",
+      "object_label": "letter"
+    }
+  ]
+}

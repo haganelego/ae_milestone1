@@ -1,0 +1,222 @@
+{
+  "image_id": 2329331,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bed",
+      "bbox": [
+        124,
+        109,
+        344,
+        305
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "curtain",
+      "bbox": [
+        373,
+        14,
+        422,
+        207
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "door",
+      "bbox": [
+        426,
+        54,
+        500,
+        223
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "light",
+      "bbox": [
+        60,
+        112,
+        104,
+        198
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "phone",
+      "bbox": [
+        47,
+        192,
+        92,
+        211
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pillow",
+      "bbox": [
+        186,
+        134,
+        238,
+        170
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pillow",
+      "bbox": [
+        176,
+        121,
+        204,
+        154
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pillow",
+      "bbox": [
+        138,
+        146,
+        201,
+        203
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pillow",
+      "bbox": [
+        187,
+        152,
+        241,
+        185
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "table",
+      "bbox": [
+        26,
+        187,
+        129,
+        315
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "window",
+      "bbox": [
+        359,
+        97,
+        399,
+        162
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "table",
+      "bbox": [
+        48,
+        215,
+        136,
+        296
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "lamp",
+      "bbox": [
+        60,
+        98,
+        101,
+        191
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "table",
+      "bbox": [
+        51,
+        184,
+        123,
+        260
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "light",
+      "bbox": [
+        16,
+        41,
+        92,
+        108
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "pillow",
+      "bbox": [
+        173,
+        128,
+        234,
+        161
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "pillow",
+      "bbox": [
+        140,
+        132,
+        164,
+        159
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "light",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "table",
+      "predicate": "has",
+      "object_label": "lamp"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "has",
+      "object_label": "curtain"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    },
+    {
+      "subject_label": "pillow",
+      "predicate": "on",
+      "object_label": "bed"
+    }
+  ]
+}

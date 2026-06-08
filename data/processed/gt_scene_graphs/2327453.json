@@ -1,0 +1,187 @@
+{
+  "image_id": 2327453,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "car",
+      "bbox": [
+        274,
+        227,
+        352,
+        250
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "dog",
+      "bbox": [
+        40,
+        315,
+        72,
+        338
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "food",
+      "bbox": [
+        19,
+        420,
+        119,
+        483
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "glass",
+      "bbox": [
+        141,
+        371,
+        189,
+        397
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hat",
+      "bbox": [
+        82,
+        266,
+        150,
+        311
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "house",
+      "bbox": [
+        321,
+        210,
+        352,
+        243
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "house",
+      "bbox": [
+        13,
+        207,
+        107,
+        239
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        139,
+        164,
+        195,
+        340
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "man",
+      "bbox": [
+        260,
+        274,
+        329,
+        373
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "person",
+      "bbox": [
+        129,
+        330,
+        289,
+        498
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "tree",
+      "bbox": [
+        23,
+        232,
+        37,
+        269
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "umbrella",
+      "bbox": [
+        171,
+        126,
+        235,
+        191
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "woman",
+      "bbox": [
+        219,
+        316,
+        366,
+        499
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "woman",
+      "bbox": [
+        79,
+        266,
+        150,
+        369
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "woman",
+      "bbox": [
+        187,
+        175,
+        241,
+        341
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "hat",
+      "bbox": [
+        157,
+        149,
+        206,
+        199
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "car",
+      "predicate": "near",
+      "object_label": "house"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "with",
+      "object_label": "glass"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "in",
+      "object_label": "hat"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "with",
+      "object_label": "hat"
+    }
+  ]
+}

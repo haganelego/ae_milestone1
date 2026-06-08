@@ -1,0 +1,112 @@
+{
+  "image_id": 2329268,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        0,
+        499,
+        52
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "door",
+      "bbox": [
+        381,
+        56,
+        442,
+        175
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "track",
+      "bbox": [
+        0,
+        119,
+        500,
+        240
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "train",
+      "bbox": [
+        0,
+        11,
+        500,
+        240
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "window",
+      "bbox": [
+        332,
+        77,
+        361,
+        113
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "bbox": [
+        399,
+        80,
+        428,
+        119
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "window",
+      "bbox": [
+        261,
+        0,
+        304,
+        37
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "window",
+      "bbox": [
+        247,
+        75,
+        319,
+        111
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "door",
+      "predicate": "on",
+      "object_label": "train"
+    },
+    {
+      "subject_label": "train",
+      "predicate": "on",
+      "object_label": "track"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "door"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "train"
+    }
+  ]
+}

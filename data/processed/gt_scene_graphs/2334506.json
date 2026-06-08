@@ -1,0 +1,232 @@
+{
+  "image_id": 2334506,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "bbox": [
+        3,
+        241,
+        74,
+        260
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bench",
+      "bbox": [
+        65,
+        242,
+        267,
+        390
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bench",
+      "bbox": [
+        66,
+        255,
+        199,
+        370
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "building",
+      "bbox": [
+        61,
+        0,
+        374,
+        240
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "car",
+      "bbox": [
+        0,
+        212,
+        39,
+        246
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "car",
+      "bbox": [
+        40,
+        208,
+        169,
+        248
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "fence",
+      "bbox": [
+        2,
+        207,
+        373,
+        247
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "snow",
+      "bbox": [
+        0,
+        238,
+        375,
+        498
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "lamp",
+      "bbox": [
+        165,
+        77,
+        187,
+        109
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tree",
+      "bbox": [
+        185,
+        0,
+        374,
+        255
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "window",
+      "bbox": [
+        227,
+        62,
+        249,
+        104
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        227,
+        146,
+        256,
+        162
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "snow",
+      "bbox": [
+        254,
+        260,
+        323,
+        311
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "pole",
+      "bbox": [
+        170,
+        62,
+        194,
+        273
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "snow",
+      "bbox": [
+        173,
+        293,
+        259,
+        310
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "snow",
+      "bbox": [
+        189,
+        278,
+        370,
+        468
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bench",
+      "predicate": "sitting on",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "sitting on",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "sitting on",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "sitting on",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "in",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "bench",
+      "predicate": "sitting on",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "lamp",
+      "predicate": "on",
+      "object_label": "pole"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "building"
+    },
+    {
+      "subject_label": "snow",
+      "predicate": "covering",
+      "object_label": "snow"
+    },
+    {
+      "subject_label": "snow",
+      "predicate": "on",
+      "object_label": "snow"
+    }
+  ]
+}

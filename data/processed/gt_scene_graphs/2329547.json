@@ -1,0 +1,82 @@
+{
+  "image_id": 2329547,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "hand",
+      "bbox": [
+        226,
+        62,
+        258,
+        84
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "helmet",
+      "bbox": [
+        285,
+        2,
+        360,
+        45
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        208,
+        0,
+        483,
+        324
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shirt",
+      "bbox": [
+        292,
+        42,
+        408,
+        169
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "short",
+      "bbox": [
+        332,
+        136,
+        423,
+        241
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "person",
+      "bbox": [
+        241,
+        15,
+        444,
+        288
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    }
+  ]
+}

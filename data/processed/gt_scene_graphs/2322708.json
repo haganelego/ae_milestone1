@@ -1,0 +1,312 @@
+{
+  "image_id": 2322708,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        0,
+        501,
+        215
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "door",
+      "bbox": [
+        5,
+        96,
+        57,
+        205
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hair",
+      "bbox": [
+        191,
+        157,
+        214,
+        179
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        345,
+        184,
+        406,
+        332
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        301,
+        150,
+        354,
+        298
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "bbox": [
+        393,
+        133,
+        430,
+        253
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "bbox": [
+        335,
+        127,
+        369,
+        222
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "bbox": [
+        416,
+        149,
+        483,
+        322
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "man",
+      "bbox": [
+        113,
+        135,
+        175,
+        298
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "bbox": [
+        452,
+        169,
+        499,
+        330
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "man",
+      "bbox": [
+        429,
+        144,
+        459,
+        188
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "man",
+      "bbox": [
+        59,
+        130,
+        108,
+        279
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "man",
+      "bbox": [
+        273,
+        159,
+        325,
+        309
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "man",
+      "bbox": [
+        174,
+        158,
+        245,
+        330
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "pant",
+      "bbox": [
+        181,
+        273,
+        231,
+        325
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "shirt",
+      "bbox": [
+        274,
+        180,
+        327,
+        278
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "shirt",
+      "bbox": [
+        469,
+        187,
+        499,
+        239
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "street",
+      "bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "person",
+      "bbox": [
+        115,
+        134,
+        171,
+        297
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "person",
+      "bbox": [
+        62,
+        127,
+        109,
+        276
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "man",
+      "bbox": [
+        109,
+        131,
+        154,
+        295
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "shirt",
+      "bbox": [
+        431,
+        175,
+        481,
+        245
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "person",
+      "bbox": [
+        251,
+        140,
+        358,
+        298
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "standing on",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "person",
+      "predicate": "standing on",
+      "object_label": "street"
+    }
+  ]
+}

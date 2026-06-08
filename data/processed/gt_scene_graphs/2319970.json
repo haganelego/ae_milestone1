@@ -1,0 +1,187 @@
+{
+  "image_id": 2319970,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bird",
+      "bbox": [
+        207,
+        158,
+        314,
+        227
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "vase",
+      "bbox": [
+        148,
+        2,
+        333,
+        367
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "flower",
+      "bbox": [
+        184,
+        212,
+        230,
+        254
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "leaf",
+      "bbox": [
+        184,
+        154,
+        221,
+        189
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "neck",
+      "bbox": [
+        192,
+        81,
+        303,
+        114
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "vase",
+      "bbox": [
+        139,
+        0,
+        354,
+        371
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tail",
+      "bbox": [
+        210,
+        178,
+        248,
+        202
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tree",
+      "bbox": [
+        194,
+        187,
+        293,
+        324
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "wing",
+      "bbox": [
+        240,
+        167,
+        295,
+        200
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "vase",
+      "bbox": [
+        194,
+        35,
+        311,
+        253
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "bird",
+      "bbox": [
+        193,
+        149,
+        308,
+        252
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "vase",
+      "bbox": [
+        189,
+        68,
+        334,
+        336
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bird",
+      "predicate": "on",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "on",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "on",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "neck",
+      "predicate": "of",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "has",
+      "object_label": "bird"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "has",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "has",
+      "object_label": "neck"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "has",
+      "object_label": "tree"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "of",
+      "object_label": "bird"
+    },
+    {
+      "subject_label": "tree",
+      "predicate": "on",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "bird"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "has",
+      "object_label": "bird"
+    }
+  ]
+}

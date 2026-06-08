@@ -1,0 +1,317 @@
+{
+  "image_id": 2328340,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "pant",
+      "bbox": [
+        123,
+        165,
+        167,
+        244
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "child",
+      "bbox": [
+        222,
+        105,
+        305,
+        273
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "woman",
+      "bbox": [
+        115,
+        106,
+        171,
+        245
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "bbox": [
+        255,
+        118,
+        275,
+        142
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "head",
+      "bbox": [
+        318,
+        71,
+        341,
+        98
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "jacket",
+      "bbox": [
+        230,
+        134,
+        289,
+        184
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "jacket",
+      "bbox": [
+        303,
+        94,
+        361,
+        148
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "jacket",
+      "bbox": [
+        118,
+        130,
+        166,
+        179
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "man",
+      "bbox": [
+        296,
+        55,
+        447,
+        244
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "mountain",
+      "bbox": [
+        97,
+        2,
+        497,
+        140
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "pant",
+      "bbox": [
+        312,
+        140,
+        354,
+        210
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "pole",
+      "bbox": [
+        103,
+        172,
+        126,
+        259
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "skier",
+      "bbox": [
+        170,
+        110,
+        193,
+        148
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "ski",
+      "bbox": [
+        138,
+        234,
+        175,
+        260
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "ski",
+      "bbox": [
+        319,
+        221,
+        341,
+        246
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "person",
+      "bbox": [
+        274,
+        64,
+        385,
+        250
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "person",
+      "bbox": [
+        302,
+        63,
+        367,
+        231
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "man",
+      "bbox": [
+        291,
+        63,
+        376,
+        224
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "woman",
+      "bbox": [
+        109,
+        98,
+        342,
+        271
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "head",
+      "bbox": [
+        245,
+        117,
+        276,
+        140
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "pant",
+      "bbox": [
+        115,
+        160,
+        171,
+        235
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "pole",
+      "bbox": [
+        104,
+        163,
+        182,
+        256
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "woman",
+      "bbox": [
+        239,
+        77,
+        380,
+        180
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "people",
+      "bbox": [
+        108,
+        67,
+        378,
+        265
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "ski",
+      "bbox": [
+        226,
+        155,
+        317,
+        256
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "on",
+      "object_label": "ski"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "child"
+    },
+    {
+      "subject_label": "head",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "jacket",
+      "predicate": "of",
+      "object_label": "child"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "jacket"
+    },
+    {
+      "subject_label": "pant",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "ski",
+      "predicate": "of",
+      "object_label": "person"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "in",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "holding",
+      "object_label": "pole"
+    }
+  ]
+}

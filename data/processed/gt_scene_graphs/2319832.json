@@ -1,0 +1,242 @@
+{
+  "image_id": 2319832,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "plane",
+      "bbox": [
+        274,
+        104,
+        403,
+        148
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "airplane",
+      "bbox": [
+        248,
+        123,
+        288,
+        135
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "airplane",
+      "bbox": [
+        359,
+        82,
+        499,
+        237
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "airplane",
+      "bbox": [
+        135,
+        127,
+        166,
+        138
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "airplane",
+      "bbox": [
+        43,
+        126,
+        69,
+        137
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "airplane",
+      "bbox": [
+        199,
+        123,
+        239,
+        137
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tail",
+      "bbox": [
+        369,
+        102,
+        391,
+        130
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "wing",
+      "bbox": [
+        336,
+        119,
+        411,
+        147
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "wing",
+      "bbox": [
+        460,
+        80,
+        499,
+        131
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "plane",
+      "bbox": [
+        300,
+        74,
+        498,
+        234
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "wing",
+      "bbox": [
+        409,
+        69,
+        497,
+        228
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "plane",
+      "bbox": [
+        250,
+        79,
+        419,
+        180
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "plane",
+      "bbox": [
+        4,
+        90,
+        489,
+        215
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "plane",
+      "bbox": [
+        58,
+        115,
+        356,
+        149
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "airplane",
+      "bbox": [
+        276,
+        99,
+        420,
+        167
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "plane",
+      "bbox": [
+        272,
+        103,
+        420,
+        146
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "wing",
+      "bbox": [
+        367,
+        100,
+        395,
+        126
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "airplane",
+      "bbox": [
+        260,
+        106,
+        401,
+        154
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "plane",
+      "bbox": [
+        233,
+        115,
+        424,
+        188
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "tail",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "tail",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "on",
+      "object_label": "plane"
+    },
+    {
+      "subject_label": "wing",
+      "predicate": "of",
+      "object_label": "airplane"
+    }
+  ]
+}

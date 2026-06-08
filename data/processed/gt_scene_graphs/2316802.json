@@ -1,0 +1,237 @@
+{
+  "image_id": 2316802,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "cabinet",
+      "bbox": [
+        133,
+        49,
+        268,
+        122
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "girl",
+      "bbox": [
+        1,
+        202,
+        178,
+        306
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "curtain",
+      "bbox": [
+        59,
+        26,
+        148,
+        239
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "curtain",
+      "bbox": [
+        254,
+        20,
+        410,
+        161
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "curtain",
+      "bbox": [
+        406,
+        5,
+        497,
+        330
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "curtain",
+      "bbox": [
+        0,
+        8,
+        26,
+        193
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "door",
+      "bbox": [
+        149,
+        61,
+        206,
+        117
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "table",
+      "bbox": [
+        221,
+        237,
+        326,
+        321
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "room",
+      "bbox": [
+        0,
+        0,
+        486,
+        331
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "screen",
+      "bbox": [
+        147,
+        125,
+        258,
+        207
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sock",
+      "bbox": [
+        4,
+        286,
+        59,
+        310
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        0,
+        13,
+        149,
+        221
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        271,
+        46,
+        419,
+        195
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "table",
+      "bbox": [
+        202,
+        205,
+        336,
+        331
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "girl",
+      "bbox": [
+        25,
+        204,
+        197,
+        314
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "sock",
+      "bbox": [
+        0,
+        282,
+        26,
+        298
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "chair",
+      "bbox": [
+        274,
+        159,
+        423,
+        330
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "window",
+      "bbox": [
+        278,
+        53,
+        351,
+        213
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "cup",
+      "bbox": [
+        239,
+        224,
+        263,
+        250
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "girl",
+      "predicate": "wearing",
+      "object_label": "sock"
+    },
+    {
+      "subject_label": "girl",
+      "predicate": "wearing",
+      "object_label": "sock"
+    },
+    {
+      "subject_label": "curtain",
+      "predicate": "on",
+      "object_label": "table"
+    },
+    {
+      "subject_label": "door",
+      "predicate": "on",
+      "object_label": "cabinet"
+    },
+    {
+      "subject_label": "table",
+      "predicate": "in front of",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "in",
+      "object_label": "room"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "in",
+      "object_label": "room"
+    },
+    {
+      "subject_label": "cup",
+      "predicate": "on",
+      "object_label": "table"
+    }
+  ]
+}

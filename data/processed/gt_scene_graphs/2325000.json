@@ -1,0 +1,97 @@
+{
+  "image_id": 2325000,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "airplane",
+      "bbox": [
+        7,
+        25,
+        490,
+        340
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "bbox": [
+        14,
+        279,
+        58,
+        371
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        113,
+        286,
+        146,
+        374
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shirt",
+      "bbox": [
+        111,
+        310,
+        148,
+        356
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "shirt",
+      "bbox": [
+        16,
+        293,
+        58,
+        340
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tail",
+      "bbox": [
+        270,
+        33,
+        318,
+        173
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "window",
+      "bbox": [
+        56,
+        143,
+        80,
+        175
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "airplane",
+      "predicate": "has",
+      "object_label": "tail"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "airplane"
+    }
+  ]
+}

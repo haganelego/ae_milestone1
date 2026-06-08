@@ -1,0 +1,197 @@
+{
+  "image_id": 2339627,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "bbox": [
+        0,
+        58,
+        60,
+        123
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "door",
+      "bbox": [
+        359,
+        117,
+        384,
+        210
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "house",
+      "bbox": [
+        0,
+        113,
+        61,
+        236
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "house",
+      "bbox": [
+        52,
+        0,
+        479,
+        261
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "bbox": [
+        337,
+        0,
+        356,
+        270
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "post",
+      "bbox": [
+        269,
+        76,
+        278,
+        367
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sidewalk",
+      "bbox": [
+        0,
+        231,
+        480,
+        280
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "bbox": [
+        225,
+        40,
+        323,
+        78
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "sign",
+      "bbox": [
+        176,
+        152,
+        210,
+        169
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "street",
+      "bbox": [
+        0,
+        267,
+        479,
+        374
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "trunk",
+      "bbox": [
+        467,
+        0,
+        499,
+        376
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "window",
+      "bbox": [
+        188,
+        86,
+        232,
+        183
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "bbox": [
+        109,
+        99,
+        124,
+        187
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "window",
+      "bbox": [
+        242,
+        227,
+        270,
+        250
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "window",
+      "bbox": [
+        278,
+        88,
+        321,
+        184
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "window",
+      "bbox": [
+        95,
+        1,
+        105,
+        46
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "door",
+      "predicate": "of",
+      "object_label": "house"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "on",
+      "object_label": "sidewalk"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "near",
+      "object_label": "street"
+    },
+    {
+      "subject_label": "sign",
+      "predicate": "on",
+      "object_label": "post"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "house"
+    },
+    {
+      "subject_label": "window",
+      "predicate": "on",
+      "object_label": "house"
+    }
+  ]
+}

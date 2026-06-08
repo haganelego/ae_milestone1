@@ -1,0 +1,317 @@
+{
+  "image_id": 2326286,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "flower",
+      "bbox": [
+        307,
+        47,
+        387,
+        96
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "flower",
+      "bbox": [
+        192,
+        10,
+        449,
+        369
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "flower",
+      "bbox": [
+        261,
+        43,
+        309,
+        67
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "flower",
+      "bbox": [
+        311,
+        48,
+        448,
+        157
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "flower",
+      "bbox": [
+        274,
+        87,
+        363,
+        188
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "flower",
+      "bbox": [
+        276,
+        4,
+        352,
+        58
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "flower",
+      "bbox": [
+        210,
+        45,
+        324,
+        137
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "flower",
+      "bbox": [
+        299,
+        14,
+        345,
+        52
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "flower",
+      "bbox": [
+        308,
+        48,
+        445,
+        176
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "leaf",
+      "bbox": [
+        192,
+        109,
+        306,
+        227
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "leaf",
+      "bbox": [
+        214,
+        114,
+        261,
+        156
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "leaf",
+      "bbox": [
+        243,
+        111,
+        294,
+        192
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "leaf",
+      "bbox": [
+        202,
+        24,
+        268,
+        105
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "light",
+      "bbox": [
+        375,
+        257,
+        386,
+        372
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "vase",
+      "bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "leaf",
+      "bbox": [
+        373,
+        214,
+        411,
+        324
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "flower",
+      "bbox": [
+        378,
+        64,
+        444,
+        209
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "flower",
+      "bbox": [
+        362,
+        61,
+        445,
+        164
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "flower",
+      "bbox": [
+        279,
+        10,
+        346,
+        50
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "flower",
+      "bbox": [
+        278,
+        88,
+        362,
+        245
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "flower",
+      "bbox": [
+        306,
+        47,
+        393,
+        99
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "of",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "of",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "of",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "with",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "with",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "with",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "vase",
+      "predicate": "with",
+      "object_label": "flower"
+    },
+    {
+      "subject_label": "leaf",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    },
+    {
+      "subject_label": "flower",
+      "predicate": "in",
+      "object_label": "vase"
+    }
+  ]
+}

@@ -1,0 +1,242 @@
+{
+  "image_id": 2333237,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bus",
+      "bbox": [
+        263,
+        61,
+        475,
+        317
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "bbox": [
+        202,
+        160,
+        245,
+        273
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        174,
+        172,
+        222,
+        319
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        102,
+        159,
+        139,
+        302
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        22,
+        153,
+        106,
+        354
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pant",
+      "bbox": [
+        239,
+        210,
+        260,
+        242
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "person",
+      "bbox": [
+        113,
+        161,
+        176,
+        336
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "person",
+      "bbox": [
+        271,
+        168,
+        297,
+        234
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "person",
+      "bbox": [
+        252,
+        164,
+        275,
+        218
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "bbox": [
+        23,
+        175,
+        94,
+        259
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "bbox": [
+        236,
+        187,
+        261,
+        216
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "shirt",
+      "bbox": [
+        113,
+        188,
+        174,
+        254
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "shirt",
+      "bbox": [
+        205,
+        174,
+        243,
+        213
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shoe",
+      "bbox": [
+        48,
+        332,
+        84,
+        352
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "short",
+      "bbox": [
+        112,
+        228,
+        128,
+        268
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "sign",
+      "bbox": [
+        103,
+        132,
+        149,
+        158
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "woman",
+      "bbox": [
+        236,
+        174,
+        265,
+        248
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "man",
+      "bbox": [
+        105,
+        167,
+        220,
+        335
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "shirt",
+      "bbox": [
+        119,
+        189,
+        214,
+        278
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "people",
+      "bbox": [
+        23,
+        155,
+        303,
+        352
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "shirt",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "shoe",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "woman",
+      "predicate": "wearing",
+      "object_label": "pant"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shirt"
+    }
+  ]
+}

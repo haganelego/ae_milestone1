@@ -1,0 +1,177 @@
+{
+  "image_id": 2417743,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "hair",
+      "bbox": [
+        115,
+        35,
+        148,
+        64
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hair",
+      "bbox": [
+        359,
+        37,
+        393,
+        64
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "man",
+      "bbox": [
+        255,
+        36,
+        485,
+        290
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "bbox": [
+        7,
+        36,
+        238,
+        290
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "racket",
+      "bbox": [
+        176,
+        99,
+        217,
+        138
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shirt",
+      "bbox": [
+        90,
+        68,
+        158,
+        165
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shoe",
+      "bbox": [
+        8,
+        240,
+        39,
+        291
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "shoe",
+      "bbox": [
+        189,
+        252,
+        241,
+        284
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "shoe",
+      "bbox": [
+        257,
+        240,
+        285,
+        290
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shoe",
+      "bbox": [
+        389,
+        221,
+        494,
+        287
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sock",
+      "bbox": [
+        428,
+        231,
+        454,
+        270
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "short",
+      "bbox": [
+        79,
+        138,
+        175,
+        225
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "player",
+      "bbox": [
+        337,
+        40,
+        453,
+        274
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "shirt",
+      "bbox": [
+        96,
+        85,
+        170,
+        156
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shoe"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "in",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "hair"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "sock",
+      "predicate": "on",
+      "object_label": "player"
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "image_id": 2335223,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bike",
+      "bbox": [
+        125,
+        108,
+        283,
+        291
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bus",
+      "bbox": [
+        27,
+        0,
+        498,
+        146
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "door",
+      "bbox": [
+        336,
+        0,
+        452,
+        127
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "hair",
+      "bbox": [
+        145,
+        8,
+        184,
+        46
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "bbox": [
+        122,
+        9,
+        249,
+        274
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shirt",
+      "bbox": [
+        123,
+        44,
+        207,
+        143
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "short",
+      "bbox": [
+        126,
+        125,
+        238,
+        206
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tire",
+      "bbox": [
+        217,
+        59,
+        293,
+        143
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tire",
+      "bbox": [
+        126,
+        210,
+        171,
+        266
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "bike",
+      "bbox": [
+        126,
+        185,
+        280,
+        273
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "bike",
+      "bbox": [
+        95,
+        186,
+        305,
+        295
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "street",
+      "bbox": [
+        62,
+        234,
+        323,
+        326
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "door",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "hair",
+      "predicate": "on",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "riding",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "short"
+    },
+    {
+      "subject_label": "tire",
+      "predicate": "on",
+      "object_label": "bus"
+    },
+    {
+      "subject_label": "tire",
+      "predicate": "on",
+      "object_label": "bike"
+    }
+  ]
+}

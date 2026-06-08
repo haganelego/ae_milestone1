@@ -1,0 +1,337 @@
+{
+  "image_id": 2327592,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bike",
+      "bbox": [
+        0,
+        233,
+        104,
+        332
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bike",
+      "bbox": [
+        140,
+        157,
+        275,
+        332
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "box",
+      "bbox": [
+        157,
+        176,
+        269,
+        291
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "building",
+      "bbox": [
+        283,
+        1,
+        497,
+        236
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "car",
+      "bbox": [
+        0,
+        84,
+        80,
+        165
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "door",
+      "bbox": [
+        360,
+        30,
+        383,
+        184
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "door",
+      "bbox": [
+        384,
+        0,
+        414,
+        197
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "helmet",
+      "bbox": [
+        191,
+        62,
+        226,
+        88
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "logo",
+      "bbox": [
+        173,
+        181,
+        246,
+        216
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "bbox": [
+        162,
+        58,
+        265,
+        186
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "plant",
+      "bbox": [
+        0,
+        139,
+        131,
+        238
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "pole",
+      "bbox": [
+        236,
+        48,
+        248,
+        85
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "pole",
+      "bbox": [
+        239,
+        0,
+        244,
+        103
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "seat",
+      "bbox": [
+        0,
+        234,
+        32,
+        265
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "shirt",
+      "bbox": [
+        170,
+        96,
+        256,
+        173
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "sidewalk",
+      "bbox": [
+        325,
+        208,
+        383,
+        266
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "tree",
+      "bbox": [
+        27,
+        13,
+        133,
+        105
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "wheel",
+      "bbox": [
+        205,
+        279,
+        224,
+        333
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "window",
+      "bbox": [
+        297,
+        74,
+        362,
+        96
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "window",
+      "bbox": [
+        298,
+        8,
+        315,
+        72
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "pot",
+      "bbox": [
+        111,
+        149,
+        152,
+        188
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "handle",
+      "bbox": [
+        163,
+        157,
+        256,
+        178
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "plant",
+      "bbox": [
+        100,
+        102,
+        164,
+        165
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "building",
+      "bbox": [
+        280,
+        1,
+        431,
+        183
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "man",
+      "bbox": [
+        170,
+        133,
+        262,
+        332
+      ]
+    },
+    {
+      "object_id": 25,
+      "label": "plant",
+      "bbox": [
+        17,
+        154,
+        109,
+        263
+      ]
+    },
+    {
+      "object_id": 26,
+      "label": "helmet",
+      "bbox": [
+        179,
+        68,
+        224,
+        88
+      ]
+    },
+    {
+      "object_id": 27,
+      "label": "man",
+      "bbox": [
+        152,
+        66,
+        259,
+        235
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_label": "bike",
+      "predicate": "has",
+      "object_label": "seat"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wears",
+      "object_label": "shirt"
+    },
+    {
+      "subject_label": "pole",
+      "predicate": "behind",
+      "object_label": "man"
+    },
+    {
+      "subject_label": "handle",
+      "predicate": "on",
+      "object_label": "bike"
+    },
+    {
+      "subject_label": "building",
+      "predicate": "with",
+      "object_label": "window"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "wearing",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "helmet"
+    },
+    {
+      "subject_label": "man",
+      "predicate": "has",
+      "object_label": "shirt"
+    }
+  ]
+}
