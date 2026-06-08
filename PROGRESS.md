@@ -4,6 +4,21 @@ Rolling micro-progress (latest 5 checkpoints). Newest first.
 
 ---
 
+## 2026-06-08 — Relation-decouple (proper top-K SGG usage)
+
+### Change
+- `egtr_infer.py`: relationship export now takes top-K triplets by ranking score WITHOUT the endpoint object_conf>0.3 gate (object LIST unchanged → mean_object_confidence / baseline / B-1 convergence unchanged). Fixes person-relation suppression (person boxes conf ~0.2 were dropping all their relations).
+- Re-exported 100×20 EGTR preds; recomputed metrics/relative/convergence/aggregate; re-scored LLM 4b-h5 & 9b-h5 (relation inputs changed); VLM unchanged (image input). Parse failures 0.
+
+### Impact
+- L20 zero-relation images **23/100 → 4/100** (residual genuine: rel scores <0.005); mean L20 rels 4.1→7.9; true-GT triplet recall@L20 0.25→0.286; node_recall 0.569 unchanged.
+- RelOracle(0.8): 74/100 saturate, mean 14.6 (slightly later than 80/13.8 — relations add honest late info).
+- **Conclusions robust**: vs RelOracle(0.8) MAE — hybrid_4b_k2 4.15 (#1), hybrid_9b_k2 4.41, llm_sgg_4b_h5_k2 4.81, vlm_9b_single_k2 5.17; conf_convergence 5.99 (LLM-free, 99/100); baseline 7.03. Structured-SGG+LLM (hybrid k2) still beats image-VLM; k2 helps; baseline weakest.
+- Checkpoints: `e1b8e56` (pre-B1), `c3441fc` (B-1). Decouple committed next.
+- Refs: `.claude/docs/research/m1-scale100.md` (decouple section).
+
+---
+
 ## 2026-06-08 — Git checkpoint + convergence-based stop (Plan B-1)
 
 ### Git

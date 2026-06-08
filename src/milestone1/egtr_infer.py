@@ -1,14 +1,11 @@
 """EGTR model wrapper for scene graph generation inference."""
 
-import sys
-from pathlib import Path
 from typing import Any
 
-import numpy as np
 import torch
 from PIL import Image
 
-from milestone1.config import REPO_ROOT, setup_egtr_path
+from milestone1.config import setup_egtr_path
 from milestone1.vocab import load_obj_names, load_pred_names
 
 # Ensure EGTR is importable
@@ -85,9 +82,7 @@ class EgtrModel:
         img_w, img_h = pil_image.size
 
         # Preprocess
-        encoding = self.feature_extractor(
-            images=pil_image, return_tensors="pt"
-        )
+        encoding = self.feature_extractor(images=pil_image, return_tensors="pt")
         pixel_values = encoding["pixel_values"].cuda()
         pixel_mask = encoding["pixel_mask"].cuda()
 
@@ -105,14 +100,10 @@ class EgtrModel:
         logits = outputs.logits[0]  # (200, 150)
         pred_boxes = outputs.pred_boxes[0]  # (200, 4) cx,cy,w,h normalized
         probs = logits.softmax(-1)
-        obj_scores, pred_classes = torch.max(
-            probs[:, : self.num_labels], dim=-1
-        )
+        obj_scores, pred_classes = torch.max(probs[:, : self.num_labels], dim=-1)
 
         # Convert boxes to absolute [x1, y1, x2, y2]
-        abs_boxes = rescale_bboxes(
-            pred_boxes.cpu(), (img_w, img_h)
-        )  # (200, 4)
+        abs_boxes = rescale_bboxes(pred_boxes.cpu(), (img_w, img_h))  # (200, 4)
 
         # Filter and rank objects by confidence
         valid_mask = obj_scores > self.object_conf_threshold
@@ -130,44 +121,44 @@ class EgtrModel:
         objects = []
         for rank, idx in enumerate(valid_indices):
             idx_int = idx.item()
-            objects.append({
-                "object_id": rank,
-                "query_id": idx_int,
-                "label": self.obj_names[pred_classes[idx_int].item()],
-                "confidence": round(obj_scores[idx_int].item(), 4),
-                "bbox": [round(x, 1) for x in abs_boxes[idx_int].tolist()],
-            })
+            objects.append(
+                {
+                    "object_id": rank,
+                    "query_id": idx_int,
+                    "label": self.obj_names[pred_classes[idx_int].item()],
+                    "confidence": round(obj_scores[idx_int].item(), 4),
+                    "bbox": [round(x, 1) for x in abs_boxes[idx_int].tolist()],
+                }
+            )
 
-        # Extract relationships (Method A: single pred per pair)
+        # Extract relationships (Method A: single predicate per pair).
+        # Proper top-K SGG usage: rank ALL query pairs by triplet score and take
+        # the top-K directly, WITHOUT requiring both endpoints to pass the object
+        # confidence threshold. This avoids dropping valid relations whose endpoint
+        # (e.g. a "person"/"man" box at conf ~0.25) falls just below
+        # object_conf_threshold, which previously zeroed out relations for ~23% of
+        # images. The object LIST above stays confidence-gated so that
+        # mean_object_confidence (node track / baseline / hybrid) is unchanged;
+        # only the relationship track is decoupled.
         pred_rel = torch.clamp(outputs.pred_rel[0], 0.0, 1.0)  # (200,200,50)
-        pred_conn = torch.clamp(
-            outputs.pred_connectivity[0], 0.0, 1.0
-        )  # (200,200,1)
+        pred_conn = torch.clamp(outputs.pred_connectivity[0], 0.0, 1.0)  # (200,200,1)
         pred_rel = pred_rel * pred_conn  # gate by connectivity
 
-        # Object score outer product
+        # Object score outer product (weights triplets by both endpoints' conf)
         sub_ob_scores = torch.outer(obj_scores, obj_scores)  # (200, 200)
         n_queries = sub_ob_scores.shape[0]
-        sub_ob_scores[
-            torch.arange(n_queries), torch.arange(n_queries)
-        ] = 0.0
+        sub_ob_scores[torch.arange(n_queries), torch.arange(n_queries)] = 0.0
 
-        # Rank triplets
+        # Rank triplets over all pairs; buffer extra in case of the conf floor
         triplet_scores = pred_rel.max(-1)[0] * sub_ob_scores  # (200, 200)
         top_pairs = argsort_desc(triplet_scores.cpu().numpy())[
             : self.top_k_relationships * 3
         ]
 
-        # Build query_id -> object_id mapping for valid objects
-        query_to_obj = {
-            obj["query_id"]: obj["object_id"] for obj in objects
-        }
-        valid_query_ids = set(query_to_obj.keys())
-
         relationships = []
         for s_q, o_q in top_pairs:
-            if s_q not in valid_query_ids or o_q not in valid_query_ids:
-                continue
+            s_q = int(s_q)
+            o_q = int(o_q)
 
             best_pred = pred_rel[s_q, o_q].argmax().item()
             rel_score = pred_rel[s_q, o_q, best_pred].item()
@@ -175,14 +166,20 @@ class EgtrModel:
             if rel_score < self.relation_conf_threshold:
                 continue
 
-            relationships.append({
-                "subject_id": query_to_obj[s_q],
-                "subject_label": self.obj_names[pred_classes[s_q].item()],
-                "predicate": self.pred_names[best_pred],
-                "object_id": query_to_obj[o_q],
-                "object_label": self.obj_names[pred_classes[o_q].item()],
-                "confidence": round(rel_score, 4),
-            })
+            # subject_id/object_id are query indices (endpoints may be below the
+            # object_conf_threshold and thus absent from the exported objects list).
+            relationships.append(
+                {
+                    "subject_id": s_q,
+                    "subject_label": self.obj_names[pred_classes[s_q].item()],
+                    "predicate": self.pred_names[best_pred],
+                    "object_id": o_q,
+                    "object_label": self.obj_names[pred_classes[o_q].item()],
+                    "confidence": round(rel_score, 4),
+                    "subject_conf": round(obj_scores[s_q].item(), 4),
+                    "object_conf": round(obj_scores[o_q].item(), 4),
+                }
+            )
 
             if len(relationships) >= self.top_k_relationships:
                 break

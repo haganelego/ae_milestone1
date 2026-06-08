@@ -69,6 +69,38 @@ non-degenerate (80% saturate; 10-image was 90%). Confirms the methodological fix
 - **20% don't reach RelSGScore 0.8** even vs their own L20 — model keeps changing up to
   full res; consider threshold 0.7 or gain-based stop for the tail.
 
+## Relation-decouple update (proper top-K SGG usage)
+
+The relationship export previously required BOTH endpoints to pass `object_conf_threshold=0.3`.
+Person boxes score ~0.19–0.25, so person relations (and thus all relations of 23/100 images)
+were dropped — an export artifact, NOT an EGTR failure (EGTR ranks "man-wearing-shirt" #1).
+Fixed `src/milestone1/egtr_infer.py` to take top-K triplets by ranking score WITHOUT the
+endpoint conf gate (object LIST stays conf>0.3, so `mean_object_confidence` / baseline /
+convergence are unchanged). Re-exported all 100×20 predictions, re-scored LLM (relation
+inputs changed; VLM unaffected — image input).
+
+Impact:
+- L20 zero-relation images **23/100 → 4/100** (residual 4 are genuine: all EGTR rel scores < 0.005); mean L20 relations **4.1 → 7.9**; true-GT triplet recall@L20 **0.25 → 0.286**; node_recall unchanged (0.569).
+- RelOracle(0.8) saturates 74/100 (mean 14.6) — slightly later than pre-decouple (80/100, 13.8) because relations now genuinely add late-arriving info (more honest).
+
+Corrected method comparison vs RelOracle(0.8), n=100 (sorted by MAE):
+
+| Method | MeanStop | MAE | Early | Late |
+|---|---|---|---|---|
+| **hybrid_4b_k2** | 13.43 | **4.15** | 0.56 | 0.29 |
+| **hybrid_9b_k2** | 12.99 | **4.41** | 0.55 | 0.29 |
+| llm_sgg_4b_h5_k2 | 11.79 | 4.81 | 0.70 | 0.21 |
+| vlm_9b_single_k2 | 11.45 | 5.17 | 0.71 | 0.24 |
+| hybrid_4b_k1 | 9.93 | 5.69 | 0.80 | 0.16 |
+| llm_sgg_9b_h5_k2 | 9.63 | 5.83 | 0.81 | 0.15 |
+| **conf_convergence** (B-1, LLM-free, 99/100 trigger) | 10.69 | 5.99 | 0.67 | 0.25 |
+| baseline (abs conf≥0.4) | 11.59 | 7.03 | 0.61 | 0.28 |
+
+**Conclusions are robust to the fix**: confidence+LLM **hybrid (k2) still wins** (4.15–4.41);
+structured-SGG+LLM still beats image-VLM (best LLM/hybrid 4.15 vs best VLM 5.17); consecutive-k=2
+helps; node-confidence baseline remains weakest; `conf_convergence` is the best deployable
+LLM-free option. Now on honest footing: relations are actually present (4 vs 23 node-only).
+
 ## Artifacts
 
 - `outputs/metrics/method_comparison_100.csv` (vs true-GT Oracle 0.5)
