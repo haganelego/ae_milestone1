@@ -617,8 +617,8 @@ def main() -> None:
             else float("nan"),
         }
 
-    # LLM-4b stop map (for vertical lines)
-    llm_4b_stop = abl_map.get(base_4b_slug, {})
+    # Proposed-method stop map (hybrid_4b_k2: 0.5*obj_conf + 0.5*LLM, consecutive-k=2)
+    proposed_stop = hybrid_map.get("hybrid_4b_k2", {})
 
     # --- Figure 6a: Per-image relative curves ---
     levels_range = list(range(1, max_level + 1))
@@ -684,13 +684,13 @@ def main() -> None:
             label=f"Baseline={baseline_stop_val}",
         )
 
-        llm4b_stop_val = llm_4b_stop.get(img_id, max_level)
+        proposed_stop_val = proposed_stop.get(img_id, max_level)
         ax.axvline(
-            x=llm4b_stop_val,
+            x=proposed_stop_val,
             color="red",
             linestyle="--",
             alpha=0.8,
-            label=f"LLM-4b={llm4b_stop_val}",
+            label=f"Proposed hybrid_4b_k2={proposed_stop_val}",
         )
 
         ax.set_xlabel("Resolution Level")
