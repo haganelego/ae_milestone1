@@ -922,7 +922,11 @@ def main() -> None:
 
     lines.append("## Figures")
     lines.append("")
-    lines.append("- `outputs/figures/relative_curve_{image_id}.png` - per-image curves")
+    lines.append(
+        "- `outputs/figures/relative_curve_{image_id}.png` - per-image curves "
+        "(stop lines: green=RelOracle(0.8), orange=Baseline obj-conf, "
+        "red=Proposed hybrid_4b_k2)"
+    )
     lines.append(
         "- `outputs/figures/relative_method_comparison_mae.png` - MAE bar chart"
     )
