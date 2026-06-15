@@ -1,0 +1,641 @@
+predicate,level,recall
+above,1,0.0
+above,2,0.0
+above,3,0.0
+above,4,0.0
+above,5,0.0
+above,6,0.0
+above,7,0.0
+above,8,0.0
+above,9,0.0
+above,10,0.0
+above,11,0.0
+above,12,0.0
+above,13,0.0
+above,14,0.0
+above,15,0.0
+above,16,0.0
+above,17,0.0
+above,18,0.0
+above,19,0.0
+above,20,0.0
+across,1,0.0
+across,2,0.0
+across,3,0.0
+across,4,0.0
+across,5,0.0
+across,6,0.0
+across,7,0.0
+across,8,0.0
+across,9,0.0
+across,10,0.0
+across,11,0.0
+across,12,0.0
+across,13,0.0
+across,14,0.0
+across,15,0.0
+across,16,0.0
+across,17,0.0
+across,18,0.0
+across,19,0.0
+across,20,0.0
+attached to,1,0.0
+attached to,2,0.0
+attached to,3,0.0
+attached to,4,0.0
+attached to,5,0.0
+attached to,6,0.0
+attached to,7,0.0
+attached to,8,0.0
+attached to,9,0.0
+attached to,10,0.0
+attached to,11,0.0
+attached to,12,0.0
+attached to,13,0.0
+attached to,14,0.0
+attached to,15,0.0
+attached to,16,0.0
+attached to,17,0.0
+attached to,18,0.0
+attached to,19,0.0
+attached to,20,0.0
+behind,1,0.0
+behind,2,0.0
+behind,3,0.0
+behind,4,0.0
+behind,5,0.0
+behind,6,0.0
+behind,7,0.0
+behind,8,0.0
+behind,9,0.0
+behind,10,0.0
+behind,11,0.0
+behind,12,0.0
+behind,13,0.0
+behind,14,0.0
+behind,15,0.0
+behind,16,0.0
+behind,17,0.0
+behind,18,0.058823529411764705
+behind,19,0.0
+behind,20,0.058823529411764705
+belonging to,1,0.0
+belonging to,2,0.0
+belonging to,3,0.0
+belonging to,4,0.0
+belonging to,5,0.0
+belonging to,6,0.0
+belonging to,7,0.0
+belonging to,8,0.0
+belonging to,9,0.0
+belonging to,10,0.0
+belonging to,11,0.0
+belonging to,12,0.0
+belonging to,13,0.0
+belonging to,14,0.0
+belonging to,15,0.0
+belonging to,16,0.0
+belonging to,17,0.0
+belonging to,18,0.0
+belonging to,19,0.0
+belonging to,20,0.0
+between,1,0.0
+between,2,0.0
+between,3,0.0
+between,4,0.0
+between,5,0.0
+between,6,0.0
+between,7,0.0
+between,8,0.0
+between,9,0.0
+between,10,0.0
+between,11,0.0
+between,12,0.0
+between,13,0.0
+between,14,0.0
+between,15,0.0
+between,16,0.0
+between,17,0.0
+between,18,0.0
+between,19,0.0
+between,20,0.0
+carrying,1,0.0
+carrying,2,0.0
+carrying,3,0.0
+carrying,4,0.0
+carrying,5,0.0
+carrying,6,0.0
+carrying,7,0.0
+carrying,8,0.0
+carrying,9,0.0
+carrying,10,0.0
+carrying,11,0.0
+carrying,12,0.0
+carrying,13,0.0
+carrying,14,0.0
+carrying,15,0.0
+carrying,16,0.0
+carrying,17,0.0
+carrying,18,0.0
+carrying,19,0.0
+carrying,20,0.16666666666666666
+covered in,1,0.0
+covered in,2,0.0
+covered in,3,0.0
+covered in,4,0.0
+covered in,5,0.0
+covered in,6,0.0
+covered in,7,0.0
+covered in,8,0.0
+covered in,9,0.0
+covered in,10,0.0
+covered in,11,0.0
+covered in,12,0.0
+covered in,13,0.0
+covered in,14,0.0
+covered in,15,0.0
+covered in,16,0.0
+covered in,17,0.0
+covered in,18,0.0
+covered in,19,0.0
+covered in,20,0.0
+covering,1,0.0
+covering,2,0.0
+covering,3,0.0
+covering,4,0.0
+covering,5,0.0
+covering,6,0.0
+covering,7,0.0
+covering,8,0.0
+covering,9,0.0
+covering,10,0.0
+covering,11,0.0
+covering,12,0.0
+covering,13,0.0
+covering,14,0.0
+covering,15,0.0
+covering,16,0.0
+covering,17,0.0
+covering,18,0.0
+covering,19,0.0
+covering,20,0.0
+eating,1,0.0
+eating,2,0.0
+eating,3,0.0
+eating,4,0.0
+eating,5,0.0
+eating,6,0.0
+eating,7,0.0
+eating,8,0.0
+eating,9,0.0
+eating,10,0.0
+eating,11,0.0
+eating,12,0.0
+eating,13,0.0
+eating,14,0.0
+eating,15,0.0
+eating,16,0.0
+eating,17,0.0
+eating,18,0.0
+eating,19,0.0
+eating,20,0.0
+for,1,0.0
+for,2,0.0
+for,3,0.0
+for,4,0.0
+for,5,0.0
+for,6,0.0
+for,7,0.0
+for,8,0.0
+for,9,0.0
+for,10,0.0
+for,11,0.0
+for,12,0.0
+for,13,0.0
+for,14,0.0
+for,15,0.0
+for,16,0.0
+for,17,0.0
+for,18,0.0
+for,19,0.0
+for,20,0.0
+from,1,0.0
+from,2,0.0
+from,3,0.0
+from,4,0.0
+from,5,0.0
+from,6,0.0
+from,7,0.0
+from,8,0.0
+from,9,0.0
+from,10,0.0
+from,11,0.0
+from,12,0.0
+from,13,0.0
+from,14,0.0
+from,15,0.0
+from,16,0.0
+from,17,0.0
+from,18,0.0
+from,19,0.0
+from,20,0.0
+growing on,1,0.0
+growing on,2,0.0
+growing on,3,0.0
+growing on,4,0.0
+growing on,5,0.0
+growing on,6,0.0
+growing on,7,0.0
+growing on,8,0.0
+growing on,9,0.0
+growing on,10,0.0
+growing on,11,0.0
+growing on,12,0.0
+growing on,13,0.0
+growing on,14,0.0
+growing on,15,0.0
+growing on,16,0.0
+growing on,17,0.0
+growing on,18,0.0
+growing on,19,0.0
+growing on,20,0.0
+hanging from,1,0.0
+hanging from,2,0.0
+hanging from,3,0.0
+hanging from,4,0.0
+hanging from,5,0.0
+hanging from,6,0.0
+hanging from,7,0.0
+hanging from,8,0.0
+hanging from,9,0.0
+hanging from,10,0.0
+hanging from,11,0.0
+hanging from,12,0.0
+hanging from,13,0.0
+hanging from,14,0.0
+hanging from,15,0.0
+hanging from,16,0.0
+hanging from,17,0.0
+hanging from,18,0.0
+hanging from,19,0.0
+hanging from,20,0.0
+has,1,0.0
+has,2,0.0
+has,3,0.0
+has,4,0.0
+has,5,0.0
+has,6,0.0
+has,7,0.0
+has,8,0.0
+has,9,0.0
+has,10,0.0
+has,11,0.0
+has,12,0.0
+has,13,0.019230769230769232
+has,14,0.0
+has,15,0.019230769230769232
+has,16,0.1346153846153846
+has,17,0.057692307692307696
+has,18,0.21153846153846154
+has,19,0.23076923076923078
+has,20,0.23076923076923078
+holding,1,0.0
+holding,2,0.0
+holding,3,0.0
+holding,4,0.0
+holding,5,0.0
+holding,6,0.0
+holding,7,0.0
+holding,8,0.0
+holding,9,0.0
+holding,10,0.0
+holding,11,0.0
+holding,12,0.0
+holding,13,0.0
+holding,14,0.05555555555555555
+holding,15,0.05555555555555555
+holding,16,0.05555555555555555
+holding,17,0.05555555555555555
+holding,18,0.2222222222222222
+holding,19,0.2777777777777778
+holding,20,0.2222222222222222
+in,1,0.0
+in,2,0.0
+in,3,0.0
+in,4,0.0
+in,5,0.0
+in,6,0.0
+in,7,0.0
+in,8,0.0
+in,9,0.0
+in,10,0.0
+in,11,0.027777777777777776
+in,12,0.0
+in,13,0.027777777777777776
+in,14,0.0
+in,15,0.0
+in,16,0.027777777777777776
+in,17,0.05555555555555555
+in,18,0.1111111111111111
+in,19,0.1111111111111111
+in,20,0.1388888888888889
+in front of,1,0.0
+in front of,2,0.0
+in front of,3,0.0
+in front of,4,0.0
+in front of,5,0.0
+in front of,6,0.0
+in front of,7,0.0
+in front of,8,0.0
+in front of,9,0.0
+in front of,10,0.0
+in front of,11,0.0
+in front of,12,0.0
+in front of,13,0.0
+in front of,14,0.0
+in front of,15,0.0
+in front of,16,0.0
+in front of,17,0.0
+in front of,18,0.0
+in front of,19,0.0
+in front of,20,0.0
+laying on,1,0.0
+laying on,2,0.0
+laying on,3,0.0
+laying on,4,0.0
+laying on,5,0.0
+laying on,6,0.0
+laying on,7,0.0
+laying on,8,0.0
+laying on,9,0.0
+laying on,10,0.0
+laying on,11,0.0
+laying on,12,0.0
+laying on,13,0.0
+laying on,14,0.0
+laying on,15,0.0
+laying on,16,0.0
+laying on,17,0.0
+laying on,18,0.0
+laying on,19,0.0
+laying on,20,0.0
+near,1,0.0
+near,2,0.0
+near,3,0.0
+near,4,0.0
+near,5,0.0
+near,6,0.0
+near,7,0.0
+near,8,0.0
+near,9,0.0
+near,10,0.0
+near,11,0.0
+near,12,0.0
+near,13,0.0
+near,14,0.0
+near,15,0.0
+near,16,0.0
+near,17,0.03571428571428571
+near,18,0.03571428571428571
+near,19,0.0
+near,20,0.0
+of,1,0.0
+of,2,0.0
+of,3,0.0
+of,4,0.0
+of,5,0.0
+of,6,0.0
+of,7,0.0
+of,8,0.0
+of,9,0.0
+of,10,0.0
+of,11,0.0
+of,12,0.0
+of,13,0.07142857142857142
+of,14,0.05714285714285714
+of,15,0.04285714285714286
+of,16,0.07142857142857142
+of,17,0.1
+of,18,0.18571428571428572
+of,19,0.2571428571428571
+of,20,0.32857142857142857
+on,1,0.0
+on,2,0.0
+on,3,0.0
+on,4,0.0
+on,5,0.0
+on,6,0.0
+on,7,0.0
+on,8,0.006896551724137931
+on,9,0.0
+on,10,0.006896551724137931
+on,11,0.020689655172413793
+on,12,0.020689655172413793
+on,13,0.034482758620689655
+on,14,0.07586206896551724
+on,15,0.1103448275862069
+on,16,0.1793103448275862
+on,17,0.15172413793103448
+on,18,0.23448275862068965
+on,19,0.27586206896551724
+on,20,0.3310344827586207
+part of,1,0.0
+part of,2,0.0
+part of,3,0.0
+part of,4,0.0
+part of,5,0.0
+part of,6,0.0
+part of,7,0.0
+part of,8,0.0
+part of,9,0.0
+part of,10,0.0
+part of,11,0.0
+part of,12,0.0
+part of,13,0.0
+part of,14,0.0
+part of,15,0.0
+part of,16,0.0
+part of,17,0.0
+part of,18,0.0
+part of,19,0.0
+part of,20,0.0
+riding,1,0.0
+riding,2,0.0
+riding,3,0.0
+riding,4,0.0
+riding,5,0.0
+riding,6,0.0
+riding,7,0.0
+riding,8,0.0
+riding,9,0.0
+riding,10,0.0
+riding,11,0.0
+riding,12,0.0
+riding,13,0.0
+riding,14,0.0
+riding,15,0.0
+riding,16,0.0
+riding,17,0.0
+riding,18,0.25
+riding,19,0.0
+riding,20,0.25
+says,1,0.0
+says,2,0.0
+says,3,0.0
+says,4,0.0
+says,5,0.0
+says,6,0.0
+says,7,0.0
+says,8,0.0
+says,9,0.0
+says,10,0.0
+says,11,0.0
+says,12,0.0
+says,13,0.0
+says,14,0.0
+says,15,0.0
+says,16,0.0
+says,17,0.0
+says,18,0.0
+says,19,0.0
+says,20,0.0
+sitting on,1,0.0
+sitting on,2,0.0
+sitting on,3,0.0
+sitting on,4,0.0
+sitting on,5,0.0
+sitting on,6,0.0
+sitting on,7,0.0
+sitting on,8,0.0
+sitting on,9,0.0
+sitting on,10,0.0
+sitting on,11,0.0
+sitting on,12,0.0
+sitting on,13,0.0
+sitting on,14,0.0
+sitting on,15,0.0
+sitting on,16,0.0
+sitting on,17,0.0
+sitting on,18,0.0
+sitting on,19,0.1111111111111111
+sitting on,20,0.1111111111111111
+standing on,1,0.0
+standing on,2,0.0
+standing on,3,0.0
+standing on,4,0.0
+standing on,5,0.0
+standing on,6,0.0
+standing on,7,0.0
+standing on,8,0.0
+standing on,9,0.0
+standing on,10,0.0
+standing on,11,0.0
+standing on,12,0.0
+standing on,13,0.0
+standing on,14,0.0
+standing on,15,0.0
+standing on,16,0.0
+standing on,17,0.0
+standing on,18,0.0
+standing on,19,0.0
+standing on,20,0.0
+under,1,0.0
+under,2,0.0
+under,3,0.0
+under,4,0.0
+under,5,0.0
+under,6,0.0
+under,7,0.0
+under,8,0.0
+under,9,0.0
+under,10,0.0
+under,11,0.0
+under,12,0.0
+under,13,0.0
+under,14,0.0
+under,15,0.0
+under,16,0.0
+under,17,0.0
+under,18,0.0
+under,19,0.0
+under,20,0.0
+walking on,1,0.0
+walking on,2,0.0
+walking on,3,0.0
+walking on,4,0.0
+walking on,5,0.0
+walking on,6,0.0
+walking on,7,0.0
+walking on,8,0.0
+walking on,9,0.0
+walking on,10,0.0
+walking on,11,0.0
+walking on,12,0.0
+walking on,13,0.0
+walking on,14,0.0
+walking on,15,0.0
+walking on,16,0.0
+walking on,17,0.0
+walking on,18,0.0
+walking on,19,0.0
+walking on,20,0.0
+wearing,1,0.0
+wearing,2,0.0
+wearing,3,0.0
+wearing,4,0.0
+wearing,5,0.0
+wearing,6,0.0
+wearing,7,0.0
+wearing,8,0.0
+wearing,9,0.0
+wearing,10,0.0
+wearing,11,0.0
+wearing,12,0.011363636363636364
+wearing,13,0.0
+wearing,14,0.056818181818181816
+wearing,15,0.17045454545454544
+wearing,16,0.29545454545454547
+wearing,17,0.22727272727272727
+wearing,18,0.4090909090909091
+wearing,19,0.5454545454545454
+wearing,20,0.5681818181818182
+wears,1,0.0
+wears,2,0.0
+wears,3,0.0
+wears,4,0.0
+wears,5,0.0
+wears,6,0.0
+wears,7,0.0
+wears,8,0.0
+wears,9,0.0
+wears,10,0.0
+wears,11,0.0
+wears,12,0.0
+wears,13,0.0
+wears,14,0.0
+wears,15,0.0
+wears,16,0.0
+wears,17,0.0
+wears,18,0.0
+wears,19,0.0
+wears,20,0.0
+with,1,0.0
+with,2,0.0
+with,3,0.0
+with,4,0.0
+with,5,0.0
+with,6,0.0
+with,7,0.0
+with,8,0.0
+with,9,0.0
+with,10,0.0
+with,11,0.0
+with,12,0.0
+with,13,0.0
+with,14,0.0
+with,15,0.0
+with,16,0.0
+with,17,0.0
+with,18,0.034482758620689655
+with,19,0.034482758620689655
+with,20,0.034482758620689655

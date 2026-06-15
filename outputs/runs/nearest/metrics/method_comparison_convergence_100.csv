@@ -1,0 +1,10 @@
+method,mean_stop,frac_images_stop,MAE_vs_RelOracle08,MedAE_vs_RelOracle08,early_vs_RelOracle08,late_vs_RelOracle08,pearson_r_vs_RelOracle08,MAE_vs_GTOracle05,MedAE_vs_GTOracle05,early_vs_GTOracle05,late_vs_GTOracle05,pearson_r_vs_GTOracle05
+baseline_abs_conf04,16.69,0.73,2.93,2.0,0.63,0.17,0.009,2.97,2.0,0.62,0.1,0.02
+hybrid_convergence,17.28,0.32,3.04,1.0,0.29,0.35,0.064,3.0,0.0,0.31,0.18,0.056
+llm4b_convergence,16.88,0.34,3.46,1.0,0.33,0.36,0.042,3.44,1.0,0.34,0.19,0.005
+llm9b_convergence,13.89,0.56,5.67,6.0,0.56,0.2,0.248,5.67,6.5,0.56,0.08,0.23
+hybrid_4b_k1_abs,12.54,0.95,6.56,6.5,0.92,0.02,0.146,6.72,7.0,0.94,0.02,0.2
+llm_sgg_4b_abs,12.17,0.88,7.07,7.0,0.81,0.08,0.088,7.29,8.0,0.83,0.08,0.013
+hybrid_9b_k1_abs,10.83,0.96,8.25,9.0,0.95,0.02,0.071,8.39,8.5,0.95,0.01,0.177
+conf_convergence,8.6,0.9,10.52,12.0,0.86,0.06,0.113,10.7,12.0,0.89,0.02,0.126
+llm_sgg_9b_abs,5.08,1.0,13.88,14.0,1.0,0.0,0.031,14.12,15.0,1.0,0.0,0.134

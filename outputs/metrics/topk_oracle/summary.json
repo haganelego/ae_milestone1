@@ -1,0 +1,89 @@
+{
+  "config": {
+    "top_n_nodes": 10,
+    "top_n_triplets": 5,
+    "n_images": 100,
+    "max_level": 20
+  },
+  "reference_stats": {
+    "mean_node_ref_labels": 5.8,
+    "mean_trip_ref_triplets": 3.5
+  },
+  "coef_08": {
+    "saturated": 80,
+    "saturation_rate": 0.8,
+    "mean_stop": 15.01,
+    "median_stop": 14.5,
+    "histogram": {
+      "5": 1,
+      "7": 2,
+      "8": 2,
+      "9": 3,
+      "10": 3,
+      "11": 5,
+      "12": 6,
+      "13": 11,
+      "14": 17,
+      "15": 11,
+      "16": 5,
+      "17": 1,
+      "18": 8,
+      "19": 5,
+      "20": 20
+    },
+    "trivial_always_19_mae": 4.39,
+    "trivial_always_20_mae": 4.99,
+    "top3_methods": [
+      {
+        "method": "llm_sgg_4b_h5_k2",
+        "mae": 3.29
+      },
+      {
+        "method": "hybrid_4b_k2",
+        "mae": 3.31
+      },
+      {
+        "method": "vlm_9b_single_k2",
+        "mae": 3.34
+      }
+    ]
+  },
+  "coef_09": {
+    "saturated": 71,
+    "saturation_rate": 0.71,
+    "mean_stop": 16.36,
+    "median_stop": 17.0,
+    "histogram": {
+      "5": 1,
+      "7": 1,
+      "8": 1,
+      "9": 2,
+      "10": 2,
+      "12": 6,
+      "13": 5,
+      "14": 7,
+      "15": 14,
+      "16": 10,
+      "17": 9,
+      "18": 7,
+      "19": 6,
+      "20": 29
+    },
+    "trivial_always_19_mae": 3.22,
+    "trivial_always_20_mae": 3.64,
+    "top3_methods": [
+      {
+        "method": "hybrid_4b_k2",
+        "mae": 3.06
+      },
+      {
+        "method": "vlm_9b_single_k2",
+        "mae": 3.63
+      },
+      {
+        "method": "llm_sgg_4b_h5_k2",
+        "mae": 3.82
+      }
+    ]
+  }
+}

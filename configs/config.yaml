@@ -54,9 +54,11 @@ resolution_levels:
     - 0.7293
     - 0.8538
     - 1.00
-  # nearest-neighbor downscale/upscale: produces blocky low-res artifacts that
-  # better mimic real sensor/observation degradation than smooth bilinear.
-  interpolation: nearest
+  # bilinear downscale/upscale: area-averaging low-pass that matches optical/sensor
+  # capture of a distant object (smooth blur, not blocky aliasing). Chosen as the
+  # adopted model for "robot approaching -> resolution recovers"; nearest-neighbor
+  # results are archived under outputs/runs/nearest/ for comparison.
+  interpolation: bilinear
 
 egtr:
   object_conf_threshold: 0.3

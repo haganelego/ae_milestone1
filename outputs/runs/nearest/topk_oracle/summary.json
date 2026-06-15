@@ -1,0 +1,76 @@
+{
+  "config": {
+    "top_n_nodes": 10,
+    "top_n_triplets": 5,
+    "n_images": 100,
+    "max_level": 20
+  },
+  "reference_stats": {
+    "mean_node_ref_labels": 5.8,
+    "mean_trip_ref_triplets": 3.5
+  },
+  "coef_08": {
+    "saturated": 71,
+    "saturation_rate": 0.71,
+    "mean_stop": 18.46,
+    "median_stop": 19.0,
+    "histogram": {
+      "13": 2,
+      "14": 2,
+      "15": 2,
+      "16": 8,
+      "17": 4,
+      "18": 21,
+      "19": 32,
+      "20": 29
+    },
+    "trivial_always_19_mae": 1.12,
+    "trivial_always_20_mae": 1.54,
+    "top3_methods": [
+      {
+        "method": "hybrid_4b_k2",
+        "mae": 1.43
+      },
+      {
+        "method": "hybrid_9b_k2",
+        "mae": 2.26
+      },
+      {
+        "method": "baseline",
+        "mae": 2.59
+      }
+    ]
+  },
+  "coef_09": {
+    "saturated": 58,
+    "saturation_rate": 0.58,
+    "mean_stop": 18.84,
+    "median_stop": 19.0,
+    "histogram": {
+      "13": 1,
+      "14": 2,
+      "15": 1,
+      "16": 6,
+      "17": 1,
+      "18": 18,
+      "19": 29,
+      "20": 42
+    },
+    "trivial_always_19_mae": 1.0,
+    "trivial_always_20_mae": 1.16,
+    "top3_methods": [
+      {
+        "method": "hybrid_4b_k2",
+        "mae": 1.27
+      },
+      {
+        "method": "hybrid_9b_k2",
+        "mae": 2.14
+      },
+      {
+        "method": "llm_sgg_4b_h5_k2",
+        "mae": 2.57
+      }
+    ]
+  }
+}

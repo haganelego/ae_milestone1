@@ -70,3 +70,10 @@ outputs/llm_ablation/
 outputs/vlm_scores/
 outputs/llm_scores/
 outputs/llm_inputs/
+# Archived per-run raw predictions (outputs/runs/<run>/): keep metrics/figures/
+# analysis tracked, but exclude the large regenerable prediction/score JSONs.
+outputs/runs/*/egtr_predictions/
+outputs/runs/*/llm_scores/
+outputs/runs/*/vlm_scores/
+outputs/runs/*/llm_ablation/
+outputs/runs/*/llm_inputs/
