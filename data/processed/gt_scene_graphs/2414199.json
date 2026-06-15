@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "house",
+      "class_id": 64,
       "bbox": [
         438,
         75,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         331,
         8,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         333,
         57,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         388,
         177,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "pole",
+      "class_id": 98,
       "bbox": [
         470,
         0,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "street",
+      "class_id": 123,
       "bbox": [
         393,
         199,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         330,
         16,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         383,
         122,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "skateboard",
+      "class_id": 116,
       "bbox": [
         336,
         97,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         0,
         0,
@@ -104,59 +114,246 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "house",
+      "subject_class_id": 64,
+      "subject_bbox": [
+        438,
+        75,
+        498,
+        198
+      ],
       "predicate": "behind",
-      "object_label": "pole"
+      "predicate_id": 7,
+      "object_id": 4,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        470,
+        0,
+        483,
+        243
+      ]
     },
     {
+      "subject_id": 0,
       "subject_label": "house",
+      "subject_class_id": 64,
+      "subject_bbox": [
+        438,
+        75,
+        498,
+        198
+      ],
       "predicate": "across",
-      "object_label": "street"
+      "predicate_id": 1,
+      "object_id": 5,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        393,
+        199,
+        498,
+        223
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "wearing",
-      "object_label": "pant"
+      "predicate_id": 47,
+      "object_id": 2,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        333,
+        57,
+        405,
+        124
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 6,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        330,
+        16,
+        398,
+        66
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "wears",
-      "object_label": "shoe"
+      "predicate_id": 48,
+      "object_id": 7,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        383,
+        122,
+        409,
+        141
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "has",
-      "object_label": "skateboard"
+      "predicate_id": 19,
+      "object_id": 8,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        336,
+        97,
+        401,
+        149
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "on",
-      "object_label": "skateboard"
+      "predicate_id": 30,
+      "object_id": 8,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        336,
+        97,
+        401,
+        149
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        331,
+        8,
+        437,
+        144
+      ],
       "predicate": "riding",
-      "object_label": "skateboard"
+      "predicate_id": 37,
+      "object_id": 8,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        336,
+        97,
+        401,
+        149
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        388,
+        177,
+        415,
+        218
+      ],
       "predicate": "near",
-      "object_label": "street"
+      "predicate_id": 28,
+      "object_id": 5,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        393,
+        199,
+        498,
+        223
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        470,
+        0,
+        483,
+        243
+      ],
       "predicate": "near",
-      "object_label": "man"
+      "predicate_id": 28,
+      "object_id": 1,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        331,
+        8,
+        437,
+        144
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        470,
+        0,
+        483,
+        243
+      ],
       "predicate": "near",
-      "object_label": "street"
+      "predicate_id": 28,
+      "object_id": 5,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        393,
+        199,
+        498,
+        223
+      ]
     }
   ]
 }

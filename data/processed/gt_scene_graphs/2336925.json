@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bed",
+      "class_id": 8,
       "bbox": [
         129,
         112,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "drawer",
+      "class_id": 38,
       "bbox": [
         385,
         213,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "drawer",
+      "class_id": 38,
       "bbox": [
         386,
         240,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "pillow",
+      "class_id": 92,
       "bbox": [
         247,
         160,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "pillow",
+      "class_id": 92,
       "bbox": [
         255,
         166,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "pillow",
+      "class_id": 92,
       "bbox": [
         323,
         180,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "pillow",
+      "class_id": 92,
       "bbox": [
         296,
         163,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "pillow",
+      "class_id": 92,
       "bbox": [
         337,
         166,
@@ -84,39 +92,158 @@
   ],
   "relationships": [
     {
+      "subject_id": 3,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        247,
+        160,
+        377,
+        211
+      ],
       "predicate": "on",
-      "object_label": "bed"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        247,
+        160,
+        377,
+        211
+      ],
       "predicate": "sitting on",
-      "object_label": "bed"
+      "predicate_id": 39,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        255,
+        166,
+        376,
+        210
+      ],
       "predicate": "laying on",
-      "object_label": "bed"
+      "predicate_id": 23,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        255,
+        166,
+        376,
+        210
+      ],
       "predicate": "on",
-      "object_label": "bed"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        323,
+        180,
+        370,
+        204
+      ],
       "predicate": "on",
-      "object_label": "bed"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        296,
+        163,
+        321,
+        178
+      ],
       "predicate": "on",
-      "object_label": "bed"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        337,
+        166,
+        377,
+        203
+      ],
       "predicate": "on",
-      "object_label": "bed"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        129,
+        112,
+        420,
+        308
+      ]
     }
   ]
 }

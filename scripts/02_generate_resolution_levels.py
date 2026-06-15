@@ -11,12 +11,23 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.config import load_config, resolve
 
+# Map config interpolation name -> PIL resample filter.
+_RESAMPLE_FILTERS = {
+    "nearest": Image.NEAREST,
+    "bilinear": Image.BILINEAR,
+    "bicubic": Image.BICUBIC,
+    "lanczos": Image.LANCZOS,
+}
+
 
 def main() -> None:
     cfg = load_config()
     vg_root = Path(cfg["paths"]["vg_root"])
     scales = cfg["resolution_levels"]["scales"]
     num_levels = cfg["resolution_levels"]["num_levels"]
+    interp_name = cfg["resolution_levels"].get("interpolation", "bilinear")
+    resample = _RESAMPLE_FILTERS[interp_name]
+    print(f"Interpolation: {interp_name}")
 
     # Load selected images
     selected_path = resolve(cfg["paths"]["selected_images"])
@@ -53,8 +64,8 @@ def main() -> None:
                 # Downscale then upscale back to original size
                 small_w = max(1, int(orig_w * scale))
                 small_h = max(1, int(orig_h * scale))
-                small = img.resize((small_w, small_h), Image.BILINEAR)
-                degraded = small.resize((orig_w, orig_h), Image.BILINEAR)
+                small = img.resize((small_w, small_h), resample)
+                degraded = small.resize((orig_w, orig_h), resample)
 
             degraded.save(out_path, quality=95)
 

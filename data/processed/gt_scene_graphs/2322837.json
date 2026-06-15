@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bag",
+      "class_id": 3,
       "bbox": [
         405,
         279,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         42,
         183,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "bottle",
+      "class_id": 16,
       "bbox": [
         190,
         280,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "box",
+      "class_id": 18,
       "bbox": [
         150,
         217,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         0,
         105,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         0,
         188,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         140,
         161,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "finger",
+      "class_id": 45,
       "bbox": [
         177,
         203,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "food",
+      "class_id": 48,
       "bbox": [
         232,
         289,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "glass",
+      "class_id": 53,
       "bbox": [
         224,
         72,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         47,
         99,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         218,
         200,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         122,
         101,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         178,
         22,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "mouth",
+      "class_id": 81,
       "bbox": [
         181,
         192,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         187,
         92,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "table",
+      "class_id": 125,
       "bbox": [
         58,
         204,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         24,
         94,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         190,
         42,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "glass",
+      "class_id": 53,
       "bbox": [
         235,
         74,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "cap",
+      "class_id": 24,
       "bbox": [
         331,
         286,
@@ -214,6 +235,7 @@
     {
       "object_id": 21,
       "label": "table",
+      "class_id": 125,
       "bbox": [
         328,
         207,
@@ -224,44 +246,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "bottle",
+      "subject_class_id": 16,
+      "subject_bbox": [
+        190,
+        280,
+        229,
+        372
+      ],
       "predicate": "in",
-      "object_label": "table"
+      "predicate_id": 21,
+      "object_id": 16,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        58,
+        204,
+        499,
+        374
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        140,
+        161,
+        162,
+        194
+      ],
       "predicate": "of",
-      "object_label": "woman"
+      "predicate_id": 29,
+      "object_id": 17,
+      "object_label": "woman",
+      "object_class_id": 148,
+      "object_bbox": [
+        24,
+        94,
+        252,
+        372
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "glass",
+      "subject_class_id": 53,
+      "subject_bbox": [
+        224,
+        72,
+        293,
+        107
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 13,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        178,
+        22,
+        332,
+        268
+      ]
     },
     {
+      "subject_id": 11,
       "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        218,
+        200,
+        271,
+        246
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 13,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        178,
+        22,
+        332,
+        268
+      ]
     },
     {
+      "subject_id": 13,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        178,
+        22,
+        332,
+        268
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 15,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        187,
+        92,
+        332,
+        264
+      ]
     },
     {
+      "subject_id": 17,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        24,
+        94,
+        252,
+        372
+      ],
       "predicate": "wears",
-      "object_label": "shirt"
+      "predicate_id": 48,
+      "object_id": 1,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        42,
+        183,
+        212,
+        373
+      ]
     },
     {
+      "subject_id": 18,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        190,
+        42,
+        293,
+        200
+      ],
       "predicate": "wears",
-      "object_label": "glass"
+      "predicate_id": 48,
+      "object_id": 19,
+      "object_label": "glass",
+      "object_class_id": 53,
+      "object_bbox": [
+        235,
+        74,
+        293,
+        122
+      ]
     },
     {
+      "subject_id": 20,
       "subject_label": "cap",
+      "subject_class_id": 24,
+      "subject_bbox": [
+        331,
+        286,
+        365,
+        312
+      ],
       "predicate": "on",
-      "object_label": "table"
+      "predicate_id": 30,
+      "object_id": 16,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        58,
+        204,
+        499,
+        374
+      ]
     }
   ]
 }

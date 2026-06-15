@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "beach",
+      "class_id": 6,
       "bbox": [
         283,
         117,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "boat",
+      "class_id": 13,
       "bbox": [
         0,
         117,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         84,
         85,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         88,
         137,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "track",
+      "class_id": 133,
       "bbox": [
         300,
         269,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         101,
         230,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         126,
         81,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "sneaker",
+      "class_id": 119,
       "bbox": [
         221,
         318,
@@ -84,19 +92,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        84,
+        85,
+        304,
+        374
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 3,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        88,
+        137,
+        185,
+        300
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        84,
+        85,
+        304,
+        374
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 5,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        101,
+        230,
+        242,
+        371
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        84,
+        85,
+        304,
+        374
+      ],
       "predicate": "has",
-      "object_label": "sneaker"
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "sneaker",
+      "object_class_id": 119,
+      "object_bbox": [
+        221,
+        318,
+        300,
+        359
+      ]
     }
   ]
 }

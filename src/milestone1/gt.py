@@ -15,6 +15,7 @@ def _load_coco_and_rels(
     # Suppress COCO stdout
     import io
     import sys
+
     old_stdout = sys.stdout
     sys.stdout = io.StringIO()
     try:
@@ -44,11 +45,13 @@ def count_gt_objects_and_relationships(
         num_objects = len(ann_ids)
         rel_list = rels_split.get(str(image_id), [])
         num_relationships = len(rel_list)
-        results.append({
-            "image_id": image_id,
-            "num_objects": num_objects,
-            "num_relationships": num_relationships,
-        })
+        results.append(
+            {
+                "image_id": image_id,
+                "num_objects": num_objects,
+                "num_relationships": num_relationships,
+            }
+        )
     return results
 
 
@@ -59,9 +62,15 @@ def load_gt_scene_graph(
 
     Returns {
         image_id: int,
-        objects: [{object_id, label, bbox: [x1,y1,x2,y2]}],
-        relationships: [{subject_label, predicate, object_label}]
+        objects: [{object_id, label, class_id, bbox: [x1,y1,x2,y2]}],
+        relationships: [{subject_id, subject_label, subject_class_id, subject_bbox,
+                         predicate, predicate_id,
+                         object_id, object_label, object_class_id, object_bbox}]
     }
+
+    object_id on relationships indexes into `objects`. class_id / predicate_id are
+    0-indexed integer labels; bbox is [x1,y1,x2,y2]. These fields make standard
+    SGDet R@K (IoU-based GT-vs-prediction triplet matching) computable post-hoc.
     """
     coco, rel_data, rels_split = _load_coco_and_rels(vg_root, split)
 
@@ -77,29 +86,40 @@ def load_gt_scene_graph(
 
     objects = []
     for i, ann in enumerate(anns):
-        cls_name = id2name[ann["category_id"] - 1]
+        cls_id = ann["category_id"] - 1
+        cls_name = id2name[cls_id]
         # Convert COCO bbox [x, y, w, h] to [x1, y1, x2, y2]
         x, y, w, h = ann["bbox"]
         bbox = [x, y, x + w, y + h]
-        objects.append({
-            "object_id": i,
-            "label": cls_name,
-            "bbox": bbox,
-        })
+        objects.append(
+            {
+                "object_id": i,
+                "label": cls_name,
+                "class_id": cls_id,
+                "bbox": bbox,
+            }
+        )
 
-    # Relationships
+    # Relationships. subject_id / object_id index into `objects`; bbox + class_id
+    # + predicate_id are carried so SGDet R@K can match GT triplets to predictions.
     rel_list = rels_split.get(str(image_id), [])
     relationships = []
     for subj_idx, obj_idx, pred_id_1indexed in rel_list:
         if subj_idx < len(anns) and obj_idx < len(anns):
-            subj_name = id2name[anns[subj_idx]["category_id"] - 1]
-            obj_name = id2name[anns[obj_idx]["category_id"] - 1]
-            pred_name = pred_names[pred_id_1indexed - 1]
-            relationships.append({
-                "subject_label": subj_name,
-                "predicate": pred_name,
-                "object_label": obj_name,
-            })
+            relationships.append(
+                {
+                    "subject_id": subj_idx,
+                    "subject_label": objects[subj_idx]["label"],
+                    "subject_class_id": objects[subj_idx]["class_id"],
+                    "subject_bbox": objects[subj_idx]["bbox"],
+                    "predicate": pred_names[pred_id_1indexed - 1],
+                    "predicate_id": pred_id_1indexed - 1,
+                    "object_id": obj_idx,
+                    "object_label": objects[obj_idx]["label"],
+                    "object_class_id": objects[obj_idx]["class_id"],
+                    "object_bbox": objects[obj_idx]["bbox"],
+                }
+            )
 
     return {
         "image_id": image_id,

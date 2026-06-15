@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         0,
         205,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "arm",
+      "class_id": 2,
       "bbox": [
         270,
         130,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         155,
         34,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         209,
         35,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "eye",
+      "class_id": 42,
       "bbox": [
         218,
         104,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         119,
         67,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         204,
         28,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "mouth",
+      "class_id": 81,
       "bbox": [
         229,
         121,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "neck",
+      "class_id": 82,
       "bbox": [
         269,
         82,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "nose",
+      "class_id": 83,
       "bbox": [
         221,
         127,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "racket",
+      "class_id": 101,
       "bbox": [
         110,
         55,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "seat",
+      "class_id": 107,
       "bbox": [
         125,
         0,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         238,
         106,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "racket",
+      "class_id": 101,
       "bbox": [
         86,
         17,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "player",
+      "class_id": 97,
       "bbox": [
         205,
         162,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         100,
         39,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         156,
         33,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         154,
         73,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         202,
         110,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         200,
         48,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "seat",
+      "class_id": 107,
       "bbox": [
         147,
         124,
@@ -214,89 +235,378 @@
   ],
   "relationships": [
     {
+      "subject_id": 1,
       "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        270,
+        130,
+        371,
+        331
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 16,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        156,
+        33,
+        416,
+        330
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        155,
+        34,
+        387,
+        329
+      ],
       "predicate": "has",
-      "object_label": "arm"
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "arm",
+      "object_class_id": 2,
+      "object_bbox": [
+        270,
+        130,
+        371,
+        331
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        155,
+        34,
+        387,
+        329
+      ],
       "predicate": "with",
-      "object_label": "hair"
+      "predicate_id": 49,
+      "object_id": 3,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        209,
+        35,
+        312,
+        104
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        155,
+        34,
+        387,
+        329
+      ],
       "predicate": "holding",
-      "object_label": "racket"
+      "predicate_id": 20,
+      "object_id": 10,
+      "object_label": "racket",
+      "object_class_id": 101,
+      "object_bbox": [
+        110,
+        55,
+        200,
+        239
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        155,
+        34,
+        387,
+        329
+      ],
       "predicate": "in",
-      "object_label": "shirt"
+      "predicate_id": 21,
+      "object_id": 12,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        238,
+        106,
+        389,
+        331
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "eye",
+      "subject_class_id": 42,
+      "subject_bbox": [
+        218,
+        104,
+        242,
+        122
+      ],
       "predicate": "of",
-      "object_label": "person"
+      "predicate_id": 29,
+      "object_id": 15,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        100,
+        39,
+        413,
+        332
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        119,
+        67,
+        278,
+        181
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        155,
+        34,
+        387,
+        329
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        119,
+        67,
+        278,
+        181
+      ],
       "predicate": "holding",
-      "object_label": "racket"
+      "predicate_id": 20,
+      "object_id": 10,
+      "object_label": "racket",
+      "object_class_id": 101,
+      "object_bbox": [
+        110,
+        55,
+        200,
+        239
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        204,
+        28,
+        323,
+        145
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        155,
+        34,
+        387,
+        329
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "mouth",
+      "subject_class_id": 81,
+      "subject_bbox": [
+        229,
+        121,
+        258,
+        173
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        155,
+        34,
+        387,
+        329
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "mouth",
+      "subject_class_id": 81,
+      "subject_bbox": [
+        229,
+        121,
+        258,
+        173
+      ],
       "predicate": "of",
-      "object_label": "person"
+      "predicate_id": 29,
+      "object_id": 15,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        100,
+        39,
+        413,
+        332
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "nose",
+      "subject_class_id": 83,
+      "subject_bbox": [
+        221,
+        127,
+        258,
+        145
+      ],
       "predicate": "of",
-      "object_label": "person"
+      "predicate_id": 29,
+      "object_id": 15,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        100,
+        39,
+        413,
+        332
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "racket",
+      "subject_class_id": 101,
+      "subject_bbox": [
+        110,
+        55,
+        200,
+        239
+      ],
       "predicate": "in",
-      "object_label": "hand"
+      "predicate_id": 21,
+      "object_id": 5,
+      "object_label": "hand",
+      "object_class_id": 57,
+      "object_bbox": [
+        119,
+        67,
+        278,
+        181
+      ]
     },
     {
+      "subject_id": 15,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        100,
+        39,
+        413,
+        332
+      ],
       "predicate": "has",
-      "object_label": "neck"
+      "predicate_id": 19,
+      "object_id": 8,
+      "object_label": "neck",
+      "object_class_id": 82,
+      "object_bbox": [
+        269,
+        82,
+        315,
+        145
+      ]
     },
     {
+      "subject_id": 16,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        156,
+        33,
+        416,
+        330
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 12,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        238,
+        106,
+        389,
+        331
+      ]
     },
     {
+      "subject_id": 17,
       "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        154,
+        73,
+        226,
+        138
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 18,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        202,
+        110,
+        394,
+        332
+      ]
     },
     {
+      "subject_id": 19,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        200,
+        48,
+        321,
+        185
+      ],
       "predicate": "has",
-      "object_label": "hair"
+      "predicate_id": 19,
+      "object_id": 3,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        209,
+        35,
+        312,
+        104
+      ]
     }
   ]
 }

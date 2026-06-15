@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "basket",
+      "class_id": 5,
       "bbox": [
         79,
         222,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "cap",
+      "class_id": 24,
       "bbox": [
         156,
         28,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         93,
         2,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "hat",
+      "class_id": 59,
       "bbox": [
         267,
         202,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "lamp",
+      "class_id": 70,
       "bbox": [
         442,
         30,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         110,
         19,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         265,
         28,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         276,
         212,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         277,
         68,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "tile",
+      "class_id": 128,
       "bbox": [
         219,
         332,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         246,
         19,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "jean",
+      "class_id": 66,
       "bbox": [
         143,
         189,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         104,
         31,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "hat",
+      "class_id": 59,
       "bbox": [
         155,
         28,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "paper",
+      "class_id": 87,
       "bbox": [
         84,
         246,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "lamp",
+      "class_id": 70,
       "bbox": [
         446,
         21,
@@ -164,34 +180,136 @@
   ],
   "relationships": [
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        110,
+        19,
+        251,
+        368
+      ],
       "predicate": "wearing",
-      "object_label": "cap"
+      "predicate_id": 47,
+      "object_id": 1,
+      "object_label": "cap",
+      "object_class_id": 24,
+      "object_bbox": [
+        156,
+        28,
+        217,
+        71
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        110,
+        19,
+        251,
+        368
+      ],
       "predicate": "wearing",
-      "object_label": "jean"
+      "predicate_id": 47,
+      "object_id": 11,
+      "object_label": "jean",
+      "object_class_id": 66,
+      "object_bbox": [
+        143,
+        189,
+        236,
+        360
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        110,
+        19,
+        251,
+        368
+      ],
       "predicate": "wearing",
-      "object_label": "hat"
+      "predicate_id": 47,
+      "object_id": 13,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        155,
+        28,
+        219,
+        76
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        265,
+        28,
+        408,
+        372
+      ],
       "predicate": "wearing",
-      "object_label": "pant"
+      "predicate_id": 47,
+      "object_id": 7,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        276,
+        212,
+        401,
+        373
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        265,
+        28,
+        408,
+        372
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 8,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        277,
+        68,
+        408,
+        278
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "paper",
+      "subject_class_id": 87,
+      "subject_bbox": [
+        84,
+        246,
+        143,
+        270
+      ],
       "predicate": "on",
-      "object_label": "basket"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "basket",
+      "object_class_id": 5,
+      "object_bbox": [
+        79,
+        222,
+        145,
+        295
+      ]
     }
   ]
 }

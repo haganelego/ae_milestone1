@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "board",
+      "class_id": 12,
       "bbox": [
         126,
         42,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "board",
+      "class_id": 12,
       "bbox": [
         146,
         138,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "board",
+      "class_id": 12,
       "bbox": [
         84,
         325,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "box",
+      "class_id": 18,
       "bbox": [
         14,
         5,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         286,
         0,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "toilet",
+      "class_id": 130,
       "bbox": [
         164,
         269,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "toilet",
+      "class_id": 130,
       "bbox": [
         71,
         95,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "toilet",
+      "class_id": 130,
       "bbox": [
         77,
         142,
@@ -84,34 +92,136 @@
   ],
   "relationships": [
     {
+      "subject_id": 1,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        146,
+        138,
+        320,
+        285
+      ],
       "predicate": "behind",
-      "object_label": "toilet"
+      "predicate_id": 7,
+      "object_id": 5,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        164,
+        269,
+        246,
+        325
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        146,
+        138,
+        320,
+        285
+      ],
       "predicate": "for",
-      "object_label": "toilet"
+      "predicate_id": 15,
+      "object_id": 5,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        164,
+        269,
+        246,
+        325
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        146,
+        138,
+        320,
+        285
+      ],
       "predicate": "on",
-      "object_label": "toilet"
+      "predicate_id": 30,
+      "object_id": 6,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        71,
+        95,
+        298,
+        474
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        146,
+        138,
+        320,
+        285
+      ],
       "predicate": "on",
-      "object_label": "toilet"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        77,
+        142,
+        313,
+        473
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        84,
+        325,
+        118,
+        415
+      ],
       "predicate": "on",
-      "object_label": "toilet"
+      "predicate_id": 30,
+      "object_id": 6,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        71,
+        95,
+        298,
+        474
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "board",
+      "subject_class_id": 12,
+      "subject_bbox": [
+        84,
+        325,
+        118,
+        415
+      ],
       "predicate": "on",
-      "object_label": "toilet"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        77,
+        142,
+        313,
+        473
+      ]
     }
   ]
 }

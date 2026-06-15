@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bike",
+      "class_id": 10,
       "bbox": [
         101,
         417,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "face",
+      "class_id": 43,
       "bbox": [
         88,
         125,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "fence",
+      "class_id": 44,
       "bbox": [
         0,
         0,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         68,
         94,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         75,
         125,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "racket",
+      "class_id": 101,
       "bbox": [
         190,
         4,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         94,
         178,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         80,
         414,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         92,
         418,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         99,
         282,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "sneaker",
+      "class_id": 119,
       "bbox": [
         124,
         445,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "sneaker",
+      "class_id": 119,
       "bbox": [
         89,
         417,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         24,
         105,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "sock",
+      "class_id": 121,
       "bbox": [
         84,
         406,
@@ -144,39 +158,158 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        0,
+        334,
+        415
+      ],
       "predicate": "behind",
-      "object_label": "woman"
+      "predicate_id": 7,
+      "object_id": 3,
+      "object_label": "woman",
+      "object_class_id": 148,
+      "object_bbox": [
+        68,
+        94,
+        238,
+        485
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        68,
+        94,
+        238,
+        485
+      ],
       "predicate": "wearing",
-      "object_label": "shoe"
+      "predicate_id": 47,
+      "object_id": 7,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        80,
+        414,
+        179,
+        489
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        68,
+        94,
+        238,
+        485
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 9,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        99,
+        282,
+        197,
+        349
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        68,
+        94,
+        238,
+        485
+      ],
       "predicate": "wearing",
-      "object_label": "sock"
+      "predicate_id": 47,
+      "object_id": 13,
+      "object_label": "sock",
+      "object_class_id": 121,
+      "object_bbox": [
+        84,
+        406,
+        171,
+        457
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        94,
+        178,
+        178,
+        291
+      ],
       "predicate": "on",
-      "object_label": "woman"
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "woman",
+      "object_class_id": 148,
+      "object_bbox": [
+        68,
+        94,
+        238,
+        485
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "short",
+      "subject_class_id": 112,
+      "subject_bbox": [
+        99,
+        282,
+        197,
+        349
+      ],
       "predicate": "on",
-      "object_label": "woman"
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "woman",
+      "object_class_id": 148,
+      "object_bbox": [
+        68,
+        94,
+        238,
+        485
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        24,
+        105,
+        250,
+        452
+      ],
       "predicate": "wearing",
-      "object_label": "sock"
+      "predicate_id": 47,
+      "object_id": 13,
+      "object_label": "sock",
+      "object_class_id": 121,
+      "object_bbox": [
+        84,
+        406,
+        171,
+        457
+      ]
     }
   ]
 }

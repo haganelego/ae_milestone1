@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bench",
+      "class_id": 9,
       "bbox": [
         0,
         151,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         226,
         71,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         207,
         232,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         366,
         227,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         169,
         71,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         306,
         65,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         308,
         239,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         372,
         130,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         121,
         0,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "people",
+      "class_id": 89,
       "bbox": [
         172,
         70,
@@ -104,29 +114,114 @@
   ],
   "relationships": [
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        306,
+        65,
+        496,
+        330
+      ],
       "predicate": "with",
-      "object_label": "hair"
+      "predicate_id": 49,
+      "object_id": 1,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        226,
+        71,
+        298,
+        147
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        306,
+        65,
+        496,
+        330
+      ],
       "predicate": "has",
-      "object_label": "hand"
+      "predicate_id": 19,
+      "object_id": 3,
+      "object_label": "hand",
+      "object_class_id": 57,
+      "object_bbox": [
+        366,
+        227,
+        403,
+        257
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        306,
+        65,
+        496,
+        330
+      ],
       "predicate": "wearing",
-      "object_label": "pant"
+      "predicate_id": 47,
+      "object_id": 6,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        308,
+        239,
+        497,
+        332
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        121,
+        0,
+        213,
+        159
+      ],
       "predicate": "behind",
-      "object_label": "bench"
+      "predicate_id": 7,
+      "object_id": 0,
+      "object_label": "bench",
+      "object_class_id": 9,
+      "object_bbox": [
+        0,
+        151,
+        494,
+        315
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        172,
+        70,
+        498,
+        306
+      ],
       "predicate": "on",
-      "object_label": "bench"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bench",
+      "object_class_id": 9,
+      "object_bbox": [
+        0,
+        151,
+        494,
+        315
+      ]
     }
   ]
 }

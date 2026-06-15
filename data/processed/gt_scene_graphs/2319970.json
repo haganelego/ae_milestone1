@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bird",
+      "class_id": 11,
       "bbox": [
         207,
         158,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "vase",
+      "class_id": 139,
       "bbox": [
         148,
         2,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         184,
         212,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         184,
         154,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "neck",
+      "class_id": 82,
       "bbox": [
         192,
         81,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "vase",
+      "class_id": 139,
       "bbox": [
         139,
         0,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "tail",
+      "class_id": 126,
       "bbox": [
         210,
         178,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         194,
         187,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "wing",
+      "class_id": 146,
       "bbox": [
         240,
         167,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "vase",
+      "class_id": 139,
       "bbox": [
         194,
         35,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "bird",
+      "class_id": 11,
       "bbox": [
         193,
         149,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "vase",
+      "class_id": 139,
       "bbox": [
         189,
         68,
@@ -124,64 +136,268 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "bird",
+      "subject_class_id": 11,
+      "subject_bbox": [
+        207,
+        158,
+        314,
+        227
+      ],
       "predicate": "on",
-      "object_label": "vase"
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        139,
+        0,
+        354,
+        371
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        184,
+        212,
+        230,
+        254
+      ],
       "predicate": "on",
-      "object_label": "vase"
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        139,
+        0,
+        354,
+        371
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        184,
+        154,
+        221,
+        189
+      ],
       "predicate": "on",
-      "object_label": "vase"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        148,
+        2,
+        333,
+        367
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "neck",
+      "subject_class_id": 82,
+      "subject_bbox": [
+        192,
+        81,
+        303,
+        114
+      ],
       "predicate": "of",
-      "object_label": "vase"
+      "predicate_id": 29,
+      "object_id": 9,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        194,
+        35,
+        311,
+        253
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        139,
+        0,
+        354,
+        371
+      ],
       "predicate": "has",
-      "object_label": "bird"
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "bird",
+      "object_class_id": 11,
+      "object_bbox": [
+        207,
+        158,
+        314,
+        227
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        139,
+        0,
+        354,
+        371
+      ],
       "predicate": "has",
-      "object_label": "vase"
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        148,
+        2,
+        333,
+        367
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        139,
+        0,
+        354,
+        371
+      ],
       "predicate": "has",
-      "object_label": "neck"
+      "predicate_id": 19,
+      "object_id": 4,
+      "object_label": "neck",
+      "object_class_id": 82,
+      "object_bbox": [
+        192,
+        81,
+        303,
+        114
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        139,
+        0,
+        354,
+        371
+      ],
       "predicate": "has",
-      "object_label": "tree"
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "tree",
+      "object_class_id": 135,
+      "object_bbox": [
+        194,
+        187,
+        293,
+        324
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "tail",
+      "subject_class_id": 126,
+      "subject_bbox": [
+        210,
+        178,
+        248,
+        202
+      ],
       "predicate": "of",
-      "object_label": "bird"
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "bird",
+      "object_class_id": 11,
+      "object_bbox": [
+        207,
+        158,
+        314,
+        227
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        194,
+        187,
+        293,
+        324
+      ],
       "predicate": "on",
-      "object_label": "vase"
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        139,
+        0,
+        354,
+        371
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "wing",
+      "subject_class_id": 146,
+      "subject_bbox": [
+        240,
+        167,
+        295,
+        200
+      ],
       "predicate": "of",
-      "object_label": "bird"
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "bird",
+      "object_class_id": 11,
+      "object_bbox": [
+        207,
+        158,
+        314,
+        227
+      ]
     },
     {
+      "subject_id": 11,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        189,
+        68,
+        334,
+        336
+      ],
       "predicate": "has",
-      "object_label": "bird"
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "bird",
+      "object_class_id": 11,
+      "object_bbox": [
+        207,
+        158,
+        314,
+        227
+      ]
     }
   ]
 }

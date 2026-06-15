@@ -1,9 +1,9 @@
 image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extra_node_count,missing_nodes,extra_nodes,gt_triplet_count,pred_triplet_count,missing_triplet_count,extra_triplet_count,missing_triplets,extra_triplets
 2316000,oracle,20,11,11,5,5,bag;bench;leaf;person;shirt,building;roof;sidewalk;street;window,3,7,2,6,door-of-bus;leaf-on-tree,bus-has-window;door-on-bus;man-carrying-bag;tire-on-car;wheel-on-bus;window-on-bus
-2316325,oracle,14,11,9,5,3,bike;face;sneaker;sock;woman,arm;hand;leg,6,9,3,6,fence-behind-woman;shirt-on-woman;woman-wearing-sock,racket-in-hand;woman-has-arm;woman-has-hair;woman-has-hand;woman-holding-racket;woman-wearing-shirt
-2316365,oracle,14,7,8,2,3,eye;nose,bear;face;tail,6,7,4,5,leg-of-sheep;mouth-of-sheep;nose-of-sheep;sheep-with-eye,bear-has-head;bear-has-leg;sheep-has-ear;sheep-has-face;sheep-has-head
+2316325,oracle,18,11,12,3,4,bike;face;sneaker,arm;hand;leg;neck,6,7,4,5,fence-behind-woman;shirt-on-woman;short-on-woman;woman-wearing-sock,woman-has-arm;woman-has-hair;woman-has-hand;woman-holding-racket;woman-wearing-shirt
+2316365,oracle,20,7,8,1,2,eye,face;flower,6,7,4,5,leg-of-sheep;mouth-of-sheep;nose-of-sheep;sheep-with-eye,face-of-sheep;sheep-has-ear;sheep-has-face;sheep-has-head;sheep-has-leg
 2316707,oracle,20,9,8,5,4,board;child;hand;person;stand,leg;pant;plate;shoe,4,6,2,4,board-behind-fence;child-on-stand,helmet-on-man;man-wearing-helmet;man-wearing-pant;man-wearing-shirt
-2316770,oracle,10,8,4,4,0,hair;neck;nose;zebra,,5,6,2,3,nose-of-zebra;zebra-has-eye,leg-of-zebra;zebra-has-head;zebra-has-leg
+2316770,oracle,19,8,9,1,2,hair,face;leaf,5,10,1,6,zebra-has-eye,leg-of-zebra;neck-of-zebra;zebra-has-head;zebra-has-leg;zebra-has-neck;zebra-has-nose
 2316802,oracle,20,11,9,5,3,cabinet;cup;door;girl;screen,hair;pillow;shirt,6,5,5,4,curtain-on-table;door-on-cabinet;girl-wearing-sock;table-in front of-window;window-in-room,chair-near-table;woman-has-hair;woman-has-leg;woman-wearing-shirt
 2316954,oracle,20,6,7,2,3,boot;person,arm;beach;hair,6,5,4,3,man-in-boot;man-with-surfboard;person-carrying-surfboard;person-holding-surfboard,man-has-arm;man-has-hair;man-on-surfboard
 2317010,oracle,20,10,5,6,1,animal;cat;curtain;lady;man;tree,leaf,4,0,4,0,curtain-near-window;flower-in-vase;flower-on-table;tree-in-window,
@@ -14,35 +14,35 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2317864,oracle,20,7,4,4,1,boat;building;roof;table,trunk,4,1,3,0,bird-in-boat;bird-standing on-boat;roof-on-building,
 2318121,oracle,20,8,5,3,0,room;shelf;table,,9,4,7,2,bed-in-room;book-on-shelf;book-with-shelf;lamp-sitting on-table;shelf-behind-bed;shelf-holding-book;table-with-leg,lamp-near-bed;table-near-bed
 2318331,oracle,20,13,10,7,4,chair;jacket;letter;logo;person;player;sneaker,hair;racket;shoe;sock,3,4,3,4,jacket-on-chair;person-with-hand;shirt-on-player,man-holding-racket;man-wearing-shirt;man-wearing-shoe;man-wearing-short
-2318597,oracle,10,4,5,1,2,light,eye;head,4,7,2,5,elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-eye;elephant-has-head;eye-of-elephant;trunk-of-elephant
+2318597,oracle,16,4,3,2,1,ear;light,eye,4,4,2,2,elephant-near-elephant;trunk-on-elephant,elephant-has-head;trunk-of-elephant
 2319448,oracle,20,6,2,4,0,banana;chair;room;umbrella,,3,2,2,1,banana-in-chair;chair-under-banana,banana-on-table
 2319832,oracle,20,4,4,1,1,airplane,engine,4,2,4,2,tail-on-plane;wing-of-airplane;wing-of-plane;wing-on-plane,plane-has-tail;tail-of-plane
 2319970,oracle,20,8,8,6,6,bird;flower;neck;tail;tree;wing,head;leg;man;person;plant;table,11,4,10,3,bird-on-vase;leaf-on-vase;neck-of-vase;tail-of-bird;tree-on-vase;vase-has-bird;vase-has-neck;vase-has-tree;vase-has-vase;wing-of-bird,man-on-vase;plant-in-vase;vase-on-table
 2320051,oracle,20,12,8,7,3,building;cap;helmet;man;player;tree;wheel,fence;leg;racket,5,8,3,6,man-wearing-cap;man-with-helmet;man-with-shoe,fence-behind-man;helmet-on-head;man-has-head;man-wearing-helmet;man-wearing-shirt;man-wearing-shoe
 2320090,oracle,20,15,11,5,1,cap;guy;letter;railing;tree,pole,8,6,5,3,fence-near-man;guy-has-shoe;man-riding-skateboard;man-wearing-cap;man-wearing-shoe,hat-on-head;hat-on-man;man-on-skateboard
-2320110,oracle,16,8,7,3,2,airplane;flower;logo,door;nose,6,8,2,4,flower-on-plane;wing-of-plane,plane-has-tail;plane-has-wing;window-on-plane;wing-on-plane
+2320110,oracle,18,8,7,3,2,airplane;flower;logo,door;window,6,8,3,5,flower-on-plane;flower-on-tail;wing-of-plane,door-on-plane;logo-on-plane;plane-has-tail;window-on-plane;wing-on-plane
 2320621,oracle,20,11,7,4,0,board;jean;logo;person,,10,7,9,6,jean-on-leg;person-laying on-beach;person-wearing-jean;person-with-board;shirt-on-woman;surfboard-behind-board;woman-near-surfboard;woman-wearing-jean;woman-wearing-short,boy-has-hair;boy-on-beach;boy-wearing-pant;logo-on-surfboard;surfboard-on-beach;woman-on-beach
-2321244,oracle,13,8,7,3,2,mouth;shoe;tail,head;neck,8,9,5,6,cat-has-eye;cat-with-eye;eye-of-cat;mouth-of-cat;paw-of-cat,cat-has-ear;cat-has-head;cat-has-leg;cat-has-paw;cat-has-tail;head-of-cat
-2321559,oracle,9,8,5,3,0,beach;eye;mouth,,5,7,3,5,ear-of-elephant;eye-of-elephant;mouth-of-elephant,elephant-has-head;elephant-has-leg;elephant-has-trunk;head-of-elephant;tree-behind-elephant
-2321594,oracle,16,6,8,3,5,bed;flower;pillow,arm;eye;nose;paw;tie,4,4,2,2,flower-on-pillow;leg-of-bear,bear-has-ear;eye-on-bear
+2321244,oracle,18,8,9,2,3,leg;shoe,face;head;neck,8,13,3,8,cat-with-eye;leg-of-cat;mouth-of-cat,cat-has-ear;cat-has-face;cat-has-head;cat-has-leg;cat-has-paw;cat-has-tail;cat-on-bed;head-of-cat
+2321559,oracle,14,8,6,2,0,beach;tree,,5,9,2,6,eye-of-elephant;mouth-of-elephant,elephant-has-ear;elephant-has-head;elephant-has-leg;elephant-has-mouth;elephant-has-trunk;head-of-elephant
+2321594,oracle,17,6,9,3,6,bed;flower;pillow,arm;eye;face;neck;paw;tie,4,5,2,3,flower-on-pillow;leg-of-bear,bear-has-ear;bear-has-eye;eye-on-bear
 2322452,oracle,20,6,6,3,3,bottle;desk;pot,plant;screen;vase,6,8,5,7,bottle-on-desk;drawer-on-desk;flower-on-desk;pot-above-desk;pot-on-desk,book-on-shelf;flower-in-vase;flower-on-table;plant-in-pot;plant-on-shelf;plant-on-table;pot-on-table
 2322708,oracle,20,8,5,4,1,hair;pant;person;street,bag,6,2,5,1,man-in-shirt;man-in-street;man-standing on-street;person-standing on-street;shirt-of-person,man-wearing-jacket
 2322837,oracle,20,17,12,6,1,bag;box;cap;finger;food;mouth,face,8,11,6,9,bottle-in-table;cap-on-table;ear-of-woman;hand-on-man;man-wears-glass;woman-wears-shirt,bottle-on-table;glass-on-face;man-has-hair;man-wearing-glass;paper-on-table;woman-at-table;woman-has-hair;woman-has-hand;woman-wearing-shirt
 2323166,oracle,20,9,6,4,1,arm;board;leg;person,tree,6,5,4,3,arm-of-person;head-belonging to-man;leg-belonging to-man;man-riding-skateboard,man-on-skateboard;man-wearing-pant;sign-on-building
 2323243,oracle,20,5,7,2,4,fence;light,building;leg;rock;tail,4,6,3,5,ear-belonging to-elephant;trunk-belonging to-elephant;trunk-on-elephant,elephant-has-ear;elephant-has-leg;elephant-has-tail;elephant-has-trunk;tail-of-elephant
-2323263,oracle,7,2,3,0,1,,table,1,0,1,0,plant-with-leaf,
+2323263,oracle,20,2,2,2,2,leaf;plant,fruit;orange,1,2,1,2,plant-with-leaf,orange-near-banana;orange-on-table
 2324445,oracle,20,14,8,7,1,boy;hill;man;people;person;pole;post,rock,10,6,8,4,fence-between-mountain;fence-between-train;fence-near-track;fence-near-train;people-walking on-sidewalk;pole-on-fence;post-on-fence;sidewalk-near-track,door-on-train;man-on-sidewalk;train-has-door;train-has-window
 2324457,oracle,20,13,5,9,1,coat;door;flag;girl;jacket;jean;person;wheel;woman,tire,8,8,7,7,bus-has-window;flag-hanging from-building;girl-wearing-jacket;person-holding-bag;person-wearing-jean;window-on-building;woman-holding-bag,bus-has-tire;person-wearing-jacket;tire-on-bus;woman-carrying-bag;woman-near-bus;woman-wearing-jacket;woman-wearing-jean
-2324488,oracle,6,7,5,4,2,boat;short;sneaker;track,arm;head,3,8,1,6,man-has-sneaker,hat-on-head;hat-on-man;man-has-head;man-has-shoe;man-on-beach;man-wearing-hat
+2324488,oracle,16,7,7,4,4,boat;short;sneaker;track,arm;head;leg;neck,3,5,1,3,man-has-sneaker,man-has-head;man-on-beach;man-wearing-shoe
 2324510,oracle,20,4,2,3,1,board;box;toilet,tile,3,1,3,1,board-behind-toilet;board-for-toilet;board-on-toilet,bowl-of-toilet
 2325000,oracle,20,5,8,2,5,airplane;shirt,door;engine;plane;wheel;wing,3,12,2,11,airplane-has-tail;window-on-airplane,door-on-plane;engine-on-plane;engine-under-wing;logo-on-plane;man-wearing-pant;plane-has-engine;plane-has-tail;plane-has-wing;tail-of-plane;wheel-on-plane;wing-of-plane
-2325568,oracle,14,3,3,0,0,,,6,1,5,0,light-on-pole;pole-holding-light;pole-holding-sign;sign-above-light;sign-under-sign,
+2325568,oracle,17,3,8,0,5,,building;clock;roof;tower;window,6,0,6,0,light-on-pole;pole-holding-light;pole-holding-sign;sign-above-light;sign-on-pole;sign-under-sign,
 2325782,oracle,20,6,10,2,6,bike;tire,engine;motorcycle;screen;seat;wheel;window,3,2,3,2,bike-has-tire;bike-near-bike;helmet-on-bike,motorcycle-has-wheel;wheel-on-motorcycle
-2325803,oracle,10,4,5,1,2,windshield,building;sidewalk,2,4,1,3,windshield-on-bus,bus-has-window;bus-on-street;window-on-building
-2325932,oracle,20,8,7,4,3,bottle;face;jacket;pole,hand;head;tree,4,9,2,7,woman-wearing-jacket;woman-with-bottle,fence-behind-woman;hair-of-woman;jean-on-woman;woman-has-hair;woman-has-hand;woman-holding-plate;woman-wearing-shirt
-2326286,oracle,7,4,3,1,0,light,,4,1,3,0,leaf-in-vase;leaf-of-flower;vase-with-flower,
+2325803,oracle,15,4,5,1,2,windshield,building;sidewalk,2,3,1,2,window-on-bus,bus-on-street;window-on-building
+2325932,oracle,19,8,8,4,4,face;jacket;jean;pole,hand;head;shirt;tree,4,8,2,6,woman-wearing-jean;woman-with-bottle,fence-behind-woman;pant-on-woman;woman-has-hair;woman-has-hand;woman-holding-plate;woman-wearing-pant
+2326286,oracle,16,4,3,1,0,light,,4,1,3,0,leaf-in-vase;leaf-of-flower;vase-with-flower,
 2326383,oracle,20,10,7,5,2,door;people;person;sign;woman,sidewalk;wire,3,5,3,5,building-has-window;bus-with-sign;door-with-building,bus-on-street;man-on-sidewalk;sign-on-building;window-on-building;woman-wearing-jacket
-2326426,oracle,12,13,12,6,5,basket;cap;hat;paper;person;window,chair;hand;leg;room;table,6,5,3,2,man-wearing-cap;man-wearing-hat;paper-on-basket,box-on-table;man-has-hair
+2326426,oracle,18,13,13,4,4,cap;hat;paper;person,chair;hand;leg;table,6,8,3,5,man-wearing-cap;man-wearing-hat;paper-on-basket,lamp-on-table;man-has-hair;man-in-room;man-wearing-shoe;vase-on-table
 2326651,oracle,20,9,9,6,6,building;leaf;pant;person;sign;trunk,eye;hat;leg;roof;shirt;tree,2,10,2,10,person-wearing-pant;sign-near-building,elephant-has-head;elephant-has-leg;elephant-has-trunk;hat-on-head;hat-on-man;leg-of-elephant;man-riding-elephant;man-wearing-hat;man-wearing-shirt;sign-on-building
 2327119,oracle,20,7,5,5,3,flag;letter;pole;rock;sign,hand;post;tower,5,3,5,3,flag-on-pole;letter-on-sign;sign-says-letter;sign-under-clock;sign-with-letter,clock-has-hand;clock-on-tower;hand-on-clock
 2327453,oracle,20,11,8,5,2,car;dog;food;house;person,bottle;tie,4,6,4,6,car-near-house;person-with-glass;woman-in-hat;woman-with-hat,man-holding-umbrella;man-wearing-hat;man-wearing-pant;man-wearing-shirt;man-wearing-tie;woman-holding-umbrella
@@ -50,155 +50,155 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2327947,oracle,20,5,3,2,0,sidewalk;window,,3,6,2,5,tree-behind-bus;window-of-bus,bus-has-wheel;bus-has-window;bus-on-street;logo-on-bus;wheel-on-bus
 2328338,oracle,20,9,6,5,2,hand;hill;people;track;wheel,man;tire,4,6,4,6,people-standing on-hill;track-from-bike;wheel-of-bike;wheel-on-bike,helmet-on-man;man-on-bike;man-wearing-boot;man-wearing-glove;man-wearing-helmet;tire-on-bike
 2328340,oracle,20,12,6,8,2,child;head;jacket;mountain;people;person;skier;woman,snow;track,11,5,7,1,head-of-child;head-of-person;jacket-of-child;pant-of-person;ski-of-person;woman-holding-pole;woman-in-pant,man-wearing-pant
-2329268,oracle,12,5,4,2,1,building;track,wheel,5,4,3,2,train-on-track;window-on-building;window-on-door,building-behind-train;train-has-door
+2329268,oracle,13,5,6,0,1,,wheel,5,0,5,0,door-on-train;train-on-track;window-on-building;window-on-door;window-on-train,
 2329331,oracle,20,9,7,4,2,curtain;phone;table;window,post;room,4,3,3,2,light-on-table;table-has-lamp;window-has-curtain,lamp-near-bed;lamp-on-desk
-2329547,oracle,9,6,3,4,1,hand;man;person;short,bottle,3,3,1,1,man-wearing-short,helmet-on-head
-2329909,oracle,17,7,7,3,3,ear;horse;nose,mouth;neck;wave,5,7,2,4,ear-of-horse;nose-of-horse,horse-has-head;horse-has-leg;horse-has-tail;horse-on-beach
-2330349,oracle,19,4,9,1,6,woman,glove;hand;jacket;pant;pole;ski,3,8,2,7,snow-in-snow;tree-covered in-snow,helmet-on-head;woman-holding-pole;woman-on-ski;woman-wearing-glass;woman-wearing-glove;woman-wearing-jacket;woman-wearing-pant
-2331313,oracle,19,6,10,4,8,coat;man;person;shoe,building;flag;hair;leg;pole;sidewalk;sign;tree,4,8,1,5,man-wearing-coat,bag-on-bench;bench-on-sidewalk;man-has-hair;man-wearing-jacket;man-wearing-shirt
+2329547,oracle,19,6,6,3,3,man;person;short,arm;pant;tree,3,6,1,4,man-wearing-short,helmet-on-man;logo-on-shirt;man-wearing-pant;man-wearing-shoe
+2329909,oracle,19,7,6,4,3,ear;hair;horse;nose,mouth;neck;wave,5,4,2,1,ear-of-horse;nose-of-horse,horse-on-beach
+2330349,oracle,19,4,9,1,6,woman,glove;hand;jacket;pant;pole;ski,3,6,2,5,snow-in-snow;tree-covered in-snow,helmet-on-head;woman-on-ski;woman-wearing-glove;woman-wearing-jacket;woman-wearing-pant
+2331313,oracle,19,6,10,3,7,coat;person;shoe,building;flag;hair;pole;sidewalk;sign;tree,4,7,1,4,man-wearing-coat,man-has-hair;man-wearing-hat;man-wearing-jean;man-wearing-shirt
 2332207,oracle,20,8,3,5,0,building;car;engine;roof;window,,5,3,4,2,building-near-track;car-behind-engine;track-near-light;window-on-train,logo-on-train;track-under-train
-2332990,oracle,10,6,7,1,2,kite,face;head,5,6,3,4,man-with-shirt;neck-between-hair;neck-between-shirt,head-of-man;man-has-hair;man-has-head;man-wearing-shirt
+2332990,oracle,16,6,8,1,3,neck,face;head;tail,5,6,3,4,man-with-shirt;neck-between-hair;neck-between-shirt,head-of-man;man-has-hair;man-has-head;man-wearing-shirt
 2333129,oracle,20,7,3,4,0,cap;head;letter;shirt,,5,4,4,3,cap-on-head;head-of-man;man-wearing-cap;man-wearing-shirt,man-wearing-short;person-on-skateboard;person-wearing-short
 2333137,oracle,20,10,7,6,3,building;dog;door;girl;railing;woman,fence;house;roof,4,4,3,3,building-has-window;door-of-building;window-on-building,woman-carrying-bag;woman-has-hair;woman-wearing-shirt
 2333237,oracle,20,10,9,5,4,pant;people;person;shoe;woman,building;pole;sidewalk;street,7,7,5,5,man-has-shirt;man-in-shirt;shirt-on-man;shoe-on-man;woman-wearing-pant,man-wearing-jacket;man-wearing-shoe;windshield-on-bus;woman-wearing-jean;woman-wearing-shirt
 2333505,oracle,20,8,10,4,6,man;pant;people;tree,ear;face;head;neck;tie;woman,5,3,5,3,man-has-hand;man-wearing-pant;man-with-hair;people-on-bench;tree-behind-bench,woman-has-hair;woman-wearing-jacket;woman-wearing-shirt
 2333913,oracle,20,6,5,3,2,cat;desk;drawer,door;room,3,2,2,1,bed-with-pillow;cat-laying on-bed,bag-on-table
-2334506,oracle,13,9,6,3,0,fence;lamp;tree,,6,2,4,0,bench-sitting on-snow;lamp-on-pole;snow-covering-snow;snow-on-snow,
+2334506,oracle,17,9,6,3,0,car;fence;lamp,,6,2,4,0,bench-sitting on-snow;lamp-on-pole;snow-covering-snow;snow-on-snow,
 2334997,oracle,20,15,8,8,1,box;cap;glass;hat;head;pizza;short;sign,tree,12,7,11,6,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-short;shirt-on-man;sign-in-window,bench-in front of-building;door-on-building;man-wearing-hat;man-wearing-pant;sign-on-building;window-on-building
-2335223,oracle,14,9,11,1,3,bus,arm;leg;shoe,6,8,3,5,hair-on-man;man-riding-bike;tire-on-bike,man-has-hair;man-on-bike;man-wearing-shirt;sign-on-bus;tire-on-truck
+2335223,oracle,20,9,11,2,4,bus;door,arm;leg;shoe;wheel,6,10,2,6,hair-on-man;tire-on-bike,man-has-hair;man-on-bike;man-wearing-shirt;man-wearing-shoe;wheel-on-bike;window-on-bus
 2335499,oracle,20,17,9,12,4,branch;building;cup;food;glass;leg;logo;person;plate;shoe;tree;truck,arm;head;light;pizza,9,6,8,5,food-on-plate;food-on-table;glass-on-person;leg-on-table;logo-on-shirt;person-has-hand;person-with-hair;tree-with-branch,boy-eating-pizza;boy-has-hair;boy-wearing-pant;boy-wearing-shirt;cup-on-table
 2335659,oracle,20,13,9,7,3,hat;pant;pole;post;shirt;street;window,bag;jean;tree,6,9,3,6,man-standing on-sidewalk;pant-on-man;pole-on-sidewalk,man-wearing-hat;man-wearing-pant;man-wearing-shirt;person-on-skateboard;woman-carrying-bag;woman-wearing-jean
 2335744,oracle,20,10,7,4,1,car;railing;sidewalk;windshield,truck,3,3,2,2,building-near-street;car-near-bus,bus-on-street;truck-on-street
 2335867,oracle,20,10,9,4,3,building;car;post;rock,leaf;tree;wire,2,5,2,5,building-with-roof;window-in-building,building-has-window;house-has-roof;roof-on-house;sign-on-pole;window-on-building
 2336163,oracle,20,8,7,4,3,airplane;tower;truck;zebra,door;nose;wheel,3,5,3,5,tail-on-plane;window-on-plane;windshield-on-plane,door-on-plane;nose-of-plane;plane-has-nose;plane-has-tail;tail-of-plane
-2336845,oracle,12,4,7,0,3,,hair;neck;tail,3,5,1,3,zebra-has-ear,leg-of-zebra;tail-of-zebra;zebra-has-tail
-2336925,oracle,18,3,7,0,4,,door;lamp;leg;room,3,0,3,0,pillow-laying on-bed;pillow-on-bed;pillow-sitting on-bed,
+2336845,oracle,18,4,7,0,3,,hair;neck;tail,3,5,1,3,zebra-has-ear,head-of-zebra;leg-of-zebra;zebra-has-neck
+2336925,oracle,20,3,6,1,4,bed,door;lamp;leg;room,3,1,2,0,pillow-laying on-bed;pillow-sitting on-bed,
 2337019,oracle,20,5,4,3,2,head;leaf;neck,branch;leg,2,1,2,1,ear-on-zebra;zebra-has-head,zebra-has-ear
 2337436,oracle,20,5,9,1,5,shirt,face;head;man;nose;roof,2,6,1,5,ear-of-cow,cow-has-nose;hat-on-head;man-holding-cow;man-wearing-hat;nose-of-cow
-2337684,oracle,19,5,7,1,3,logo,head;leg;tire,4,5,3,4,building-near-truck;logo-on-truck;truck-near-dog,dog-has-head;light-on-truck;tire-on-truck;truck-has-tire
-2338794,oracle,19,8,4,5,1,car;light;people;sidewalk;window,pole,3,4,1,2,window-on-car,bus-has-window;tire-on-bus
-2339565,oracle,20,6,8,0,2,,pant;pole,3,3,3,3,man-in-shirt;man-wears-shirt;sign-on-building,man-wearing-pant;man-wearing-shirt;sign-on-pole
+2337684,oracle,20,5,6,2,3,logo;truck,head;leg;tire,4,4,3,3,building-near-truck;logo-on-truck;truck-near-dog,light-on-truck;tire-on-truck;truck-has-tire
+2338794,oracle,19,8,4,5,1,car;light;people;sidewalk;window,pole,3,5,1,3,window-on-car,bus-has-door;bus-has-window;door-on-bus
+2339565,oracle,18,6,8,0,2,,pant;pole,3,4,3,4,man-in-shirt;man-wears-shirt;sign-on-building,clock-on-building;man-wearing-pant;man-wearing-shirt;sign-on-pole
 2339627,oracle,20,10,7,3,0,building;post;trunk,,5,2,4,1,door-of-house;pole-near-street;pole-on-sidewalk;sign-on-post,sign-on-pole
 2340550,oracle,20,7,8,2,3,boy;pole,girl;hand;short,9,6,8,5,bench-near-pole;boy-near-pole;clock-above-pole;pole-for-clock;pole-with-clock;sidewalk-near-pole;tree-growing on-tree;tree-near-pole,clock-has-face;girl-near-clock;girl-wearing-shirt;girl-wearing-short;hand-on-clock
 2341363,oracle,20,3,3,1,1,person,hand,3,3,3,3,finger-attached to-person;finger-on-person;person-has-finger,finger-on-hand;hand-has-finger;hand-on-table
 2341367,oracle,20,9,6,6,3,bag;building;hair;shoe;sign;tree,leg;short;sidewalk,8,5,6,3,sign-on-building;woman-carrying-bag;woman-carrying-umbrella;woman-has-hair;woman-has-umbrella;woman-wearing-shoe,person-holding-umbrella;woman-has-head;woman-wearing-short
 2341799,oracle,20,16,6,11,1,arm;bus;guy;hand;head;lady;letter;man;person;shoe;umbrella,glass,10,2,10,2,arm-of-person;hair-of-person;hand-of-person;head-of-person;man-wearing-hat;man-wearing-shirt;person-has-hair;person-wearing-short;shirt-with-letter;woman-in-hat,woman-wearing-hat;woman-wearing-shirt
-2341962,oracle,5,2,7,0,5,,bottle;counter;door;food;light,1,0,1,0,vegetable-sitting on-table,
+2341962,oracle,13,2,4,0,2,,food;plate,1,1,1,1,vegetable-sitting on-table,food-on-table
 2342137,oracle,20,6,7,3,4,pole;truck;trunk,building;handle;sidewalk;tree,3,6,1,4,truck-has-window,door-on-truck;tire-on-truck;tree-near-truck;window-on-truck
 2342548,oracle,20,10,13,4,7,arm;girl;lady;person,ear;face;finger;hair;mouth;nose;woman,11,16,11,16,arm-of-person;cup-in-hand;girl-holding-cup;glass-on-person;hand-of-person;lady-in-shirt;neck-of-person;person-holding-cup;person-near-person;person-wearing-glass;person-wearing-shirt,food-on-plate;glass-on-face;glass-on-woman;nose-of-woman;woman-eating-food;woman-has-ear;woman-has-face;woman-has-hand;woman-has-head;woman-has-mouth;woman-has-nose;woman-holding-cup;woman-holding-plate;woman-sitting on-bed;woman-wearing-glass;woman-wearing-shirt
-2343209,oracle,13,10,8,4,2,fence;flower;leaf;post,branch;eye,9,6,5,2,ear-on-giraffe;giraffe-eating-leaf;giraffe-near-giraffe;head-on-giraffe;nose-of-giraffe,giraffe-has-head;head-of-giraffe
-2343387,oracle,18,9,8,4,3,hill;mountain;people;short,ear;face;wave,7,6,3,2,head-has-hat;man-in-boat;man-sitting on-boat,hat-on-head;hat-on-man
-2343409,oracle,12,4,5,0,1,,engine,3,7,3,7,plane-has-nose;tail-part of-plane;wing-of-plane,engine-on-plane;logo-on-plane;logo-on-tail;plane-has-engine;plane-has-tail;tail-of-plane;wing-on-plane
+2343209,oracle,19,10,9,4,3,fence;flower;leaf;post,branch;eye;face,9,6,5,2,ear-on-giraffe;giraffe-eating-leaf;giraffe-near-giraffe;head-on-giraffe;nose-of-giraffe,giraffe-has-head;head-of-giraffe
+2343387,oracle,20,9,11,4,6,hill;mountain;people;short,branch;cap;ear;mouth;nose;wave,7,5,4,2,head-has-hat;man-in-boat;man-sitting on-boat;man-wearing-short,hat-on-head;hat-on-man
+2343409,oracle,18,4,7,0,3,,door;engine;window,3,1,3,1,plane-has-nose;tail-part of-plane;wing-of-plane,logo-on-tail
 2411572,oracle,20,6,4,4,2,head;horse;leaf;tail,leg;trunk,4,4,4,4,head-on-horse;leaf-on-tree;leaf-under-tree;tree-near-horse,dog-has-head;dog-has-leg;dog-has-tail;head-of-dog
 2412125,oracle,20,8,7,4,3,coat;head;pole;skier,jacket;pant;trunk,8,7,7,6,branch-in-snow;skier-has-head;skier-holding-pole;skier-in-snow;skier-wears-coat;skier-wears-ski;tree-has-branch,man-holding-pole;man-wearing-helmet;man-wearing-jacket;man-wearing-pant;person-wearing-helmet;person-wearing-jacket
 2414199,oracle,20,10,9,4,3,house;person;pole;street,arm;branch;sidewalk,11,7,8,4,house-across-street;house-behind-pole;man-has-skateboard;man-riding-skateboard;man-wears-shoe;person-near-street;pole-near-man;pole-near-street,boy-on-skateboard;man-has-hair;man-wearing-shoe;pant-on-man
 2414226,oracle,20,9,5,4,0,letter;light;post;sidewalk,,6,2,6,2,letter-on-sign;sign-holding-post;sign-on-post;sign-on-sidewalk;street-between-sidewalk;tree-covering-street,pole-holding-sign;sign-on-pole
 2414296,oracle,20,9,5,5,1,lamp;letter;sign;street;umbrella,pole,6,2,5,1,lamp-with-light;letter-on-building;light-on-building;light-on-street;umbrella-in front of-building,sign-on-building
-2415332,oracle,18,11,10,4,3,glove;hill;man;shoe,arm;mountain;track,5,8,3,6,head-of-man;man-wearing-glove;shoe-of-man,helmet-on-man;man-has-head;man-on-board;man-wearing-helmet;man-wearing-pant;pant-on-man
-2415349,oracle,15,5,5,2,2,sign;train,car;pole,3,3,1,1,door-near-train,door-on-train
+2415332,oracle,19,11,9,4,2,board;hill;man;shoe,arm;mountain,5,6,3,4,head-of-man;man-wearing-glove;shoe-of-man,man-wearing-helmet;man-wearing-pant;person-wearing-helmet;person-wearing-jacket
+2415349,oracle,19,5,5,1,1,sign,pole,3,3,1,1,door-near-train,door-on-train
 2417298,oracle,20,13,8,7,2,coat;hat;hill;pant;person;skier;tree,arm;head,12,9,12,9,glove-on-hand;person-has-glove;person-has-pant;person-holding-pole;person-in-jacket;person-wearing-coat;person-wearing-hat;person-wearing-jacket;pole-on-hand;skier-in-snow;skier-wearing-helmet;snow-on-hill,helmet-on-man;logo-on-jacket;logo-on-shirt;man-holding-pole;man-on-snow;man-wearing-glove;man-wearing-helmet;man-wearing-jacket;man-wearing-shirt
-2417333,oracle,12,6,4,2,0,bottle;vegetable,,6,5,4,3,bottle-behind-pizza;leaf-on-table;table-on-pizza;table-with-pizza,leaf-on-plate;pizza-on-table;plate-on-table
-2417743,oracle,20,8,7,3,2,hair;man;player,arm;leg,5,6,3,4,man-in-shirt;man-in-shoe;sock-on-player,man-holding-racket;man-wearing-shirt;man-wearing-shoe;man-wearing-sock
+2417333,oracle,16,6,5,1,0,bottle,,6,4,4,2,bottle-behind-pizza;leaf-on-table;table-on-pizza;table-with-pizza,pizza-on-table;plate-on-table
+2417743,oracle,18,8,10,1,3,player,hand;head;leg,5,4,4,3,man-has-hair;man-in-shirt;man-in-shoe;sock-on-player,man-holding-racket;man-wearing-shirt;man-wearing-sock
 2316000,baseline,20,11,11,5,5,bag;bench;leaf;person;shirt,building;roof;sidewalk;street;window,3,7,2,6,door-of-bus;leaf-on-tree,bus-has-window;door-on-bus;man-carrying-bag;tire-on-car;wheel-on-bus;window-on-bus
-2316325,baseline,11,11,8,6,3,bike;face;racket;sneaker;sock;woman,arm;hand;leg,6,5,4,3,fence-behind-woman;shirt-on-woman;short-on-woman;woman-wearing-sock,woman-has-hair;woman-holding-racket;woman-wearing-shirt
-2316365,baseline,10,7,4,3,0,eye;mouth;nose,,6,5,5,4,ear-of-sheep;leg-of-sheep;mouth-of-sheep;nose-of-sheep;sheep-with-eye,sheep-has-ear;sheep-has-head;sheep-has-tail;sheep-on-hill
-2316707,baseline,12,9,3,8,2,board;boy;child;fence;hand;helmet;person;stand,leg;pant,4,3,4,3,board-behind-fence;boy-wearing-helmet;boy-wearing-shirt;child-on-stand,man-wearing-pant;man-wearing-shirt;person-wearing-pant
-2316770,baseline,6,8,1,8,1,ear;eye;hair;head;leg;neck;nose;zebra,window,5,0,5,0,ear-of-zebra;head-of-zebra;nose-of-zebra;zebra-has-ear;zebra-has-eye,
+2316325,baseline,16,11,11,4,4,bike;face;sneaker;woman,arm;hand;head;leg,6,7,4,5,fence-behind-woman;shirt-on-woman;short-on-woman;woman-wearing-sock,woman-has-arm;woman-has-hair;woman-has-leg;woman-holding-racket;woman-wearing-shirt
+2316365,baseline,20,7,8,1,2,eye,face;flower,6,7,4,5,leg-of-sheep;mouth-of-sheep;nose-of-sheep;sheep-with-eye,face-of-sheep;sheep-has-ear;sheep-has-face;sheep-has-head;sheep-has-leg
+2316707,baseline,19,9,8,6,5,board;boy;child;hand;person;stand,leg;man;pant;plate;shoe,4,6,3,5,board-behind-fence;boy-wearing-shirt;child-on-stand,helmet-on-head;helmet-on-man;man-wearing-helmet;man-wearing-pant;man-wearing-shirt
+2316770,baseline,15,8,1,8,1,ear;eye;hair;head;leg;neck;nose;zebra,building,5,1,5,1,ear-of-zebra;head-of-zebra;nose-of-zebra;zebra-has-ear;zebra-has-eye,window-on-building
 2316802,baseline,20,11,9,5,3,cabinet;cup;door;girl;screen,hair;pillow;shirt,6,5,5,4,curtain-on-table;door-on-cabinet;girl-wearing-sock;table-in front of-window;window-in-room,chair-near-table;woman-has-hair;woman-has-leg;woman-wearing-shirt
-2316954,baseline,16,6,7,2,3,boot;person,arm;beach;hair,6,5,5,4,man-carrying-surfboard;man-in-boot;man-with-surfboard;person-carrying-surfboard;person-holding-surfboard,man-has-arm;man-has-hair;man-has-head;man-on-surfboard
+2316954,baseline,19,6,6,3,3,boot;person;surfboard,arm;beach;hair,6,6,5,5,man-carrying-surfboard;man-in-boot;man-with-surfboard;person-carrying-surfboard;person-holding-surfboard,man-has-arm;man-has-hair;man-has-head;man-on-surfboard;man-wearing-shoe
 2317010,baseline,20,10,5,6,1,animal;cat;curtain;lady;man;tree,leaf,4,0,4,0,curtain-near-window;flower-in-vase;flower-on-table;tree-in-window,
-2317015,baseline,6,15,2,13,0,arm;eye;hand;head;man;mouth;neck;nose;person;player;racket;seat;sign,,16,4,14,2,arm-of-man;eye-of-person;hand-holding-racket;hand-of-man;head-on-man;man-has-arm;man-holding-racket;man-in-shirt;man-with-hair;mouth-of-man;mouth-of-person;nose-of-person;person-has-neck;racket-in-hand,person-has-hair;person-wearing-shirt
-2317647,baseline,10,18,4,14,0,bench;book;face;girl;glass;hat;jacket;jean;pant;people;person;phone;window;woman,,18,6,15,3,girl-on-phone;glass-on-woman;glass-sitting on-face;man-holding-book;man-sitting on-bench;man-wearing-jacket;man-wearing-pant;people-has-bench;person-wearing-shirt;shirt-on-person;window-behind-man;window-behind-people;window-behind-person;woman-sitting on-bench;woman-wearing-glass,hat-on-man;man-has-hand;man-wearing-glass
-2317782,baseline,6,12,1,11,0,arm;desk;door;head;light;man;pant;shirt;sign;window;woman,,4,0,4,0,man-has-arm;man-has-head;man-wearing-pant;man-wearing-shirt,
-2317790,baseline,20,6,2,4,0,box;flag;shelf;towel,,5,0,5,0,box-in-shelf;pillow-behind-pillow;pillow-on-bed;pillow-under-pillow;shelf-behind-bed,
-2317864,baseline,19,7,4,3,0,boat;building;table,,4,1,3,0,bird-in-boat;bird-standing on-boat;roof-on-building,
-2318121,baseline,15,8,6,2,0,shelf;table,,9,1,8,0,bed-in-room;book-on-shelf;book-with-shelf;lamp-sitting on-table;pillow-on-bed;shelf-behind-bed;shelf-holding-book;table-with-leg,
-2318331,baseline,7,13,1,12,0,arm;chair;hand;jacket;leg;letter;logo;man;person;player;short;sneaker,,3,1,3,1,jacket-on-chair;person-with-hand;shirt-on-player,man-wearing-shirt
-2318597,baseline,8,4,2,3,1,ear;light;trunk,eye,4,7,2,5,elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-eye;eye-of-elephant;leg-of-elephant;trunk-of-elephant
+2317015,baseline,15,15,4,12,1,arm;eye;hand;head;man;mouth;nose;person;player;racket;seat;sign,building,16,2,16,2,arm-of-man;eye-of-person;hand-holding-racket;hand-of-man;head-on-man;man-has-arm;man-has-hair;man-holding-racket;man-in-shirt;man-wearing-shirt;man-with-hair;mouth-of-man;mouth-of-person;nose-of-person;person-has-neck;racket-in-hand,boy-has-hair;boy-wearing-shirt
+2317647,baseline,15,18,7,13,2,bench;book;face;girl;glass;jacket;pant;people;person;phone;shirt;window;woman,building;room,18,5,15,2,girl-on-phone;glass-on-woman;glass-sitting on-face;man-holding-book;man-sitting on-bench;man-wearing-pant;man-wearing-shirt;people-has-bench;person-wearing-shirt;shirt-on-person;window-behind-man;window-behind-people;window-behind-person;woman-sitting on-bench;woman-wearing-glass,hat-on-man;man-has-hand
+2317782,baseline,16,12,5,8,1,arm;desk;head;light;pant;shirt;sign;woman,sidewalk,4,3,4,3,man-has-arm;man-has-head;man-wearing-pant;man-wearing-shirt,man-wearing-hat;man-wearing-jacket;window-on-building
+2317790,baseline,16,6,2,5,1,bed;box;flag;shelf;towel,room,5,0,5,0,box-in-shelf;pillow-behind-pillow;pillow-on-bed;pillow-under-pillow;shelf-behind-bed,
+2317864,baseline,13,7,1,7,1,beach;bird;boat;building;roof;table;tree,room,4,0,4,0,bird-in-boat;bird-on-boat;bird-standing on-boat;roof-on-building,
+2318121,baseline,16,8,1,7,0,bed;book;leg;pillow;room;shelf;table,,9,2,8,1,bed-in-room;book-on-shelf;book-with-shelf;lamp-sitting on-table;pillow-on-bed;shelf-behind-bed;shelf-holding-book;table-with-leg,lamp-near-bed
+2318331,baseline,12,13,1,13,1,arm;chair;hand;jacket;leg;letter;logo;man;person;player;shirt;short;sneaker,building,3,0,3,0,jacket-on-chair;person-with-hand;shirt-on-player,
+2318597,baseline,18,4,4,1,1,light,eye,4,4,2,2,elephant-near-elephant;trunk-on-elephant,elephant-has-leg;trunk-of-elephant
 2319448,baseline,20,6,2,4,0,banana;chair;room;umbrella,,3,2,2,1,banana-in-chair;chair-under-banana,banana-on-table
-2319832,baseline,19,4,4,1,1,airplane,engine,4,2,4,2,tail-on-plane;wing-of-airplane;wing-of-plane;wing-on-plane,plane-has-tail;tail-of-plane
-2319970,baseline,13,8,1,7,0,bird;flower;leaf;neck;tail;tree;wing,,11,2,10,1,bird-on-vase;leaf-on-vase;neck-of-vase;tail-of-bird;tree-on-vase;vase-has-bird;vase-has-neck;vase-has-tree;vase-has-vase;wing-of-bird,flower-in-vase
-2320051,baseline,8,12,2,11,1,arm;building;cap;hand;helmet;man;player;shirt;shoe;tree;wheel,leg,5,0,5,0,helmet-on-man;man-wearing-cap;man-wearing-pant;man-with-helmet;man-with-shoe,
-2320090,baseline,11,15,5,12,2,arm;building;cap;fence;guy;hat;head;letter;railing;shoe;skateboard;tree,leg;pole,8,7,4,3,fence-near-man;guy-has-shoe;man-riding-skateboard;man-wearing-cap,man-on-skateboard;person-wearing-jean;person-wearing-shirt
-2320110,baseline,4,8,1,8,1,airplane;building;engine;flower;logo;plane;tail;wing,train,6,0,6,0,building-behind-plane;engine-on-plane;flower-on-plane;flower-on-tail;tail-of-plane;wing-of-plane,
-2320621,baseline,20,11,7,4,0,board;jean;logo;person,,10,7,9,6,jean-on-leg;person-laying on-beach;person-wearing-jean;person-with-board;shirt-on-woman;surfboard-behind-board;woman-near-surfboard;woman-wearing-jean;woman-wearing-short,boy-has-hair;boy-on-beach;boy-wearing-pant;logo-on-surfboard;surfboard-on-beach;woman-on-beach
-2321244,baseline,11,8,7,4,3,cat;eye;shoe;tail,dog;head;neck,8,8,8,8,cat-has-eye;cat-with-eye;ear-of-cat;eye-of-cat;leg-of-cat;mouth-of-cat;paw-of-cat;tail-of-cat,dog-has-ear;dog-has-head;dog-has-leg;dog-has-paw;ear-of-dog;head-of-dog;leg-of-dog;paw-of-dog
-2321559,baseline,7,8,2,6,0,beach;elephant;eye;leg;mouth;tree,,5,0,5,0,ear-of-elephant;eye-of-elephant;leg-of-elephant;mouth-of-elephant;trunk-of-elephant,
-2321594,baseline,7,6,2,5,1,bear;bed;flower;leg;pillow,eye,4,1,4,1,bear-on-bed;ear-of-bear;flower-on-pillow;leg-of-bear,logo-on-sign
-2322452,baseline,16,6,3,5,2,bottle;desk;flower;pot;shelf,plant;vase,6,5,6,5,bottle-on-desk;drawer-on-desk;flower-in-pot;flower-on-desk;pot-above-desk;pot-on-desk,bowl-on-table;flower-in-vase;plant-in-pot;plant-on-shelf;plant-on-table
-2322708,baseline,8,8,2,6,0,hair;man;pant;person;shirt;street,,6,2,5,1,man-in-shirt;man-in-street;man-standing on-street;person-standing on-street;shirt-of-person,man-wearing-hat
-2322837,baseline,8,17,5,13,1,bag;bottle;box;cap;chair;ear;finger;food;hair;hand;mouth;table;woman,face,8,5,6,3,bottle-in-table;cap-on-table;ear-of-woman;hand-on-man;man-wears-glass;woman-wears-shirt,glass-on-face;man-has-hand;man-wearing-glass
-2323166,baseline,7,9,1,8,0,arm;board;head;leg;man;person;short;skateboard,,6,4,4,2,arm-of-person;head-belonging to-man;leg-belonging to-man;man-riding-skateboard,man-on-motorcycle;sign-on-building
-2323243,baseline,14,5,6,2,3,fence;light,building;leg;sidewalk,4,4,3,3,ear-belonging to-elephant;trunk-belonging to-elephant;trunk-on-elephant,elephant-has-ear;elephant-has-head;elephant-has-trunk
+2319832,baseline,12,4,1,4,1,airplane;plane;tail;wing,building,4,0,4,0,tail-on-plane;wing-of-airplane;wing-of-plane;wing-on-plane,
+2319970,baseline,10,8,1,8,1,bird;flower;leaf;neck;tail;tree;vase;wing,room,11,1,11,1,bird-on-vase;flower-on-vase;leaf-on-vase;neck-of-vase;tail-of-bird;tree-on-vase;vase-has-bird;vase-has-neck;vase-has-tree;vase-has-vase;wing-of-bird,book-on-shelf
+2320051,baseline,16,12,4,10,2,arm;building;cap;hand;helmet;man;player;shirt;tree;wheel,fence;leg,5,2,4,1,helmet-on-man;man-wearing-cap;man-with-helmet;man-with-shoe,man-wearing-shoe
+2320090,baseline,16,15,8,9,2,cap;guy;hat;head;letter;railing;shoe;skateboard;tree,leg;pole,8,5,5,2,fence-near-man;guy-has-shoe;man-riding-skateboard;man-wearing-cap;man-wearing-shoe,person-wearing-jean;person-wearing-shirt
+2320110,baseline,19,8,7,3,2,airplane;flower;logo,door;window,6,8,4,6,building-behind-plane;flower-on-plane;flower-on-tail;wing-of-plane,door-on-plane;engine-under-wing;logo-on-plane;plane-has-tail;window-on-plane;wing-on-plane
+2320621,baseline,14,11,1,11,1,beach;board;hair;jean;leg;logo;person;shirt;short;surfboard;woman,building,10,2,10,2,jean-on-leg;person-laying on-beach;person-wearing-jean;person-with-board;shirt-on-woman;surfboard-behind-board;woman-near-surfboard;woman-wearing-jean;woman-wearing-shirt;woman-wearing-short,building-has-window;window-on-building
+2321244,baseline,11,8,1,8,1,cat;ear;eye;leg;mouth;paw;shoe;tail,bed,8,0,8,0,cat-has-eye;cat-with-eye;ear-of-cat;eye-of-cat;leg-of-cat;mouth-of-cat;paw-of-cat;tail-of-cat,
+2321559,baseline,13,8,4,4,0,beach;eye;tree;trunk,,5,5,3,3,eye-of-elephant;mouth-of-elephant;trunk-of-elephant,elephant-has-ear;elephant-has-head;elephant-has-leg
+2321594,baseline,16,6,7,4,5,bear;bed;flower;pillow,arm;eye;face;neck;paw,4,6,2,4,flower-on-pillow;leg-of-bear,bear-has-ear;bear-has-eye;ear-on-bear;eye-on-bear
+2322452,baseline,20,6,6,3,3,bottle;desk;pot,plant;screen;vase,6,8,5,7,bottle-on-desk;drawer-on-desk;flower-on-desk;pot-above-desk;pot-on-desk,book-on-shelf;flower-in-vase;flower-on-table;plant-in-pot;plant-on-shelf;plant-on-table;pot-on-table
+2322708,baseline,13,8,2,7,1,door;hair;man;pant;person;shirt;street,window,6,1,6,1,man-in-shirt;man-in-street;man-standing on-street;man-wearing-shirt;person-standing on-street;shirt-of-person,window-on-building
+2322837,baseline,18,17,11,7,1,bag;box;cap;chair;finger;food;mouth,face,8,8,7,7,bottle-in-table;cap-on-table;ear-of-woman;glass-on-man;hand-on-man;man-wears-glass;woman-wears-shirt,bottle-on-table;glass-on-face;man-wearing-glass;paper-on-table;woman-at-table;woman-has-hair;woman-wearing-shirt
+2323166,baseline,18,9,4,6,1,arm;board;leg;person;shirt;short,building,6,4,4,2,arm-of-person;head-belonging to-man;leg-belonging to-man;man-riding-skateboard,man-on-skateboard;man-wearing-pant
+2323243,baseline,16,5,4,4,3,ear;fence;light;trunk,building;leg;pole,4,0,4,0,ear-belonging to-elephant;ear-of-elephant;trunk-belonging to-elephant;trunk-on-elephant,
 2323263,baseline,20,2,2,2,2,leaf;plant,fruit;orange,1,2,1,2,plant-with-leaf,orange-near-banana;orange-on-table
-2324445,baseline,10,14,6,9,1,boy;hill;man;mountain;people;person;pole;post;sidewalk,tree,10,4,8,2,fence-between-mountain;fence-between-train;fence-near-track;fence-near-train;people-walking on-sidewalk;pole-on-fence;post-on-fence;sidewalk-near-track,door-on-train;train-has-door
-2324457,baseline,17,13,5,10,2,bag;coat;door;flag;girl;jacket;jean;person;wheel;woman,man;tire,8,9,7,8,bus-has-window;flag-hanging from-building;girl-wearing-jacket;person-holding-bag;person-wearing-jean;window-on-building;woman-holding-bag,bus-has-tire;bus-on-street;man-carrying-bag;man-near-bus;man-wearing-jacket;man-wearing-jean;person-wearing-jacket;tire-on-bus
-2324488,baseline,5,7,3,5,1,boat;shirt;short;sneaker;track,head,3,7,3,7,man-has-sneaker;man-wearing-shirt;man-wearing-short,hat-on-head;hat-on-man;man-has-head;man-holding-bag;man-on-beach;man-wearing-cap;man-wearing-hat
-2324510,baseline,20,4,2,3,1,board;box;toilet,tile,3,1,3,1,board-behind-toilet;board-for-toilet;board-on-toilet,bowl-of-toilet
-2325000,baseline,9,5,5,4,4,airplane;man;shirt;window,engine;plane;wheel;wing,3,11,2,10,airplane-has-tail;window-on-airplane,engine-on-plane;logo-on-plane;man-near-plane;plane-has-engine;plane-has-logo;plane-has-tail;plane-has-wing;tail-of-plane;wheel-on-plane;wing-of-plane
+2324445,baseline,14,14,4,11,1,boy;fence;hill;man;mountain;people;person;pole;post;sidewalk;track,building,10,2,10,2,fence-between-mountain;fence-between-train;fence-near-track;fence-near-train;people-walking on-sidewalk;pole-on-fence;post-on-fence;sidewalk-near-track;train-on-track;window-on-train,door-on-train;train-has-door
+2324457,baseline,7,13,1,12,0,bag;building;bus;coat;door;flag;girl;jacket;jean;person;wheel;woman,,8,0,8,0,bus-has-window;flag-hanging from-building;girl-wearing-jacket;person-holding-bag;person-wearing-jean;window-on-building;window-on-bus;woman-holding-bag,
+2324488,baseline,15,7,7,4,4,boat;short;sneaker;track,hair;hand;head;leg,3,4,2,3,man-has-sneaker;man-wearing-short,man-has-hair;man-has-head;man-on-beach
+2324510,baseline,16,4,2,4,2,board;box;door;toilet,building;window,3,1,3,1,board-behind-toilet;board-for-toilet;board-on-toilet,window-on-building
+2325000,baseline,13,5,2,5,2,airplane;man;shirt;tail;window,building;wing,3,0,3,0,airplane-has-tail;man-wearing-shirt;window-on-airplane,
 2325568,baseline,20,3,3,0,0,,,6,0,6,0,light-on-pole;pole-holding-light;pole-holding-sign;sign-above-light;sign-on-pole;sign-under-sign,
-2325782,baseline,20,6,10,2,6,bike;tire,engine;motorcycle;screen;seat;wheel;window,3,2,3,2,bike-has-tire;bike-near-bike;helmet-on-bike,motorcycle-has-wheel;wheel-on-motorcycle
-2325803,baseline,6,4,3,2,1,bus;windshield,building,2,2,2,2,window-on-bus;windshield-on-bus,car-on-street;window-on-building
-2325932,baseline,12,8,2,8,2,bottle;face;fence;hair;jacket;jean;pole;woman,shirt;tree,4,3,4,3,woman-holding-bottle;woman-wearing-jacket;woman-wearing-jean;woman-with-bottle,woman-has-head;woman-wearing-pant;woman-wearing-shirt
-2326286,baseline,5,4,1,3,0,leaf;light;vase,,4,1,3,0,leaf-in-vase;leaf-of-flower;vase-with-flower,
-2326383,baseline,9,10,6,5,1,people;person;pole;sign;woman,roof,3,5,3,5,building-has-window;bus-with-sign;door-with-building,building-has-roof;bus-on-street;door-on-building;roof-on-building;window-on-building
-2326426,baseline,9,13,9,9,5,basket;cap;door;hat;lamp;paper;person;tile;window,chair;hand;head;light;room,6,6,3,3,man-wearing-cap;man-wearing-hat;paper-on-basket,chair-at-table;man-has-hair;man-has-hand
-2326651,baseline,13,9,7,6,4,basket;leaf;pant;person;sign;trunk,hat;leg;shirt;tree,2,10,2,10,person-wearing-pant;sign-near-building,elephant-has-leg;elephant-has-trunk;fruit-in-basket;hat-on-head;hat-on-man;leg-of-elephant;man-on-elephant;man-wearing-hat;man-wearing-shirt;trunk-of-elephant
+2325782,baseline,15,6,2,6,2,bike;helmet;light;stand;tile;tire,screen;shelf,3,0,3,0,bike-has-tire;bike-near-bike;helmet-on-bike,
+2325803,baseline,15,4,5,1,2,windshield,building;sidewalk,2,3,1,2,window-on-bus,bus-on-street;window-on-building
+2325932,baseline,18,8,7,6,5,bottle;face;jacket;jean;pole;woman,hand;head;man;pant;tree,4,8,4,8,woman-holding-bottle;woman-wearing-jacket;woman-wearing-jean;woman-with-bottle,fence-behind-man;man-has-hair;man-wearing-glass;man-wearing-hat;man-wearing-pant;man-wearing-shirt;man-wearing-shoe;pant-on-man
+2326286,baseline,18,4,3,1,0,light,,4,3,2,1,leaf-in-vase;leaf-of-flower,vase-holding-flower
+2326383,baseline,16,10,7,4,1,people;person;sign;woman,roof,3,5,3,5,building-has-window;bus-with-sign;door-with-building,bus-on-street;person-wearing-jacket;sign-on-building;window-on-building;woman-wearing-jacket
+2326426,baseline,13,13,1,13,1,basket;cap;door;hat;jean;lamp;man;pant;paper;person;shirt;tile;window,building,6,1,6,1,man-wearing-cap;man-wearing-hat;man-wearing-jean;man-wearing-pant;man-wearing-shirt;paper-on-basket,window-on-building
+2326651,baseline,14,9,1,8,0,basket;elephant;leaf;man;pant;person;sign;trunk,,2,1,2,1,person-wearing-pant;sign-near-building,window-on-building
 2327119,baseline,20,7,5,5,3,flag;letter;pole;rock;sign,hand;post;tower,5,3,5,3,flag-on-pole;letter-on-sign;sign-says-letter;sign-under-clock;sign-with-letter,clock-has-hand;clock-on-tower;hand-on-clock
-2327453,baseline,13,11,3,8,0,car;dog;food;glass;house;man;person;woman,,4,5,4,5,car-near-house;person-with-glass;woman-in-hat;woman-with-hat,hat-on-head;man-wearing-hat;man-wearing-pant;man-wearing-shirt;woman-holding-umbrella
-2327592,baseline,18,18,10,9,1,bike;box;car;handle;logo;pole;seat;wheel;window,street,10,5,8,3,bike-has-seat;building-with-window;handle-on-bike;man-has-helmet;man-has-shirt;man-wears-helmet;man-wears-shirt;pole-behind-man,helmet-on-head;helmet-on-man;plant-in-pot
-2327947,baseline,7,5,1,4,0,bus;sidewalk;street;window,,3,0,3,0,tree-behind-bus;window-of-bus;window-on-bus,
+2327453,baseline,18,11,5,6,0,car;dog;food;house;person;woman,,4,5,4,5,car-near-house;person-with-glass;woman-in-hat;woman-with-hat,man-holding-umbrella;man-wearing-glass;man-wearing-hat;man-wearing-pant;man-wearing-shirt
+2327592,baseline,17,18,5,13,0,bike;box;car;handle;helmet;logo;plant;pole;pot;seat;shirt;wheel;window,,10,3,9,2,bike-has-seat;building-with-window;handle-on-bike;man-has-helmet;man-has-shirt;man-wearing-helmet;man-wears-helmet;man-wears-shirt;pole-behind-man,hat-on-man;man-wearing-hat
+2327947,baseline,13,5,1,5,1,bus;sidewalk;street;tree;window,building,3,0,3,0,tree-behind-bus;window-of-bus;window-on-bus,
 2328338,baseline,20,9,6,5,2,hand;hill;people;track;wheel,man;tire,4,6,4,6,people-standing on-hill;track-from-bike;wheel-of-bike;wheel-on-bike,helmet-on-man;man-on-bike;man-wearing-boot;man-wearing-glove;man-wearing-helmet;tire-on-bike
 2328340,baseline,20,12,6,8,2,child;head;jacket;mountain;people;person;skier;woman,snow;track,11,5,7,1,head-of-child;head-of-person;jacket-of-child;pant-of-person;ski-of-person;woman-holding-pole;woman-in-pant,man-wearing-pant
-2329268,baseline,12,5,4,2,1,building;track,wheel,5,4,3,2,train-on-track;window-on-building;window-on-door,building-behind-train;train-has-door
-2329331,baseline,19,9,7,4,2,curtain;phone;table;window,post;room,4,5,3,4,light-on-table;table-has-lamp;window-has-curtain,bed-in-room;lamp-near-bed;lamp-on-table;table-near-bed
-2329547,baseline,9,6,3,4,1,hand;man;person;short,bottle,3,3,1,1,man-wearing-short,helmet-on-head
-2329909,baseline,11,7,3,5,1,ear;hair;head;horse;nose,wave,5,1,5,1,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,animal-on-beach
-2330349,baseline,19,4,9,1,6,woman,glove;hand;jacket;pant;pole;ski,3,8,2,7,snow-in-snow;tree-covered in-snow,helmet-on-head;woman-holding-pole;woman-on-ski;woman-wearing-glass;woman-wearing-glove;woman-wearing-jacket;woman-wearing-pant
+2329268,baseline,14,5,6,0,1,,wheel,5,5,2,2,train-on-track;window-on-building,building-behind-train;train-has-door
+2329331,baseline,17,9,5,5,1,bed;door;phone;pillow;table,room,4,1,4,1,light-on-table;pillow-on-bed;table-has-lamp;window-has-curtain,lamp-on-desk
+2329547,baseline,16,6,3,4,1,hand;man;person;short,pant,3,3,3,3,man-wearing-helmet;man-wearing-shirt;man-wearing-short,boy-wearing-helmet;boy-wearing-shirt;helmet-on-head
+2329909,baseline,14,7,1,6,0,ear;hair;head;horse;leg;nose,,5,0,5,0,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,
+2330349,baseline,19,4,9,1,6,woman,glove;hand;jacket;pant;pole;ski,3,6,2,5,snow-in-snow;tree-covered in-snow,helmet-on-head;woman-on-ski;woman-wearing-glove;woman-wearing-jacket;woman-wearing-pant
 2331313,baseline,20,6,11,3,8,coat;man;person,building;flag;hair;leg;pole;sidewalk;sign;tree,4,8,1,5,man-wearing-coat,bag-on-bench;man-has-hair;man-wearing-shirt;people-sitting on-bench;sign-on-pole
-2332207,baseline,20,8,3,5,0,building;car;engine;roof;window,,5,3,4,2,building-near-track;car-behind-engine;track-near-light;window-on-train,logo-on-train;track-under-train
-2332990,baseline,12,6,6,1,1,kite,head,5,6,3,4,man-with-shirt;neck-between-hair;neck-between-shirt,head-of-man;man-has-hair;man-has-head;man-wearing-shirt
-2333129,baseline,20,7,3,4,0,cap;head;letter;shirt,,5,4,4,3,cap-on-head;head-of-man;man-wearing-cap;man-wearing-shirt,man-wearing-short;person-on-skateboard;person-wearing-short
-2333137,baseline,7,10,3,8,1,car;dog;door;girl;pant;railing;tree;woman,roof,4,3,3,2,building-has-window;door-of-building;woman-wearing-pant,building-has-roof;roof-on-building
-2333237,baseline,7,10,7,6,3,pant;people;person;shoe;sign;woman,building;street;window,7,2,5,0,man-has-shirt;man-in-shirt;shirt-on-man;shoe-on-man;woman-wearing-pant,
-2333505,baseline,20,8,10,4,6,man;pant;people;tree,ear;face;head;neck;tie;woman,5,3,5,3,man-has-hand;man-wearing-pant;man-with-hair;people-on-bench;tree-behind-bench,woman-has-hair;woman-wearing-jacket;woman-wearing-shirt
-2333913,baseline,20,6,5,3,2,cat;desk;drawer,door;room,3,2,2,1,bed-with-pillow;cat-laying on-bed,bag-on-table
+2332207,baseline,12,8,1,8,1,building;car;engine;light;roof;track;train;window,bed,5,0,5,0,building-near-track;car-behind-engine;track-near-light;train-on-track;window-on-train,
+2332990,baseline,16,6,8,1,3,neck,face;head;tail,5,6,3,4,man-with-shirt;neck-between-hair;neck-between-shirt,head-of-man;man-has-hair;man-has-head;man-wearing-shirt
+2333129,baseline,12,7,1,7,1,cap;head;letter;man;shirt;short;skateboard,building,5,1,5,1,cap-on-head;head-of-man;man-on-skateboard;man-wearing-cap;man-wearing-shirt,window-on-building
+2333137,baseline,20,10,7,6,3,building;dog;door;girl;railing;woman,fence;house;roof,4,4,3,3,building-has-window;door-of-building;window-on-building,woman-carrying-bag;woman-has-hair;woman-wearing-shirt
+2333237,baseline,19,10,8,5,3,pant;people;person;shoe;woman,building;sidewalk;street,7,4,5,2,man-has-shirt;man-in-shirt;shirt-on-man;shoe-on-man;woman-wearing-pant,man-wearing-shoe;windshield-on-bus
+2333505,baseline,15,8,1,8,1,bench;hair;hand;man;pant;people;shirt;tree,building,5,0,5,0,man-has-hand;man-wearing-pant;man-with-hair;people-on-bench;tree-behind-bench,
+2333913,baseline,16,6,2,5,1,bed;cat;desk;drawer;pillow,room,3,0,3,0,bed-with-pillow;cat-laying on-bed;pillow-on-bed,
 2334506,baseline,20,9,7,3,1,car;fence;lamp,leg,6,3,4,1,bench-sitting on-snow;lamp-on-pole;snow-covering-snow;snow-on-snow,light-on-pole
-2334997,baseline,6,15,1,15,1,bench;box;building;cap;door;glass;hat;head;man;pizza;shirt;short;sidewalk;sign;window,tree,12,2,12,2,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-shirt;man-wearing-short;shirt-on-man;sign-in-window,door-on-building;sign-on-door
-2335223,baseline,11,9,4,5,0,bike;bus;short;street;tire,,6,2,6,2,door-on-bus;hair-on-man;man-riding-bike;man-wearing-short;tire-on-bike;tire-on-bus,man-has-hair;man-wearing-shirt
-2335499,baseline,6,17,1,16,0,branch;building;cup;food;glass;hair;hand;leg;logo;pant;person;plate;shoe;table;tree;truck,,9,1,9,1,food-on-plate;food-on-table;glass-on-person;glass-on-table;leg-on-table;logo-on-shirt;person-has-hand;person-with-hair;tree-with-branch,man-wearing-shirt
+2334997,baseline,14,15,2,14,1,bench;box;cap;door;glass;hat;head;man;pizza;shirt;short;sidewalk;sign;window,tree,12,1,12,1,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-shirt;man-wearing-short;shirt-on-man;sign-in-window,tree-near-building
+2335223,baseline,16,9,5,6,2,bike;bus;door;short;street;tire,building;head,6,5,6,5,door-on-bus;hair-on-man;man-riding-bike;man-wearing-short;tire-on-bike;tire-on-bus,head-of-man;man-has-arm;man-has-hair;man-wearing-shirt;window-on-building
+2335499,baseline,19,17,8,12,3,branch;building;cup;food;glass;leg;logo;person;plate;shoe;tree;truck,arm;head;light,9,4,8,3,food-on-plate;food-on-table;glass-on-person;leg-on-table;logo-on-shirt;person-has-hand;person-with-hair;tree-with-branch,boy-has-hair;boy-wearing-pant;boy-wearing-shirt
 2335659,baseline,20,13,9,7,3,hat;pant;pole;post;shirt;street;window,bag;jean;tree,6,9,3,6,man-standing on-sidewalk;pant-on-man;pole-on-sidewalk,man-wearing-hat;man-wearing-pant;man-wearing-shirt;person-on-skateboard;woman-carrying-bag;woman-wearing-jean
-2335744,baseline,10,10,4,6,0,car;railing;roof;sidewalk;street;windshield,,3,1,2,0,building-near-street;car-near-bus,
-2335867,baseline,20,10,9,4,3,building;car;post;rock,leaf;tree;wire,2,5,2,5,building-with-roof;window-in-building,building-has-window;house-has-roof;roof-on-house;sign-on-pole;window-on-building
-2336163,baseline,11,8,1,8,1,airplane;plane;tail;tower;truck;window;windshield;zebra,building,3,0,3,0,tail-on-plane;window-on-plane;windshield-on-plane,
-2336845,baseline,15,4,9,0,5,,face;hair;neck;nose;tail,3,8,0,5,,ear-of-zebra;head-of-zebra;leg-of-zebra;tree-behind-zebra;zebra-has-nose
+2335744,baseline,17,10,7,4,1,car;railing;sidewalk;windshield,truck,3,3,3,3,building-near-street;car-near-bus;windshield-on-bus,bus-on-street;tree-behind-bus;window-on-bus
+2335867,baseline,15,10,4,7,1,car;house;post;rock;roof;sign;trunk,tree,2,2,2,2,building-with-roof;window-in-building,letter-on-sign;window-on-building
+2336163,baseline,16,8,1,8,1,airplane;plane;tail;tower;truck;window;windshield;zebra,building,3,0,3,0,tail-on-plane;window-on-plane;windshield-on-plane,
+2336845,baseline,18,4,7,0,3,,hair;neck;tail,3,5,1,3,zebra-has-ear,head-of-zebra;leg-of-zebra;zebra-has-neck
 2336925,baseline,20,3,6,1,4,bed,door;lamp;leg;room,3,1,2,0,pillow-laying on-bed;pillow-sitting on-bed,
-2337019,baseline,4,5,1,5,1,ear;head;leaf;neck;zebra,door,2,0,2,0,ear-on-zebra;zebra-has-head,
-2337436,baseline,8,5,1,4,0,cow;ear;eye;shirt,,2,1,2,1,ear-of-cow;eye-of-cow,man-wearing-hat
-2337684,baseline,1,5,1,5,1,building;dog;logo;truck;window,light,4,0,4,0,building-near-truck;logo-on-truck;truck-near-dog;window-on-building,
-2338794,baseline,20,8,4,5,1,bus;car;people;sidewalk;window,pole,3,4,2,3,light-on-bus;window-on-car,bus-has-door;door-on-bus;woman-wearing-shirt
-2339565,baseline,11,6,4,3,1,light;man;shirt,pole,3,3,2,2,man-in-shirt;man-wears-shirt,sign-on-pole;woman-wearing-pant
-2339627,baseline,13,10,8,3,1,house;post;trunk,plant,5,3,5,3,door-of-house;pole-near-street;pole-on-sidewalk;sign-on-post;window-on-house,sign-on-building;sign-on-pole;window-on-building
+2337019,baseline,19,5,5,3,3,head;leaf;neck,branch;tail;tree,2,2,2,2,ear-on-zebra;zebra-has-head,tail-of-zebra;zebra-has-tail
+2337436,baseline,19,5,7,2,4,cow;shirt,head;man;mouth;neck,2,2,2,2,ear-of-cow;eye-of-cow,hat-on-head;man-wearing-hat
+2337684,baseline,15,5,2,3,0,dog;logo;truck,,4,1,3,0,building-near-truck;logo-on-truck;truck-near-dog,
+2338794,baseline,14,8,1,7,0,bus;car;door;light;people;sidewalk;window,,3,2,3,2,light-on-bus;window-on-bus;window-on-car,tree-near-building;window-on-building
+2339565,baseline,20,6,8,0,2,,pant;pole,3,3,3,3,man-in-shirt;man-wears-shirt;sign-on-building,man-wearing-pant;man-wearing-shirt;sign-on-pole
+2339627,baseline,12,10,1,9,0,door;house;pole;post;sidewalk;sign;street;trunk;window,,5,2,5,2,door-of-house;pole-near-street;pole-on-sidewalk;sign-on-post;window-on-house,sign-on-building;window-on-building
 2340550,baseline,20,7,8,2,3,boy;pole,girl;hand;short,9,6,8,5,bench-near-pole;boy-near-pole;clock-above-pole;pole-for-clock;pole-with-clock;sidewalk-near-pole;tree-growing on-tree;tree-near-pole,clock-has-face;girl-near-clock;girl-wearing-shirt;girl-wearing-short;hand-on-clock
 2341363,baseline,20,3,3,1,1,person,hand,3,3,3,3,finger-attached to-person;finger-on-person;person-has-finger,finger-on-hand;hand-has-finger;hand-on-table
-2341367,baseline,7,9,2,8,1,bag;building;hair;shirt;shoe;sign;tree;woman,short,8,4,8,4,sign-on-building;woman-carrying-bag;woman-carrying-umbrella;woman-has-hair;woman-has-umbrella;woman-holding-umbrella;woman-wearing-shirt;woman-wearing-shoe,man-holding-umbrella;man-on-sidewalk;man-wearing-short;person-holding-umbrella
-2341799,baseline,11,16,1,15,0,arm;bus;guy;hair;hand;hat;head;lady;letter;man;person;shoe;short;umbrella;woman,,10,2,10,2,arm-of-person;hair-of-person;hand-of-person;head-of-person;man-wearing-hat;man-wearing-shirt;person-has-hair;person-wearing-short;shirt-with-letter;woman-in-hat,woman-wearing-hat;woman-wearing-shirt
+2341367,baseline,19,9,5,7,3,bag;building;shirt;shoe;sign;tree;woman,leg;short;sidewalk,8,5,5,2,sign-on-building;woman-carrying-bag;woman-carrying-umbrella;woman-has-umbrella;woman-wearing-shoe,person-holding-umbrella;woman-wearing-short
+2341799,baseline,20,16,6,11,1,arm;bus;guy;hand;head;lady;letter;man;person;shoe;umbrella,glass,10,2,10,2,arm-of-person;hair-of-person;hand-of-person;head-of-person;man-wearing-hat;man-wearing-shirt;person-has-hair;person-wearing-short;shirt-with-letter;woman-in-hat,woman-wearing-hat;woman-wearing-shirt
 2341962,baseline,20,2,1,1,0,table,,1,0,1,0,vegetable-sitting on-table,
 2342137,baseline,20,6,7,3,4,pole;truck;trunk,building;handle;sidewalk;tree,3,6,1,4,truck-has-window,door-on-truck;tire-on-truck;tree-near-truck;window-on-truck
-2342548,baseline,7,10,7,9,6,arm;cup;girl;hand;lady;neck;person;plate;shirt,ear;face;hair;man;mouth;nose,11,4,11,4,arm-of-person;cup-in-hand;girl-holding-cup;glass-on-person;hand-of-person;lady-in-shirt;neck-of-person;person-holding-cup;person-near-person;person-wearing-glass;person-wearing-shirt,glass-on-face;glass-on-man;man-has-hair;man-wearing-glass
-2343209,baseline,15,10,10,3,3,fence;flower;post,branch;eye;face,9,6,5,2,ear-on-giraffe;giraffe-eating-leaf;giraffe-near-giraffe;head-on-giraffe;nose-of-giraffe,giraffe-has-head;head-of-giraffe
-2343387,baseline,15,9,5,5,1,hill;man;mountain;people;short,wave,7,6,4,3,head-has-hat;man-in-boat;man-sitting on-boat;man-wearing-short,hat-on-head;hat-on-man;man-on-boat
-2343409,baseline,12,4,5,0,1,,engine,3,7,3,7,plane-has-nose;tail-part of-plane;wing-of-plane,engine-on-plane;logo-on-plane;logo-on-tail;plane-has-engine;plane-has-tail;tail-of-plane;wing-on-plane
+2342548,baseline,11,10,1,10,1,arm;cup;girl;glass;hand;lady;neck;person;plate;shirt,building,11,0,11,0,arm-of-person;cup-in-hand;girl-holding-cup;glass-on-person;hand-of-person;lady-in-shirt;neck-of-person;person-holding-cup;person-near-person;person-wearing-glass;person-wearing-shirt,
+2343209,baseline,19,10,9,4,3,fence;flower;leaf;post,branch;eye;face,9,6,5,2,ear-on-giraffe;giraffe-eating-leaf;giraffe-near-giraffe;head-on-giraffe;nose-of-giraffe,giraffe-has-head;head-of-giraffe
+2343387,baseline,20,9,11,4,6,hill;mountain;people;short,branch;cap;ear;mouth;nose;wave,7,5,4,2,head-has-hat;man-in-boat;man-sitting on-boat;man-wearing-short,hat-on-head;hat-on-man
+2343409,baseline,18,4,7,0,3,,door;engine;window,3,1,3,1,plane-has-nose;tail-part of-plane;wing-of-plane,logo-on-tail
 2411572,baseline,20,6,4,4,2,head;horse;leaf;tail,leg;trunk,4,4,4,4,head-on-horse;leaf-on-tree;leaf-under-tree;tree-near-horse,dog-has-head;dog-has-leg;dog-has-tail;head-of-dog
 2412125,baseline,20,8,7,4,3,coat;head;pole;skier,jacket;pant;trunk,8,7,7,6,branch-in-snow;skier-has-head;skier-holding-pole;skier-in-snow;skier-wears-coat;skier-wears-ski;tree-has-branch,man-holding-pole;man-wearing-helmet;man-wearing-jacket;man-wearing-pant;person-wearing-helmet;person-wearing-jacket
-2414199,baseline,20,10,9,4,3,house;person;pole;street,arm;branch;sidewalk,11,7,8,4,house-across-street;house-behind-pole;man-has-skateboard;man-riding-skateboard;man-wears-shoe;person-near-street;pole-near-man;pole-near-street,boy-on-skateboard;man-has-hair;man-wearing-shoe;pant-on-man
-2414226,baseline,10,9,2,7,0,letter;light;post;sidewalk;street;tree;wire,,6,3,5,2,sign-holding-post;sign-on-post;sign-on-sidewalk;street-between-sidewalk;tree-covering-street,pole-holding-sign;sign-on-pole
-2414296,baseline,20,9,5,5,1,lamp;letter;sign;street;umbrella,pole,6,2,5,1,lamp-with-light;letter-on-building;light-on-building;light-on-street;umbrella-in front of-building,sign-on-building
-2415332,baseline,7,11,2,10,1,board;glove;head;helmet;hill;jacket;man;pant;shoe;tree,beach,5,2,5,2,head-of-man;helmet-on-head;man-wearing-glove;man-wearing-jacket;shoe-of-man,light-on-pole;pole-in-snow
+2414199,baseline,18,10,4,7,1,house;pant;person;pole;shoe;street;tree,head,11,8,9,6,house-across-street;house-behind-pole;man-has-skateboard;man-on-skateboard;man-riding-skateboard;man-wears-shoe;person-near-street;pole-near-man;pole-near-street,hat-on-head;hat-on-man;head-of-man;man-has-arm;man-has-head;man-wearing-hat
+2414226,baseline,14,9,1,8,0,letter;light;post;sidewalk;sign;street;tree;wire,,6,2,6,2,letter-on-sign;sign-holding-post;sign-on-post;sign-on-sidewalk;street-between-sidewalk;tree-covering-street,pole-holding-sign;sign-on-pole
+2414296,baseline,11,9,1,8,0,clock;lamp;letter;light;sign;street;tree;umbrella,,6,1,6,1,clock-on-building;lamp-with-light;letter-on-building;light-on-building;light-on-street;umbrella-in front of-building,window-on-building
+2415332,baseline,18,11,4,8,1,board;glove;hill;jacket;man;pant;shoe;tree,arm,5,3,4,2,head-of-man;man-wearing-glove;man-wearing-jacket;shoe-of-man,person-wearing-helmet;person-wearing-pant
 2415349,baseline,20,5,5,1,1,sign,pole,3,4,1,2,door-near-train,door-on-train;train-has-door
-2417298,baseline,13,13,3,10,0,coat;glove;hand;hat;hill;jacket;pant;person;skier;tree,,12,4,12,4,glove-on-hand;person-has-glove;person-has-pant;person-holding-pole;person-in-jacket;person-wearing-coat;person-wearing-hat;person-wearing-jacket;pole-on-hand;skier-in-snow;skier-wearing-helmet;snow-on-hill,helmet-on-head;helmet-on-man;man-wearing-helmet;man-wearing-shirt
-2417333,baseline,7,6,2,4,0,bottle;leaf;plate;vegetable,,6,3,5,2,bottle-behind-pizza;leaf-on-pizza;leaf-on-table;table-on-pizza;table-with-pizza,pizza-on-table;plate-on-table
-2417743,baseline,10,8,6,5,3,hair;player;racket;shoe;sock,building;head;window,5,2,4,1,man-has-hair;man-in-shirt;man-in-shoe;sock-on-player,man-wearing-shirt
+2417298,baseline,20,13,8,7,2,coat;hat;hill;pant;person;skier;tree,arm;head,12,9,12,9,glove-on-hand;person-has-glove;person-has-pant;person-holding-pole;person-in-jacket;person-wearing-coat;person-wearing-hat;person-wearing-jacket;pole-on-hand;skier-in-snow;skier-wearing-helmet;snow-on-hill,helmet-on-man;logo-on-jacket;logo-on-shirt;man-holding-pole;man-on-snow;man-wearing-glove;man-wearing-helmet;man-wearing-jacket;man-wearing-shirt
+2417333,baseline,15,6,4,3,1,bottle;leaf;vegetable,light,6,3,5,2,bottle-behind-pizza;leaf-on-pizza;leaf-on-table;table-on-pizza;table-with-pizza,pizza-on-table;plate-on-table
+2417743,baseline,18,8,10,1,3,player,hand;head;leg,5,4,4,3,man-has-hair;man-in-shirt;man-in-shoe;sock-on-player,man-holding-racket;man-wearing-shirt;man-wearing-sock
 2316000,llm,20,11,11,5,5,bag;bench;leaf;person;shirt,building;roof;sidewalk;street;window,3,7,2,6,door-of-bus;leaf-on-tree,bus-has-window;door-on-bus;man-carrying-bag;tire-on-car;wheel-on-bus;window-on-bus
 2316325,llm,20,11,12,3,4,bike;face;sneaker,arm;hand;leg;neck,6,9,2,5,shirt-on-woman;woman-wearing-sock,racket-has-handle;woman-has-hair;woman-has-hand;woman-holding-racket;woman-wearing-shirt
 2316365,llm,20,7,8,1,2,eye,face;flower,6,7,4,5,leg-of-sheep;mouth-of-sheep;nose-of-sheep;sheep-with-eye,face-of-sheep;sheep-has-ear;sheep-has-face;sheep-has-head;sheep-has-leg
@@ -214,7 +214,7 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2317864,llm,20,7,4,4,1,boat;building;roof;table,trunk,4,1,3,0,bird-in-boat;bird-standing on-boat;roof-on-building,
 2318121,llm,20,8,5,3,0,room;shelf;table,,9,4,7,2,bed-in-room;book-on-shelf;book-with-shelf;lamp-sitting on-table;shelf-behind-bed;shelf-holding-book;table-with-leg,lamp-near-bed;table-near-bed
 2318331,llm,20,13,10,7,4,chair;jacket;letter;logo;person;player;sneaker,hair;racket;shoe;sock,3,4,3,4,jacket-on-chair;person-with-hand;shirt-on-player,man-holding-racket;man-wearing-shirt;man-wearing-shoe;man-wearing-short
-2318597,llm,7,4,1,4,1,ear;elephant;light;trunk,tail,4,4,3,3,elephant-has-trunk;elephant-near-elephant;trunk-on-elephant,ear-of-elephant;elephant-has-head;head-of-elephant
+2318597,llm,7,4,9,4,9,ear;elephant;light;trunk,bed;building;cow;hat;paper;plane;roof;tie;tile,4,0,4,0,elephant-has-ear;elephant-has-trunk;elephant-near-elephant;trunk-on-elephant,
 2319448,llm,20,6,2,4,0,banana;chair;room;umbrella,,3,2,2,1,banana-in-chair;chair-under-banana,banana-on-table
 2319832,llm,20,4,4,1,1,airplane,engine,4,2,4,2,tail-on-plane;wing-of-airplane;wing-of-plane;wing-on-plane,plane-has-tail;tail-of-plane
 2319970,llm,20,8,8,6,6,bird;flower;neck;tail;tree;wing,head;leg;man;person;plant;table,11,4,10,3,bird-on-vase;leaf-on-vase;neck-of-vase;tail-of-bird;tree-on-vase;vase-has-bird;vase-has-neck;vase-has-tree;vase-has-vase;wing-of-bird,man-on-vase;plant-in-vase;vase-on-table
@@ -226,7 +226,7 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2321559,llm,20,8,7,2,1,beach;mouth,head,5,8,2,5,eye-of-elephant;mouth-of-elephant,elephant-has-ear;elephant-has-head;elephant-has-leg;elephant-has-mouth;elephant-has-trunk
 2321594,llm,20,6,8,4,6,bear;bed;flower;pillow,arm;eye;face;neck;nose;tie,4,6,3,5,ear-of-bear;flower-on-pillow;leg-of-bear,bear-has-ear;bear-on-sign;bear-wearing-tie;logo-on-sign;sign-behind-bear
 2322452,llm,20,6,6,3,3,bottle;desk;pot,plant;screen;vase,6,8,5,7,bottle-on-desk;drawer-on-desk;flower-on-desk;pot-above-desk;pot-on-desk,book-on-shelf;flower-in-vase;flower-on-table;plant-in-pot;plant-on-shelf;plant-on-table;pot-on-table
-2322708,llm,8,8,2,6,0,hair;man;pant;person;shirt;street,,6,2,5,1,man-in-shirt;man-in-street;man-standing on-street;person-standing on-street;shirt-of-person,man-wearing-hat
+2322708,llm,8,8,6,7,5,door;hair;man;pant;person;shirt;street,cow;leg;light;snow;window,6,1,6,1,man-in-shirt;man-in-street;man-standing on-street;man-wearing-shirt;person-standing on-street;shirt-of-person,window-on-building
 2322837,llm,20,17,12,6,1,bag;box;cap;finger;food;mouth,face,8,11,6,9,bottle-in-table;cap-on-table;ear-of-woman;hand-on-man;man-wears-glass;woman-wears-shirt,bottle-on-table;glass-on-face;man-has-hair;man-wearing-glass;paper-on-table;woman-at-table;woman-has-hair;woman-has-hand;woman-wearing-shirt
 2323166,llm,20,9,6,4,1,arm;board;leg;person,tree,6,5,4,3,arm-of-person;head-belonging to-man;leg-belonging to-man;man-riding-skateboard,man-on-skateboard;man-wearing-pant;sign-on-building
 2323243,llm,20,5,7,2,4,fence;light,building;leg;rock;tail,4,6,3,5,ear-belonging to-elephant;trunk-belonging to-elephant;trunk-on-elephant,elephant-has-ear;elephant-has-leg;elephant-has-tail;elephant-has-trunk;tail-of-elephant
@@ -253,21 +253,21 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2329268,llm,20,5,6,1,2,building,roof;wheel,5,11,1,7,window-on-building,building-behind-train;logo-on-train;sign-on-train;train-has-door;train-has-wheel;train-has-window;wheel-on-train
 2329331,llm,20,9,7,4,2,curtain;phone;table;window,post;room,4,3,3,2,light-on-table;table-has-lamp;window-has-curtain,lamp-near-bed;lamp-on-desk
 2329547,llm,20,6,8,1,3,person,arm;leg;tree,3,6,0,3,,helmet-on-head;helmet-on-man;man-on-skateboard
-2329909,llm,11,7,3,5,1,ear;hair;head;horse;nose,wave,5,1,5,1,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,animal-on-beach
+2329909,llm,11,7,1,6,0,hair;head;horse;leg;nose;tail,,5,0,5,0,ear-of-horse;head-of-horse;leg-of-horse;nose-of-horse;tail-of-horse,
 2330349,llm,20,4,10,1,7,woman,boot;glove;hand;jacket;pant;pole;ski,3,8,2,7,snow-in-snow;tree-covered in-snow,helmet-on-head;woman-holding-pole;woman-on-ski;woman-wearing-boot;woman-wearing-glove;woman-wearing-jacket;woman-wearing-pant
-2331313,llm,12,6,10,5,9,bench;coat;man;pant;person,building;car;flag;hair;jacket;pole;sidewalk;sign;tree,4,4,3,3,man-sitting on-bench;man-wearing-coat;man-wearing-pant,man-has-hair;man-on-sidewalk;man-wearing-jacket
+2331313,llm,12,6,2,6,2,bench;coat;man;pant;person;shoe,building;sign,4,1,4,1,man-sitting on-bench;man-wearing-coat;man-wearing-pant;man-wearing-shoe,sign-on-building
 2332207,llm,20,8,3,5,0,building;car;engine;roof;window,,5,3,4,2,building-near-track;car-behind-engine;track-near-light;window-on-train,logo-on-train;track-under-train
-2332990,llm,5,6,2,5,1,hair;kite;man;neck;tree,light,5,4,5,4,hair-on-man;man-with-shirt;neck-between-hair;neck-between-shirt;shirt-on-man,man-has-hair;man-has-head;man-wearing-glass;man-wearing-shirt
-2333129,llm,13,7,6,6,5,cap;head;letter;shirt;short;skateboard,fence;person;pole;racket;sidewalk,5,0,5,0,cap-on-head;head-of-man;man-on-skateboard;man-wearing-cap;man-wearing-shirt,
+2332990,llm,5,6,2,6,2,hair;kite;man;neck;shirt;tree,box;cow,5,0,5,0,hair-on-man;man-with-shirt;neck-between-hair;neck-between-shirt;shirt-on-man,
+2333129,llm,13,7,1,7,1,cap;head;letter;man;shirt;short;skateboard,building,5,1,5,1,cap-on-head;head-of-man;man-on-skateboard;man-wearing-cap;man-wearing-shirt,window-on-building
 2333137,llm,20,10,7,6,3,building;dog;door;girl;railing;woman,fence;house;roof,4,4,3,3,building-has-window;door-of-building;window-on-building,woman-carrying-bag;woman-has-hair;woman-wearing-shirt
 2333237,llm,20,10,9,5,4,pant;people;person;shoe;woman,building;pole;sidewalk;street,7,7,5,5,man-has-shirt;man-in-shirt;shirt-on-man;shoe-on-man;woman-wearing-pant,man-wearing-jacket;man-wearing-shoe;windshield-on-bus;woman-wearing-jean;woman-wearing-shirt
 2333505,llm,20,8,10,4,6,man;pant;people;tree,ear;face;head;neck;tie;woman,5,3,5,3,man-has-hand;man-wearing-pant;man-with-hair;people-on-bench;tree-behind-bench,woman-has-hair;woman-wearing-jacket;woman-wearing-shirt
 2333913,llm,20,6,5,3,2,cat;desk;drawer,door;room,3,2,2,1,bed-with-pillow;cat-laying on-bed,bag-on-table
 2334506,llm,20,9,7,3,1,car;fence;lamp,leg,6,3,4,1,bench-sitting on-snow;lamp-on-pole;snow-covering-snow;snow-on-snow,light-on-pole
-2334997,llm,9,15,2,14,1,bench;box;building;cap;door;glass;hat;head;man;pizza;shirt;short;sign;window,tree,12,2,11,1,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-shirt;man-wearing-short;shirt-on-man;sign-in-window,door-on-building
+2334997,llm,9,15,4,13,2,bench;box;cap;door;glass;hat;head;man;pizza;shirt;short;sidewalk;sign,cow;room,12,0,12,0,bench-on-sidewalk;hat-on-man;man-carrying-box;man-carrying-pizza;man-on-sidewalk;man-walking on-sidewalk;man-wearing-cap;man-wearing-glass;man-wearing-shirt;man-wearing-short;shirt-on-man;sign-in-window,
 2335223,llm,20,9,11,2,4,bus;door,arm;leg;shoe;wheel,6,10,2,6,hair-on-man;tire-on-bike,man-has-hair;man-on-bike;man-wearing-shirt;man-wearing-shoe;wheel-on-bike;window-on-bus
 2335499,llm,20,17,9,12,4,branch;building;cup;food;glass;leg;logo;person;plate;shoe;tree;truck,arm;head;light;pizza,9,6,8,5,food-on-plate;food-on-table;glass-on-person;leg-on-table;logo-on-shirt;person-has-hand;person-with-hair;tree-with-branch,boy-eating-pizza;boy-has-hair;boy-wearing-pant;boy-wearing-shirt;cup-on-table
-2335659,llm,10,13,5,9,1,hat;pant;pole;post;shirt;skateboard;street;truck;woman,jean,6,5,4,3,man-standing on-sidewalk;pant-on-man;pole-on-sidewalk;woman-wearing-shirt,man-wearing-jean;person-wearing-jean;tree-on-sidewalk
+2335659,llm,10,13,5,10,2,hat;man;pant;pole;post;shirt;sidewalk;skateboard;truck;woman,glass;roof,6,0,6,0,man-on-sidewalk;man-on-skateboard;man-standing on-sidewalk;pant-on-man;pole-on-sidewalk;woman-wearing-shirt,
 2335744,llm,20,10,7,4,1,car;railing;sidewalk;windshield,truck,3,3,2,2,building-near-street;car-near-bus,bus-on-street;truck-on-street
 2335867,llm,20,10,9,4,3,building;car;post;rock,leaf;tree;wire,2,5,2,5,building-with-roof;window-in-building,building-has-window;house-has-roof;roof-on-house;sign-on-pole;window-on-building
 2336163,llm,20,8,7,4,3,airplane;tower;truck;zebra,door;nose;wheel,3,5,3,5,tail-on-plane;window-on-plane;windshield-on-plane,door-on-plane;nose-of-plane;plane-has-nose;plane-has-tail;tail-of-plane
@@ -280,7 +280,7 @@ image_id,method,stop_level,gt_node_count,pred_node_count,missing_node_count,extr
 2339565,llm,20,6,8,0,2,,pant;pole,3,3,3,3,man-in-shirt;man-wears-shirt;sign-on-building,man-wearing-pant;man-wearing-shirt;sign-on-pole
 2339627,llm,20,10,7,3,0,building;post;trunk,,5,2,4,1,door-of-house;pole-near-street;pole-on-sidewalk;sign-on-post,sign-on-pole
 2340550,llm,20,7,8,2,3,boy;pole,girl;hand;short,9,6,8,5,bench-near-pole;boy-near-pole;clock-above-pole;pole-for-clock;pole-with-clock;sidewalk-near-pole;tree-growing on-tree;tree-near-pole,clock-has-face;girl-near-clock;girl-wearing-shirt;girl-wearing-short;hand-on-clock
-2341363,llm,7,3,1,2,0,person;table,,3,1,3,1,finger-attached to-person;finger-on-person;person-has-finger,finger-on-hand
+2341363,llm,7,3,1,3,1,finger;person;table,room,3,0,3,0,finger-attached to-person;finger-on-person;person-has-finger,
 2341367,llm,20,9,6,6,3,bag;building;hair;shoe;sign;tree,leg;short;sidewalk,8,5,6,3,sign-on-building;woman-carrying-bag;woman-carrying-umbrella;woman-has-hair;woman-has-umbrella;woman-wearing-shoe,person-holding-umbrella;woman-has-head;woman-wearing-short
 2341799,llm,20,16,6,11,1,arm;bus;guy;hand;head;lady;letter;man;person;shoe;umbrella,glass,10,2,10,2,arm-of-person;hair-of-person;hand-of-person;head-of-person;man-wearing-hat;man-wearing-shirt;person-has-hair;person-wearing-short;shirt-with-letter;woman-in-hat,woman-wearing-hat;woman-wearing-shirt
 2341962,llm,20,2,1,1,0,table,,1,0,1,0,vegetable-sitting on-table,

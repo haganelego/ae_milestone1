@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         29,
         91,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         49,
         86,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         62,
         87,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         24,
         12,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "pole",
+      "class_id": 98,
       "bbox": [
         61,
         167,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         114,
         339,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         13,
         48,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         20,
         56,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "street",
+      "class_id": 123,
       "bbox": [
         2,
         206,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         255,
         0,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         0,
         1,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "wire",
+      "class_id": 147,
       "bbox": [
         2,
         5,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         152,
         355,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         156,
         323,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "pole",
+      "class_id": 98,
       "bbox": [
         56,
         182,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         20,
         321,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "post",
+      "class_id": 99,
       "bbox": [
         51,
         174,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         84,
         212,
@@ -184,44 +202,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        29,
+        91,
+        56,
+        126
+      ],
       "predicate": "on",
-      "object_label": "sign"
+      "predicate_id": 30,
+      "object_id": 6,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        13,
+        48,
+        122,
+        178
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        49,
+        86,
+        66,
+        128
+      ],
       "predicate": "on",
-      "object_label": "sign"
+      "predicate_id": 30,
+      "object_id": 6,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        13,
+        48,
+        122,
+        178
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        62,
+        87,
+        90,
+        134
+      ],
       "predicate": "on",
-      "object_label": "sign"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        20,
+        56,
+        120,
+        407
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        13,
+        48,
+        122,
+        178
+      ],
       "predicate": "holding",
-      "object_label": "post"
+      "predicate_id": 20,
+      "object_id": 16,
+      "object_label": "post",
+      "object_class_id": 99,
+      "object_bbox": [
+        51,
+        174,
+        80,
+        407
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        13,
+        48,
+        122,
+        178
+      ],
       "predicate": "on",
-      "object_label": "post"
+      "predicate_id": 30,
+      "object_id": 16,
+      "object_label": "post",
+      "object_class_id": 99,
+      "object_bbox": [
+        51,
+        174,
+        80,
+        407
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        20,
+        56,
+        120,
+        407
+      ],
       "predicate": "on",
-      "object_label": "sidewalk"
+      "predicate_id": 30,
+      "object_id": 15,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        20,
+        321,
+        346,
+        414
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "street",
+      "subject_class_id": 123,
+      "subject_bbox": [
+        2,
+        206,
+        351,
+        377
+      ],
       "predicate": "between",
-      "object_label": "sidewalk"
+      "predicate_id": 9,
+      "object_id": 17,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        84,
+        212,
+        337,
+        413
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        0,
+        1,
+        51,
+        232
+      ],
       "predicate": "covering",
-      "object_label": "street"
+      "predicate_id": 12,
+      "object_id": 8,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        2,
+        206,
+        351,
+        377
+      ]
     }
   ]
 }

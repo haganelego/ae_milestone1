@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bike",
+      "class_id": 10,
       "bbox": [
         286,
         22,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "bike",
+      "class_id": 10,
       "bbox": [
         0,
         12,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "helmet",
+      "class_id": 61,
       "bbox": [
         100,
         38,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         385,
         0,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "stand",
+      "class_id": 122,
       "bbox": [
         278,
         76,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "tile",
+      "class_id": 128,
       "bbox": [
         258,
         195,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "tire",
+      "class_id": 129,
       "bbox": [
         227,
         112,
@@ -74,19 +81,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 1,
       "subject_label": "bike",
+      "subject_class_id": 10,
+      "subject_bbox": [
+        0,
+        12,
+        293,
+        209
+      ],
       "predicate": "near",
-      "object_label": "bike"
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "bike",
+      "object_class_id": 10,
+      "object_bbox": [
+        286,
+        22,
+        491,
+        198
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "bike",
+      "subject_class_id": 10,
+      "subject_bbox": [
+        0,
+        12,
+        293,
+        209
+      ],
       "predicate": "has",
-      "object_label": "tire"
+      "predicate_id": 19,
+      "object_id": 6,
+      "object_label": "tire",
+      "object_class_id": 129,
+      "object_bbox": [
+        227,
+        112,
+        292,
+        193
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "helmet",
+      "subject_class_id": 61,
+      "subject_bbox": [
+        100,
+        38,
+        147,
+        80
+      ],
       "predicate": "on",
-      "object_label": "bike"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "bike",
+      "object_class_id": 10,
+      "object_bbox": [
+        0,
+        12,
+        293,
+        209
+      ]
     }
   ]
 }

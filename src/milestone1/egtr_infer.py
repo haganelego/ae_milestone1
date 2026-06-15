@@ -74,10 +74,16 @@ class EgtrModel:
         """Run inference on a single PIL image.
 
         Returns {
-            objects: [{object_id, label, confidence, bbox: [x1,y1,x2,y2]}],
-            relationships: [{subject_id, subject_label, predicate,
-                             object_id, object_label, confidence}]
+            objects: [{object_id, query_id, label, confidence, bbox: [x1,y1,x2,y2]}],
+            relationships: [{subject_id, subject_label, subject_class_id, subject_bbox,
+                             predicate, predicate_id,
+                             object_id, object_label, object_class_id, object_bbox,
+                             confidence, subject_conf, object_conf, triplet_score}]
         }
+
+        subject_id / object_id are query indices. *_bbox / *_class_id / predicate_id
+        / triplet_score are persisted so standard SGDet R@K (IoU triplet matching vs
+        GT) is computable post-hoc, independent of the confidence-gated objects list.
         """
         img_w, img_h = pil_image.size
 
@@ -168,16 +174,26 @@ class EgtrModel:
 
             # subject_id/object_id are query indices (endpoints may be below the
             # object_conf_threshold and thus absent from the exported objects list).
+            # bbox / class-id / triplet_score are persisted on every relationship so
+            # that standard SGDet R@K (IoU-based triplet matching against GT) can be
+            # computed post-hoc directly from these JSONs, independent of the
+            # confidence-gated `objects` list. abs_boxes is indexed by query id.
             relationships.append(
                 {
                     "subject_id": s_q,
                     "subject_label": self.obj_names[pred_classes[s_q].item()],
+                    "subject_class_id": int(pred_classes[s_q].item()),
+                    "subject_bbox": [round(x, 1) for x in abs_boxes[s_q].tolist()],
                     "predicate": self.pred_names[best_pred],
+                    "predicate_id": int(best_pred),
                     "object_id": o_q,
                     "object_label": self.obj_names[pred_classes[o_q].item()],
+                    "object_class_id": int(pred_classes[o_q].item()),
+                    "object_bbox": [round(x, 1) for x in abs_boxes[o_q].tolist()],
                     "confidence": round(rel_score, 4),
                     "subject_conf": round(obj_scores[s_q].item(), 4),
                     "object_conf": round(obj_scores[o_q].item(), 4),
+                    "triplet_score": round(triplet_scores[s_q, o_q].item(), 6),
                 }
             )
 

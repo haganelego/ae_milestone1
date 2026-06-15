@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         115,
         35,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         359,
         37,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         255,
         36,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         7,
         36,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "racket",
+      "class_id": 101,
       "bbox": [
         176,
         99,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         90,
         68,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         8,
         240,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         189,
         252,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         257,
         240,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         389,
         221,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "sock",
+      "class_id": 121,
       "bbox": [
         428,
         231,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         79,
         138,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "player",
+      "class_id": 97,
       "bbox": [
         337,
         40,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         96,
         85,
@@ -144,34 +158,136 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        255,
+        36,
+        485,
+        290
+      ],
       "predicate": "has",
-      "object_label": "hair"
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        359,
+        37,
+        393,
+        64
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        255,
+        36,
+        485,
+        290
+      ],
       "predicate": "in",
-      "object_label": "shoe"
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        389,
+        221,
+        494,
+        287
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        255,
+        36,
+        485,
+        290
+      ],
       "predicate": "in",
-      "object_label": "shirt"
+      "predicate_id": 21,
+      "object_id": 13,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        96,
+        85,
+        170,
+        156
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        7,
+        36,
+        238,
+        290
+      ],
       "predicate": "has",
-      "object_label": "hair"
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        115,
+        35,
+        148,
+        64
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        7,
+        36,
+        238,
+        290
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 11,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        79,
+        138,
+        175,
+        225
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "sock",
+      "subject_class_id": 121,
+      "subject_bbox": [
+        428,
+        231,
+        454,
+        270
+      ],
       "predicate": "on",
-      "object_label": "player"
+      "predicate_id": 30,
+      "object_id": 12,
+      "object_label": "player",
+      "object_class_id": 97,
+      "object_bbox": [
+        337,
+        40,
+        453,
+        274
+      ]
     }
   ]
 }

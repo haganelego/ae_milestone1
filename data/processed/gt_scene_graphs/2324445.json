@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "boy",
+      "class_id": 19,
       "bbox": [
         392,
         172,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         235,
         121,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "fence",
+      "class_id": 44,
       "bbox": [
         0,
         159,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "hill",
+      "class_id": 62,
       "bbox": [
         407,
         160,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         423,
         167,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "pole",
+      "class_id": 98,
       "bbox": [
         37,
         173,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "track",
+      "class_id": 133,
       "bbox": [
         0,
         207,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "train",
+      "class_id": 134,
       "bbox": [
         192,
         96,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         269,
         121,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         205,
         114,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "fence",
+      "class_id": 44,
       "bbox": [
         37,
         156,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "track",
+      "class_id": 133,
       "bbox": [
         71,
         238,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         378,
         149,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "people",
+      "class_id": 89,
       "bbox": [
         423,
         164,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "post",
+      "class_id": 99,
       "bbox": [
         74,
         170,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         388,
         174,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         388,
         210,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "mountain",
+      "class_id": 80,
       "bbox": [
         0,
         3,
@@ -184,64 +202,268 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        159,
+        201,
+        233
+      ],
       "predicate": "near",
-      "object_label": "track"
+      "predicate_id": 28,
+      "object_id": 6,
+      "object_label": "track",
+      "object_class_id": 133,
+      "object_bbox": [
+        0,
+        207,
+        346,
+        373
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        159,
+        201,
+        233
+      ],
       "predicate": "between",
-      "object_label": "train"
+      "predicate_id": 9,
+      "object_id": 7,
+      "object_label": "train",
+      "object_class_id": 134,
+      "object_bbox": [
+        192,
+        96,
+        350,
+        243
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        159,
+        201,
+        233
+      ],
       "predicate": "near",
-      "object_label": "train"
+      "predicate_id": 28,
+      "object_id": 7,
+      "object_label": "train",
+      "object_class_id": 134,
+      "object_bbox": [
+        192,
+        96,
+        350,
+        243
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        159,
+        201,
+        233
+      ],
       "predicate": "between",
-      "object_label": "mountain"
+      "predicate_id": 9,
+      "object_id": 17,
+      "object_label": "mountain",
+      "object_class_id": 80,
+      "object_bbox": [
+        0,
+        3,
+        479,
+        197
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        37,
+        173,
+        47,
+        224
+      ],
       "predicate": "on",
-      "object_label": "fence"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "fence",
+      "object_class_id": 44,
+      "object_bbox": [
+        0,
+        159,
+        201,
+        233
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "train",
+      "subject_class_id": 134,
+      "subject_bbox": [
+        192,
+        96,
+        350,
+        243
+      ],
       "predicate": "on",
-      "object_label": "track"
+      "predicate_id": 30,
+      "object_id": 6,
+      "object_label": "track",
+      "object_class_id": 133,
+      "object_bbox": [
+        0,
+        207,
+        346,
+        373
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        269,
+        121,
+        293,
+        156
+      ],
       "predicate": "on",
-      "object_label": "train"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "train",
+      "object_class_id": 134,
+      "object_bbox": [
+        192,
+        96,
+        350,
+        243
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        205,
+        114,
+        229,
+        159
+      ],
       "predicate": "on",
-      "object_label": "train"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "train",
+      "object_class_id": 134,
+      "object_bbox": [
+        192,
+        96,
+        350,
+        243
+      ]
     },
     {
+      "subject_id": 13,
       "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        423,
+        164,
+        447,
+        214
+      ],
       "predicate": "walking on",
-      "object_label": "sidewalk"
+      "predicate_id": 45,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        378,
+        149,
+        498,
+        371
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "post",
+      "subject_class_id": 99,
+      "subject_bbox": [
+        74,
+        170,
+        92,
+        219
+      ],
       "predicate": "on",
-      "object_label": "fence"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "fence",
+      "object_class_id": 44,
+      "object_bbox": [
+        0,
+        159,
+        201,
+        233
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "post",
+      "subject_class_id": 99,
+      "subject_bbox": [
+        74,
+        170,
+        92,
+        219
+      ],
       "predicate": "on",
-      "object_label": "fence"
+      "predicate_id": 30,
+      "object_id": 10,
+      "object_label": "fence",
+      "object_class_id": 44,
+      "object_bbox": [
+        37,
+        156,
+        198,
+        219
+      ]
     },
     {
+      "subject_id": 16,
       "subject_label": "sidewalk",
+      "subject_class_id": 113,
+      "subject_bbox": [
+        388,
+        210,
+        496,
+        363
+      ],
       "predicate": "near",
-      "object_label": "track"
+      "predicate_id": 28,
+      "object_id": 6,
+      "object_label": "track",
+      "object_class_id": 133,
+      "object_bbox": [
+        0,
+        207,
+        346,
+        373
+      ]
     }
   ]
 }

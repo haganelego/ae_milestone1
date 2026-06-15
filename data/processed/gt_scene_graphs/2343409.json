@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         3,
         93,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "nose",
+      "class_id": 83,
       "bbox": [
         462,
         166,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         1,
         58,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         453,
         222,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         408,
         220,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         2,
         75,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "plane",
+      "class_id": 94,
       "bbox": [
         332,
         218,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "tail",
+      "class_id": 126,
       "bbox": [
         2,
         94,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "wing",
+      "class_id": 146,
       "bbox": [
         170,
         139,
@@ -94,19 +103,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "plane",
+      "subject_class_id": 94,
+      "subject_bbox": [
+        3,
+        93,
+        493,
+        236
+      ],
       "predicate": "has",
-      "object_label": "nose"
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "nose",
+      "object_class_id": 83,
+      "object_bbox": [
+        462,
+        166,
+        492,
+        203
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "tail",
+      "subject_class_id": 126,
+      "subject_bbox": [
+        2,
+        94,
+        123,
+        205
+      ],
       "predicate": "part of",
-      "object_label": "plane"
+      "predicate_id": 35,
+      "object_id": 0,
+      "object_label": "plane",
+      "object_class_id": 94,
+      "object_bbox": [
+        3,
+        93,
+        493,
+        236
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "wing",
+      "subject_class_id": 146,
+      "subject_bbox": [
+        170,
+        139,
+        339,
+        204
+      ],
       "predicate": "of",
-      "object_label": "plane"
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "plane",
+      "object_class_id": 94,
+      "object_bbox": [
+        1,
+        58,
+        497,
+        281
+      ]
     }
   ]
 }

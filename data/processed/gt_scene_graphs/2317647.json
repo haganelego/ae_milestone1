@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bench",
+      "class_id": 9,
       "bbox": [
         79,
         265,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "book",
+      "class_id": 14,
       "bbox": [
         19,
         296,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "face",
+      "class_id": 43,
       "bbox": [
         400,
         100,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "girl",
+      "class_id": 52,
       "bbox": [
         343,
         45,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "glass",
+      "class_id": 53,
       "bbox": [
         391,
         123,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         37,
         88,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         392,
         196,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         38,
         337,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         89,
         335,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         362,
         199,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "hat",
+      "class_id": 59,
       "bbox": [
         100,
         83,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         89,
         89,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         80,
         132,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "jean",
+      "class_id": 66,
       "bbox": [
         35,
         323,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         10,
         194,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         345,
         140,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         57,
         23,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         249,
         22,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "phone",
+      "class_id": 91,
       "bbox": [
         378,
         191,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         23,
         68,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         308,
         39,
@@ -214,6 +235,7 @@
     {
       "object_id": 21,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         365,
         46,
@@ -224,6 +246,7 @@
     {
       "object_id": 22,
       "label": "phone",
+      "class_id": 91,
       "bbox": [
         392,
         188,
@@ -234,6 +257,7 @@
     {
       "object_id": 23,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         15,
         189,
@@ -244,6 +268,7 @@
     {
       "object_id": 24,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         333,
         46,
@@ -254,6 +279,7 @@
     {
       "object_id": 25,
       "label": "jacket",
+      "class_id": 65,
       "bbox": [
         94,
         144,
@@ -264,6 +290,7 @@
     {
       "object_id": 26,
       "label": "glass",
+      "class_id": 53,
       "bbox": [
         429,
         122,
@@ -274,6 +301,7 @@
     {
       "object_id": 27,
       "label": "phone",
+      "class_id": 91,
       "bbox": [
         398,
         198,
@@ -284,6 +312,7 @@
     {
       "object_id": 28,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         28,
         319,
@@ -294,6 +323,7 @@
     {
       "object_id": 29,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         351,
         168,
@@ -304,6 +334,7 @@
     {
       "object_id": 30,
       "label": "people",
+      "class_id": 89,
       "bbox": [
         69,
         40,
@@ -314,6 +345,7 @@
     {
       "object_id": 31,
       "label": "bench",
+      "class_id": 9,
       "bbox": [
         261,
         239,
@@ -324,6 +356,7 @@
     {
       "object_id": 32,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         47,
         33,
@@ -334,109 +367,466 @@
   ],
   "relationships": [
     {
+      "subject_id": 3,
       "subject_label": "girl",
+      "subject_class_id": 52,
+      "subject_bbox": [
+        343,
+        45,
+        486,
+        403
+      ],
       "predicate": "on",
-      "object_label": "phone"
+      "predicate_id": 30,
+      "object_id": 18,
+      "object_label": "phone",
+      "object_class_id": 91,
+      "object_bbox": [
+        378,
+        191,
+        433,
+        253
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "glass",
+      "subject_class_id": 53,
+      "subject_bbox": [
+        391,
+        123,
+        476,
+        156
+      ],
       "predicate": "on",
-      "object_label": "woman"
+      "predicate_id": 30,
+      "object_id": 21,
+      "object_label": "woman",
+      "object_class_id": 148,
+      "object_bbox": [
+        365,
+        46,
+        483,
+        231
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        37,
+        88,
+        327,
+        487
+      ],
       "predicate": "sitting on",
-      "object_label": "bench"
+      "predicate_id": 39,
+      "object_id": 0,
+      "object_label": "bench",
+      "object_class_id": 9,
+      "object_bbox": [
+        79,
+        265,
+        484,
+        495
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        37,
+        88,
+        327,
+        487
+      ],
       "predicate": "holding",
-      "object_label": "book"
+      "predicate_id": 20,
+      "object_id": 1,
+      "object_label": "book",
+      "object_class_id": 14,
+      "object_bbox": [
+        19,
+        296,
+        175,
+        404
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        37,
+        88,
+        327,
+        487
+      ],
       "predicate": "wearing",
-      "object_label": "hat"
+      "predicate_id": 47,
+      "object_id": 10,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        100,
+        83,
+        205,
+        178
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        37,
+        88,
+        327,
+        487
+      ],
       "predicate": "wearing",
-      "object_label": "jacket"
+      "predicate_id": 47,
+      "object_id": 25,
+      "object_label": "jacket",
+      "object_class_id": 65,
+      "object_bbox": [
+        94,
+        144,
+        313,
+        350
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        37,
+        88,
+        327,
+        487
+      ],
       "predicate": "wearing",
-      "object_label": "pant"
+      "predicate_id": 47,
+      "object_id": 28,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        28,
+        319,
+        336,
+        497
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "hat",
+      "subject_class_id": 59,
+      "subject_bbox": [
+        100,
+        83,
+        205,
+        178
+      ],
       "predicate": "on",
-      "object_label": "head"
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "head",
+      "object_class_id": 60,
+      "object_bbox": [
+        89,
+        89,
+        221,
+        230
+      ]
     },
     {
+      "subject_id": 15,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        345,
+        140,
+        492,
+        364
+      ],
       "predicate": "on",
-      "object_label": "person"
+      "predicate_id": 30,
+      "object_id": 29,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        351,
+        168,
+        491,
+        340
+      ]
     },
     {
+      "subject_id": 16,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        57,
+        23,
+        226,
+        261
+      ],
       "predicate": "behind",
-      "object_label": "man"
+      "predicate_id": 7,
+      "object_id": 5,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        37,
+        88,
+        327,
+        487
+      ]
     },
     {
+      "subject_id": 16,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        57,
+        23,
+        226,
+        261
+      ],
       "predicate": "behind",
-      "object_label": "person"
+      "predicate_id": 7,
+      "object_id": 23,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        15,
+        189,
+        112,
+        491
+      ]
     },
     {
+      "subject_id": 16,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        57,
+        23,
+        226,
+        261
+      ],
       "predicate": "behind",
-      "object_label": "person"
+      "predicate_id": 7,
+      "object_id": 24,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        333,
+        46,
+        483,
+        485
+      ]
     },
     {
+      "subject_id": 17,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        249,
+        22,
+        479,
+        271
+      ],
       "predicate": "behind",
-      "object_label": "man"
+      "predicate_id": 7,
+      "object_id": 5,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        37,
+        88,
+        327,
+        487
+      ]
     },
     {
+      "subject_id": 17,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        249,
+        22,
+        479,
+        271
+      ],
       "predicate": "behind",
-      "object_label": "person"
+      "predicate_id": 7,
+      "object_id": 23,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        15,
+        189,
+        112,
+        491
+      ]
     },
     {
+      "subject_id": 19,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        23,
+        68,
+        383,
+        489
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 12,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        80,
+        132,
+        337,
+        355
+      ]
     },
     {
+      "subject_id": 20,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        308,
+        39,
+        491,
+        497
+      ],
       "predicate": "sitting on",
-      "object_label": "bench"
+      "predicate_id": 39,
+      "object_id": 0,
+      "object_label": "bench",
+      "object_class_id": 9,
+      "object_bbox": [
+        79,
+        265,
+        484,
+        495
+      ]
     },
     {
+      "subject_id": 20,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        308,
+        39,
+        491,
+        497
+      ],
       "predicate": "wearing",
-      "object_label": "glass"
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "glass",
+      "object_class_id": 53,
+      "object_bbox": [
+        391,
+        123,
+        476,
+        156
+      ]
     },
     {
+      "subject_id": 23,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        15,
+        189,
+        112,
+        491
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 14,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        10,
+        194,
+        108,
+        370
+      ]
     },
     {
+      "subject_id": 26,
       "subject_label": "glass",
+      "subject_class_id": 53,
+      "subject_bbox": [
+        429,
+        122,
+        480,
+        165
+      ],
       "predicate": "sitting on",
-      "object_label": "face"
+      "predicate_id": 39,
+      "object_id": 2,
+      "object_label": "face",
+      "object_class_id": 43,
+      "object_bbox": [
+        400,
+        100,
+        476,
+        186
+      ]
     },
     {
+      "subject_id": 30,
       "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        69,
+        40,
+        497,
+        448
+      ],
       "predicate": "has",
-      "object_label": "bench"
+      "predicate_id": 19,
+      "object_id": 31,
+      "object_label": "bench",
+      "object_class_id": 9,
+      "object_bbox": [
+        261,
+        239,
+        377,
+        367
+      ]
     },
     {
+      "subject_id": 32,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        47,
+        33,
+        496,
+        273
+      ],
       "predicate": "behind",
-      "object_label": "people"
+      "predicate_id": 7,
+      "object_id": 30,
+      "object_label": "people",
+      "object_class_id": 89,
+      "object_bbox": [
+        69,
+        40,
+        497,
+        448
+      ]
     }
   ]
 }

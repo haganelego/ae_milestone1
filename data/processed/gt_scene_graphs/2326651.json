@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "basket",
+      "class_id": 5,
       "bbox": [
         236,
         287,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         0,
         9,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         210,
         46,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "elephant",
+      "class_id": 40,
       "bbox": [
         77,
         100,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         0,
         0,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         110,
         5,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         137,
         79,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         343,
         150,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         295,
         147,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         323,
         156,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         391,
         152,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "trunk",
+      "class_id": 137,
       "bbox": [
         235,
         128,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         114,
         4,
@@ -134,29 +147,114 @@
   ],
   "relationships": [
     {
+      "subject_id": 7,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        343,
+        150,
+        363,
+        185
+      ],
       "predicate": "near",
-      "object_label": "building"
+      "predicate_id": 28,
+      "object_id": 2,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        210,
+        46,
+        493,
+        210
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        295,
+        147,
+        318,
+        183
+      ],
       "predicate": "near",
-      "object_label": "building"
+      "predicate_id": 28,
+      "object_id": 2,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        210,
+        46,
+        493,
+        210
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        323,
+        156,
+        348,
+        188
+      ],
       "predicate": "near",
-      "object_label": "building"
+      "predicate_id": 28,
+      "object_id": 2,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        210,
+        46,
+        493,
+        210
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        391,
+        152,
+        423,
+        186
+      ],
       "predicate": "near",
-      "object_label": "building"
+      "predicate_id": 28,
+      "object_id": 2,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        210,
+        46,
+        493,
+        210
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        114,
+        4,
+        218,
+        146
+      ],
       "predicate": "wearing",
-      "object_label": "pant"
+      "predicate_id": 47,
+      "object_id": 6,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        137,
+        79,
+        211,
+        130
+      ]
     }
   ]
 }

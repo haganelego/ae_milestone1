@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "arm",
+      "class_id": 2,
       "bbox": [
         162,
         47,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         77,
         103,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         109,
         126,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "jacket",
+      "class_id": 65,
       "bbox": [
         67,
         103,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         54,
         265,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         106,
         33,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "logo",
+      "class_id": 76,
       "bbox": [
         30,
         14,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         150,
         32,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         91,
         57,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "player",
+      "class_id": 97,
       "bbox": [
         37,
         162,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         112,
         73,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         163,
         75,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         98,
         194,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         78,
         259,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "sneaker",
+      "class_id": 119,
       "bbox": [
         37,
         380,
@@ -154,19 +169,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 3,
       "subject_label": "jacket",
+      "subject_class_id": 65,
+      "subject_bbox": [
+        67,
+        103,
+        118,
+        161
+      ],
       "predicate": "on",
-      "object_label": "chair"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "chair",
+      "object_class_id": 27,
+      "object_bbox": [
+        77,
+        103,
+        132,
+        163
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        91,
+        57,
+        164,
+        191
+      ],
       "predicate": "with",
-      "object_label": "hand"
+      "predicate_id": 49,
+      "object_id": 2,
+      "object_label": "hand",
+      "object_class_id": 57,
+      "object_bbox": [
+        109,
+        126,
+        163,
+        143
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        98,
+        194,
+        180,
+        275
+      ],
       "predicate": "on",
-      "object_label": "player"
+      "predicate_id": 30,
+      "object_id": 9,
+      "object_label": "player",
+      "object_class_id": 97,
+      "object_bbox": [
+        37,
+        162,
+        215,
+        410
+      ]
     }
   ]
 }

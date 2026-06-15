@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "snow",
+      "class_id": 120,
       "bbox": [
         0,
         178,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "glove",
+      "class_id": 54,
       "bbox": [
         244,
         189,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         139,
         87,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "helmet",
+      "class_id": 61,
       "bbox": [
         135,
         86,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "hill",
+      "class_id": 62,
       "bbox": [
         396,
         141,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "jacket",
+      "class_id": 65,
       "bbox": [
         137,
         117,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         113,
         82,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         199,
         155,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         250,
         229,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         281,
         225,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         244,
         158,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         73,
         160,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         251,
         149,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         317,
         163,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "board",
+      "class_id": 12,
       "bbox": [
         234,
         231,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "snow",
+      "class_id": 120,
       "bbox": [
         58,
         227,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "snow",
+      "class_id": 120,
       "bbox": [
         12,
         190,
@@ -174,34 +191,136 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        139,
+        87,
+        185,
+        138
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 6,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        113,
+        82,
+        314,
+        271
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "helmet",
+      "subject_class_id": 61,
+      "subject_bbox": [
+        135,
+        86,
+        191,
+        139
+      ],
       "predicate": "on",
-      "object_label": "head"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "head",
+      "object_class_id": 60,
+      "object_bbox": [
+        139,
+        87,
+        185,
+        138
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        113,
+        82,
+        314,
+        271
+      ],
       "predicate": "wearing",
-      "object_label": "glove"
+      "predicate_id": 47,
+      "object_id": 1,
+      "object_label": "glove",
+      "object_class_id": 54,
+      "object_bbox": [
+        244,
+        189,
+        260,
+        215
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        113,
+        82,
+        314,
+        271
+      ],
       "predicate": "wearing",
-      "object_label": "jacket"
+      "predicate_id": 47,
+      "object_id": 5,
+      "object_label": "jacket",
+      "object_class_id": 65,
+      "object_bbox": [
+        137,
+        117,
+        256,
+        206
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "shoe",
+      "subject_class_id": 111,
+      "subject_bbox": [
+        250,
+        229,
+        273,
+        248
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 6,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        113,
+        82,
+        314,
+        271
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "shoe",
+      "subject_class_id": 111,
+      "subject_bbox": [
+        281,
+        225,
+        313,
+        262
+      ],
       "predicate": "of",
-      "object_label": "man"
+      "predicate_id": 29,
+      "object_id": 6,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        113,
+        82,
+        314,
+        271
+      ]
     }
   ]
 }

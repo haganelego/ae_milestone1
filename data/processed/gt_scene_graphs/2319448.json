@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "banana",
+      "class_id": 4,
       "bbox": [
         17,
         56,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         277,
         340,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         3,
         285,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         290,
         3,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "room",
+      "class_id": 105,
       "bbox": [
         0,
         1,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         184,
         76,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         259,
         97,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         230,
         67,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "umbrella",
+      "class_id": 138,
       "bbox": [
         176,
         288,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         65,
         1,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "chair",
+      "class_id": 27,
       "bbox": [
         6,
         272,
@@ -114,19 +125,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "banana",
+      "subject_class_id": 4,
+      "subject_bbox": [
+        17,
+        56,
+        202,
+        396
+      ],
       "predicate": "in",
-      "object_label": "chair"
+      "predicate_id": 21,
+      "object_id": 10,
+      "object_label": "chair",
+      "object_class_id": 27,
+      "object_bbox": [
+        6,
+        272,
+        135,
+        379
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "chair",
+      "subject_class_id": 27,
+      "subject_bbox": [
+        277,
+        340,
+        374,
+        493
+      ],
       "predicate": "in",
-      "object_label": "room"
+      "predicate_id": 21,
+      "object_id": 4,
+      "object_label": "room",
+      "object_class_id": 105,
+      "object_bbox": [
+        0,
+        1,
+        367,
+        491
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "chair",
+      "subject_class_id": 27,
+      "subject_bbox": [
+        3,
+        285,
+        211,
+        477
+      ],
       "predicate": "under",
-      "object_label": "banana"
+      "predicate_id": 42,
+      "object_id": 0,
+      "object_label": "banana",
+      "object_class_id": 4,
+      "object_bbox": [
+        17,
+        56,
+        202,
+        396
+      ]
     }
   ]
 }

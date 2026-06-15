@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bottle",
+      "class_id": 16,
       "bbox": [
         0,
         0,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "table",
+      "class_id": 125,
       "bbox": [
         0,
         5,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         75,
         118,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         221,
         12,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         173,
         138,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         250,
         114,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "vegetable",
+      "class_id": 140,
       "bbox": [
         316,
         98,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "pizza",
+      "class_id": 93,
       "bbox": [
         12,
         22,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "plate",
+      "class_id": 96,
       "bbox": [
         0,
         11,
@@ -94,64 +103,268 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "bottle",
+      "subject_class_id": 16,
+      "subject_bbox": [
+        0,
+        0,
+        71,
+        85
+      ],
       "predicate": "behind",
-      "object_label": "pizza"
+      "predicate_id": 7,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "table",
+      "subject_class_id": 125,
+      "subject_bbox": [
+        0,
+        5,
+        498,
+        371
+      ],
       "predicate": "on",
-      "object_label": "pizza"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "table",
+      "subject_class_id": 125,
+      "subject_bbox": [
+        0,
+        5,
+        498,
+        371
+      ],
       "predicate": "with",
-      "object_label": "pizza"
+      "predicate_id": 49,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        75,
+        118,
+        181,
+        215
+      ],
       "predicate": "on",
-      "object_label": "table"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        0,
+        5,
+        498,
+        371
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        75,
+        118,
+        181,
+        215
+      ],
       "predicate": "on",
-      "object_label": "pizza"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        221,
+        12,
+        286,
+        107
+      ],
       "predicate": "on",
-      "object_label": "table"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        0,
+        5,
+        498,
+        371
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        221,
+        12,
+        286,
+        107
+      ],
       "predicate": "on",
-      "object_label": "pizza"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        173,
+        138,
+        256,
+        179
+      ],
       "predicate": "on",
-      "object_label": "table"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        0,
+        5,
+        498,
+        371
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        173,
+        138,
+        256,
+        179
+      ],
       "predicate": "on",
-      "object_label": "pizza"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        250,
+        114,
+        337,
+        209
+      ],
       "predicate": "on",
-      "object_label": "table"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        0,
+        5,
+        498,
+        371
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        250,
+        114,
+        337,
+        209
+      ],
       "predicate": "on",
-      "object_label": "pizza"
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        12,
+        22,
+        498,
+        361
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "pizza",
+      "subject_class_id": 93,
+      "subject_bbox": [
+        12,
+        22,
+        498,
+        361
+      ],
       "predicate": "on",
-      "object_label": "plate"
+      "predicate_id": 30,
+      "object_id": 8,
+      "object_label": "plate",
+      "object_class_id": 96,
+      "object_bbox": [
+        0,
+        11,
+        498,
+        334
+      ]
     }
   ]
 }

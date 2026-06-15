@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         336,
         12,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         97,
         102,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         426,
         158,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         29,
         105,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "sheep",
+      "class_id": 108,
       "bbox": [
         251,
         1,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "sheep",
+      "class_id": 108,
       "bbox": [
         5,
         1,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         135,
         97,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         94,
         106,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "nose",
+      "class_id": 83,
       "bbox": [
         271,
         59,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "mouth",
+      "class_id": 81,
       "bbox": [
         277,
         70,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         138,
         100,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "eye",
+      "class_id": 42,
       "bbox": [
         297,
         25,
@@ -124,44 +136,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        336,
+        12,
+        375,
+        43
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 4,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        251,
+        1,
+        499,
+        227
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        97,
+        102,
+        168,
+        156
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 5,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        5,
+        1,
+        496,
+        204
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        426,
+        158,
+        445,
+        208
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 4,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        251,
+        1,
+        499,
+        227
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "sheep",
+      "subject_class_id": 108,
+      "subject_bbox": [
+        251,
+        1,
+        499,
+        227
+      ],
       "predicate": "with",
-      "object_label": "eye"
+      "predicate_id": 49,
+      "object_id": 11,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        297,
+        25,
+        335,
+        56
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        135,
+        97,
+        166,
+        117
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 5,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        5,
+        1,
+        496,
+        204
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        94,
+        106,
+        122,
+        121
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 5,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        5,
+        1,
+        496,
+        204
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "nose",
+      "subject_class_id": 83,
+      "subject_bbox": [
+        271,
+        59,
+        292,
+        87
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 4,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        251,
+        1,
+        499,
+        227
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "mouth",
+      "subject_class_id": 81,
+      "subject_bbox": [
+        277,
+        70,
+        310,
+        95
+      ],
       "predicate": "of",
-      "object_label": "sheep"
+      "predicate_id": 29,
+      "object_id": 4,
+      "object_label": "sheep",
+      "object_class_id": 108,
+      "object_bbox": [
+        251,
+        1,
+        499,
+        227
+      ]
     }
   ]
 }

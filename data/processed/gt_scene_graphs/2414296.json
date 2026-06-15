@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         0,
         278,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         87,
         0,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "clock",
+      "class_id": 29,
       "bbox": [
         275,
         71,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "lamp",
+      "class_id": 70,
       "bbox": [
         115,
         181,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         454,
         44,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         92,
         157,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         148,
         208,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         368,
         187,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         150,
         268,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         214,
         238,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "street",
+      "class_id": 123,
       "bbox": [
         0,
         322,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         0,
         201,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         214,
         233,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         132,
         213,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "umbrella",
+      "class_id": 138,
       "bbox": [
         359,
         269,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "letter",
+      "class_id": 74,
       "bbox": [
         142,
         252,
@@ -164,44 +180,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "clock",
+      "subject_class_id": 29,
+      "subject_bbox": [
+        275,
+        71,
+        369,
+        177
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "lamp",
+      "subject_class_id": 70,
+      "subject_bbox": [
+        115,
+        181,
+        180,
+        372
+      ],
       "predicate": "with",
-      "object_label": "light"
+      "predicate_id": 49,
+      "object_id": 6,
+      "object_label": "light",
+      "object_class_id": 75,
+      "object_bbox": [
+        148,
+        208,
+        181,
+        232
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        454,
+        44,
+        500,
+        102
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "light",
+      "subject_class_id": 75,
+      "subject_bbox": [
+        92,
+        157,
+        498,
+        371
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "light",
+      "subject_class_id": 75,
+      "subject_bbox": [
+        92,
+        157,
+        498,
+        371
+      ],
       "predicate": "on",
-      "object_label": "street"
+      "predicate_id": 30,
+      "object_id": 10,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        322,
+        429,
+        371
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "light",
+      "subject_class_id": 75,
+      "subject_bbox": [
+        368,
+        187,
+        390,
+        209
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        214,
+        233,
+        266,
+        268
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "umbrella",
+      "subject_class_id": 138,
+      "subject_bbox": [
+        359,
+        269,
+        397,
+        370
+      ],
       "predicate": "in front of",
-      "object_label": "building"
+      "predicate_id": 22,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        87,
+        0,
+        498,
+        374
+      ]
     }
   ]
 }

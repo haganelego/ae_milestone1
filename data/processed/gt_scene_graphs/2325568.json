@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         220,
         226,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         220,
         92,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "pole",
+      "class_id": 98,
       "bbox": [
         245,
         57,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         218,
         60,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         214,
         215,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         214,
         87,
@@ -64,34 +70,136 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "light",
+      "subject_class_id": 75,
+      "subject_bbox": [
+        220,
+        226,
+        402,
+        321
+      ],
       "predicate": "on",
-      "object_label": "pole"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        245,
+        57,
+        342,
+        330
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        245,
+        57,
+        342,
+        330
+      ],
       "predicate": "holding",
-      "object_label": "sign"
+      "predicate_id": 20,
+      "object_id": 3,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        218,
+        60,
+        352,
+        227
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        245,
+        57,
+        342,
+        330
+      ],
       "predicate": "holding",
-      "object_label": "light"
+      "predicate_id": 20,
+      "object_id": 4,
+      "object_label": "light",
+      "object_class_id": 75,
+      "object_bbox": [
+        214,
+        215,
+        415,
+        325
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        218,
+        60,
+        352,
+        227
+      ],
       "predicate": "above",
-      "object_label": "light"
+      "predicate_id": 0,
+      "object_id": 0,
+      "object_label": "light",
+      "object_class_id": 75,
+      "object_bbox": [
+        220,
+        226,
+        402,
+        321
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        218,
+        60,
+        352,
+        227
+      ],
       "predicate": "on",
-      "object_label": "pole"
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        245,
+        57,
+        342,
+        330
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        214,
+        87,
+        349,
+        191
+      ],
       "predicate": "under",
-      "object_label": "sign"
+      "predicate_id": 42,
+      "object_id": 1,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        220,
+        92,
+        342,
+        184
+      ]
     }
   ]
 }

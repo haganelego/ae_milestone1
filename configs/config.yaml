@@ -54,7 +54,9 @@ resolution_levels:
     - 0.7293
     - 0.8538
     - 1.00
-  interpolation: bilinear
+  # nearest-neighbor downscale/upscale: produces blocky low-res artifacts that
+  # better mimic real sensor/observation degradation than smooth bilinear.
+  interpolation: nearest
 
 egtr:
   object_conf_threshold: 0.3

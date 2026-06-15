@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         4,
         288,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         13,
         287,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "kite",
+      "class_id": 68,
       "bbox": [
         119,
         123,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "neck",
+      "class_id": 82,
       "bbox": [
         44,
         357,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         1,
         362,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         319,
         436,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         6,
         270,
@@ -74,29 +81,114 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        4,
+        288,
+        186,
+        496
+      ],
       "predicate": "with",
-      "object_label": "shirt"
+      "predicate_id": 49,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        1,
+        362,
+        177,
+        495
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "hair",
+      "subject_class_id": 56,
+      "subject_bbox": [
+        13,
+        287,
+        92,
+        376
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        4,
+        288,
+        186,
+        496
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "neck",
+      "subject_class_id": 82,
+      "subject_bbox": [
+        44,
+        357,
+        88,
+        398
+      ],
       "predicate": "between",
-      "object_label": "hair"
+      "predicate_id": 9,
+      "object_id": 1,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        13,
+        287,
+        92,
+        376
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "neck",
+      "subject_class_id": 82,
+      "subject_bbox": [
+        44,
+        357,
+        88,
+        398
+      ],
       "predicate": "between",
-      "object_label": "shirt"
+      "predicate_id": 9,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        1,
+        362,
+        177,
+        495
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        1,
+        362,
+        177,
+        495
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        4,
+        288,
+        186,
+        496
+      ]
     }
   ]
 }

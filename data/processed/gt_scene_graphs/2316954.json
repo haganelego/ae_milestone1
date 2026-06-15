@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "boot",
+      "class_id": 15,
       "bbox": [
         182,
         306,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         204,
         131,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         63,
         108,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         173,
         125,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "surfboard",
+      "class_id": 124,
       "bbox": [
         209,
         164,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "surfboard",
+      "class_id": 124,
       "bbox": [
         41,
         123,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "wave",
+      "class_id": 142,
       "bbox": [
         279,
         129,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         161,
         128,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         64,
         109,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "surfboard",
+      "class_id": 124,
       "bbox": [
         190,
         179,
@@ -104,44 +114,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        63,
+        108,
+        103,
+        161
+      ],
       "predicate": "holding",
-      "object_label": "surfboard"
+      "predicate_id": 20,
+      "object_id": 5,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        41,
+        123,
+        134,
+        164
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        173,
+        125,
+        270,
+        330
+      ],
       "predicate": "in",
-      "object_label": "boot"
+      "predicate_id": 21,
+      "object_id": 0,
+      "object_label": "boot",
+      "object_class_id": 15,
+      "object_bbox": [
+        182,
+        306,
+        243,
+        331
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        173,
+        125,
+        270,
+        330
+      ],
       "predicate": "carrying",
-      "object_label": "surfboard"
+      "predicate_id": 10,
+      "object_id": 4,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        209,
+        164,
+        276,
+        300
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        173,
+        125,
+        270,
+        330
+      ],
       "predicate": "holding",
-      "object_label": "surfboard"
+      "predicate_id": 20,
+      "object_id": 4,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        209,
+        164,
+        276,
+        300
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        173,
+        125,
+        270,
+        330
+      ],
       "predicate": "with",
-      "object_label": "surfboard"
+      "predicate_id": 49,
+      "object_id": 4,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        209,
+        164,
+        276,
+        300
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        173,
+        125,
+        270,
+        330
+      ],
       "predicate": "holding",
-      "object_label": "surfboard"
+      "predicate_id": 20,
+      "object_id": 9,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        190,
+        179,
+        293,
+        299
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        161,
+        128,
+        280,
+        329
+      ],
       "predicate": "carrying",
-      "object_label": "surfboard"
+      "predicate_id": 10,
+      "object_id": 4,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        209,
+        164,
+        276,
+        300
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        64,
+        109,
+        98,
+        167
+      ],
       "predicate": "holding",
-      "object_label": "surfboard"
+      "predicate_id": 20,
+      "object_id": 5,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        41,
+        123,
+        134,
+        164
+      ]
     }
   ]
 }

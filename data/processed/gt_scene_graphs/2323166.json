@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "arm",
+      "class_id": 2,
       "bbox": [
         289,
         135,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "board",
+      "class_id": 12,
       "bbox": [
         275,
         216,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         278,
         107,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         284,
         110,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         287,
         169,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         311,
         174,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         289,
         123,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         292,
         162,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "skateboard",
+      "class_id": 116,
       "bbox": [
         275,
         213,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         275,
         102,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         283,
         110,
@@ -114,39 +125,158 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        289,
+        135,
+        305,
+        179
+      ],
       "predicate": "of",
-      "object_label": "person"
+      "predicate_id": 29,
+      "object_id": 9,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        275,
+        102,
+        343,
+        239
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        278,
+        107,
+        347,
+        223
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 6,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        289,
+        123,
+        341,
+        170
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        278,
+        107,
+        347,
+        223
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 7,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        292,
+        162,
+        338,
+        193
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        278,
+        107,
+        347,
+        223
+      ],
       "predicate": "riding",
-      "object_label": "skateboard"
+      "predicate_id": 37,
+      "object_id": 8,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        275,
+        213,
+        344,
+        231
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        284,
+        110,
+        303,
+        134
+      ],
       "predicate": "belonging to",
-      "object_label": "man"
+      "predicate_id": 8,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        278,
+        107,
+        347,
+        223
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        287,
+        169,
+        320,
+        212
+      ],
       "predicate": "belonging to",
-      "object_label": "man"
+      "predicate_id": 8,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        278,
+        107,
+        347,
+        223
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        311,
+        174,
+        339,
+        209
+      ],
       "predicate": "belonging to",
-      "object_label": "man"
+      "predicate_id": 8,
+      "object_id": 2,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        278,
+        107,
+        347,
+        223
+      ]
     }
   ]
 }

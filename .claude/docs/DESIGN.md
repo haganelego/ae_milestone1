@@ -27,7 +27,7 @@ person-centric applications are future background only — no person-specific ru
 ### In Scope
 
 - Visual Genome image subset (GT obj≥5, rel≥3); 10 images first, scale to 100.
-- 20-level resolution degradation (downscale→bilinear upscale to original size).
+- 20-level resolution degradation (downscale→nearest-neighbor upscale to original size).
 - EGTR inference at each level → objects + relationship triplets (+confidences, bbox).
 - Comparison vs VG GT scene graph (label-only, category-set matching): Node & Triplet P/R/F1, SGScore.
 - Saturation/stop estimation: GT-based Oracle stop, node-confidence Baseline stop, LLM SG-sequence stop.
@@ -47,7 +47,7 @@ person-centric applications are future background only — no person-specific ru
 | ID | Requirement | Priority | Notes |
 |----|-------------|----------|-------|
 | FR-1 | Select VG subset (GT obj≥5, rel≥3), deterministic | High | `01`, `selected_images.json` |
-| FR-2 | Generate 20-level degraded image series (bilinear) | High | `02` |
+| FR-2 | Generate 20-level degraded image series (nearest-neighbor) | High | `02` |
 | FR-3 | Run EGTR per image/level → standardized JSON (objects, triplets, conf, bbox) | High | `03`/`04` |
 | FR-4 | Convert VG GT → comparison JSON (label-only) | High | `05` |
 | FR-5 | Compute Node/Triplet P/R/F1 + SGScore + mean conf per level | High | `06` |

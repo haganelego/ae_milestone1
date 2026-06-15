@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "cat",
+      "class_id": 26,
       "bbox": [
         143,
         11,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         299,
         49,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "ear",
+      "class_id": 39,
       "bbox": [
         250,
         28,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         170,
         290,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         142,
         159,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "leg",
+      "class_id": 73,
       "bbox": [
         167,
         240,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "paw",
+      "class_id": 88,
       "bbox": [
         143,
         180,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "tail",
+      "class_id": 126,
       "bbox": [
         292,
         322,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         137,
         19,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "eye",
+      "class_id": 42,
       "bbox": [
         243,
         71,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "cat",
+      "class_id": 26,
       "bbox": [
         194,
         17,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "mouth",
+      "class_id": 81,
       "bbox": [
         246,
         100,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "eye",
+      "class_id": 42,
       "bbox": [
         250,
         66,
@@ -134,49 +147,202 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        143,
+        11,
+        403,
+        374
+      ],
       "predicate": "with",
-      "object_label": "eye"
+      "predicate_id": 49,
+      "object_id": 9,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        243,
+        71,
+        311,
+        106
+      ]
     },
     {
+      "subject_id": 0,
       "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        143,
+        11,
+        403,
+        374
+      ],
       "predicate": "has",
-      "object_label": "eye"
+      "predicate_id": 19,
+      "object_id": 12,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        250,
+        66,
+        301,
+        103
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        299,
+        49,
+        328,
+        81
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        143,
+        11,
+        403,
+        374
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        250,
+        28,
+        275,
+        64
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 10,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        194,
+        17,
+        380,
+        231
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        167,
+        240,
+        249,
+        297
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 10,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        194,
+        17,
+        380,
+        231
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "paw",
+      "subject_class_id": 88,
+      "subject_bbox": [
+        143,
+        180,
+        178,
+        215
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        143,
+        11,
+        403,
+        374
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "tail",
+      "subject_class_id": 126,
+      "subject_bbox": [
+        292,
+        322,
+        369,
+        372
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 10,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        194,
+        17,
+        380,
+        231
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "eye",
+      "subject_class_id": 42,
+      "subject_bbox": [
+        243,
+        71,
+        311,
+        106
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 10,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        194,
+        17,
+        380,
+        231
+      ]
     },
     {
+      "subject_id": 11,
       "subject_label": "mouth",
+      "subject_class_id": 81,
+      "subject_bbox": [
+        246,
+        100,
+        290,
+        130
+      ],
       "predicate": "of",
-      "object_label": "cat"
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        143,
+        11,
+        403,
+        374
+      ]
     }
   ]
 }

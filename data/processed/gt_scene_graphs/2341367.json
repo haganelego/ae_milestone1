@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bag",
+      "class_id": 3,
       "bbox": [
         139,
         213,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         250,
         130,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         142,
         164,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         141,
         211,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "shoe",
+      "class_id": 111,
       "bbox": [
         165,
         416,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         286,
         140,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "tree",
+      "class_id": 135,
       "bbox": [
         248,
         16,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "umbrella",
+      "class_id": 138,
       "bbox": [
         103,
         109,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "woman",
+      "class_id": 148,
       "bbox": [
         86,
         166,
@@ -94,44 +103,180 @@
   ],
   "relationships": [
     {
+      "subject_id": 5,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        286,
+        140,
+        305,
+        165
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        250,
+        130,
+        278,
+        212
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "carrying",
-      "object_label": "bag"
+      "predicate_id": 10,
+      "object_id": 0,
+      "object_label": "bag",
+      "object_class_id": 3,
+      "object_bbox": [
+        139,
+        213,
+        194,
+        302
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "has",
-      "object_label": "hair"
+      "predicate_id": 19,
+      "object_id": 2,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        142,
+        164,
+        182,
+        221
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 3,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        141,
+        211,
+        185,
+        256
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "wearing",
-      "object_label": "shoe"
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        165,
+        416,
+        203,
+        439
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "carrying",
-      "object_label": "umbrella"
+      "predicate_id": 10,
+      "object_id": 7,
+      "object_label": "umbrella",
+      "object_class_id": 138,
+      "object_bbox": [
+        103,
+        109,
+        271,
+        256
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "has",
-      "object_label": "umbrella"
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "umbrella",
+      "object_class_id": 138,
+      "object_bbox": [
+        103,
+        109,
+        271,
+        256
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        86,
+        166,
+        204,
+        442
+      ],
       "predicate": "holding",
-      "object_label": "umbrella"
+      "predicate_id": 20,
+      "object_id": 7,
+      "object_label": "umbrella",
+      "object_class_id": 138,
+      "object_bbox": [
+        103,
+        109,
+        271,
+        256
+      ]
     }
   ]
 }

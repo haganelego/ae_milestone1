@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "hand",
+      "class_id": 57,
       "bbox": [
         226,
         62,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "helmet",
+      "class_id": 61,
       "bbox": [
         285,
         2,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         208,
         0,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         292,
         42,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         332,
         136,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         241,
         15,
@@ -64,19 +70,70 @@
   ],
   "relationships": [
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        208,
+        0,
+        483,
+        324
+      ],
       "predicate": "wearing",
-      "object_label": "helmet"
+      "predicate_id": 47,
+      "object_id": 1,
+      "object_label": "helmet",
+      "object_class_id": 61,
+      "object_bbox": [
+        285,
+        2,
+        360,
+        45
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        208,
+        0,
+        483,
+        324
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 3,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        292,
+        42,
+        408,
+        169
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        208,
+        0,
+        483,
+        324
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        332,
+        136,
+        423,
+        241
+      ]
     }
   ]
 }

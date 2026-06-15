@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         155,
         0,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "dog",
+      "class_id": 36,
       "bbox": [
         318,
         209,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "logo",
+      "class_id": 76,
       "bbox": [
         160,
         125,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "truck",
+      "class_id": 136,
       "bbox": [
         2,
         0,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         288,
         0,
@@ -54,24 +59,92 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "building",
+      "subject_class_id": 21,
+      "subject_bbox": [
+        155,
+        0,
+        498,
+        233
+      ],
       "predicate": "near",
-      "object_label": "truck"
+      "predicate_id": 28,
+      "object_id": 3,
+      "object_label": "truck",
+      "object_class_id": 136,
+      "object_bbox": [
+        2,
+        0,
+        331,
+        284
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "logo",
+      "subject_class_id": 76,
+      "subject_bbox": [
+        160,
+        125,
+        210,
+        148
+      ],
       "predicate": "on",
-      "object_label": "truck"
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "truck",
+      "object_class_id": 136,
+      "object_bbox": [
+        2,
+        0,
+        331,
+        284
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "truck",
+      "subject_class_id": 136,
+      "subject_bbox": [
+        2,
+        0,
+        331,
+        284
+      ],
       "predicate": "near",
-      "object_label": "dog"
+      "predicate_id": 28,
+      "object_id": 1,
+      "object_label": "dog",
+      "object_class_id": 36,
+      "object_bbox": [
+        318,
+        209,
+        370,
+        333
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        288,
+        0,
+        406,
+        65
+      ],
       "predicate": "on",
-      "object_label": "building"
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        155,
+        0,
+        498,
+        233
+      ]
     }
   ]
 }

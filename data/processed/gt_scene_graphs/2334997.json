@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "bench",
+      "class_id": 9,
       "bbox": [
         194,
         238,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "box",
+      "class_id": 18,
       "bbox": [
         345,
         234,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         286,
         173,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         87,
         139,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         66,
         156,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         78,
         103,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "hat",
+      "class_id": 59,
       "bbox": [
         359,
         173,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "head",
+      "class_id": 60,
       "bbox": [
         361,
         171,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         300,
         153,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "pizza",
+      "class_id": 93,
       "bbox": [
         345,
         236,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         341,
         197,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "short",
+      "class_id": 112,
       "bbox": [
         348,
         261,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         58,
         172,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         232,
         150,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         345,
         176,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         178,
         142,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         0,
         158,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         7,
         91,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         0,
         86,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         231,
         134,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         230,
         174,
@@ -214,6 +235,7 @@
     {
       "object_id": 21,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         0,
         147,
@@ -224,6 +246,7 @@
     {
       "object_id": 22,
       "label": "sign",
+      "class_id": 114,
       "bbox": [
         111,
         2,
@@ -234,6 +257,7 @@
     {
       "object_id": 23,
       "label": "window",
+      "class_id": 144,
       "bbox": [
         82,
         106,
@@ -244,6 +268,7 @@
     {
       "object_id": 24,
       "label": "cap",
+      "class_id": 24,
       "bbox": [
         339,
         150,
@@ -254,6 +279,7 @@
     {
       "object_id": 25,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         293,
         134,
@@ -264,6 +290,7 @@
     {
       "object_id": 26,
       "label": "glass",
+      "class_id": 53,
       "bbox": [
         347,
         178,
@@ -274,6 +301,7 @@
     {
       "object_id": 27,
       "label": "sidewalk",
+      "class_id": 113,
       "bbox": [
         304,
         180,
@@ -284,69 +312,290 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "bench",
+      "subject_class_id": 9,
+      "subject_bbox": [
+        194,
+        238,
+        321,
+        313
+      ],
       "predicate": "on",
-      "object_label": "sidewalk"
+      "predicate_id": 30,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        58,
+        172,
+        498,
+        328
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "hat",
+      "subject_class_id": 59,
+      "subject_bbox": [
+        359,
+        173,
+        392,
+        191
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 8,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        300,
+        153,
+        456,
+        330
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        300,
+        153,
+        456,
+        330
+      ],
       "predicate": "carrying",
-      "object_label": "box"
+      "predicate_id": 10,
+      "object_id": 1,
+      "object_label": "box",
+      "object_class_id": 18,
+      "object_bbox": [
+        345,
+        234,
+        401,
+        254
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        300,
+        153,
+        456,
+        330
+      ],
       "predicate": "carrying",
-      "object_label": "pizza"
+      "predicate_id": 10,
+      "object_id": 9,
+      "object_label": "pizza",
+      "object_class_id": 93,
+      "object_bbox": [
+        345,
+        236,
+        399,
+        253
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        300,
+        153,
+        456,
+        330
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 10,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        341,
+        197,
+        409,
+        280
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        300,
+        153,
+        456,
+        330
+      ],
       "predicate": "wearing",
-      "object_label": "cap"
+      "predicate_id": 47,
+      "object_id": 24,
+      "object_label": "cap",
+      "object_class_id": 24,
+      "object_bbox": [
+        339,
+        150,
+        410,
+        190
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        300,
+        153,
+        456,
+        330
+      ],
       "predicate": "walking on",
-      "object_label": "sidewalk"
+      "predicate_id": 45,
+      "object_id": 27,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        304,
+        180,
+        497,
+        325
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        341,
+        197,
+        409,
+        280
+      ],
       "predicate": "on",
-      "object_label": "man"
+      "predicate_id": 30,
+      "object_id": 8,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        300,
+        153,
+        456,
+        330
+      ]
     },
     {
+      "subject_id": 13,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        232,
+        150,
+        283,
+        174
+      ],
       "predicate": "in",
-      "object_label": "window"
+      "predicate_id": 21,
+      "object_id": 19,
+      "object_label": "window",
+      "object_class_id": 144,
+      "object_bbox": [
+        231,
+        134,
+        284,
+        178
+      ]
     },
     {
+      "subject_id": 15,
       "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        178,
+        142,
+        224,
+        165
+      ],
       "predicate": "in",
-      "object_label": "window"
+      "predicate_id": 21,
+      "object_id": 5,
+      "object_label": "window",
+      "object_class_id": 144,
+      "object_bbox": [
+        78,
+        103,
+        170,
+        162
+      ]
     },
     {
+      "subject_id": 25,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        293,
+        134,
+        494,
+        328
+      ],
       "predicate": "wearing",
-      "object_label": "short"
+      "predicate_id": 47,
+      "object_id": 11,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        348,
+        261,
+        398,
+        329
+      ]
     },
     {
+      "subject_id": 25,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        293,
+        134,
+        494,
+        328
+      ],
       "predicate": "on",
-      "object_label": "sidewalk"
+      "predicate_id": 30,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        58,
+        172,
+        498,
+        328
+      ]
     },
     {
+      "subject_id": 25,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        293,
+        134,
+        494,
+        328
+      ],
       "predicate": "wearing",
-      "object_label": "glass"
+      "predicate_id": 47,
+      "object_id": 26,
+      "object_label": "glass",
+      "object_class_id": 53,
+      "object_bbox": [
+        347,
+        178,
+        400,
+        201
+      ]
     }
   ]
 }

@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         307,
         47,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         192,
         10,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         261,
         43,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         311,
         48,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         274,
         87,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         276,
         4,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         210,
         45,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         299,
         14,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         308,
         48,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         192,
         109,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         214,
         114,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         243,
         111,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         202,
         24,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "light",
+      "class_id": 75,
       "bbox": [
         375,
         257,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "vase",
+      "class_id": 139,
       "bbox": [
         293,
         247,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "leaf",
+      "class_id": 72,
       "bbox": [
         373,
         214,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         378,
         64,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         362,
         61,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         279,
         10,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         278,
         88,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "flower",
+      "class_id": 47,
       "bbox": [
         306,
         47,
@@ -214,104 +235,444 @@
   ],
   "relationships": [
     {
+      "subject_id": 0,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        307,
+        47,
+        387,
+        96
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 1,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        192,
+        10,
+        449,
+        369
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 2,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        261,
+        43,
+        309,
+        67
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        311,
+        48,
+        448,
+        157
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 4,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        274,
+        87,
+        363,
+        188
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 5,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        276,
+        4,
+        352,
+        58
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 6,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        210,
+        45,
+        324,
+        137
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        308,
+        48,
+        445,
+        176
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        192,
+        109,
+        306,
+        227
+      ],
       "predicate": "of",
-      "object_label": "flower"
+      "predicate_id": 29,
+      "object_id": 4,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        274,
+        87,
+        363,
+        188
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        192,
+        109,
+        306,
+        227
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        214,
+        114,
+        261,
+        156
+      ],
       "predicate": "of",
-      "object_label": "flower"
+      "predicate_id": 29,
+      "object_id": 6,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        210,
+        45,
+        324,
+        137
+      ]
     },
     {
+      "subject_id": 11,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        243,
+        111,
+        294,
+        192
+      ],
       "predicate": "of",
-      "object_label": "flower"
+      "predicate_id": 29,
+      "object_id": 17,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        362,
+        61,
+        445,
+        164
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        293,
+        247,
+        390,
+        374
+      ],
       "predicate": "with",
-      "object_label": "flower"
+      "predicate_id": 49,
+      "object_id": 5,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        276,
+        4,
+        352,
+        58
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        293,
+        247,
+        390,
+        374
+      ],
       "predicate": "with",
-      "object_label": "flower"
+      "predicate_id": 49,
+      "object_id": 6,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        210,
+        45,
+        324,
+        137
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        293,
+        247,
+        390,
+        374
+      ],
       "predicate": "with",
-      "object_label": "flower"
+      "predicate_id": 49,
+      "object_id": 8,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        308,
+        48,
+        445,
+        176
+      ]
     },
     {
+      "subject_id": 14,
       "subject_label": "vase",
+      "subject_class_id": 139,
+      "subject_bbox": [
+        293,
+        247,
+        390,
+        374
+      ],
       "predicate": "with",
-      "object_label": "flower"
+      "predicate_id": 49,
+      "object_id": 19,
+      "object_label": "flower",
+      "object_class_id": 47,
+      "object_bbox": [
+        278,
+        88,
+        362,
+        245
+      ]
     },
     {
+      "subject_id": 15,
       "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        373,
+        214,
+        411,
+        324
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 17,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        362,
+        61,
+        445,
+        164
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 18,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        279,
+        10,
+        346,
+        50
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     },
     {
+      "subject_id": 20,
       "subject_label": "flower",
+      "subject_class_id": 47,
+      "subject_bbox": [
+        306,
+        47,
+        393,
+        99
+      ],
       "predicate": "in",
-      "object_label": "vase"
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "vase",
+      "object_class_id": 139,
+      "object_bbox": [
+        293,
+        247,
+        390,
+        374
+      ]
     }
   ]
 }

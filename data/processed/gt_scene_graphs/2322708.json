@@ -4,6 +4,7 @@
     {
       "object_id": 0,
       "label": "building",
+      "class_id": 21,
       "bbox": [
         0,
         0,
@@ -14,6 +15,7 @@
     {
       "object_id": 1,
       "label": "door",
+      "class_id": 37,
       "bbox": [
         5,
         96,
@@ -24,6 +26,7 @@
     {
       "object_id": 2,
       "label": "hair",
+      "class_id": 56,
       "bbox": [
         191,
         157,
@@ -34,6 +37,7 @@
     {
       "object_id": 3,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         345,
         184,
@@ -44,6 +48,7 @@
     {
       "object_id": 4,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         301,
         150,
@@ -54,6 +59,7 @@
     {
       "object_id": 5,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         393,
         133,
@@ -64,6 +70,7 @@
     {
       "object_id": 6,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         335,
         127,
@@ -74,6 +81,7 @@
     {
       "object_id": 7,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         416,
         149,
@@ -84,6 +92,7 @@
     {
       "object_id": 8,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         113,
         135,
@@ -94,6 +103,7 @@
     {
       "object_id": 9,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         452,
         169,
@@ -104,6 +114,7 @@
     {
       "object_id": 10,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         429,
         144,
@@ -114,6 +125,7 @@
     {
       "object_id": 11,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         59,
         130,
@@ -124,6 +136,7 @@
     {
       "object_id": 12,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         273,
         159,
@@ -134,6 +147,7 @@
     {
       "object_id": 13,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         174,
         158,
@@ -144,6 +158,7 @@
     {
       "object_id": 14,
       "label": "pant",
+      "class_id": 86,
       "bbox": [
         181,
         273,
@@ -154,6 +169,7 @@
     {
       "object_id": 15,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         274,
         180,
@@ -164,6 +180,7 @@
     {
       "object_id": 16,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         469,
         187,
@@ -174,6 +191,7 @@
     {
       "object_id": 17,
       "label": "street",
+      "class_id": 123,
       "bbox": [
         0,
         179,
@@ -184,6 +202,7 @@
     {
       "object_id": 18,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         115,
         134,
@@ -194,6 +213,7 @@
     {
       "object_id": 19,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         62,
         127,
@@ -204,6 +224,7 @@
     {
       "object_id": 20,
       "label": "man",
+      "class_id": 77,
       "bbox": [
         109,
         131,
@@ -214,6 +235,7 @@
     {
       "object_id": 21,
       "label": "shirt",
+      "class_id": 110,
       "bbox": [
         431,
         175,
@@ -224,6 +246,7 @@
     {
       "object_id": 22,
       "label": "person",
+      "class_id": 90,
       "bbox": [
         251,
         140,
@@ -234,79 +257,334 @@
   ],
   "relationships": [
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        345,
+        184,
+        406,
+        332
+      ],
       "predicate": "in",
-      "object_label": "street"
+      "predicate_id": 21,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 3,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        345,
+        184,
+        406,
+        332
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        416,
+        149,
+        483,
+        322
+      ],
       "predicate": "in",
-      "object_label": "street"
+      "predicate_id": 21,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 7,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        416,
+        149,
+        483,
+        322
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 21,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        431,
+        175,
+        481,
+        245
+      ]
     },
     {
+      "subject_id": 8,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        113,
+        135,
+        175,
+        298
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        452,
+        169,
+        499,
+        330
+      ],
       "predicate": "wearing",
-      "object_label": "shirt"
+      "predicate_id": 47,
+      "object_id": 16,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        469,
+        187,
+        499,
+        239
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        452,
+        169,
+        499,
+        330
+      ],
       "predicate": "in",
-      "object_label": "street"
+      "predicate_id": 21,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 9,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        452,
+        169,
+        499,
+        330
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 10,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        429,
+        144,
+        459,
+        188
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 11,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        59,
+        130,
+        108,
+        279
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        273,
+        159,
+        325,
+        309
+      ],
       "predicate": "in",
-      "object_label": "shirt"
+      "predicate_id": 21,
+      "object_id": 15,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        274,
+        180,
+        327,
+        278
+      ]
     },
     {
+      "subject_id": 12,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        273,
+        159,
+        325,
+        309
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 13,
       "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        174,
+        158,
+        245,
+        330
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     },
     {
+      "subject_id": 15,
       "subject_label": "shirt",
+      "subject_class_id": 110,
+      "subject_bbox": [
+        274,
+        180,
+        327,
+        278
+      ],
       "predicate": "of",
-      "object_label": "person"
+      "predicate_id": 29,
+      "object_id": 22,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        251,
+        140,
+        358,
+        298
+      ]
     },
     {
+      "subject_id": 18,
       "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        115,
+        134,
+        171,
+        297
+      ],
       "predicate": "standing on",
-      "object_label": "street"
+      "predicate_id": 40,
+      "object_id": 17,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        179,
+        497,
+        328
+      ]
     }
   ]
 }
