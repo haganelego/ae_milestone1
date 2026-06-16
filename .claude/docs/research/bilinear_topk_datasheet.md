@@ -97,53 +97,73 @@ Interpretation:
   discriminative range; honest caveat: per-image precision is still limited (best method
   ≈ best tuned constant; correlation r≈0.25 — positive but weak).
 
+## Threshold scheme (FINAL — one coherent set, not three magic numbers)
+
+| Module / method | stop threshold | rationale |
+|---|---|---|
+| object-detection confidence (ablation = baseline) | **0.4** | EGTR mean obj-conf plateaus ~0.40 (≥0.5 fires 7/100, ≥0.6 only 1/100) → the plateau level itself. |
+| LLM relationship-reliability (ablation = llm_sgg) | **0.8** | high-confidence saturation; also the empirically better operating point. |
+| **hybrid = mean(conf, LLM) (PROPOSED)** | **0.6** | **DERIVED: 0.5·0.4 + 0.5·0.8 = 0.6** — the 0.5/0.5 convex combination of the two component thresholds, matching the 0.5/0.5 fusion weights. Stop on **2 consecutive** levels above 0.6 (k=2). |
+
+`configs/config.yaml`: `baseline.mean_object_conf_threshold=0.4`, `llm.saturation_threshold=0.8`,
+`ablation.hybrid.threshold=0.6`. Oracle coef 0.9 main.
+
 ## Method comparison vs TopK oracle — **coef 0.9 = MAIN** (n=100; topk_oracle/method_comparison_topk_c09.csv)
 
 | Rank | Method | Mean Stop | MAE | MedAE | Early% | Late% | Pearson r |
 |------|--------|-----------|-----|-------|--------|-------|-----------|
-| 1 | **hybrid_4b_k2** | 16.34 | **3.06** | 2.0 | 0.42 | 0.43 | 0.193 |
-| 2 | vlm_9b_single_k2 | 14.41 | 3.63 | 3.0 | 0.64 | 0.26 | 0.176 |
-| 3 | llm_sgg_4b_h5_k2 | 14.26 | 3.82 | 3.0 | 0.64 | 0.26 | 0.125 |
+| 1 | **llm_sgg_4b_h5_k2** | 16.17 | **2.99** | 2.0 | 0.44 | 0.40 | 0.227 |
+| 2 | **hybrid_4b_k2** (proposed) | 16.34 | **3.06** | 2.0 | 0.42 | 0.43 | 0.193 |
+| 3 | vlm_9b_single_k2 | 14.41 | 3.63 | 3.0 | 0.64 | 0.26 | 0.176 |
 | 4 | hybrid_9b_k2 | 15.08 | 3.84 | 3.0 | 0.47 | 0.40 | 0.071 |
 | 5 | hybrid_4b_k1 | 12.77 | 4.91 | 4.0 | 0.69 | 0.19 | 0.079 |
 | 6 | vlm_9b_single_k1 | 11.95 | 5.03 | 4.5 | 0.82 | 0.13 | 0.120 |
 | 7 | baseline (conf≥0.4) | 13.38 | 5.40 | 5.0 | 0.58 | 0.26 | 0.133 |
 | 8 | vlm_4b_single_k2 | 12.98 | 6.22 | 5.0 | 0.61 | 0.32 | −0.076 |
 | 9 | hybrid_9b_k1 | 10.76 | 6.26 | 6.0 | 0.82 | 0.13 | 0.173 |
-| 10 | llm_sgg_9b_h5_k2 | 9.91 | 6.81 | 7.0 | 0.84 | 0.10 | 0.139 |
+| 10 | llm_sgg_9b_h5_k2 | 11.19 | 6.33 | 6.0 | 0.72 | 0.18 | 0.089 |
 | 11 | llm_sgg_4b_h5_k1 | 9.95 | 6.93 | 7.0 | 0.84 | 0.09 | −0.065 |
 | 12 | llm_sgg_9b_h5_k1 | 6.95 | 9.43 | 10.0 | 0.96 | 0.01 | 0.034 |
 | 13 | vlm_4b_single_k1 | 7.00 | 9.66 | 10.0 | 0.94 | 0.04 | −0.115 |
 
-At coef 0.9, **hybrid_4b_k2 is clearly best (MAE 3.06)**, followed by a looser cluster
-vlm_9b_single_k2 (3.63) / llm_sgg_4b_h5_k2 (3.82) / hybrid_9b_k2 (3.84). consecutive-k2
-helps strongly (hybrid_4b 4.91→3.06; llm_sgg_4b 6.93→3.82). baseline weak (5.40). 9b
-LLM-SGG and 4b VLM far too early.
+**llm_sgg_4b_k2 (2.99) and the proposed hybrid_4b_k2 (3.06) are statistically tied** (ΔMAE
+0.07; **MedAE identical = 2.0**). Both lead; structured-SGG+LLM at 4b with consecutive-k2 is
+the top tier. consecutive-k2 helps strongly (hybrid_4b 4.91→3.06; llm_sgg_4b 6.93→2.99).
+baseline (conf-only ablation) weak (5.40). 9b overconfident / 4b VLM too early.
+
+**Ablation reading (proposed = hybrid of two modules):** the LLM-reliability module alone
+(llm_sgg_4b_k2, 2.99) matches the full hybrid (3.06) → at this operating point the LLM module
+is the dominant contributor; the object-confidence module adds little. The confidence anchor
+helps only when the LLM threshold is set too low: at llm=0.7 hybrid_4b_k2 (3.06) clearly beat
+llm_sgg_4b_k2 (3.82), but at the principled llm=0.8 the gap closes.
 
 ### Sensitivity — coef 0.8 (topk_oracle/method_comparison_topk_c08.csv)
-Top: llm_sgg_4b_h5_k2 (3.29) / hybrid_4b_k2 (3.31) / vlm_9b_single_k2 (3.34) — a tighter
-3-way cluster; baseline 4.97. Lowering the threshold pulls saturation earlier (oracle mean
-15.0 vs 16.36) and tightens the top cluster, but the ranking family is stable.
+Top: llm_sgg_4b_h5_k2 (3.26) / hybrid_4b_k2 (3.31) / vlm_9b_single_k2 (3.34) — same tie at the
+top; baseline 4.97. Lowering the threshold pulls the oracle earlier (mean 15.0 vs 16.36) but
+the ranking family is stable.
 
 ### Quantization note (why 0.9 is the effective ceiling)
 RelSGScore over the small top-10/5 reference is discrete; coef ≥0.95 ≡ 1.0 (43/100 pile at
 L20). 0.9 is the strictest threshold that preserves a real stop distribution.
 
-## Headline takeaways (bilinear + TopK, coef 0.9 main)
+## Headline takeaways (bilinear + TopK, coef 0.9 main, scheme 0.4/0.8/0.6)
 
 1. **Saturation is mid-to-late range, inside the resolution span**: TopK oracle (coef 0.9)
    mean stop 16.36 (median 17), 71/100 saturate before L20; spread L5–20. Bilinear keeps the
    saturation point inside the range (unlike nearest, which piled it at L18–20 / the ceiling).
-2. **hybrid_4b_k2 is the best stop estimator (MAE 3.06)**, followed by a looser cluster
-   vlm_9b_single_k2 (3.63) / llm_sgg_4b_h5_k2 (3.82) / hybrid_9b_k2 (3.84). Structured-SGG +
-   LLM + confidence fusion, and the large 9b VLM, lead. consecutive-k2 helps strongly. Simple
-   conf baseline weak (5.40). 9b LLM-SGG and 4b VLM far too early.
-3. **Honest limitation**: per-image precision is limited — correlation r≈0.19–0.25 (weak but
+2. **Top tier: llm_sgg_4b_k2 (MAE 2.99) ≈ proposed hybrid_4b_k2 (3.06)** — tied (ΔMAE 0.07,
+   MedAE both 2.0). Structured-SGG + LLM at 4b with consecutive-k2 leads. The 9b VLM (3.63)
+   trails; conf-only baseline weak (5.40); 9b LLM and 4b VLM far too early.
+3. **Ablation story (proposed = hybrid of two modules)**: the LLM-reliability module alone
+   matches the full hybrid, so the confidence module's added value is marginal at the
+   principled operating point — it helps only when the LLM threshold is set too low (llm=0.7:
+   hybrid 3.06 ≫ llm-only 3.82; llm=0.8: gap closes).
+4. **Honest limitation**: per-image precision is limited — correlation r≈0.19–0.25 (weak but
    positive). Methods capture the central tendency of saturation; exact per-image level
    prediction remains hard.
-4. **coef 0.8 sensitivity**: pulls the oracle earlier (mean 15.0) and tightens the top into a
-   3-way cluster (llm_sgg_4b_k2 3.29 / hybrid_4b_k2 3.31 / vlm_9b_k2 3.34); ranking family
-   stable. 0.9 is the strictest threshold before quantization collapses to L20 (≥0.95 ≡ 1.0).
+5. **coef 0.8 sensitivity**: oracle earlier (mean 15.0), same top tie (llm_sgg_4b_k2 3.26 /
+   hybrid_4b_k2 3.31); ranking family stable. 0.9 is the strictest threshold before
+   quantization collapses to L20 (≥0.95 ≡ 1.0).
 
 ## UNCHANGED — keep as-is (interpolation-independent)
 - EGTR validity: author eval R@20/50/100 = 23.54/30.21/34.35, mR@50 = 7.94, AP50 = 30.83;

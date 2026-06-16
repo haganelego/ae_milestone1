@@ -36,7 +36,7 @@
     "top3_methods": [
       {
         "method": "llm_sgg_4b_h5_k2",
-        "mae": 3.29
+        "mae": 3.26
       },
       {
         "method": "hybrid_4b_k2",
@@ -73,16 +73,16 @@
     "trivial_always_20_mae": 3.64,
     "top3_methods": [
       {
+        "method": "llm_sgg_4b_h5_k2",
+        "mae": 2.99
+      },
+      {
         "method": "hybrid_4b_k2",
         "mae": 3.06
       },
       {
         "method": "vlm_9b_single_k2",
         "mae": 3.63
-      },
-      {
-        "method": "llm_sgg_4b_h5_k2",
-        "mae": 3.82
       }
     ]
   }

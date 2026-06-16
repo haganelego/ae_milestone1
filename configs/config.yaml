@@ -89,7 +89,9 @@ llm:
   endpoint: http://localhost:11434/api/generate
   start_level: 5
   history_length: 5
-  saturation_threshold: 0.7
+  # 0.8 chosen so the hybrid threshold is the matching 0.5/0.5 convex combination of
+  # the two component thresholds: 0.5*0.4 (object-conf) + 0.5*0.8 (LLM) = 0.6.
+  saturation_threshold: 0.8
   use_consecutive_stop: false
   consecutive_k: 2
   input_object_conf_threshold: 0.3
