@@ -1,0 +1,194 @@
+{
+  "image_id": 2322823,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boat",
+      "class_id": 13,
+      "bbox": [
+        53,
+        203,
+        87,
+        259
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "flag",
+      "class_id": 46,
+      "bbox": [
+        216,
+        153,
+        262,
+        192
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "horse",
+      "class_id": 63,
+      "bbox": [
+        27,
+        108,
+        216,
+        348
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        47,
+        66,
+        191,
+        278
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        212,
+        188,
+        241,
+        482
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        90,
+        96,
+        169,
+        156
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        183,
+        229,
+        217,
+        297
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        236,
+        263,
+        281,
+        343
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        49,
+        66,
+        180,
+        277
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "flag",
+      "subject_class_id": 46,
+      "subject_bbox": [
+        216,
+        153,
+        262,
+        192
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 4,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        212,
+        188,
+        241,
+        482
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        49,
+        66,
+        180,
+        277
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 0,
+      "object_label": "boat",
+      "object_class_id": 13,
+      "object_bbox": [
+        53,
+        203,
+        87,
+        259
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        49,
+        66,
+        180,
+        277
+      ],
+      "predicate": "riding",
+      "predicate_id": 37,
+      "object_id": 2,
+      "object_label": "horse",
+      "object_class_id": 63,
+      "object_bbox": [
+        27,
+        108,
+        216,
+        348
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        49,
+        66,
+        180,
+        277
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 5,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        90,
+        96,
+        169,
+        156
+      ]
+    }
+  ]
+}

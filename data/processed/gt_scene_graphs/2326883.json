@@ -1,0 +1,216 @@
+{
+  "image_id": 2326883,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        275,
+        216,
+        295,
+        246
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bear",
+      "class_id": 7,
+      "bbox": [
+        168,
+        147,
+        252,
+        275
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bear",
+      "class_id": 7,
+      "bbox": [
+        239,
+        187,
+        299,
+        291
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "bench",
+      "class_id": 9,
+      "bbox": [
+        323,
+        214,
+        439,
+        280
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "door",
+      "class_id": 37,
+      "bbox": [
+        134,
+        118,
+        171,
+        258
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "face",
+      "class_id": 43,
+      "bbox": [
+        180,
+        164,
+        220,
+        196
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        179,
+        159,
+        223,
+        200
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        190,
+        226,
+        235,
+        264
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        170,
+        141,
+        224,
+        198
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        275,
+        216,
+        295,
+        246
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        239,
+        187,
+        299,
+        291
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "bear",
+      "subject_class_id": 7,
+      "subject_bbox": [
+        168,
+        147,
+        252,
+        275
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        190,
+        226,
+        235,
+        264
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "face",
+      "subject_class_id": 43,
+      "subject_bbox": [
+        180,
+        164,
+        220,
+        196
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        168,
+        147,
+        252,
+        275
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        179,
+        159,
+        223,
+        200
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        168,
+        147,
+        252,
+        275
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        170,
+        141,
+        224,
+        198
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        168,
+        147,
+        252,
+        275
+      ]
+    }
+  ]
+}

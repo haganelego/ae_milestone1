@@ -1,0 +1,546 @@
+{
+  "image_id": 2332124,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "box",
+      "class_id": 18,
+      "bbox": [
+        440,
+        202,
+        487,
+        251
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "box",
+      "class_id": 18,
+      "bbox": [
+        442,
+        248,
+        493,
+        290
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        0,
+        234,
+        19,
+        299
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "guy",
+      "class_id": 55,
+      "bbox": [
+        73,
+        193,
+        101,
+        275
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "jacket",
+      "class_id": 65,
+      "bbox": [
+        41,
+        169,
+        79,
+        252
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "kid",
+      "class_id": 67,
+      "bbox": [
+        205,
+        186,
+        251,
+        303
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "kid",
+      "class_id": 67,
+      "bbox": [
+        41,
+        169,
+        89,
+        314
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "light",
+      "class_id": 75,
+      "bbox": [
+        179,
+        1,
+        204,
+        22
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        214,
+        257,
+        245,
+        299
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        155,
+        0,
+        197,
+        297
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        205,
+        206,
+        243,
+        262
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        72,
+        201,
+        100,
+        236
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sidewalk",
+      "class_id": 113,
+      "bbox": [
+        8,
+        265,
+        335,
+        313
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        262,
+        18,
+        300,
+        109
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        430,
+        3,
+        499,
+        90
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        119,
+        75,
+        157,
+        140
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "skateboard",
+      "class_id": 116,
+      "bbox": [
+        40,
+        303,
+        110,
+        320
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "skateboard",
+      "class_id": 116,
+      "bbox": [
+        208,
+        297,
+        264,
+        312
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "stand",
+      "class_id": 122,
+      "bbox": [
+        111,
+        219,
+        169,
+        294
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "street",
+      "class_id": 123,
+      "bbox": [
+        0,
+        264,
+        499,
+        330
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        424,
+        4,
+        495,
+        207
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        143,
+        136,
+        155,
+        216
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        263,
+        100,
+        309,
+        212
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "box",
+      "subject_class_id": 18,
+      "subject_bbox": [
+        440,
+        202,
+        487,
+        251
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        8,
+        265,
+        335,
+        313
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "box",
+      "subject_class_id": 18,
+      "subject_bbox": [
+        442,
+        248,
+        493,
+        290
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        8,
+        265,
+        335,
+        313
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "car",
+      "subject_class_id": 25,
+      "subject_bbox": [
+        0,
+        234,
+        19,
+        299
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 19,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        264,
+        499,
+        330
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        205,
+        186,
+        251,
+        303
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 10,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        205,
+        206,
+        243,
+        262
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        205,
+        186,
+        251,
+        303
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 17,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        208,
+        297,
+        264,
+        312
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        205,
+        186,
+        251,
+        303
+      ],
+      "predicate": "riding",
+      "predicate_id": 37,
+      "object_id": 17,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        208,
+        297,
+        264,
+        312
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        41,
+        169,
+        89,
+        314
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "jacket",
+      "object_class_id": 65,
+      "object_bbox": [
+        41,
+        169,
+        79,
+        252
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        41,
+        169,
+        89,
+        314
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 16,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        40,
+        303,
+        110,
+        320
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        41,
+        169,
+        89,
+        314
+      ],
+      "predicate": "riding",
+      "predicate_id": 37,
+      "object_id": 16,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        40,
+        303,
+        110,
+        320
+      ]
+    },
+    {
+      "subject_id": 18,
+      "subject_label": "stand",
+      "subject_class_id": 122,
+      "subject_bbox": [
+        111,
+        219,
+        169,
+        294
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 12,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        8,
+        265,
+        335,
+        313
+      ]
+    },
+    {
+      "subject_id": 20,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        424,
+        4,
+        495,
+        207
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 14,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        430,
+        3,
+        499,
+        90
+      ]
+    },
+    {
+      "subject_id": 21,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        143,
+        136,
+        155,
+        216
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 15,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        119,
+        75,
+        157,
+        140
+      ]
+    },
+    {
+      "subject_id": 22,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        263,
+        100,
+        309,
+        212
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 13,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        262,
+        18,
+        300,
+        109
+      ]
+    }
+  ]
+}

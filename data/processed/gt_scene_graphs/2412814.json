@@ -1,0 +1,667 @@
+{
+  "image_id": 2412814,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        220,
+        72,
+        277,
+        155
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "face",
+      "class_id": 43,
+      "bbox": [
+        278,
+        49,
+        303,
+        76
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "finger",
+      "class_id": 45,
+      "bbox": [
+        275,
+        107,
+        300,
+        133
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "shoe",
+      "class_id": 111,
+      "bbox": [
+        168,
+        88,
+        195,
+        133
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        278,
+        105,
+        300,
+        134
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "hat",
+      "class_id": 59,
+      "bbox": [
+        278,
+        32,
+        306,
+        51
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        167,
+        88,
+        228,
+        134
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        167,
+        33,
+        306,
+        281
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "racket",
+      "class_id": 101,
+      "bbox": [
+        274,
+        125,
+        349,
+        154
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        223,
+        61,
+        306,
+        118
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shoe",
+      "class_id": 111,
+      "bbox": [
+        236,
+        245,
+        268,
+        282
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "short",
+      "class_id": 112,
+      "bbox": [
+        189,
+        85,
+        270,
+        156
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sneaker",
+      "class_id": 119,
+      "bbox": [
+        236,
+        246,
+        265,
+        280
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sock",
+      "class_id": 121,
+      "bbox": [
+        247,
+        223,
+        262,
+        250
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 4,
+      "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        278,
+        105,
+        300,
+        134
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 2,
+      "object_label": "finger",
+      "object_class_id": 45,
+      "object_bbox": [
+        275,
+        107,
+        300,
+        133
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "hat",
+      "subject_class_id": 59,
+      "subject_bbox": [
+        278,
+        32,
+        306,
+        51
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 7,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        167,
+        33,
+        306,
+        281
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "face",
+      "object_class_id": 43,
+      "object_bbox": [
+        278,
+        49,
+        303,
+        76
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 3,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        168,
+        88,
+        195,
+        133
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 3,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        168,
+        88,
+        195,
+        133
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 3,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        168,
+        88,
+        195,
+        133
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 5,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        278,
+        32,
+        306,
+        51
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 5,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        278,
+        32,
+        306,
+        51
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 5,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        278,
+        32,
+        306,
+        51
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 6,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        167,
+        88,
+        228,
+        134
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 6,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        167,
+        88,
+        228,
+        134
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "holding",
+      "predicate_id": 20,
+      "object_id": 8,
+      "object_label": "racket",
+      "object_class_id": 101,
+      "object_bbox": [
+        274,
+        125,
+        349,
+        154
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 8,
+      "object_label": "racket",
+      "object_class_id": 101,
+      "object_bbox": [
+        274,
+        125,
+        349,
+        154
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        223,
+        61,
+        306,
+        118
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 9,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        223,
+        61,
+        306,
+        118
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 9,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        223,
+        61,
+        306,
+        118
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 10,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        236,
+        245,
+        268,
+        282
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 10,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        236,
+        245,
+        268,
+        282
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 10,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        236,
+        245,
+        268,
+        282
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 11,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        189,
+        85,
+        270,
+        156
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 11,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        189,
+        85,
+        270,
+        156
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 13,
+      "object_label": "sock",
+      "object_class_id": 121,
+      "object_bbox": [
+        247,
+        223,
+        262,
+        250
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        167,
+        33,
+        306,
+        281
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 13,
+      "object_label": "sock",
+      "object_class_id": 121,
+      "object_bbox": [
+        247,
+        223,
+        262,
+        250
+      ]
+    }
+  ]
+}

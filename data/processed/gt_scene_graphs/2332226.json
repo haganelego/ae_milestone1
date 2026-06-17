@@ -1,0 +1,183 @@
+{
+  "image_id": 2332226,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        246,
+        189,
+        269,
+        212
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "fence",
+      "class_id": 44,
+      "bbox": [
+        0,
+        310,
+        499,
+        371
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "giraffe",
+      "class_id": 51,
+      "bbox": [
+        0,
+        112,
+        312,
+        373
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "giraffe",
+      "class_id": 51,
+      "bbox": [
+        276,
+        227,
+        468,
+        374
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        145,
+        311,
+        163,
+        373
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tail",
+      "class_id": 126,
+      "bbox": [
+        429,
+        321,
+        463,
+        374
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        383,
+        0,
+        499,
+        375
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        395,
+        330,
+        432,
+        373
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        246,
+        189,
+        269,
+        212
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "giraffe",
+      "object_class_id": 51,
+      "object_bbox": [
+        0,
+        112,
+        312,
+        373
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "giraffe",
+      "subject_class_id": 51,
+      "subject_bbox": [
+        0,
+        112,
+        312,
+        373
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 1,
+      "object_label": "fence",
+      "object_class_id": 44,
+      "object_bbox": [
+        0,
+        310,
+        499,
+        371
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "giraffe",
+      "subject_class_id": 51,
+      "subject_bbox": [
+        276,
+        227,
+        468,
+        374
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 5,
+      "object_label": "tail",
+      "object_class_id": 126,
+      "object_bbox": [
+        429,
+        321,
+        463,
+        374
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "giraffe",
+      "subject_class_id": 51,
+      "subject_bbox": [
+        276,
+        227,
+        468,
+        374
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        395,
+        330,
+        432,
+        373
+      ]
+    }
+  ]
+}

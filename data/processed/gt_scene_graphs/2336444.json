@@ -1,0 +1,359 @@
+{
+  "image_id": 2336444,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bench",
+      "class_id": 9,
+      "bbox": [
+        427,
+        223,
+        469,
+        241
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        0,
+        31,
+        129,
+        252
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        162,
+        224,
+        209,
+        241
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "street",
+      "class_id": 123,
+      "bbox": [
+        0,
+        223,
+        500,
+        318
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        290,
+        152,
+        368,
+        166
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        361,
+        145,
+        381,
+        235
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sidewalk",
+      "class_id": 113,
+      "bbox": [
+        0,
+        238,
+        191,
+        256
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        44,
+        121,
+        65,
+        157
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "street",
+      "class_id": 123,
+      "bbox": [
+        0,
+        217,
+        485,
+        314
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        0,
+        34,
+        187,
+        244
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        26,
+        138,
+        49,
+        181
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        0,
+        43,
+        124,
+        259
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        0,
+        135,
+        13,
+        190
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        32,
+        89,
+        46,
+        129
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        28,
+        92,
+        49,
+        127
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        93,
+        148,
+        111,
+        194
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "bench",
+      "subject_class_id": 9,
+      "subject_bbox": [
+        427,
+        223,
+        469,
+        241
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 8,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        217,
+        485,
+        314
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        44,
+        121,
+        65,
+        157
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 9,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        34,
+        187,
+        244
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        26,
+        138,
+        49,
+        181
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        31,
+        129,
+        252
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        26,
+        138,
+        49,
+        181
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        43,
+        124,
+        259
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        0,
+        135,
+        13,
+        190
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 9,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        34,
+        187,
+        244
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        32,
+        89,
+        46,
+        129
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 9,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        34,
+        187,
+        244
+      ]
+    },
+    {
+      "subject_id": 14,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        28,
+        92,
+        49,
+        127
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        43,
+        124,
+        259
+      ]
+    },
+    {
+      "subject_id": 15,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        93,
+        148,
+        111,
+        194
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        0,
+        31,
+        129,
+        252
+      ]
+    }
+  ]
+}

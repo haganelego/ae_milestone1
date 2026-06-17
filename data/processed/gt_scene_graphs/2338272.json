@@ -1,0 +1,194 @@
+{
+  "image_id": 2338272,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        93,
+        143,
+        344,
+        331
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "letter",
+      "class_id": 74,
+      "bbox": [
+        295,
+        85,
+        359,
+        128
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        56,
+        25,
+        377,
+        331
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        276,
+        61,
+        393,
+        152
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        0,
+        138,
+        138,
+        331
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        127,
+        245,
+        147,
+        270
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        274,
+        0,
+        380,
+        101
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        327,
+        247,
+        412,
+        323
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "letter",
+      "class_id": 74,
+      "bbox": [
+        341,
+        84,
+        359,
+        113
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        295,
+        85,
+        359,
+        128
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        276,
+        61,
+        393,
+        152
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        0,
+        138,
+        138,
+        331
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        93,
+        143,
+        344,
+        331
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        127,
+        245,
+        147,
+        270
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "building",
+      "object_class_id": 21,
+      "object_bbox": [
+        93,
+        143,
+        344,
+        331
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "letter",
+      "subject_class_id": 74,
+      "subject_bbox": [
+        341,
+        84,
+        359,
+        113
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "sign",
+      "object_class_id": 114,
+      "object_bbox": [
+        276,
+        61,
+        393,
+        152
+      ]
+    }
+  ]
+}

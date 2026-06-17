@@ -1,0 +1,392 @@
+{
+  "image_id": 2324882,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        95,
+        0,
+        499,
+        214
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        28,
+        174,
+        83,
+        221
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        45,
+        170,
+        84,
+        187
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        55,
+        161,
+        86,
+        185
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        0,
+        165,
+        36,
+        206
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        38,
+        215,
+        55,
+        243
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        36,
+        220,
+        50,
+        247
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        11,
+        173,
+        39,
+        247
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "people",
+      "class_id": 89,
+      "bbox": [
+        29,
+        177,
+        67,
+        253
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        380,
+        155,
+        399,
+        204
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        366,
+        160,
+        381,
+        206
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        166,
+        21,
+        187,
+        244
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "sidewalk",
+      "class_id": 113,
+      "bbox": [
+        305,
+        217,
+        473,
+        241
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        244,
+        160,
+        266,
+        178
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "umbrella",
+      "class_id": 138,
+      "bbox": [
+        110,
+        136,
+        173,
+        161
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        228,
+        14,
+        256,
+        76
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        292,
+        19,
+        319,
+        78
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        27,
+        172,
+        69,
+        252
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "street",
+      "class_id": 123,
+      "bbox": [
+        0,
+        201,
+        485,
+        328
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        25,
+        162,
+        77,
+        263
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        31,
+        168,
+        53,
+        192
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        26,
+        167,
+        61,
+        268
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "street",
+      "class_id": 123,
+      "bbox": [
+        108,
+        167,
+        478,
+        329
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "sidewalk",
+      "class_id": 113,
+      "bbox": [
+        233,
+        183,
+        415,
+        240
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        161,
+        91,
+        188,
+        239
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 5,
+      "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        38,
+        215,
+        55,
+        243
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 19,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        25,
+        162,
+        77,
+        263
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        36,
+        220,
+        50,
+        247
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 19,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        25,
+        162,
+        77,
+        263
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        29,
+        177,
+        67,
+        253
+      ],
+      "predicate": "walking on",
+      "predicate_id": 45,
+      "object_id": 18,
+      "object_label": "street",
+      "object_class_id": 123,
+      "object_bbox": [
+        0,
+        201,
+        485,
+        328
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        166,
+        21,
+        187,
+        244
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 23,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        233,
+        183,
+        415,
+        240
+      ]
+    },
+    {
+      "subject_id": 20,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        31,
+        168,
+        53,
+        192
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 19,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        25,
+        162,
+        77,
+        263
+      ]
+    }
+  ]
+}

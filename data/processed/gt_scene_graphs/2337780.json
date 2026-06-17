@@ -1,0 +1,458 @@
+{
+  "image_id": 2337780,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        239,
+        95,
+        395,
+        364
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        83,
+        60,
+        206,
+        340
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        309,
+        127,
+        349,
+        161
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "helmet",
+      "class_id": 61,
+      "bbox": [
+        250,
+        173,
+        292,
+        220
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "helmet",
+      "class_id": 61,
+      "bbox": [
+        124,
+        75,
+        184,
+        114
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        60,
+        0,
+        97,
+        238
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        304,
+        164,
+        367,
+        262
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "shoe",
+      "class_id": 111,
+      "bbox": [
+        302,
+        328,
+        333,
+        352
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "short",
+      "class_id": 112,
+      "bbox": [
+        110,
+        214,
+        168,
+        275
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "short",
+      "class_id": 112,
+      "bbox": [
+        281,
+        218,
+        356,
+        297
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "sidewalk",
+      "class_id": 113,
+      "bbox": [
+        0,
+        206,
+        500,
+        340
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "skateboard",
+      "class_id": 116,
+      "bbox": [
+        90,
+        294,
+        356,
+        363
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "skateboard",
+      "class_id": 116,
+      "bbox": [
+        228,
+        262,
+        324,
+        357
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        64,
+        68,
+        402,
+        276
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "helmet",
+      "class_id": 61,
+      "bbox": [
+        132,
+        77,
+        171,
+        123
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 2,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        309,
+        127,
+        349,
+        161
+      ]
+    },
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "holding",
+      "predicate_id": 20,
+      "object_id": 3,
+      "object_label": "helmet",
+      "object_class_id": 61,
+      "object_bbox": [
+        250,
+        173,
+        292,
+        220
+      ]
+    },
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 7,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        302,
+        328,
+        333,
+        352
+      ]
+    },
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 9,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        281,
+        218,
+        356,
+        297
+      ]
+    },
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        90,
+        294,
+        356,
+        363
+      ]
+    },
+    {
+      "subject_id": 0,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        239,
+        95,
+        395,
+        364
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 12,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        228,
+        262,
+        324,
+        357
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        83,
+        60,
+        206,
+        340
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "helmet",
+      "object_class_id": 61,
+      "object_bbox": [
+        124,
+        75,
+        184,
+        114
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        83,
+        60,
+        206,
+        340
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 8,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        110,
+        214,
+        168,
+        275
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        83,
+        60,
+        206,
+        340
+      ],
+      "predicate": "standing on",
+      "predicate_id": 40,
+      "object_id": 11,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        90,
+        294,
+        356,
+        363
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        83,
+        60,
+        206,
+        340
+      ],
+      "predicate": "riding",
+      "predicate_id": 37,
+      "object_id": 12,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        228,
+        262,
+        324,
+        357
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        83,
+        60,
+        206,
+        340
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 14,
+      "object_label": "helmet",
+      "object_class_id": 61,
+      "object_bbox": [
+        132,
+        77,
+        171,
+        123
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        60,
+        0,
+        97,
+        238
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 10,
+      "object_label": "sidewalk",
+      "object_class_id": 113,
+      "object_bbox": [
+        0,
+        206,
+        500,
+        340
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        64,
+        68,
+        402,
+        276
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "skateboard",
+      "object_class_id": 116,
+      "object_bbox": [
+        90,
+        294,
+        356,
+        363
+      ]
+    }
+  ]
+}

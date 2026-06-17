@@ -1,0 +1,612 @@
+{
+  "image_id": 2318080,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        92,
+        168,
+        248,
+        257
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        82,
+        45,
+        282,
+        272
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "girl",
+      "class_id": 52,
+      "bbox": [
+        322,
+        182,
+        415,
+        272
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "glass",
+      "class_id": 53,
+      "bbox": [
+        222,
+        62,
+        261,
+        85
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "glove",
+      "class_id": 54,
+      "bbox": [
+        183,
+        65,
+        221,
+        104
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "glove",
+      "class_id": 54,
+      "bbox": [
+        258,
+        165,
+        283,
+        204
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        259,
+        179,
+        281,
+        205
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        192,
+        66,
+        225,
+        93
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "helmet",
+      "class_id": 61,
+      "bbox": [
+        222,
+        45,
+        268,
+        91
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "jacket",
+      "class_id": 65,
+      "bbox": [
+        166,
+        81,
+        284,
+        188
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "jacket",
+      "class_id": 65,
+      "bbox": [
+        324,
+        194,
+        385,
+        234
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "snow",
+      "class_id": 120,
+      "bbox": [
+        1,
+        61,
+        490,
+        329
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        338,
+        228,
+        404,
+        267
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        146,
+        76,
+        216,
+        187
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "ski",
+      "class_id": 117,
+      "bbox": [
+        104,
+        245,
+        169,
+        264
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "track",
+      "class_id": 133,
+      "bbox": [
+        8,
+        235,
+        351,
+        331
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "snow",
+      "class_id": 120,
+      "bbox": [
+        79,
+        269,
+        481,
+        329
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "people",
+      "class_id": 89,
+      "bbox": [
+        92,
+        44,
+        409,
+        268
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        325,
+        178,
+        410,
+        286
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "skier",
+      "class_id": 118,
+      "bbox": [
+        128,
+        40,
+        431,
+        293
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        161,
+        34,
+        293,
+        273
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        311,
+        178,
+        429,
+        284
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "skier",
+      "class_id": 118,
+      "bbox": [
+        64,
+        27,
+        314,
+        292
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "skier",
+      "class_id": 118,
+      "bbox": [
+        166,
+        30,
+        289,
+        200
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        65,
+        27,
+        297,
+        294
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "pant",
+      "subject_class_id": 86,
+      "subject_bbox": [
+        92,
+        168,
+        248,
+        257
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 22,
+      "object_label": "skier",
+      "object_class_id": 118,
+      "object_bbox": [
+        64,
+        27,
+        314,
+        292
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        82,
+        45,
+        282,
+        272
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 0,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        92,
+        168,
+        248,
+        257
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        82,
+        45,
+        282,
+        272
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "glove",
+      "object_class_id": 54,
+      "object_bbox": [
+        183,
+        65,
+        221,
+        104
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        82,
+        45,
+        282,
+        272
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 5,
+      "object_label": "glove",
+      "object_class_id": 54,
+      "object_bbox": [
+        258,
+        165,
+        283,
+        204
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        82,
+        45,
+        282,
+        272
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 8,
+      "object_label": "helmet",
+      "object_class_id": 61,
+      "object_bbox": [
+        222,
+        45,
+        268,
+        91
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        82,
+        45,
+        282,
+        272
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 16,
+      "object_label": "snow",
+      "object_class_id": 120,
+      "object_bbox": [
+        79,
+        269,
+        481,
+        329
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "girl",
+      "subject_class_id": 52,
+      "subject_bbox": [
+        322,
+        182,
+        415,
+        272
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 12,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        338,
+        228,
+        404,
+        267
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "helmet",
+      "subject_class_id": 61,
+      "subject_bbox": [
+        222,
+        45,
+        268,
+        91
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 23,
+      "object_label": "skier",
+      "object_class_id": 118,
+      "object_bbox": [
+        166,
+        30,
+        289,
+        200
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        146,
+        76,
+        216,
+        187
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 7,
+      "object_label": "hand",
+      "object_class_id": 57,
+      "object_bbox": [
+        192,
+        66,
+        225,
+        93
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "pole",
+      "subject_class_id": 98,
+      "subject_bbox": [
+        146,
+        76,
+        216,
+        187
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 22,
+      "object_label": "skier",
+      "object_class_id": 118,
+      "object_bbox": [
+        64,
+        27,
+        314,
+        292
+      ]
+    },
+    {
+      "subject_id": 15,
+      "subject_label": "track",
+      "subject_class_id": 133,
+      "subject_bbox": [
+        8,
+        235,
+        351,
+        331
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 11,
+      "object_label": "snow",
+      "object_class_id": 120,
+      "object_bbox": [
+        1,
+        61,
+        490,
+        329
+      ]
+    },
+    {
+      "subject_id": 18,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        325,
+        178,
+        410,
+        286
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 10,
+      "object_label": "jacket",
+      "object_class_id": 65,
+      "object_bbox": [
+        324,
+        194,
+        385,
+        234
+      ]
+    },
+    {
+      "subject_id": 21,
+      "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        311,
+        178,
+        429,
+        284
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "snow",
+      "object_class_id": 120,
+      "object_bbox": [
+        1,
+        61,
+        490,
+        329
+      ]
+    },
+    {
+      "subject_id": 24,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        65,
+        27,
+        297,
+        294
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 3,
+      "object_label": "glass",
+      "object_class_id": 53,
+      "object_bbox": [
+        222,
+        62,
+        261,
+        85
+      ]
+    },
+    {
+      "subject_id": 24,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        65,
+        27,
+        297,
+        294
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 12,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        338,
+        228,
+        404,
+        267
+      ]
+    }
+  ]
+}

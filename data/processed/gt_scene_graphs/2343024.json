@@ -1,0 +1,524 @@
+{
+  "image_id": 2343024,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        266,
+        5,
+        354,
+        123
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        24,
+        0,
+        498,
+        322
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        135,
+        0,
+        498,
+        312
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        160,
+        134,
+        380,
+        313
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        0,
+        0,
+        132,
+        165
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        180,
+        6,
+        353,
+        193
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "leaf",
+      "class_id": 72,
+      "bbox": [
+        99,
+        0,
+        148,
+        54
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "leaf",
+      "class_id": 72,
+      "bbox": [
+        97,
+        37,
+        155,
+        81
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        236,
+        201,
+        310,
+        321
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        404,
+        193,
+        455,
+        284
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        40,
+        177,
+        101,
+        320
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "mouth",
+      "class_id": 81,
+      "bbox": [
+        207,
+        109,
+        234,
+        142
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "tail",
+      "class_id": 126,
+      "bbox": [
+        29,
+        160,
+        51,
+        267
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        36,
+        0,
+        160,
+        104
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "trunk",
+      "class_id": 137,
+      "bbox": [
+        176,
+        95,
+        246,
+        192
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "trunk",
+      "class_id": 137,
+      "bbox": [
+        155,
+        212,
+        199,
+        266
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "eye",
+      "class_id": 42,
+      "bbox": [
+        215,
+        57,
+        246,
+        83
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        57,
+        54,
+        498,
+        296
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        295,
+        92,
+        388,
+        263
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        266,
+        5,
+        354,
+        123
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        135,
+        0,
+        498,
+        312
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "ear",
+      "object_class_id": 39,
+      "object_bbox": [
+        266,
+        5,
+        354,
+        123
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 5,
+      "object_label": "head",
+      "object_class_id": 60,
+      "object_bbox": [
+        180,
+        6,
+        353,
+        193
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 9,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        404,
+        193,
+        455,
+        284
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 11,
+      "object_label": "mouth",
+      "object_class_id": 81,
+      "object_bbox": [
+        207,
+        109,
+        234,
+        142
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 12,
+      "object_label": "tail",
+      "object_class_id": 126,
+      "object_bbox": [
+        29,
+        160,
+        51,
+        267
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        135,
+        0,
+        498,
+        312
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 16,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        215,
+        57,
+        246,
+        83
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        160,
+        134,
+        380,
+        313
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 16,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        215,
+        57,
+        246,
+        83
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        0,
+        0,
+        132,
+        165
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 14,
+      "object_label": "trunk",
+      "object_class_id": 137,
+      "object_bbox": [
+        176,
+        95,
+        246,
+        192
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "leaf",
+      "subject_class_id": 72,
+      "subject_bbox": [
+        97,
+        37,
+        155,
+        81
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 13,
+      "object_label": "tree",
+      "object_class_id": 135,
+      "object_bbox": [
+        36,
+        0,
+        160,
+        104
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "tail",
+      "subject_class_id": 126,
+      "subject_bbox": [
+        29,
+        160,
+        51,
+        267
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        24,
+        0,
+        498,
+        322
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        36,
+        0,
+        160,
+        104
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 1,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        24,
+        0,
+        498,
+        322
+      ]
+    },
+    {
+      "subject_id": 16,
+      "subject_label": "eye",
+      "subject_class_id": 42,
+      "subject_bbox": [
+        215,
+        57,
+        246,
+        83
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        135,
+        0,
+        498,
+        312
+      ]
+    },
+    {
+      "subject_id": 18,
+      "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        295,
+        92,
+        388,
+        263
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        160,
+        134,
+        380,
+        313
+      ]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "image_id": 2414130,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        290,
+        142,
+        366,
+        248
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        255,
+        100,
+        291,
+        117
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        329,
+        214,
+        364,
+        241
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        170,
+        98,
+        361,
+        285
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "short",
+      "class_id": 112,
+      "bbox": [
+        214,
+        174,
+        287,
+        226
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "surfboard",
+      "class_id": 124,
+      "bbox": [
+        86,
+        244,
+        248,
+        292
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "wave",
+      "class_id": 142,
+      "bbox": [
+        342,
+        76,
+        498,
+        216
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 3,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        170,
+        98,
+        361,
+        285
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        255,
+        100,
+        291,
+        117
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        170,
+        98,
+        361,
+        285
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 2,
+      "object_label": "hand",
+      "object_class_id": 57,
+      "object_bbox": [
+        329,
+        214,
+        364,
+        241
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        170,
+        98,
+        361,
+        285
+      ],
+      "predicate": "wears",
+      "predicate_id": 48,
+      "object_id": 4,
+      "object_label": "short",
+      "object_class_id": 112,
+      "object_bbox": [
+        214,
+        174,
+        287,
+        226
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        170,
+        98,
+        361,
+        285
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "surfboard",
+      "object_class_id": 124,
+      "object_bbox": [
+        86,
+        244,
+        248,
+        292
+      ]
+    }
+  ]
+}

@@ -1,0 +1,172 @@
+{
+  "image_id": 2414765,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bed",
+      "class_id": 8,
+      "bbox": [
+        162,
+        224,
+        499,
+        374
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "chair",
+      "class_id": 27,
+      "bbox": [
+        213,
+        193,
+        274,
+        255
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "desk",
+      "class_id": 35,
+      "bbox": [
+        142,
+        206,
+        311,
+        317
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "door",
+      "class_id": 37,
+      "bbox": [
+        351,
+        72,
+        415,
+        246
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "flower",
+      "class_id": 47,
+      "bbox": [
+        458,
+        334,
+        498,
+        369
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "light",
+      "class_id": 75,
+      "bbox": [
+        74,
+        38,
+        101,
+        67
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pillow",
+      "class_id": 92,
+      "bbox": [
+        364,
+        219,
+        498,
+        273
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "room",
+      "class_id": 105,
+      "bbox": [
+        1,
+        2,
+        499,
+        372
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "lamp",
+      "class_id": 70,
+      "bbox": [
+        242,
+        145,
+        265,
+        198
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 3,
+      "subject_label": "door",
+      "subject_class_id": 37,
+      "subject_bbox": [
+        351,
+        72,
+        415,
+        246
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        162,
+        224,
+        499,
+        374
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        364,
+        219,
+        498,
+        273
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        162,
+        224,
+        499,
+        374
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "room",
+      "subject_class_id": 105,
+      "subject_bbox": [
+        1,
+        2,
+        499,
+        372
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        162,
+        224,
+        499,
+        374
+      ]
+    }
+  ]
+}

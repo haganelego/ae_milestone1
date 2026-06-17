@@ -1,0 +1,425 @@
+{
+  "image_id": 2319628,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "number",
+      "class_id": 84,
+      "bbox": [
+        47,
+        98,
+        85,
+        127
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        237,
+        120,
+        295,
+        159
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "hat",
+      "class_id": 59,
+      "bbox": [
+        116,
+        106,
+        140,
+        125
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        246,
+        95,
+        269,
+        127
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        277,
+        148,
+        409,
+        223
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        198,
+        88,
+        301,
+        279
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        358,
+        94,
+        398,
+        190
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "number",
+      "class_id": 84,
+      "bbox": [
+        345,
+        155,
+        384,
+        185
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        21,
+        176,
+        120,
+        281
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        264,
+        131,
+        443,
+        280
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        16,
+        55,
+        141,
+        280
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "short",
+      "class_id": 112,
+      "bbox": [
+        220,
+        180,
+        278,
+        232
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        215,
+        94,
+        297,
+        277
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        205,
+        96,
+        314,
+        263
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        164,
+        90,
+        435,
+        256
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "number",
+      "class_id": 84,
+      "bbox": [
+        41,
+        93,
+        95,
+        140
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        21,
+        87,
+        130,
+        198
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        313,
+        144,
+        408,
+        209
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        47,
+        98,
+        85,
+        127
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 16,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        21,
+        87,
+        130,
+        198
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        237,
+        120,
+        295,
+        159
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 5,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        198,
+        88,
+        301,
+        279
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        246,
+        95,
+        269,
+        127
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 5,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        198,
+        88,
+        301,
+        279
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        345,
+        155,
+        384,
+        185
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        277,
+        148,
+        409,
+        223
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        345,
+        155,
+        384,
+        185
+      ],
+      "predicate": "on back of",
+      "predicate_id": 31,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        277,
+        148,
+        409,
+        223
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        345,
+        155,
+        384,
+        185
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 17,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        313,
+        144,
+        408,
+        209
+      ]
+    },
+    {
+      "subject_id": 9,
+      "subject_label": "player",
+      "subject_class_id": 97,
+      "subject_bbox": [
+        264,
+        131,
+        443,
+        280
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        277,
+        148,
+        409,
+        223
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "short",
+      "subject_class_id": 112,
+      "subject_bbox": [
+        220,
+        180,
+        278,
+        232
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 12,
+      "object_label": "player",
+      "object_class_id": 97,
+      "object_bbox": [
+        215,
+        94,
+        297,
+        277
+      ]
+    },
+    {
+      "subject_id": 15,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        41,
+        93,
+        95,
+        140
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 16,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        21,
+        87,
+        130,
+        198
+      ]
+    },
+    {
+      "subject_id": 15,
+      "subject_label": "number",
+      "subject_class_id": 84,
+      "subject_bbox": [
+        41,
+        93,
+        95,
+        140
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 17,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        313,
+        144,
+        408,
+        209
+      ]
+    }
+  ]
+}

@@ -1,0 +1,315 @@
+{
+  "image_id": 2332102,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bottle",
+      "class_id": 16,
+      "bbox": [
+        0,
+        22,
+        60,
+        69
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "cat",
+      "class_id": 26,
+      "bbox": [
+        0,
+        62,
+        362,
+        498
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "desk",
+      "class_id": 35,
+      "bbox": [
+        0,
+        77,
+        375,
+        225
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "door",
+      "class_id": 37,
+      "bbox": [
+        97,
+        0,
+        214,
+        121
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "drawer",
+      "class_id": 38,
+      "bbox": [
+        7,
+        209,
+        91,
+        499
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        161,
+        63,
+        213,
+        155
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        286,
+        110,
+        360,
+        208
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "eye",
+      "class_id": 42,
+      "bbox": [
+        222,
+        207,
+        261,
+        240
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "eye",
+      "class_id": 42,
+      "bbox": [
+        150,
+        178,
+        178,
+        211
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "handle",
+      "class_id": 58,
+      "bbox": [
+        43,
+        220,
+        86,
+        271
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "nose",
+      "class_id": 83,
+      "bbox": [
+        157,
+        245,
+        185,
+        264
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "plate",
+      "class_id": 96,
+      "bbox": [
+        0,
+        74,
+        90,
+        111
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 2,
+      "object_label": "desk",
+      "object_class_id": 35,
+      "object_bbox": [
+        0,
+        77,
+        375,
+        225
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 5,
+      "object_label": "ear",
+      "object_class_id": 39,
+      "object_bbox": [
+        161,
+        63,
+        213,
+        155
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 6,
+      "object_label": "ear",
+      "object_class_id": 39,
+      "object_bbox": [
+        286,
+        110,
+        360,
+        208
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        222,
+        207,
+        261,
+        240
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 8,
+      "object_label": "eye",
+      "object_class_id": 42,
+      "object_bbox": [
+        150,
+        178,
+        178,
+        211
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        62,
+        362,
+        498
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 10,
+      "object_label": "nose",
+      "object_class_id": 83,
+      "object_bbox": [
+        157,
+        245,
+        185,
+        264
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "door",
+      "subject_class_id": 37,
+      "subject_bbox": [
+        97,
+        0,
+        214,
+        121
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 1,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        0,
+        62,
+        362,
+        498
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "drawer",
+      "subject_class_id": 38,
+      "subject_bbox": [
+        7,
+        209,
+        91,
+        499
+      ],
+      "predicate": "under",
+      "predicate_id": 42,
+      "object_id": 2,
+      "object_label": "desk",
+      "object_class_id": 35,
+      "object_bbox": [
+        0,
+        77,
+        375,
+        225
+      ]
+    }
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "image_id": 2413649,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "door",
+      "class_id": 37,
+      "bbox": [
+        0,
+        3,
+        38,
+        73
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "handle",
+      "class_id": 58,
+      "bbox": [
+        272,
+        180,
+        302,
+        200
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "seat",
+      "class_id": 107,
+      "bbox": [
+        221,
+        193,
+        252,
+        261
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "paper",
+      "class_id": 87,
+      "bbox": [
+        141,
+        110,
+        169,
+        146
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "paper",
+      "class_id": 87,
+      "bbox": [
+        262,
+        1,
+        295,
+        26
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shelf",
+      "class_id": 109,
+      "bbox": [
+        136,
+        129,
+        169,
+        148
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "shelf",
+      "class_id": 109,
+      "bbox": [
+        0,
+        106,
+        86,
+        128
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        264,
+        0,
+        295,
+        30
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "sink",
+      "class_id": 115,
+      "bbox": [
+        0,
+        153,
+        101,
+        216
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "tile",
+      "class_id": 128,
+      "bbox": [
+        118,
+        17,
+        146,
+        41
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "toilet",
+      "class_id": 130,
+      "bbox": [
+        219,
+        190,
+        373,
+        397
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "toilet",
+      "class_id": 130,
+      "bbox": [
+        334,
+        409,
+        373,
+        498
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "toilet",
+      "class_id": 130,
+      "bbox": [
+        167,
+        157,
+        301,
+        324
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "handle",
+      "subject_class_id": 58,
+      "subject_bbox": [
+        272,
+        180,
+        302,
+        200
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 12,
+      "object_label": "toilet",
+      "object_class_id": 130,
+      "object_bbox": [
+        167,
+        157,
+        301,
+        324
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "paper",
+      "subject_class_id": 87,
+      "subject_bbox": [
+        141,
+        110,
+        169,
+        146
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "shelf",
+      "object_class_id": 109,
+      "object_bbox": [
+        136,
+        129,
+        169,
+        148
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "shelf",
+      "subject_class_id": 109,
+      "subject_bbox": [
+        0,
+        106,
+        86,
+        128
+      ],
+      "predicate": "above",
+      "predicate_id": 0,
+      "object_id": 8,
+      "object_label": "sink",
+      "object_class_id": 115,
+      "object_bbox": [
+        0,
+        153,
+        101,
+        216
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "sink",
+      "subject_class_id": 115,
+      "subject_bbox": [
+        0,
+        153,
+        101,
+        216
+      ],
+      "predicate": "under",
+      "predicate_id": 42,
+      "object_id": 6,
+      "object_label": "shelf",
+      "object_class_id": 109,
+      "object_bbox": [
+        0,
+        106,
+        86,
+        128
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "toilet",
+      "subject_class_id": 130,
+      "subject_bbox": [
+        167,
+        157,
+        301,
+        324
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 2,
+      "object_label": "seat",
+      "object_class_id": 107,
+      "object_bbox": [
+        221,
+        193,
+        252,
+        261
+      ]
+    }
+  ]
+}

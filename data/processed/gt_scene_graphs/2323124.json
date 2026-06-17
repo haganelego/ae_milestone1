@@ -1,0 +1,326 @@
+{
+  "image_id": 2323124,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "cat",
+      "class_id": 26,
+      "bbox": [
+        71,
+        39,
+        392,
+        160
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        0,
+        0,
+        483,
+        331
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        267,
+        5,
+        495,
+        276
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        326,
+        54,
+        358,
+        88
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        370,
+        113,
+        401,
+        129
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        292,
+        56,
+        397,
+        143
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "paw",
+      "class_id": 88,
+      "bbox": [
+        175,
+        138,
+        194,
+        158
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "paw",
+      "class_id": 88,
+      "bbox": [
+        256,
+        145,
+        291,
+        166
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        0,
+        0,
+        490,
+        113
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        0,
+        99,
+        88,
+        163
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "eye",
+      "class_id": 42,
+      "bbox": [
+        321,
+        93,
+        353,
+        138
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "cat",
+      "class_id": 26,
+      "bbox": [
+        72,
+        24,
+        404,
+        183
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        365,
+        2,
+        483,
+        303
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "car",
+      "class_id": 25,
+      "bbox": [
+        2,
+        7,
+        81,
+        282
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "windshield",
+      "class_id": 145,
+      "bbox": [
+        1,
+        0,
+        498,
+        126
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        71,
+        39,
+        392,
+        160
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "car",
+      "object_class_id": 25,
+      "object_bbox": [
+        0,
+        0,
+        483,
+        331
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        370,
+        113,
+        401,
+        129
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 5,
+      "object_label": "head",
+      "object_class_id": 60,
+      "object_bbox": [
+        292,
+        56,
+        397,
+        143
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "paw",
+      "subject_class_id": 88,
+      "subject_bbox": [
+        256,
+        145,
+        291,
+        166
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        71,
+        39,
+        392,
+        160
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        0,
+        0,
+        490,
+        113
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "car",
+      "object_class_id": 25,
+      "object_bbox": [
+        0,
+        0,
+        483,
+        331
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        0,
+        0,
+        490,
+        113
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "car",
+      "object_class_id": 25,
+      "object_bbox": [
+        0,
+        0,
+        483,
+        331
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "eye",
+      "subject_class_id": 42,
+      "subject_bbox": [
+        321,
+        93,
+        353,
+        138
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        71,
+        39,
+        392,
+        160
+      ]
+    },
+    {
+      "subject_id": 14,
+      "subject_label": "windshield",
+      "subject_class_id": 145,
+      "subject_bbox": [
+        1,
+        0,
+        498,
+        126
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "car",
+      "object_class_id": 25,
+      "object_bbox": [
+        0,
+        0,
+        483,
+        331
+      ]
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "image_id": 2330318,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bag",
+      "class_id": 3,
+      "bbox": [
+        0,
+        256,
+        376,
+        500
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bed",
+      "class_id": 8,
+      "bbox": [
+        0,
+        94,
+        376,
+        500
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "cat",
+      "class_id": 26,
+      "bbox": [
+        0,
+        99,
+        261,
+        415
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        75,
+        99,
+        133,
+        179
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        205,
+        130,
+        260,
+        201
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 2,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        0,
+        99,
+        261,
+        415
+      ],
+      "predicate": "laying on",
+      "predicate_id": 23,
+      "object_id": 0,
+      "object_label": "bag",
+      "object_class_id": 3,
+      "object_bbox": [
+        0,
+        256,
+        376,
+        500
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        75,
+        99,
+        133,
+        179
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        0,
+        99,
+        261,
+        415
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        205,
+        130,
+        260,
+        201
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        0,
+        99,
+        261,
+        415
+      ]
+    }
+  ]
+}

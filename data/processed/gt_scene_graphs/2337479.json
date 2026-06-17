@@ -1,0 +1,535 @@
+{
+  "image_id": 2337479,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        250,
+        53,
+        376,
+        100
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        65,
+        204,
+        113,
+        282
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "arm",
+      "class_id": 2,
+      "bbox": [
+        297,
+        185,
+        325,
+        238
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        164,
+        178,
+        252,
+        265
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        0,
+        91,
+        90,
+        234
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        414,
+        215,
+        498,
+        373
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "cap",
+      "class_id": 24,
+      "bbox": [
+        38,
+        65,
+        81,
+        95
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "girl",
+      "class_id": 52,
+      "bbox": [
+        228,
+        130,
+        325,
+        248
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        67,
+        133,
+        172,
+        287
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        202,
+        0,
+        265,
+        65
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "jacket",
+      "class_id": 65,
+      "bbox": [
+        251,
+        48,
+        489,
+        233
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        0,
+        65,
+        105,
+        291
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "plate",
+      "class_id": 96,
+      "bbox": [
+        151,
+        253,
+        230,
+        306
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "table",
+      "class_id": 125,
+      "bbox": [
+        0,
+        232,
+        458,
+        373
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        162,
+        222,
+        244,
+        268
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        184,
+        0,
+        287,
+        198
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        215,
+        0,
+        492,
+        288
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        224,
+        132,
+        305,
+        222
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        81,
+        141,
+        183,
+        278
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        172,
+        7,
+        329,
+        172
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "child",
+      "class_id": 28,
+      "bbox": [
+        5,
+        92,
+        73,
+        186
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        7,
+        36,
+        103,
+        199
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "hat",
+      "class_id": 59,
+      "bbox": [
+        37,
+        68,
+        81,
+        91
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        73,
+        191,
+        166,
+        279
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        65,
+        204,
+        113,
+        282
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 18,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        81,
+        141,
+        183,
+        278
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "arm",
+      "subject_class_id": 2,
+      "subject_bbox": [
+        297,
+        185,
+        325,
+        238
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 17,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        224,
+        132,
+        305,
+        222
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        164,
+        178,
+        252,
+        265
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 14,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        162,
+        222,
+        244,
+        268
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        164,
+        178,
+        252,
+        265
+      ],
+      "predicate": "wears",
+      "predicate_id": 48,
+      "object_id": 14,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        162,
+        222,
+        244,
+        268
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        164,
+        178,
+        252,
+        265
+      ],
+      "predicate": "with",
+      "predicate_id": 49,
+      "object_id": 14,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        162,
+        222,
+        244,
+        268
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        0,
+        91,
+        90,
+        234
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 14,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        162,
+        222,
+        244,
+        268
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        67,
+        133,
+        172,
+        287
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 23,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        73,
+        191,
+        166,
+        279
+      ]
+    },
+    {
+      "subject_id": 9,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        202,
+        0,
+        265,
+        65
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 19,
+      "object_label": "person",
+      "object_class_id": 90,
+      "object_bbox": [
+        172,
+        7,
+        329,
+        172
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        65,
+        105,
+        291
+      ],
+      "predicate": "holding",
+      "predicate_id": 20,
+      "object_id": 20,
+      "object_label": "child",
+      "object_class_id": 28,
+      "object_bbox": [
+        5,
+        92,
+        73,
+        186
+      ]
+    },
+    {
+      "subject_id": 16,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        215,
+        0,
+        492,
+        288
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "arm",
+      "object_class_id": 2,
+      "object_bbox": [
+        250,
+        53,
+        376,
+        100
+      ]
+    },
+    {
+      "subject_id": 16,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        215,
+        0,
+        492,
+        288
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 10,
+      "object_label": "jacket",
+      "object_class_id": 65,
+      "object_bbox": [
+        251,
+        48,
+        489,
+        233
+      ]
+    },
+    {
+      "subject_id": 21,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        7,
+        36,
+        103,
+        199
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 22,
+      "object_label": "hat",
+      "object_class_id": 59,
+      "object_bbox": [
+        37,
+        68,
+        81,
+        91
+      ]
+    }
+  ]
+}

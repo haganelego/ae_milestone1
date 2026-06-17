@@ -1,0 +1,172 @@
+{
+  "image_id": 2336171,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bear",
+      "class_id": 7,
+      "bbox": [
+        0,
+        18,
+        490,
+        374
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        341,
+        145,
+        412,
+        212
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        424,
+        129,
+        476,
+        187
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "eye",
+      "class_id": 42,
+      "bbox": [
+        423,
+        263,
+        447,
+        284
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "fence",
+      "class_id": 44,
+      "bbox": [
+        0,
+        108,
+        501,
+        305
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "mouth",
+      "class_id": 81,
+      "bbox": [
+        394,
+        301,
+        424,
+        329
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "mouth",
+      "class_id": 81,
+      "bbox": [
+        397,
+        303,
+        425,
+        344
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "nose",
+      "class_id": 83,
+      "bbox": [
+        452,
+        316,
+        473,
+        341
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "paw",
+      "class_id": 88,
+      "bbox": [
+        241,
+        323,
+        316,
+        374
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        341,
+        145,
+        412,
+        212
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 0,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        0,
+        18,
+        490,
+        374
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        341,
+        145,
+        412,
+        212
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        0,
+        18,
+        490,
+        374
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "mouth",
+      "subject_class_id": 81,
+      "subject_bbox": [
+        394,
+        301,
+        424,
+        329
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bear",
+      "object_class_id": 7,
+      "object_bbox": [
+        0,
+        18,
+        490,
+        374
+      ]
+    }
+  ]
+}

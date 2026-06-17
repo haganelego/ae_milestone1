@@ -1,0 +1,161 @@
+{
+  "image_id": 2341926,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        69,
+        99,
+        129,
+        205
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        198,
+        187,
+        415,
+        298
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "tail",
+      "class_id": 126,
+      "bbox": [
+        408,
+        120,
+        426,
+        240
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        0,
+        20,
+        498,
+        83
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "zebra",
+      "class_id": 149,
+      "bbox": [
+        69,
+        96,
+        425,
+        320
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "animal",
+      "class_id": 1,
+      "bbox": [
+        358,
+        69,
+        480,
+        84
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 3,
+      "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        0,
+        20,
+        498,
+        83
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 4,
+      "object_label": "zebra",
+      "object_class_id": 149,
+      "object_bbox": [
+        69,
+        96,
+        425,
+        320
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "zebra",
+      "subject_class_id": 149,
+      "subject_bbox": [
+        69,
+        96,
+        425,
+        320
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "head",
+      "object_class_id": 60,
+      "object_bbox": [
+        69,
+        99,
+        129,
+        205
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "zebra",
+      "subject_class_id": 149,
+      "subject_bbox": [
+        69,
+        96,
+        425,
+        320
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "leg",
+      "object_class_id": 73,
+      "object_bbox": [
+        198,
+        187,
+        415,
+        298
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "zebra",
+      "subject_class_id": 149,
+      "subject_bbox": [
+        69,
+        96,
+        425,
+        320
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 2,
+      "object_label": "tail",
+      "object_class_id": 126,
+      "object_bbox": [
+        408,
+        120,
+        426,
+        240
+      ]
+    }
+  ]
+}

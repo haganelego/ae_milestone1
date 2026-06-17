@@ -77,3 +77,4 @@ outputs/runs/*/llm_scores/
 outputs/runs/*/vlm_scores/
 outputs/runs/*/llm_ablation/
 outputs/runs/*/llm_inputs/
+.cache_reconstruct/

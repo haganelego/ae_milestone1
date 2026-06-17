@@ -1,0 +1,216 @@
+{
+  "image_id": 2316863,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "building",
+      "class_id": 21,
+      "bbox": [
+        333,
+        335,
+        482,
+        373
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "light",
+      "class_id": 75,
+      "bbox": [
+        101,
+        12,
+        235,
+        163
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "light",
+      "class_id": 75,
+      "bbox": [
+        45,
+        297,
+        179,
+        370
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        242,
+        0,
+        323,
+        370
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "post",
+      "class_id": 99,
+      "bbox": [
+        259,
+        183,
+        294,
+        368
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        180,
+        90,
+        413,
+        206
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        279,
+        139,
+        421,
+        205
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        177,
+        97,
+        409,
+        372
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "wire",
+      "class_id": 147,
+      "bbox": [
+        461,
+        0,
+        498,
+        55
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "letter",
+      "class_id": 74,
+      "bbox": [
+        178,
+        98,
+        244,
+        151
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "post",
+      "class_id": 99,
+      "bbox": [
+        231,
+        0,
+        364,
+        365
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 5,
+      "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        180,
+        90,
+        413,
+        206
+      ],
+      "predicate": "mounted on",
+      "predicate_id": 27,
+      "object_id": 3,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        242,
+        0,
+        323,
+        370
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        279,
+        139,
+        421,
+        205
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 9,
+      "object_label": "letter",
+      "object_class_id": 74,
+      "object_bbox": [
+        178,
+        98,
+        244,
+        151
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        177,
+        97,
+        409,
+        372
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 3,
+      "object_label": "pole",
+      "object_class_id": 98,
+      "object_bbox": [
+        242,
+        0,
+        323,
+        370
+      ]
+    },
+    {
+      "subject_id": 7,
+      "subject_label": "sign",
+      "subject_class_id": 114,
+      "subject_bbox": [
+        177,
+        97,
+        409,
+        372
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 10,
+      "object_label": "post",
+      "object_class_id": 99,
+      "object_bbox": [
+        231,
+        0,
+        364,
+        365
+      ]
+    }
+  ]
+}

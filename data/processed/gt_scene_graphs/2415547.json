@@ -1,0 +1,381 @@
+{
+  "image_id": 2415547,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bowl",
+      "class_id": 17,
+      "bbox": [
+        0,
+        243,
+        41,
+        289
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bowl",
+      "class_id": 17,
+      "bbox": [
+        86,
+        188,
+        121,
+        207
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "chair",
+      "class_id": 27,
+      "bbox": [
+        304,
+        165,
+        412,
+        317
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "door",
+      "class_id": 37,
+      "bbox": [
+        45,
+        37,
+        144,
+        161
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "face",
+      "class_id": 43,
+      "bbox": [
+        214,
+        46,
+        231,
+        74
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "face",
+      "class_id": 43,
+      "bbox": [
+        167,
+        165,
+        206,
+        199
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "fork",
+      "class_id": 49,
+      "bbox": [
+        98,
+        281,
+        176,
+        305
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        168,
+        139,
+        223,
+        164
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        254,
+        255,
+        287,
+        306
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "lamp",
+      "class_id": 70,
+      "bbox": [
+        315,
+        74,
+        355,
+        119
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        160,
+        131,
+        358,
+        313
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        197,
+        32,
+        270,
+        150
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "plate",
+      "class_id": 96,
+      "bbox": [
+        63,
+        259,
+        159,
+        317
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "table",
+      "class_id": 125,
+      "bbox": [
+        1,
+        269,
+        84,
+        312
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        104,
+        45,
+        142,
+        138
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "woman",
+      "class_id": 148,
+      "bbox": [
+        199,
+        29,
+        272,
+        156
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        157,
+        134,
+        220,
+        168
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "fork",
+      "class_id": 49,
+      "bbox": [
+        112,
+        278,
+        179,
+        316
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "bowl",
+      "subject_class_id": 17,
+      "subject_bbox": [
+        86,
+        188,
+        121,
+        207
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 13,
+      "object_label": "table",
+      "object_class_id": 125,
+      "object_bbox": [
+        1,
+        269,
+        84,
+        312
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "fork",
+      "subject_class_id": 49,
+      "subject_bbox": [
+        98,
+        281,
+        176,
+        305
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 12,
+      "object_label": "plate",
+      "object_class_id": 96,
+      "object_bbox": [
+        63,
+        259,
+        159,
+        317
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        160,
+        131,
+        358,
+        313
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        168,
+        139,
+        223,
+        164
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        160,
+        131,
+        358,
+        313
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 16,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        157,
+        134,
+        220,
+        168
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "person",
+      "subject_class_id": 90,
+      "subject_bbox": [
+        197,
+        32,
+        270,
+        150
+      ],
+      "predicate": "watching",
+      "predicate_id": 46,
+      "object_id": 10,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        160,
+        131,
+        358,
+        313
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "plate",
+      "subject_class_id": 96,
+      "subject_bbox": [
+        63,
+        259,
+        159,
+        317
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 17,
+      "object_label": "fork",
+      "object_class_id": 49,
+      "object_bbox": [
+        112,
+        278,
+        179,
+        316
+      ]
+    },
+    {
+      "subject_id": 14,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        104,
+        45,
+        142,
+        138
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 3,
+      "object_label": "door",
+      "object_class_id": 37,
+      "object_bbox": [
+        45,
+        37,
+        144,
+        161
+      ]
+    },
+    {
+      "subject_id": 15,
+      "subject_label": "woman",
+      "subject_class_id": 148,
+      "subject_bbox": [
+        199,
+        29,
+        272,
+        156
+      ],
+      "predicate": "watching",
+      "predicate_id": 46,
+      "object_id": 10,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        160,
+        131,
+        358,
+        313
+      ]
+    }
+  ]
+}

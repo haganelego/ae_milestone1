@@ -1,0 +1,271 @@
+{
+  "image_id": 2335623,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "animal",
+      "class_id": 1,
+      "bbox": [
+        0,
+        279,
+        56,
+        322
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "animal",
+      "class_id": 1,
+      "bbox": [
+        53,
+        156,
+        98,
+        193
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bed",
+      "class_id": 8,
+      "bbox": [
+        77,
+        150,
+        498,
+        373
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "boat",
+      "class_id": 13,
+      "bbox": [
+        230,
+        242,
+        294,
+        301
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "boy",
+      "class_id": 19,
+      "bbox": [
+        120,
+        97,
+        191,
+        209
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "drawer",
+      "class_id": 38,
+      "bbox": [
+        50,
+        210,
+        102,
+        252
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "drawer",
+      "class_id": 38,
+      "bbox": [
+        55,
+        236,
+        108,
+        277
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "drawer",
+      "class_id": 38,
+      "bbox": [
+        58,
+        259,
+        113,
+        298
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "girl",
+      "class_id": 52,
+      "bbox": [
+        159,
+        94,
+        280,
+        206
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        118,
+        131,
+        169,
+        178
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "child",
+      "class_id": 28,
+      "bbox": [
+        176,
+        91,
+        278,
+        204
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "cup",
+      "class_id": 33,
+      "bbox": [
+        34,
+        175,
+        105,
+        231
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "kid",
+      "class_id": 67,
+      "bbox": [
+        107,
+        78,
+        223,
+        231
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "kid",
+      "class_id": 67,
+      "bbox": [
+        163,
+        92,
+        265,
+        201
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 4,
+      "subject_label": "boy",
+      "subject_class_id": 19,
+      "subject_bbox": [
+        120,
+        97,
+        191,
+        209
+      ],
+      "predicate": "sitting on",
+      "predicate_id": 39,
+      "object_id": 2,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        77,
+        150,
+        498,
+        373
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "girl",
+      "subject_class_id": 52,
+      "subject_bbox": [
+        159,
+        94,
+        280,
+        206
+      ],
+      "predicate": "sitting on",
+      "predicate_id": 39,
+      "object_id": 2,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        77,
+        150,
+        498,
+        373
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        107,
+        78,
+        223,
+        231
+      ],
+      "predicate": "sitting on",
+      "predicate_id": 39,
+      "object_id": 2,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        77,
+        150,
+        498,
+        373
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        107,
+        78,
+        223,
+        231
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 9,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        118,
+        131,
+        169,
+        178
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "kid",
+      "subject_class_id": 67,
+      "subject_bbox": [
+        163,
+        92,
+        265,
+        201
+      ],
+      "predicate": "sitting on",
+      "predicate_id": 39,
+      "object_id": 2,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        77,
+        150,
+        498,
+        373
+      ]
+    }
+  ]
+}

@@ -1,0 +1,194 @@
+{
+  "image_id": 2318716,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bag",
+      "class_id": 3,
+      "bbox": [
+        4,
+        94,
+        496,
+        374
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "cat",
+      "class_id": 26,
+      "bbox": [
+        105,
+        35,
+        499,
+        374
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        110,
+        72,
+        168,
+        125
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        168,
+        39,
+        209,
+        82
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        6,
+        64,
+        61,
+        327
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "leg",
+      "class_id": 73,
+      "bbox": [
+        189,
+        218,
+        286,
+        278
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "table",
+      "class_id": 125,
+      "bbox": [
+        0,
+        44,
+        160,
+        373
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "cat",
+      "subject_class_id": 26,
+      "subject_bbox": [
+        105,
+        35,
+        499,
+        374
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bag",
+      "object_class_id": 3,
+      "object_bbox": [
+        4,
+        94,
+        496,
+        374
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        110,
+        72,
+        168,
+        125
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        105,
+        35,
+        499,
+        374
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        110,
+        72,
+        168,
+        125
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 1,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        105,
+        35,
+        499,
+        374
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        168,
+        39,
+        209,
+        82
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        105,
+        35,
+        499,
+        374
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "leg",
+      "subject_class_id": 73,
+      "subject_bbox": [
+        189,
+        218,
+        286,
+        278
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 1,
+      "object_label": "cat",
+      "object_class_id": 26,
+      "object_bbox": [
+        105,
+        35,
+        499,
+        374
+      ]
+    }
+  ]
+}

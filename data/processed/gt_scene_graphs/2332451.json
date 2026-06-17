@@ -1,0 +1,172 @@
+{
+  "image_id": 2332451,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "engine",
+      "class_id": 41,
+      "bbox": [
+        192,
+        216,
+        214,
+        233
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "engine",
+      "class_id": 41,
+      "bbox": [
+        137,
+        156,
+        169,
+        178
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "engine",
+      "class_id": 41,
+      "bbox": [
+        125,
+        184,
+        148,
+        203
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "fence",
+      "class_id": 44,
+      "bbox": [
+        0,
+        368,
+        334,
+        469
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "plane",
+      "class_id": 94,
+      "bbox": [
+        70,
+        99,
+        326,
+        233
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        98,
+        391,
+        107,
+        462
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        317,
+        378,
+        328,
+        426
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pole",
+      "class_id": 98,
+      "bbox": [
+        226,
+        388,
+        237,
+        446
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "tail",
+      "class_id": 126,
+      "bbox": [
+        256,
+        109,
+        319,
+        168
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "engine",
+      "subject_class_id": 41,
+      "subject_bbox": [
+        137,
+        156,
+        169,
+        178
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 4,
+      "object_label": "plane",
+      "object_class_id": 94,
+      "object_bbox": [
+        70,
+        99,
+        326,
+        233
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "engine",
+      "subject_class_id": 41,
+      "subject_bbox": [
+        125,
+        184,
+        148,
+        203
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 4,
+      "object_label": "plane",
+      "object_class_id": 94,
+      "object_bbox": [
+        70,
+        99,
+        326,
+        233
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "fence",
+      "subject_class_id": 44,
+      "subject_bbox": [
+        0,
+        368,
+        334,
+        469
+      ],
+      "predicate": "under",
+      "predicate_id": 42,
+      "object_id": 4,
+      "object_label": "plane",
+      "object_class_id": 94,
+      "object_bbox": [
+        70,
+        99,
+        326,
+        233
+      ]
+    }
+  ]
+}

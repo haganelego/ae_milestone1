@@ -1,0 +1,480 @@
+{
+  "image_id": 2319352,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bed",
+      "class_id": 8,
+      "bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bench",
+      "class_id": 9,
+      "bbox": [
+        96,
+        266,
+        228,
+        331
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "curtain",
+      "class_id": 34,
+      "bbox": [
+        112,
+        53,
+        157,
+        192
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "head",
+      "class_id": 60,
+      "bbox": [
+        24,
+        45,
+        74,
+        100
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "lamp",
+      "class_id": 70,
+      "bbox": [
+        212,
+        95,
+        243,
+        158
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "lamp",
+      "class_id": 70,
+      "bbox": [
+        395,
+        132,
+        450,
+        213
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        0,
+        43,
+        77,
+        332
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        0,
+        212,
+        73,
+        331
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "pillow",
+      "class_id": 92,
+      "bbox": [
+        243,
+        152,
+        279,
+        186
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "room",
+      "class_id": 105,
+      "bbox": [
+        0,
+        0,
+        499,
+        332
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        0,
+        94,
+        74,
+        219
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "stand",
+      "class_id": 122,
+      "bbox": [
+        393,
+        202,
+        496,
+        303
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "window",
+      "class_id": 144,
+      "bbox": [
+        0,
+        35,
+        126,
+        192
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "bed",
+      "subject_class_id": 8,
+      "subject_bbox": [
+        89,
+        119,
+        401,
+        332
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "room",
+      "object_class_id": 105,
+      "object_bbox": [
+        0,
+        0,
+        499,
+        332
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "curtain",
+      "subject_class_id": 34,
+      "subject_bbox": [
+        112,
+        53,
+        157,
+        192
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 12,
+      "object_label": "window",
+      "object_class_id": 144,
+      "object_bbox": [
+        0,
+        35,
+        126,
+        192
+      ]
+    },
+    {
+      "subject_id": 3,
+      "subject_label": "head",
+      "subject_class_id": 60,
+      "subject_bbox": [
+        24,
+        45,
+        74,
+        100
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 6,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        0,
+        43,
+        77,
+        332
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "lamp",
+      "subject_class_id": 70,
+      "subject_bbox": [
+        395,
+        132,
+        450,
+        213
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "lamp",
+      "subject_class_id": 70,
+      "subject_bbox": [
+        395,
+        132,
+        450,
+        213
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "room",
+      "object_class_id": 105,
+      "object_bbox": [
+        0,
+        0,
+        499,
+        332
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "lamp",
+      "subject_class_id": 70,
+      "subject_bbox": [
+        395,
+        132,
+        450,
+        213
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "stand",
+      "object_class_id": 122,
+      "object_bbox": [
+        393,
+        202,
+        496,
+        303
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        43,
+        77,
+        332
+      ],
+      "predicate": "looking at",
+      "predicate_id": 24,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        43,
+        77,
+        332
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        43,
+        77,
+        332
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 7,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        0,
+        212,
+        73,
+        331
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        43,
+        77,
+        332
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "room",
+      "object_class_id": 105,
+      "object_bbox": [
+        0,
+        0,
+        499,
+        332
+      ]
+    },
+    {
+      "subject_id": 6,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        0,
+        43,
+        77,
+        332
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 10,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        0,
+        94,
+        74,
+        219
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "pillow",
+      "subject_class_id": 92,
+      "subject_bbox": [
+        243,
+        152,
+        279,
+        186
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "stand",
+      "subject_class_id": 122,
+      "subject_bbox": [
+        393,
+        202,
+        496,
+        303
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 0,
+      "object_label": "bed",
+      "object_class_id": 8,
+      "object_bbox": [
+        89,
+        119,
+        401,
+        332
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        0,
+        35,
+        126,
+        192
+      ],
+      "predicate": "near",
+      "predicate_id": 28,
+      "object_id": 6,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        0,
+        43,
+        77,
+        332
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "window",
+      "subject_class_id": 144,
+      "subject_bbox": [
+        0,
+        35,
+        126,
+        192
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 9,
+      "object_label": "room",
+      "object_class_id": 105,
+      "object_bbox": [
+        0,
+        0,
+        499,
+        332
+      ]
+    }
+  ]
+}

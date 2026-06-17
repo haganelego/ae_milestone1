@@ -1,0 +1,546 @@
+{
+  "image_id": 2316328,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "stand",
+      "class_id": 122,
+      "bbox": [
+        0,
+        0,
+        494,
+        106
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "glove",
+      "class_id": 54,
+      "bbox": [
+        189,
+        238,
+        213,
+        254
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "letter",
+      "class_id": 74,
+      "bbox": [
+        171,
+        117,
+        231,
+        130
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "logo",
+      "class_id": 76,
+      "bbox": [
+        171,
+        116,
+        233,
+        129
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        256,
+        145,
+        289,
+        190
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        407,
+        111,
+        437,
+        183
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        380,
+        120,
+        411,
+        184
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        360,
+        122,
+        390,
+        183
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        328,
+        122,
+        371,
+        185
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        85,
+        171,
+        149,
+        282
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "men",
+      "class_id": 78,
+      "bbox": [
+        66,
+        69,
+        89,
+        102
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        223,
+        213,
+        318,
+        273
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "people",
+      "class_id": 89,
+      "bbox": [
+        255,
+        75,
+        274,
+        100
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "people",
+      "class_id": 89,
+      "bbox": [
+        293,
+        66,
+        323,
+        99
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        117,
+        67,
+        133,
+        101
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        105,
+        72,
+        123,
+        102
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        67,
+        70,
+        89,
+        103
+      ]
+    },
+    {
+      "object_id": 17,
+      "label": "person",
+      "class_id": 90,
+      "bbox": [
+        83,
+        70,
+        107,
+        98
+      ]
+    },
+    {
+      "object_id": 18,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        43,
+        125,
+        91,
+        199
+      ]
+    },
+    {
+      "object_id": 19,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        93,
+        129,
+        133,
+        209
+      ]
+    },
+    {
+      "object_id": 20,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        428,
+        118,
+        469,
+        181
+      ]
+    },
+    {
+      "object_id": 21,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        125,
+        140,
+        161,
+        189
+      ]
+    },
+    {
+      "object_id": 22,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        165,
+        150,
+        212,
+        187
+      ]
+    },
+    {
+      "object_id": 23,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        284,
+        120,
+        322,
+        186
+      ]
+    },
+    {
+      "object_id": 24,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        0,
+        155,
+        34,
+        201
+      ]
+    },
+    {
+      "object_id": 25,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        465,
+        114,
+        499,
+        181
+      ]
+    },
+    {
+      "object_id": 26,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        160,
+        144,
+        204,
+        194
+      ]
+    },
+    {
+      "object_id": 27,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        61,
+        76,
+        144,
+        99
+      ]
+    },
+    {
+      "object_id": 28,
+      "label": "sign",
+      "class_id": 114,
+      "bbox": [
+        170,
+        116,
+        234,
+        128
+      ]
+    },
+    {
+      "object_id": 29,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        216,
+        165,
+        329,
+        280
+      ]
+    },
+    {
+      "object_id": 30,
+      "label": "plate",
+      "class_id": 96,
+      "bbox": [
+        254,
+        267,
+        297,
+        286
+      ]
+    },
+    {
+      "object_id": 31,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        214,
+        128,
+        389,
+        318
+      ]
+    },
+    {
+      "object_id": 32,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        405,
+        101,
+        436,
+        175
+      ]
+    },
+    {
+      "object_id": 33,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        90,
+        128,
+        128,
+        191
+      ]
+    },
+    {
+      "object_id": 34,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        359,
+        121,
+        387,
+        179
+      ]
+    },
+    {
+      "object_id": 35,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        468,
+        112,
+        483,
+        151
+      ]
+    },
+    {
+      "object_id": 36,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        321,
+        118,
+        372,
+        178
+      ]
+    },
+    {
+      "object_id": 37,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        379,
+        114,
+        412,
+        186
+      ]
+    },
+    {
+      "object_id": 38,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        400,
+        110,
+        438,
+        182
+      ]
+    },
+    {
+      "object_id": 39,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        387,
+        116,
+        413,
+        181
+      ]
+    },
+    {
+      "object_id": 40,
+      "label": "player",
+      "class_id": 97,
+      "bbox": [
+        456,
+        113,
+        493,
+        175
+      ]
+    },
+    {
+      "object_id": 41,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        68,
+        77,
+        136,
+        102
+      ]
+    },
+    {
+      "object_id": 42,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        185,
+        229,
+        209,
+        259
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 10,
+      "subject_label": "men",
+      "subject_class_id": 78,
+      "subject_bbox": [
+        66,
+        69,
+        89,
+        102
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 41,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        68,
+        77,
+        136,
+        102
+      ]
+    },
+    {
+      "subject_id": 12,
+      "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        255,
+        75,
+        274,
+        100
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 27,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        61,
+        76,
+        144,
+        99
+      ]
+    },
+    {
+      "subject_id": 13,
+      "subject_label": "people",
+      "subject_class_id": 89,
+      "subject_bbox": [
+        293,
+        66,
+        323,
+        99
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 0,
+      "object_label": "stand",
+      "object_class_id": 122,
+      "object_bbox": [
+        0,
+        0,
+        494,
+        106
+      ]
+    }
+  ]
+}

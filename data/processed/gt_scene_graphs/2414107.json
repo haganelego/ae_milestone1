@@ -1,0 +1,249 @@
+{
+  "image_id": 2414107,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        277,
+        38,
+        301,
+        73
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        218,
+        38,
+        316,
+        222
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "motorcycle",
+      "class_id": 79,
+      "bbox": [
+        94,
+        70,
+        402,
+        257
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "pant",
+      "class_id": 86,
+      "bbox": [
+        223,
+        144,
+        306,
+        218
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "shirt",
+      "class_id": 110,
+      "bbox": [
+        259,
+        71,
+        316,
+        160
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "shoe",
+      "class_id": 111,
+      "bbox": [
+        217,
+        204,
+        235,
+        223
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "tire",
+      "class_id": 129,
+      "bbox": [
+        95,
+        172,
+        177,
+        258
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "tire",
+      "class_id": 129,
+      "bbox": [
+        297,
+        223,
+        367,
+        251
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 1,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        218,
+        38,
+        316,
+        222
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        277,
+        38,
+        301,
+        73
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        218,
+        38,
+        316,
+        222
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "motorcycle",
+      "object_class_id": 79,
+      "object_bbox": [
+        94,
+        70,
+        402,
+        257
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        218,
+        38,
+        316,
+        222
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 3,
+      "object_label": "pant",
+      "object_class_id": 86,
+      "object_bbox": [
+        223,
+        144,
+        306,
+        218
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        218,
+        38,
+        316,
+        222
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 4,
+      "object_label": "shirt",
+      "object_class_id": 110,
+      "object_bbox": [
+        259,
+        71,
+        316,
+        160
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        218,
+        38,
+        316,
+        222
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 5,
+      "object_label": "shoe",
+      "object_class_id": 111,
+      "object_bbox": [
+        217,
+        204,
+        235,
+        223
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "motorcycle",
+      "subject_class_id": 79,
+      "subject_bbox": [
+        94,
+        70,
+        402,
+        257
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 6,
+      "object_label": "tire",
+      "object_class_id": 129,
+      "object_bbox": [
+        95,
+        172,
+        177,
+        258
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "motorcycle",
+      "subject_class_id": 79,
+      "subject_bbox": [
+        94,
+        70,
+        402,
+        257
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 7,
+      "object_label": "tire",
+      "object_class_id": 129,
+      "object_bbox": [
+        297,
+        223,
+        367,
+        251
+      ]
+    }
+  ]
+}

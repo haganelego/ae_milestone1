@@ -1,0 +1,304 @@
+{
+  "image_id": 2337022,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "bottle",
+      "class_id": 16,
+      "bbox": [
+        45,
+        192,
+        84,
+        260
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "bowl",
+      "class_id": 17,
+      "bbox": [
+        211,
+        297,
+        314,
+        331
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "bowl",
+      "class_id": 17,
+      "bbox": [
+        229,
+        276,
+        307,
+        329
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "bowl",
+      "class_id": 17,
+      "bbox": [
+        232,
+        262,
+        294,
+        291
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "box",
+      "class_id": 18,
+      "bbox": [
+        44,
+        34,
+        129,
+        90
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "counter",
+      "class_id": 31,
+      "bbox": [
+        0,
+        226,
+        304,
+        330
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "glove",
+      "class_id": 54,
+      "bbox": [
+        149,
+        196,
+        208,
+        275
+      ]
+    },
+    {
+      "object_id": 7,
+      "label": "food",
+      "class_id": 48,
+      "bbox": [
+        169,
+        262,
+        200,
+        287
+      ]
+    },
+    {
+      "object_id": 8,
+      "label": "glass",
+      "class_id": 53,
+      "bbox": [
+        254,
+        36,
+        292,
+        90
+      ]
+    },
+    {
+      "object_id": 9,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        238,
+        0,
+        332,
+        63
+      ]
+    },
+    {
+      "object_id": 10,
+      "label": "hand",
+      "class_id": 57,
+      "bbox": [
+        184,
+        239,
+        231,
+        270
+      ]
+    },
+    {
+      "object_id": 11,
+      "label": "man",
+      "class_id": 77,
+      "bbox": [
+        148,
+        0,
+        424,
+        331
+      ]
+    },
+    {
+      "object_id": 12,
+      "label": "table",
+      "class_id": 125,
+      "bbox": [
+        410,
+        204,
+        498,
+        328
+      ]
+    },
+    {
+      "object_id": 13,
+      "label": "food",
+      "class_id": 48,
+      "bbox": [
+        159,
+        280,
+        220,
+        329
+      ]
+    },
+    {
+      "object_id": 14,
+      "label": "hair",
+      "class_id": 56,
+      "bbox": [
+        220,
+        5,
+        335,
+        44
+      ]
+    },
+    {
+      "object_id": 15,
+      "label": "vegetable",
+      "class_id": 140,
+      "bbox": [
+        54,
+        285,
+        185,
+        324
+      ]
+    },
+    {
+      "object_id": 16,
+      "label": "vegetable",
+      "class_id": 140,
+      "bbox": [
+        136,
+        248,
+        222,
+        306
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 2,
+      "subject_label": "bowl",
+      "subject_class_id": 17,
+      "subject_bbox": [
+        229,
+        276,
+        307,
+        329
+      ],
+      "predicate": "in",
+      "predicate_id": 21,
+      "object_id": 4,
+      "object_label": "box",
+      "object_class_id": 18,
+      "object_bbox": [
+        44,
+        34,
+        129,
+        90
+      ]
+    },
+    {
+      "subject_id": 8,
+      "subject_label": "glass",
+      "subject_class_id": 53,
+      "subject_bbox": [
+        254,
+        36,
+        292,
+        90
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 11,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        148,
+        0,
+        424,
+        331
+      ]
+    },
+    {
+      "subject_id": 10,
+      "subject_label": "hand",
+      "subject_class_id": 57,
+      "subject_bbox": [
+        184,
+        239,
+        231,
+        270
+      ],
+      "predicate": "of",
+      "predicate_id": 29,
+      "object_id": 11,
+      "object_label": "man",
+      "object_class_id": 77,
+      "object_bbox": [
+        148,
+        0,
+        424,
+        331
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        148,
+        0,
+        424,
+        331
+      ],
+      "predicate": "wearing",
+      "predicate_id": 47,
+      "object_id": 6,
+      "object_label": "glove",
+      "object_class_id": 54,
+      "object_bbox": [
+        149,
+        196,
+        208,
+        275
+      ]
+    },
+    {
+      "subject_id": 11,
+      "subject_label": "man",
+      "subject_class_id": 77,
+      "subject_bbox": [
+        148,
+        0,
+        424,
+        331
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 14,
+      "object_label": "hair",
+      "object_class_id": 56,
+      "object_bbox": [
+        220,
+        5,
+        335,
+        44
+      ]
+    }
+  ]
+}

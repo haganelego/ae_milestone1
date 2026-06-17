@@ -1,0 +1,238 @@
+{
+  "image_id": 2323393,
+  "objects": [
+    {
+      "object_id": 0,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        193,
+        89,
+        327,
+        228
+      ]
+    },
+    {
+      "object_id": 1,
+      "label": "ear",
+      "class_id": 39,
+      "bbox": [
+        17,
+        85,
+        141,
+        228
+      ]
+    },
+    {
+      "object_id": 2,
+      "label": "elephant",
+      "class_id": 40,
+      "bbox": [
+        10,
+        79,
+        327,
+        402
+      ]
+    },
+    {
+      "object_id": 3,
+      "label": "plane",
+      "class_id": 94,
+      "bbox": [
+        198,
+        15,
+        250,
+        92
+      ]
+    },
+    {
+      "object_id": 4,
+      "label": "rock",
+      "class_id": 103,
+      "bbox": [
+        203,
+        255,
+        261,
+        301
+      ]
+    },
+    {
+      "object_id": 5,
+      "label": "tree",
+      "class_id": 135,
+      "bbox": [
+        182,
+        0,
+        331,
+        113
+      ]
+    },
+    {
+      "object_id": 6,
+      "label": "trunk",
+      "class_id": 137,
+      "bbox": [
+        132,
+        174,
+        209,
+        376
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "subject_id": 0,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        193,
+        89,
+        327,
+        228
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        10,
+        79,
+        327,
+        402
+      ]
+    },
+    {
+      "subject_id": 1,
+      "subject_label": "ear",
+      "subject_class_id": 39,
+      "subject_bbox": [
+        17,
+        85,
+        141,
+        228
+      ],
+      "predicate": "on",
+      "predicate_id": 30,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        10,
+        79,
+        327,
+        402
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        10,
+        79,
+        327,
+        402
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 0,
+      "object_label": "ear",
+      "object_class_id": 39,
+      "object_bbox": [
+        193,
+        89,
+        327,
+        228
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        10,
+        79,
+        327,
+        402
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 1,
+      "object_label": "ear",
+      "object_class_id": 39,
+      "object_bbox": [
+        17,
+        85,
+        141,
+        228
+      ]
+    },
+    {
+      "subject_id": 2,
+      "subject_label": "elephant",
+      "subject_class_id": 40,
+      "subject_bbox": [
+        10,
+        79,
+        327,
+        402
+      ],
+      "predicate": "has",
+      "predicate_id": 19,
+      "object_id": 6,
+      "object_label": "trunk",
+      "object_class_id": 137,
+      "object_bbox": [
+        132,
+        174,
+        209,
+        376
+      ]
+    },
+    {
+      "subject_id": 4,
+      "subject_label": "rock",
+      "subject_class_id": 103,
+      "subject_bbox": [
+        203,
+        255,
+        261,
+        301
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        10,
+        79,
+        327,
+        402
+      ]
+    },
+    {
+      "subject_id": 5,
+      "subject_label": "tree",
+      "subject_class_id": 135,
+      "subject_bbox": [
+        182,
+        0,
+        331,
+        113
+      ],
+      "predicate": "behind",
+      "predicate_id": 7,
+      "object_id": 2,
+      "object_label": "elephant",
+      "object_class_id": 40,
+      "object_bbox": [
+        10,
+        79,
+        327,
+        402
+      ]
+    }
+  ]
+}
