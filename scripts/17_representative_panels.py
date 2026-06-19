@@ -203,6 +203,13 @@ def make_panel_figure(
             llm_levels.append(lv)
             llm_scores.append(float(sat["saturation_score"]))
 
+    # ObjConf (mean object confidence) progression vs level, from all_metrics
+    objconf_by_level = {
+        int(r["level"]): safe_float(r["mean_object_confidence"]) for r in all_rows
+    }
+    objconf_levels = [lv for lv in llm_levels if objconf_by_level.get(lv) is not None]
+    objconf_scores = [objconf_by_level[lv] for lv in objconf_levels]
+
     # EGTR predictions for text blocks (levels 5, 10, 20)
     text_levels = [5, 10, 20]
     pred_texts: dict[int, dict[str, Any]] = {}
@@ -296,7 +303,7 @@ def make_panel_figure(
     ax_met.set_title("Metric Curves", fontsize=12, fontweight="bold")
     ax_met.grid(True, alpha=0.3)
 
-    # --- Row 2: LLM saturation score ---
+    # --- Row 2: LLM saturation score + ObjConf progression ---
     ax_llm = fig.add_subplot(gs[2])
     if llm_levels:
         ax_llm.plot(
@@ -308,18 +315,35 @@ def make_panel_figure(
             label="LLM Saturation Score (4B)",
         )
         ax_llm.axhline(
-            0.8, color="gray", linestyle=":", alpha=0.6, label="Threshold 0.8"
+            0.8, color="gray", linestyle=":", alpha=0.6, label="Sat. Threshold 0.8"
         )
         ax_llm.axvline(
             oracle_stop, color="orange", linestyle="--", linewidth=1.5, alpha=0.7
         )
+    if objconf_levels:
+        ax_llm.plot(
+            objconf_levels,
+            objconf_scores,
+            color="#1f77b4",
+            marker="o",
+            markersize=5,
+            linewidth=2,
+            label="ObjConf (mean obj. confidence)",
+        )
+        ax_llm.axhline(
+            0.4,
+            color="#1f77b4",
+            linestyle=":",
+            alpha=0.5,
+            label="ObjConf Threshold 0.4",
+        )
     ax_llm.set_xlabel("Degradation Level", fontsize=11)
-    ax_llm.set_ylabel("Saturation Score", fontsize=11)
+    ax_llm.set_ylabel("Score", fontsize=11)
     ax_llm.set_xlim(4.5, 20.5)
     ax_llm.set_ylim(-0.05, 1.05)
     ax_llm.set_xticks(range(5, 21))
     ax_llm.legend(fontsize=9, loc="lower right")
-    ax_llm.set_title("LLM Saturation Score", fontsize=12, fontweight="bold")
+    ax_llm.set_title("LLM Saturation Score & ObjConf", fontsize=12, fontweight="bold")
     ax_llm.grid(True, alpha=0.3)
 
     # --- Row 3: Text blocks for predicted SGs at selected levels ---

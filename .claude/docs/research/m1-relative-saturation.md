@@ -263,7 +263,7 @@ Threshold for both: 0.9. Mean gap (trip_first - node_first): +0.5 levels.
 
 ## Figures
 
-- `outputs/figures/relative_curve_{image_id}.png` - per-image curves (stop lines: green=RelOracle(0.8), orange=Baseline obj-conf, red=Proposed hybrid_4b_k2)
+- `outputs/figures/relative_curve_{image_id}.png` - per-image RelSGScore trajectory (green=Reference RelSGScore>=0.9, orange=ObjConf baseline, purple=RelSat 4b k2, red=Hybrid 4b k2)
 - `outputs/figures/relative_method_comparison_mae.png` - MAE bar chart
 - `outputs/figures/relative_vs_absolute_oracle.png` - scatter comparison
 

@@ -617,35 +617,22 @@ def main() -> None:
             else float("nan"),
         }
 
-    # Proposed-method stop map (hybrid_4b_k2: 0.5*obj_conf + 0.5*LLM, consecutive-k=2)
-    proposed_stop = hybrid_map.get("hybrid_4b_k2", {})
-
     # --- Figure 6a: Per-image relative curves ---
+    # Plot ONLY the RelSGScore trajectory, with a reference vertical line at the
+    # first level where RelSGScore >= 0.9, and stop lines for the three 4b stop
+    # predictors: ObjConf (node-confidence baseline), RelSat (LLM saturation,
+    # 4b, k=2) and Hybrid (0.5*ObjConf + 0.5*LLM-saturation, 4b, k=2).
+    ref_threshold = 0.9
+    relsat_stop = abl_k2_map[base_4b_slug]  # llm_sgg_4b_h5_k2
+    hybrid_stop_4b = hybrid_map.get("hybrid_4b_k2", {})
+
     levels_range = list(range(1, max_level + 1))
 
     for img_id in image_ids:
         fig, ax = plt.subplots(figsize=(10, 6))
 
-        nr_vals = [img_rel_data[img_id][lv]["RelNodeRecall"] for lv in levels_range]
-        tr_vals = [img_rel_data[img_id][lv]["RelTripletRecall"] for lv in levels_range]
         sg_vals = [img_rel_data[img_id][lv]["RelSGScore"] for lv in levels_range]
 
-        ax.plot(
-            levels_range,
-            nr_vals,
-            "o-",
-            label="RelNodeRecall",
-            color="#4C72B0",
-            markersize=4,
-        )
-        ax.plot(
-            levels_range,
-            tr_vals,
-            "s-",
-            label="RelTripletRecall",
-            color="#DD8452",
-            markersize=4,
-        )
         ax.plot(
             levels_range,
             sg_vals,
@@ -656,46 +643,64 @@ def main() -> None:
             linewidth=2,
         )
 
-        # Horizontal threshold line
+        # Horizontal reference guide at 0.9
         ax.axhline(
-            y=main_rel_threshold,
+            y=ref_threshold,
             color="gray",
             linestyle=":",
             alpha=0.7,
-            label=f"Threshold={main_rel_threshold}",
+            label=f"RelSGScore={ref_threshold}",
         )
 
-        # Vertical lines for stops
-        rel_stop = rel_oracle_map[img_id]
+        # Reference stop: first level where RelSGScore >= 0.9
+        ref_stop = max_level
+        for lv in levels_range:
+            val = rel_sg_map.get((img_id, lv), float("nan"))
+            if not math.isnan(val) and val >= ref_threshold:
+                ref_stop = lv
+                break
         ax.axvline(
-            x=rel_stop,
+            x=ref_stop,
             color="green",
             linestyle="--",
-            alpha=0.8,
-            label=f"RelOracle(0.8)={rel_stop}",
+            alpha=0.85,
+            linewidth=2,
+            label=f"Reference (RelSGScore>=0.9)={ref_stop}",
         )
 
-        baseline_stop_val = baseline_map.get(img_id, max_level)
+        # Stop predictor: ObjConf (node-confidence baseline)
+        objconf_stop_val = baseline_map.get(img_id, max_level)
         ax.axvline(
-            x=baseline_stop_val,
+            x=objconf_stop_val,
             color="orange",
             linestyle="--",
             alpha=0.8,
-            label=f"Baseline={baseline_stop_val}",
+            label=f"ObjConf={objconf_stop_val}",
         )
 
-        proposed_stop_val = proposed_stop.get(img_id, max_level)
+        # Stop predictor: RelSat (LLM saturation, 4b, k=2)
+        relsat_stop_val = relsat_stop.get(img_id, max_level)
         ax.axvline(
-            x=proposed_stop_val,
+            x=relsat_stop_val,
+            color="purple",
+            linestyle="--",
+            alpha=0.8,
+            label=f"RelSat (4b)={relsat_stop_val}",
+        )
+
+        # Stop predictor: Hybrid (4b, k=2)
+        hybrid_stop_val = hybrid_stop_4b.get(img_id, max_level)
+        ax.axvline(
+            x=hybrid_stop_val,
             color="red",
             linestyle="--",
             alpha=0.8,
-            label=f"Proposed hybrid_4b_k2={proposed_stop_val}",
+            label=f"Hybrid (4b)={hybrid_stop_val}",
         )
 
         ax.set_xlabel("Resolution Level")
-        ax.set_ylabel("Relative Metric Value")
-        ax.set_title(f"Relative Saturation Curves - Image {img_id}")
+        ax.set_ylabel("RelSGScore")
+        ax.set_title(f"Relative Saturation (RelSGScore) - Image {img_id}")
         ax.set_xlim(0.5, max_level + 0.5)
         ax.set_ylim(-0.05, 1.10)
         ax.set_xticks(levels_range)
@@ -923,9 +928,9 @@ def main() -> None:
     lines.append("## Figures")
     lines.append("")
     lines.append(
-        "- `outputs/figures/relative_curve_{image_id}.png` - per-image curves "
-        "(stop lines: green=RelOracle(0.8), orange=Baseline obj-conf, "
-        "red=Proposed hybrid_4b_k2)"
+        "- `outputs/figures/relative_curve_{image_id}.png` - per-image RelSGScore "
+        "trajectory (green=Reference RelSGScore>=0.9, orange=ObjConf baseline, "
+        "purple=RelSat 4b k2, red=Hybrid 4b k2)"
     )
     lines.append(
         "- `outputs/figures/relative_method_comparison_mae.png` - MAE bar chart"
