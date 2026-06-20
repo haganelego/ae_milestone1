@@ -61,7 +61,7 @@ resolution_levels:
   interpolation: bilinear
 
 egtr:
-  object_conf_threshold: 0.3
+  object_conf_threshold: 0.1
   relation_conf_threshold: 0.005
   top_k_objects: 20
   top_k_relationships: 30
@@ -79,8 +79,8 @@ metrics:
   gain_k: 3
 
 baseline:
-  mean_object_conf_threshold: 0.4
-  mean_object_conf_thresholds: [0.3, 0.4, 0.5]
+  mean_object_conf_threshold: 0.35
+  mean_object_conf_thresholds: [0.3, 0.35, 0.4]
   consecutive_k: 1
 
 llm:
@@ -89,9 +89,9 @@ llm:
   endpoint: http://localhost:11434/api/generate
   start_level: 5
   history_length: 5
-  # 0.8 chosen so the hybrid threshold is the matching 0.5/0.5 convex combination of
-  # the two component thresholds: 0.5*0.4 (object-conf) + 0.5*0.8 (LLM) = 0.6.
-  saturation_threshold: 0.8
+  # Recalibrated 0.8 -> 0.70: minimizes LLM-SGG (4b, k=2) MAE vs stop_c09
+  # (3.46 -> 3.27); 0.8 stopped too late (mean 15.7 vs oracle ~13.5).
+  saturation_threshold: 0.70
   use_consecutive_stop: false
   consecutive_k: 2
   input_object_conf_threshold: 0.3
@@ -136,7 +136,7 @@ ablation:
   hybrid:                                      # fusion of node-confidence + LLM saturation_score
     conf_weight: 0.5
     llm_weight: 0.5
-    threshold: 0.6
+    threshold: 0.5                             # recalibrated for the 0.1 object gate (obj_conf range ~0.1-0.5)
 
 convergence:
   epsilon: 0.02

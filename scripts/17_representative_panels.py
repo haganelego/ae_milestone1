@@ -21,6 +21,7 @@ import matplotlib.pyplot as plt
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
+from milestone1 import figviz
 from milestone1.config import load_config, resolve
 
 # ---------------------------------------------------------------------------
@@ -165,13 +166,15 @@ def select_representative_images(
 
 def make_panel_figure(
     image_id: str,
-    oracle_stop: int,
-    gt_desc: str,
+    stop_c09: int,
+    core_sg_vals: list[float],
+    objconf: int,
+    relsat: int,
+    hybrid: int,
     degraded_dir: Path,
     pred_dir: Path,
     gt_dir: Path,
     metrics_path: Path,
-    rel_metrics_path: Path,
     llm_dir: Path,
     out_path: Path,
 ) -> None:
@@ -180,19 +183,9 @@ def make_panel_figure(
     # --- Load data ---
     gt = load_gt(gt_dir, image_id)
 
-    # All metrics (vs true GT)
+    # All metrics (vs true GT) -- used for ObjConf progression in Row 2
     all_rows = [r for r in load_csv_dict(metrics_path) if r["image_id"] == image_id]
     all_rows.sort(key=lambda r: int(r["level"]))
-    levels_all = [int(r["level"]) for r in all_rows]
-    node_recall = [safe_float(r["node_recall"]) for r in all_rows]
-    triplet_recall = [safe_float(r["triplet_recall"]) for r in all_rows]
-    sg_score = [safe_float(r["sg_score"]) for r in all_rows]
-
-    # Relative metrics (vs L20)
-    rel_rows = [r for r in load_csv_dict(rel_metrics_path) if r["image_id"] == image_id]
-    rel_rows.sort(key=lambda r: int(r["level"]))
-    levels_rel = [int(r["level"]) for r in rel_rows]
-    rel_sg_score = [safe_float(r["RelSGScore"]) for r in rel_rows]
 
     # LLM saturation scores
     llm_levels: list[int] = []
@@ -223,7 +216,7 @@ def make_panel_figure(
     # --- Build figure ---
     fig = plt.figure(figsize=(18, 28))
     fig.suptitle(
-        f"Image {image_id}  |  RelOracleStop@0.8 = {oracle_stop}",
+        f"Image {image_id}  |  Ideal stop (stop_c09) = {stop_c09}",
         fontsize=16,
         fontweight="bold",
         y=0.995,
@@ -253,55 +246,21 @@ def make_panel_figure(
         ax.set_title(f"Level {lv}", fontsize=11, fontweight="bold")
         ax.axis("off")
 
-    # --- Row 1: Metric curves ---
+    # --- Row 1: Metric curves (same as the relative_curve paper figure) ---
     ax_met = fig.add_subplot(gs[1])
-
-    # Filter out None values for plotting
-    def plot_safe(ax: plt.Axes, x: list, y: list, *args: Any, **kwargs: Any) -> None:
-        xf = [xi for xi, yi in zip(x, y) if yi is not None]
-        yf = [yi for yi in y if yi is not None]
-        if xf:
-            ax.plot(xf, yf, *args, **kwargs)
-
-    plot_safe(
-        ax_met, levels_all, node_recall, "b-o", markersize=4, label="NodeRecall (vs GT)"
-    )
-    plot_safe(
+    figviz.draw_relative_curve(
         ax_met,
-        levels_all,
-        triplet_recall,
-        "r-s",
-        markersize=4,
-        label="TripletRecall (vs GT)",
+        list(range(1, 21)),
+        core_sg_vals,
+        stop_c09=stop_c09,
+        objconf=objconf,
+        relsat=relsat,
+        hybrid=hybrid,
+        max_level=20,
+        title="Metric Curve (core RelSGScore)",
+        compact=False,
     )
-    plot_safe(
-        ax_met, levels_all, sg_score, "g-^", markersize=4, label="SGScore (vs GT)"
-    )
-    plot_safe(
-        ax_met,
-        levels_rel,
-        rel_sg_score,
-        "m-D",
-        markersize=5,
-        linewidth=2,
-        label="RelSGScore (vs L20)",
-    )
-
-    ax_met.axvline(
-        oracle_stop,
-        color="orange",
-        linestyle="--",
-        linewidth=2,
-        label=f"RelOracleStop@0.8 = {oracle_stop}",
-    )
-    ax_met.set_xlabel("Degradation Level", fontsize=11)
-    ax_met.set_ylabel("Score", fontsize=11)
-    ax_met.set_xlim(0.5, 20.5)
-    ax_met.set_ylim(-0.05, 1.05)
     ax_met.set_xticks(range(1, 21))
-    ax_met.legend(fontsize=9, loc="lower right")
-    ax_met.set_title("Metric Curves", fontsize=12, fontweight="bold")
-    ax_met.grid(True, alpha=0.3)
 
     # --- Row 2: LLM saturation score + ObjConf progression ---
     ax_llm = fig.add_subplot(gs[2])
@@ -318,7 +277,7 @@ def make_panel_figure(
             0.8, color="gray", linestyle=":", alpha=0.6, label="Sat. Threshold 0.8"
         )
         ax_llm.axvline(
-            oracle_stop, color="orange", linestyle="--", linewidth=1.5, alpha=0.7
+            stop_c09, color="orange", linestyle="--", linewidth=1.5, alpha=0.7
         )
     if objconf_levels:
         ax_llm.plot(
@@ -443,74 +402,64 @@ def make_panel_figure(
 
 
 def make_summary_figure(
-    selected: list[tuple[str, int, str]],
-    rel_metrics_path: Path,
+    selected: list[tuple[int, int]],
+    core_sg_map: dict[int, dict[int, float]],
     out_path: Path,
 ) -> None:
-    """Overlay RelSGScore curves for the 3 selected images."""
-    rel_rows = load_csv_dict(rel_metrics_path)
-
-    fig, ax = plt.subplots(figsize=(12, 6))
+    """Overlay core-RelSGScore curves for the early/mid/late example images."""
+    fig, ax = plt.subplots(figsize=(7, 4.5))
 
     colors = ["#2196F3", "#FF9800", "#E91E63"]
     markers = ["o", "s", "D"]
     labels_prefix = ["EARLY", "MID", "LATE"]
+    levels = list(range(1, 21))
 
-    for idx, (iid, stop, desc) in enumerate(selected):
-        rows = [r for r in rel_rows if r["image_id"] == iid]
-        rows.sort(key=lambda r: int(r["level"]))
-        levels = [int(r["level"]) for r in rows]
-        scores = [safe_float(r["RelSGScore"]) for r in rows]
-
-        # Filter None
-        xf = [x for x, y in zip(levels, scores) if y is not None]
-        yf = [y for y in scores if y is not None]
-
+    for idx, (iid, stop) in enumerate(selected):
+        yf = [core_sg_map[iid][lv] for lv in levels]
         ax.plot(
-            xf,
+            levels,
             yf,
             color=colors[idx],
             marker=markers[idx],
-            markersize=5,
+            markersize=4,
             linewidth=2,
-            label=f"[{labels_prefix[idx]}] {iid} (stop={stop})",
+            label=f"[{labels_prefix[idx]}] {iid} (stop_c09={stop})",
         )
-        # Mark the oracle stop
-        ax.axvline(
+        ax.axvline(stop, color=colors[idx], linestyle="--", linewidth=1.5, alpha=0.6)
+        ax.plot(
             stop,
+            core_sg_map[iid][stop],
+            marker="X",
+            markersize=12,
             color=colors[idx],
-            linestyle="--",
-            linewidth=1.5,
-            alpha=0.6,
+            zorder=5,
         )
-        # Add a marker at the stop level if score exists
-        stop_scores = [y for x, y in zip(xf, yf) if x == stop]
-        if stop_scores:
-            ax.plot(
-                stop,
-                stop_scores[0],
-                marker="X",
-                markersize=14,
-                color=colors[idx],
-                zorder=5,
-            )
 
-    ax.axhline(0.8, color="gray", linestyle=":", alpha=0.5, label="Threshold 0.8")
-    ax.set_xlabel("Degradation Level", fontsize=12)
-    ax.set_ylabel("RelSGScore (vs L20)", fontsize=12)
+    ax.axhline(0.9, color="gray", linestyle=":", alpha=0.6, label="Threshold 0.9")
+    ax.set_xlabel("Resolution level", fontsize=11)
+    ax.set_ylabel("RelSGScore (core)", fontsize=11)
     ax.set_xlim(0.5, 20.5)
-    ax.set_ylim(-0.05, 1.05)
-    ax.set_xticks(range(1, 21))
-    ax.legend(fontsize=10, loc="lower right")
+    ax.set_ylim(-0.05, 1.08)
+    ax.set_xticks([1, 5, 10, 15, 20])
+    ax.legend(fontsize=9, loc="upper left", framealpha=0.9)
     ax.set_title(
-        "RelSGScore Saturation: Early vs Mid vs Late", fontsize=14, fontweight="bold"
+        "Core RelSGScore: Early vs Mid vs Late", fontsize=12, fontweight="bold"
     )
     ax.grid(True, alpha=0.3)
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    fig.savefig(str(out_path), dpi=150, bbox_inches="tight")
+    fig.savefig(str(out_path), dpi=200, bbox_inches="tight")
     plt.close(fig)
     print(f"  Saved: {out_path}")
+
+
+def pick_early_mid_late(stop_c09_map: dict[int, int]) -> list[tuple[int, int]]:
+    """Pick three example images spanning the stop_c09 spectrum."""
+    items = sorted(stop_c09_map.items(), key=lambda kv: kv[1])
+    early = items[0]
+    late = items[-1]
+    mid = items[len(items) // 2]
+    return [early, mid, late]
 
 
 # ---------------------------------------------------------------------------
@@ -530,43 +479,45 @@ def main() -> None:
     llm_dir = REPO_ROOT / "outputs" / "llm_ablation" / "qwen3.5-4b_h5_rel_on_conf_on"
 
     metrics_path = metrics_root / "all_metrics.csv"
-    rel_metrics_path = metrics_root / "relative_metrics.csv"
-    oracle_stop_path = metrics_root / "relative_oracle_stop.csv"
+    selected_path = resolve(cfg["paths"]["selected_images"])
+    with open(selected_path) as f:
+        image_ids: list[int] = json.load(f)
+
+    # Shared oracle / method-stop data (same source as the relative_curve figure)
+    core_sg_map, stop_c09_map = figviz.load_core_oracle(metrics_root, 20)
+    method_stops = figviz.load_method_stops(metrics_root, 20)
 
     print("=" * 60)
-    print("Selecting 3 representative images")
+    print(f"Generating {len(image_ids)} representative panel figures")
     print("=" * 60)
 
-    selected = select_representative_images(oracle_stop_path, gt_dir, pred_dir)
-
-    print()
-    print("=" * 60)
-    print("Generating panel figures")
-    print("=" * 60)
-
-    for image_id, stop, desc in selected:
-        print(f"\n  Processing image {image_id} ...")
+    for i, image_id in enumerate(image_ids, 1):
         out_path = figures_root / f"representative_{image_id}.png"
         make_panel_figure(
-            image_id=image_id,
-            oracle_stop=stop,
-            gt_desc=desc,
+            image_id=str(image_id),
+            stop_c09=stop_c09_map[image_id],
+            core_sg_vals=[core_sg_map[image_id][lv] for lv in range(1, 21)],
+            objconf=method_stops["objconf"].get(image_id, 20),
+            relsat=method_stops["relsat"].get(image_id, 20),
+            hybrid=method_stops["hybrid"].get(image_id, 20),
             degraded_dir=degraded_dir,
             pred_dir=pred_dir,
             gt_dir=gt_dir,
             metrics_path=metrics_path,
-            rel_metrics_path=rel_metrics_path,
             llm_dir=llm_dir,
             out_path=out_path,
         )
+        if i % 10 == 0:
+            print(f"  ... {i}/{len(image_ids)} done")
 
     print()
     print("=" * 60)
     print("Generating summary figure")
     print("=" * 60)
 
+    selected = pick_early_mid_late(stop_c09_map)
     summary_path = figures_root / "representative_summary.png"
-    make_summary_figure(selected, rel_metrics_path, summary_path)
+    make_summary_figure(selected, core_sg_map, summary_path)
 
     print()
     print("Done!")

@@ -78,3 +78,6 @@ outputs/runs/*/vlm_scores/
 outputs/runs/*/llm_ablation/
 outputs/runs/*/llm_inputs/
 .cache_reconstruct/
+
+# Heavy per-image representative panels (~125MB) — kept local, not committed
+outputs/figures/representative_*.png

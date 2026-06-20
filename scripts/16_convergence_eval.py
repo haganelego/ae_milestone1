@@ -267,8 +267,8 @@ def main() -> None:
     baseline_path = metrics_root / "baseline_stop.csv"
     if baseline_path.exists():
         baseline_rows = load_csv_dict(baseline_path)
-        abs_methods["baseline_abs_conf04"] = {
-            int(r["image_id"]): int(float(r["baseline_0.4"])) for r in baseline_rows
+        abs_methods["baseline_abs_conf035"] = {
+            int(r["image_id"]): int(float(r["baseline_0.35"])) for r in baseline_rows
         }
         print("  Loaded baseline_stop.csv")
     else:

@@ -216,7 +216,7 @@ def load_method_stops(
     if baseline_path.exists():
         rows = load_csv_dict(baseline_path)
         methods["baseline"] = {
-            int(r["image_id"]): int(float(r["baseline_0.4"]))
+            int(r["image_id"]): int(float(r["baseline_0.35"]))
             for r in rows
             if int(r["image_id"]) in image_set
         }

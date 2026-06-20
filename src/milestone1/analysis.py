@@ -7,9 +7,7 @@ from typing import Any
 import pandas as pd
 from PIL import Image
 
-from milestone1.config import resolve
 from milestone1.metrics import _to_label_set, _to_triplet_set
-
 
 # --------------------------------------------------------------------------- #
 # Data loading helpers
@@ -43,11 +41,11 @@ def load_stop_levels(
         df = pd.read_csv(oracle_path)
         stops["oracle"] = dict(zip(df["image_id"], df["oracle_0.5"]))
 
-    # Baseline stop (use baseline_0.4 column)
+    # Baseline stop (use baseline_0.35 column)
     baseline_path = metrics_root / "baseline_stop.csv"
     if baseline_path.exists():
         df = pd.read_csv(baseline_path)
-        stops["baseline"] = dict(zip(df["image_id"], df["baseline_0.4"]))
+        stops["baseline"] = dict(zip(df["image_id"], df["baseline_0.35"]))
 
     # LLM stop
     llm_path = metrics_root / "llm_stop.csv"
@@ -95,9 +93,7 @@ def compute_missing_at_stop(
         "missing_triplets": ";".join(
             f"{s}-{p}-{o}" for s, p, o in sorted(missing_trips)
         ),
-        "extra_triplets": ";".join(
-            f"{s}-{p}-{o}" for s, p, o in sorted(extra_trips)
-        ),
+        "extra_triplets": ";".join(f"{s}-{p}-{o}" for s, p, o in sorted(extra_trips)),
     }
 
 
@@ -294,9 +290,7 @@ def compute_saturation_gap(
 
     Saturation = level where recall first reaches threshold_frac * max(recall).
     """
-    img_df = all_metrics_df[all_metrics_df["image_id"] == image_id].sort_values(
-        "level"
-    )
+    img_df = all_metrics_df[all_metrics_df["image_id"] == image_id].sort_values("level")
 
     max_node_r = img_df["node_recall"].max()
     max_trip_r = img_df["triplet_recall"].max()
