@@ -81,3 +81,8 @@ outputs/runs/*/llm_inputs/
 
 # Heavy per-image representative panels (~125MB) — kept local, not committed
 outputs/figures/representative_*.png
+
+# PGSG (Pix2Grp) runtime: env, converted VG files and raw LAVIS run dirs are regenerable
+# (envs/pgsg/.venv is covered by .venv/ above; logs by logs/).
+data/processed/pgsg_vg/
+outputs/pgsg/runs/

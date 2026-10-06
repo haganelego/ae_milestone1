@@ -1,3 +1,6 @@
 [submodule "egtr"]
 	path = egtr
 	url = git@github.com:haganelego/egtr.git
+[submodule "Pix2Grp_CVPR2024"]
+	path = Pix2Grp_CVPR2024
+	url = git@github.com:SHTUPLUS/Pix2Grp_CVPR2024.git

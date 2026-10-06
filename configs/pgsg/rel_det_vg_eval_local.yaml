@@ -1,0 +1,95 @@
+# Local copy of Pix2Grp_CVPR2024/lavis/projects/blip/eval/rel_det_vg_pgsg_eval.yaml
+# (PGSG standard SGDet on VG-150) with every /public/... path overridden.
+# Data is produced by scripts/23_pgsg_convert_vg.py; run via scripts/24_pgsg_eval.sh.
+# Absolute paths assume repo root /home/kanaoka/usr/github/milestone_1.
+
+model:
+  arch: blip_rel_detection_pgsg
+  model_type: base_vg
+
+  max_txt_len: 512 # test time
+  dump_pred: False
+  dump_dir: "/home/kanaoka/usr/github/milestone_1/outputs/pgsg/dump"
+
+  seg_len: 32
+
+  sgcls_on: False
+  predcls_on: False
+
+  top_k_ent_label_num: 1
+  top_k_predicate_label_num: 3
+
+  finetuned: "/home/kanaoka/usr/github/milestone_1/Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth"
+
+  close_clser: False
+
+  num_coord_bin: 640
+  image_size: 384
+  cate_dict_url: "/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/categories_dict.json"
+
+  post_proc_cfg:
+    ent_ampl_scale: 5.0
+    rel_ampl_scale: 2.0
+
+
+datasets:
+  vg_rel_detection_eval: # name of the dataset builder
+    vis_processor:
+        eval:
+          name: "blip_det_image_eval"
+          image_size: 384
+        train:
+          name: "blip_det_image_eval"
+          image_size: 384
+    text_processor:
+        eval:
+          name: "blip_caption"
+    build_info:
+      # url == storage (absolute) so the builder just logs "Using existing file".
+      annotations:
+        val:
+          url:
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-val.h5
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json
+          storage:
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-val.h5
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json
+        test:
+          url:
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-test.h5
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json
+          storage:
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-test.h5
+            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json
+      images:
+        storage: /home/kanaoka/usr/dataset/vg/images
+
+run:
+  task: relation_detection
+  batch_size_train: 4
+  batch_size_eval: 4
+  num_workers: 2
+
+  max_len: 1024
+  min_len: 768
+  num_beams: 1
+
+  experiments_mode: sggen # sggen sgcls
+  generation_mode: sampling # official setting; "search" = greedy (deterministic)
+
+  seed: 42
+  output_dir: "/home/kanaoka/usr/github/milestone_1/outputs/pgsg/runs"
+
+  evaluate: True
+  test_splits: ["test"]
+
+  device: "cuda"
+  world_size: 1
+  dist_url: "env://"
+  distributed: True
+
+  zeroshot_cfg:
+    zs_triplets: "/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/zeroshot_triplet.pytorch"
+    zs_predicate: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 23, 25, 26, 27, 31, 34, 35, 36, 40, 41, 42, 44, 48]
+
+  cate_dict_url: "/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/categories_dict.json"
