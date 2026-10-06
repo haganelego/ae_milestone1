@@ -1,0 +1,34 @@
+{
+ "model": "synthetic",
+ "failure": false,
+ "error": null,
+ "checks": {
+  "observed_issues": [
+   {
+    "id": "o1",
+    "anchor_ids": [
+     "v1"
+    ],
+    "target": "label of the man",
+    "region_anchor_id": "v1",
+    "evidence": "box is a few pixels wide"
+   }
+  ],
+  "hypotheses": [
+   {
+    "id": "h1",
+    "kind": "missing_relation",
+    "candidate": "man holding cup",
+    "anchor_ids": [
+     "v1",
+     "v3"
+    ],
+    "relation_ids": [
+     "e1"
+    ],
+    "region_anchor_id": "v3",
+    "evidence": "hand near table"
+   }
+  ]
+ }
+}

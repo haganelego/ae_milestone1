@@ -1,0 +1,11 @@
+{
+ "image_id": 1005,
+ "split": "dev",
+ "level": 4,
+ "scale": 0.0802,
+ "entities": [],
+ "relations": [],
+ "stats": {
+  "synthetic": true
+ }
+}

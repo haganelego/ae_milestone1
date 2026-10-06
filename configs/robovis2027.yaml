@@ -58,6 +58,8 @@ proposal:
   max_observed_issues: 3
   theta: 2
   consecutive_k: 2
+  unknown_conservative_theta: 1   # separately named variant (plan §6)
+  max_u: 2                        # u_j = min(basis, benefit) in {0,1,2}; empty graph -> A_t = max_u
 
 evaluation:
   reference: vg_existing_gt
@@ -66,6 +68,10 @@ evaluation:
   iou_threshold: 0.5
   judge_enabled: false
   bootstrap_repeats: 2000
+  bootstrap_seed: 20271007
+  ci_level: 0.95
+  oracle_ratio: 0.9             # relative-stable oracle: q_u >= ratio * qmax for all u >= t
+  recall_k: 50                  # q_t = R@50
 
 execution:
   schema_retries: 1
@@ -82,3 +88,24 @@ llm:
   model: qwen3.5:4b
   endpoint: http://localhost:11434/api/chat
   think: false                 # qwen3.5 <think> mode off -> plain JSON output
+
+# Check generator (F1/F2) + judgment (owned by check_generator.py / judge.py).
+# Model id, endpoint and think flag come from `llm:` above; retry counts from
+# `execution:`; item caps from `proposal:`.
+checks:
+  check_model: qwen3.5:4b      # F1 (image + graph) and F2 (graph only)
+  judge_model: qwen3.5:4b      # text-only judgment
+  json_mode: true              # ollama `format: "json"`; false -> plain text + parse
+  options:                     # passed verbatim as ollama `options`
+    temperature: 0
+    seed: 20271007
+    num_ctx: 8192
+    num_predict: 1536
+  request_timeout_s: 300
+  backoff_base_s: 2.0          # transient retry sleep = base * 2^attempt, capped
+  backoff_max_s: 30.0
+  max_relations_in_prompt: 50  # top-N by trp_score (graph is already sorted)
+  max_entities_in_prompt: 60   # entities used by kept relations first, then by score
+  max_string_chars: 240
+  box_decimals: 2              # normalized box coords in the rendering
+  score_decimals: 2

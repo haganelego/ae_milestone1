@@ -1,0 +1,9 @@
+{
+ "model": "synthetic",
+ "failure": false,
+ "error": null,
+ "checks": {
+  "observed_issues": [],
+  "hypotheses": []
+ }
+}

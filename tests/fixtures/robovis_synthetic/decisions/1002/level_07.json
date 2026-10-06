@@ -1,0 +1,21 @@
+{
+ "items": [
+  {
+   "id": "o1",
+   "status": "unresolved",
+   "basis": 1,
+   "resolution_benefit": 2,
+   "limitation": "low_resolution",
+   "reason": "needs more pixels"
+  },
+  {
+   "id": "h1",
+   "status": "unresolved",
+   "basis": 1,
+   "resolution_benefit": 2,
+   "limitation": "low_resolution",
+   "reason": "needs more pixels"
+  }
+ ],
+ "failure": false
+}

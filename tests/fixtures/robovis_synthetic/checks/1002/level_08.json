@@ -1,0 +1,14 @@
+{
+ "observed_issues": [
+  {
+   "id": "o1",
+   "anchor_ids": [
+    "v1"
+   ],
+   "target": "label of the man",
+   "region_anchor_id": "v1",
+   "evidence": "box is a few pixels wide"
+  }
+ ],
+ "hypotheses": []
+}

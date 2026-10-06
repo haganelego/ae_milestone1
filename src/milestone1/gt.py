@@ -73,7 +73,24 @@ def load_gt_scene_graph(
     SGDet R@K (IoU-based GT-vs-prediction triplet matching) computable post-hoc.
     """
     coco, rel_data, rels_split = _load_coco_and_rels(vg_root, split)
+    return _build_gt_scene_graph(coco, rel_data, rels_split, image_id)
 
+
+def load_gt_scene_graphs(
+    vg_root: str | Path, split: str, image_ids: list[int]
+) -> dict[int, dict[str, Any]]:
+    """Batch version of ``load_gt_scene_graph`` (loads the annotations once)."""
+    coco, rel_data, rels_split = _load_coco_and_rels(vg_root, split)
+    return {
+        image_id: _build_gt_scene_graph(coco, rel_data, rels_split, image_id)
+        for image_id in image_ids
+    }
+
+
+def _build_gt_scene_graph(
+    coco: COCO, rel_data: dict[str, Any], rels_split: dict[str, Any], image_id: int
+) -> dict[str, Any]:
+    """Build the GT scene graph dict of one image (see ``load_gt_scene_graph``)."""
     # Object categories (0-indexed)
     id2name = {cid - 1: info["name"] for cid, info in coco.cats.items()}
 

@@ -3,13 +3,14 @@
 # Prereq: uv run --project envs/pgsg python scripts/23_pgsg_convert_vg.py --num-test-images N
 # Usage:  bash scripts/24_pgsg_eval.sh [JOB_NAME] [extra --options k=v ...]
 # Example: bash scripts/24_pgsg_eval.sh greedy20 run.generation_mode=search
+# Env: PGSG_CFG (config yaml), PGSG_LOG_DIR (log dir), MASTER_PORT
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CFG="${PGSG_CFG:-${REPO_ROOT}/configs/pgsg/rel_det_vg_eval_local.yaml}"
 JOB_NAME="${1:-local}"
 shift || true
-LOG_DIR="${REPO_ROOT}/outputs/pgsg/logs"
+LOG_DIR="${PGSG_LOG_DIR:-${REPO_ROOT}/outputs/pgsg/logs}"
 LOG_FILE="${LOG_DIR}/$(date +%Y%m%d-%H%M%S)-${JOB_NAME}.log"
 mkdir -p "${LOG_DIR}"
 

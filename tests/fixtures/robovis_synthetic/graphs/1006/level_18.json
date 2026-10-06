@@ -1,0 +1,59 @@
+{
+ "image_id": 1006,
+ "split": "dev",
+ "level": 18,
+ "scale": 0.7293,
+ "entities": [
+  {
+   "id": "v1",
+   "label_id": 77,
+   "label": "man",
+   "score": 0.8,
+   "box_xyxy_orig": [
+    10.0,
+    10.0,
+    100.0,
+    200.0
+   ]
+  },
+  {
+   "id": "v2",
+   "label_id": 20,
+   "label": "shirt",
+   "score": 0.6,
+   "box_xyxy_orig": [
+    20.0,
+    40.0,
+    90.0,
+    120.0
+   ]
+  },
+  {
+   "id": "v3",
+   "label_id": 11,
+   "label": "table",
+   "score": 0.4,
+   "box_xyxy_orig": [
+    150.0,
+    100.0,
+    300.0,
+    250.0
+   ]
+  }
+ ],
+ "relations": [
+  {
+   "id": "e1",
+   "sub": "v1",
+   "obj": "v2",
+   "pred_id": 31,
+   "pred": "wearing",
+   "pred_score": 0.7,
+   "trp_score": 0.4,
+   "rank": 0
+  }
+ ],
+ "stats": {
+  "synthetic": true
+ }
+}

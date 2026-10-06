@@ -20,6 +20,8 @@ PGSG loader quirks handled here (Pix2Grp_CVPR2024/lavis/datasets/datasets/vg_rel
 Usage:
   uv run --project envs/pgsg python scripts/23_pgsg_convert_vg.py --num-test-images 20
   uv run --project envs/pgsg python scripts/23_pgsg_convert_vg.py --num-test-images 0   # all 26,446
+  uv run --project envs/pgsg python scripts/23_pgsg_convert_vg.py \
+      --image-ids-file ids.json --out-dir data/processed/pgsg_robovis_dev20
 """
 
 from __future__ import annotations
@@ -62,6 +64,13 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=20,
         help="first N test.json images to evaluate; 0 = all test images",
+    )
+    parser.add_argument(
+        "--image-ids-file",
+        type=Path,
+        default=None,
+        help="JSON list of test image ids to evaluate (in this order); "
+        "overrides --num-test-images",
     )
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--vg-root", type=Path, default=VG_ROOT)
@@ -283,8 +292,16 @@ def main() -> None:
 
     test_images = [img for img in test_images if rel["test"].get(str(img["id"]))]
     assert not CORRUPTED_IDS & {img["id"] for img in test_images}
-    num = args.num_test_images or len(test_images)
-    targets = test_images[:num]
+    if args.image_ids_file is not None:
+        wanted = [int(i) for i in json.loads(args.image_ids_file.read_text())]
+        by_id = {img["id"]: img for img in test_images}
+        missing = [i for i in wanted if i not in by_id]
+        if missing:
+            raise ValueError(f"ids not in the test split (with relations): {missing}")
+        targets = [by_id[i] for i in wanted]
+    else:
+        num = args.num_test_images or len(test_images)
+        targets = test_images[:num]
 
     builder = H5Builder()
     builder.add_sacrificial_rows(NUM_DROPPED_ROWS)
