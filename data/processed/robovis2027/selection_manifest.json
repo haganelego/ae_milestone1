@@ -1,0 +1,61 @@
+{
+  "spec_version": 1.0,
+  "script": "scripts/26_robovis_select_images.py",
+  "git_commit": "e8200654d08a8b63a5a47329feee6fa4854d4609",
+  "source": {
+    "vg_root": "/home/kanaoka/usr/dataset/vg",
+    "annotations": "test.json",
+    "relations": "rel.json['test']",
+    "split": "test",
+    "n_images_in_split": 26446,
+    "all_selected_in_source_split": true,
+    "pgsg_test_split_is_same_vg150_test": true
+  },
+  "criteria": {
+    "min_gt_objects": 5,
+    "min_gt_relations": 3,
+    "exclude_zero_byte_files": true,
+    "dedupe": [
+      "image_id",
+      "image_bytes_sha256 (keep smallest id)"
+    ],
+    "observer_dependent_filters": null
+  },
+  "ordering": {
+    "procedure": "sorted(eligible_ids) then random.Random(seed).shuffle",
+    "seed": 42,
+    "test": "shuffled[0:100]",
+    "dev": "shuffled[100:120]",
+    "test_truncatable_to_prefix": true
+  },
+  "counts": {
+    "eligible": 18887,
+    "excluded_by_reason": {
+      "too_few_gt_objects": 1900,
+      "too_few_gt_relations": 5659
+    },
+    "test": 100,
+    "dev": 20
+  },
+  "eligible_ids_sha256": "c0ebfa36582221507c9da4c94ce7d8533c31521e472cf3d43ca76e1a4d3c5d73",
+  "overlap_with_miru_100": {
+    "miru_file": "data/processed/selected_images.json",
+    "miru_count": 100,
+    "test_overlap": 4,
+    "dev_overlap": 0,
+    "total_overlap": 4
+  },
+  "selected_size_stats": {
+    "n_portrait": 25,
+    "n_landscape": 92,
+    "n_square": 3,
+    "max_side_counts": {
+      "500": 120
+    }
+  },
+  "limitations": [
+    "Deduplication is exact only (image id and sha256 of image bytes); no near-duplicate (perceptual-hash) check was performed.",
+    "No train-leak check beyond asserting every selected id is in the VG-150 test.json; PGSG's test split is the same VG-150 test split, so test images were not seen in PGSG training.",
+    "Relation count is the raw length of rel.json[test][image_id] (may include duplicate triplets), matching the MIRU selection script."
+  ]
+}

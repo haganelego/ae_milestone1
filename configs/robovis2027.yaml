@@ -1,0 +1,84 @@
+# ROBOVIS2027 experiment config (PGSG + resolution-recovery stop policy).
+# Plan initial YAML (spec_version 1.0) expanded to block form, plus local paths.
+# All relative paths are resolved against the repository root.
+
+spec_version: 1.0
+
+output_root: outputs/robovis2027
+
+dataset:
+  vg_root: /home/kanaoka/usr/dataset/vg   # images/, test.json, rel.json (VG-150)
+  source_split: test                     # VG-150 test split (== PGSG test split)
+  dev_count: 20                          # images after the test block in shuffled order
+  test_count: 100                        # first N of shuffled order; truncatable to 60
+  seed: 42                               # random.Random(seed).shuffle on sorted ids
+  min_gt_objects: 5                      # GT-only eligibility (plan §8)
+  min_gt_relations: 3
+  base_max_side: 384                     # pre-shrink so max(W,H)=384 (PGSG input is 384x384)
+
+paths:
+  root: data/processed/robovis2027
+  selected_images: data/processed/robovis2027/selected_images.json
+  eligible_ids: data/processed/robovis2027/eligible_ids.json
+  selection_manifest: data/processed/robovis2027/selection_manifest.json
+  degraded_images: data/processed/robovis2027/degraded_images   # <image_id>/level_XX.jpg
+  levels_manifest: data/processed/robovis2027/levels_manifest.json
+  miru_selected_images: data/processed/selected_images.json     # old MIRU 100 (read-only)
+
+resolution:
+  # Must equal configs/config.yaml resolution_levels.scales (asserted in script 27).
+  # Geometric schedule scale_t = 0.05 * 20^((t-1)/19), t = 1..20.
+  scales:
+    - 0.05
+    - 0.0585
+    - 0.0685
+    - 0.0802
+    - 0.0940
+    - 0.1100
+    - 0.1288
+    - 0.1508
+    - 0.1765
+    - 0.2066
+    - 0.2419
+    - 0.2832
+    - 0.3316
+    - 0.3882
+    - 0.4545
+    - 0.5321
+    - 0.6229
+    - 0.7293
+    - 0.8538
+    - 1.0
+  interpolation: bilinear      # downscale and upscale (and pre-shrink)
+  output_format: JPEG
+  jpeg_quality: 95             # every level incl. level_20 is re-encoded identically
+
+proposal:
+  max_hypotheses: 3
+  max_observed_issues: 3
+  theta: 2
+  consecutive_k: 2
+
+evaluation:
+  reference: vg_existing_gt
+  primary: SGDet_R50
+  secondary: SGDet_mR50
+  iou_threshold: 0.5
+  judge_enabled: false
+  bootstrap_repeats: 2000
+
+execution:
+  schema_retries: 1
+  transient_retries: 5
+  max_model_calls: 9000
+  concurrency: 1
+
+pgsg:
+  checkpoint: Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth
+  env: envs/pgsg
+  eval_config: configs/pgsg/rel_det_vg_eval_local.yaml
+
+llm:
+  model: qwen3.5:4b
+  endpoint: http://localhost:11434/api/chat
+  think: false                 # qwen3.5 <think> mode off -> plain JSON output

@@ -86,3 +86,4 @@ outputs/figures/representative_*.png
 # (envs/pgsg/.venv is covered by .venv/ above; logs by logs/).
 data/processed/pgsg_vg/
 outputs/pgsg/runs/
+data/processed/robovis2027/degraded_images/
