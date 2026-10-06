@@ -7,6 +7,8 @@ Usage:
 
 Reads ``<input_dir>`` (default ``outputs/robovis2027/<run_id>``) and writes
 ``outputs/robovis2027/<run_id>/<eval_subdir>/{stops,summary,...}.csv``.
+``--q-metric relsg_gt`` selects the stage_metrics column used as q_t; non-R50
+outputs go to ``<eval dir>/q_<metric>/`` (R50 keeps the legacy layout).
 Missing / failed / invalid levels count as a missing C_t (resets the
 consecutive counter, counted in failure_count).
 """
@@ -22,20 +24,24 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.config import resolve  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
+from milestone1.robovis_eval import configured_q_metric, q_output_dir  # noqa: E402
 from milestone1.robovis_replay import RunLayout, run_replay_eval  # noqa: E402
 
 SUMMARY_COLUMNS = [
     "method",
+    "status",
+    "q_metric",
     "n_images",
     "mean_stop_t",
-    "R50_stop",
+    "q_stop",
     "mR50_stop",
+    "mR50_present_stop",
     "mean_residual",
     "oracle_mae",
     "oracle_n",
     "forced_terminal_rate",
     "inference_failure_rate",
-    "eq_fixed_R50",
+    "eq_fixed_q",
 ]
 
 
@@ -56,6 +62,12 @@ def parse_args() -> argparse.Namespace:
         "--decisions-subdir", default=None, help="default: decisions[/<path>]"
     )
     p.add_argument("--eval-subdir", default=None, help="default: eval[/<path>]")
+    p.add_argument(
+        "--q-metric",
+        default=None,
+        help="stage_metrics column used as q_t (default: evaluation.q_metric = R50); "
+        "non-R50 outputs go to <eval dir>/q_<metric>/",
+    )
     return p.parse_args()
 
 
@@ -70,15 +82,21 @@ def main() -> None:
     cfg = load_robovis_config(args.config)
     run_dir = resolve(cfg["output_root"]) / args.run_id
     input_dir = resolve(args.input_dir) if args.input_dir else run_dir
-    out_dir = run_dir / _subdir(args.eval_subdir, "eval", args.path)
+    q_metric = configured_q_metric(cfg, args.q_metric)
+    out_dir = q_output_dir(
+        run_dir / _subdir(args.eval_subdir, "eval", args.path), q_metric
+    )
     layout = RunLayout(
         args.graphs_subdir,
         _subdir(args.checks_subdir, "checks", args.path),
         _subdir(args.decisions_subdir, "decisions", args.path),
     )
 
-    digest = run_replay_eval(input_dir, out_dir, cfg, layout)
-    print(f"images={digest['n_images']} eval={digest['n_eval']} -> {out_dir}")
+    digest = run_replay_eval(input_dir, out_dir, cfg, layout, q_metric=q_metric)
+    print(
+        f"q_metric={q_metric} images={digest['n_images']} eval={digest['n_eval']} "
+        f"oracle={digest['oracle_status_counts']} -> {out_dir}"
+    )
     print(f"level outcomes: {digest['outcomes']}")
     summary: pd.DataFrame = digest["summary"]
     adaptive = summary[~summary["method"].str.startswith("fixed_")]

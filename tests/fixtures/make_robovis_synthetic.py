@@ -37,6 +37,8 @@ PRED_GT = {0: 4, 1: 3, 2: 3}  # pred_id -> n_gt per image
 N_GT_REL = sum(PRED_GT.values())
 R20_FACTOR = 0.8
 R100_FACTOR = 1.1
+# Synthetic GT RelSGScore: concave in R50 so curves/oracles differ from R50.
+RELSG_EXPONENT = 0.5
 
 
 def _ramp(peak_t: int, peak: float, start: float = 0.0) -> list[float]:
@@ -285,6 +287,7 @@ def main() -> None:
                     "R20": round(q * R20_FACTOR, 4),
                     "R50": q,
                     "R100": round(min(1.0, q * R100_FACTOR), 4),
+                    "relsg_gt": round(q**RELSG_EXPONENT, 4),
                     "n_gt_rel": N_GT_REL,
                     "valid": t not in invalid,
                 }

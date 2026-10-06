@@ -28,6 +28,8 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.check_generator import (  # noqa: E402
     PATH_F1,
+    PROMPT_V1,
+    PROMPT_VERSIONS,
     VALID_PATHS,
     generate_checks,
     limits_from_config,
@@ -63,6 +65,23 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--judge-model", default=None, help="override checks.judge_model")
     p.add_argument("--json-mode", choices=("on", "off"), default=None)
     p.add_argument("--out-tag", default="", help="suffix for checks/decisions dirs")
+    p.add_argument(
+        "--variant-name",
+        default=None,
+        help="explicit output dir name (e.g. F1v, F1_v2); overrides PATH[__tag]",
+    )
+    p.add_argument("--prompt-version", choices=PROMPT_VERSIONS, default=PROMPT_V1)
+    p.add_argument(
+        "--judge-with-image",
+        action="store_true",
+        help="judge also receives the current-state JPEG (F1 only; variant F1v)",
+    )
+    p.add_argument(
+        "--checks-from",
+        default=None,
+        help="judge-only: read existing checks from checks/<VARIANT> (e.g. F2) "
+        "instead of generating them; requires --judge",
+    )
     return p.parse_args()
 
 
@@ -140,12 +159,17 @@ def usage_row(
 
 def main() -> None:
     args = parse_args()
+    sys.stdout.reconfigure(line_buffering=True)
+    if args.checks_from and not args.judge:
+        sys.exit("--checks-from requires --judge")
+    if args.judge_with_image and (args.path != PATH_F1 or not args.judge):
+        sys.exit("--judge-with-image requires --path F1 and --judge")
     cfg = load_robovis_config(resolve(args.config))
     if args.json_mode is not None:
         cfg["checks"]["json_mode"] = args.json_mode == "on"
     settings = settings_from_config(cfg)
     client = OllamaClient(settings)
-    limits = limits_from_config(cfg)
+    limits = limits_from_config(cfg, args.prompt_version)
     schema_retries = int(cfg["execution"]["schema_retries"])
     max_calls = int(cfg["execution"]["max_model_calls"])
     check_model = args.check_model or cfg["checks"]["check_model"]
@@ -155,8 +179,15 @@ def main() -> None:
     graphs_root = run_root / "graphs"
     if not graphs_root.is_dir():
         sys.exit(f"no graphs under {graphs_root}")
-    variant = args.path + (f"__{args.out_tag}" if args.out_tag else "")
-    checks_root = run_root / "checks" / variant
+    variant = args.variant_name or (
+        args.path + (f"__{args.out_tag}" if args.out_tag else "")
+    )
+    checks_root = run_root / "checks" / (args.checks_from or variant)
+    if args.checks_from and args.checks_from != variant:
+        # Consistent per-variant path for replay/diagnostics: checks/<variant> -> source.
+        link = run_root / "checks" / variant
+        if not link.exists() and not link.is_symlink():
+            link.symlink_to(args.checks_from, target_is_directory=True)
     decisions_root = run_root / "decisions" / variant
     usage_path = run_root / "usage.jsonl"
     degraded_root = resolve(cfg["paths"]["degraded_images"])
@@ -167,7 +198,8 @@ def main() -> None:
     print(
         f"{len(states)} states | path={args.path} check_model={check_model} "
         f"judge={'on:' + judge_model if args.judge else 'off'} "
-        f"options={settings.record()}"
+        f"prompt={args.prompt_version} judge_image={args.judge_with_image} "
+        f"variant={variant} options={settings.record()}"
     )
     n_calls = 0
     n_fail = {"checks": 0, "judge": 0}
@@ -178,22 +210,31 @@ def main() -> None:
         with open(graph_path) as f:
             graph = json.load(f)
         name = graph_path.name
+        if args.checks_from:
+            src = checks_root / str(image_id) / name
+            if not src.exists():
+                print(f"  missing checks {src}; skip")
+                continue
+            with open(src) as f:
+                rec, cached = json.load(f), True
         image_path = None
-        if args.path == PATH_F1:
+        if args.path == PATH_F1 and (not args.checks_from or args.judge_with_image):
             image_path = degraded_root / str(image_id) / name.replace(".json", ".jpg")
             if not image_path.exists():
                 print(f"  missing image {image_path}; skip")
                 continue
-        rec, cached = generate_checks(
-            graph,
-            client=client,
-            model=check_model,
-            path=args.path,
-            limits=limits,
-            schema_retries=schema_retries,
-            out_path=checks_root / str(image_id) / name,
-            image_path=image_path,
-        )
+        if not args.checks_from:
+            rec, cached = generate_checks(
+                graph,
+                client=client,
+                model=check_model,
+                path=args.path,
+                limits=limits,
+                schema_retries=schema_retries,
+                out_path=checks_root / str(image_id) / name,
+                image_path=image_path,
+                prompt_version=args.prompt_version,
+            )
         n_calls += 0 if cached else rec["http_attempts"]
         n_fail["checks"] += int(rec["failure"])
         append_usage(
@@ -220,6 +261,8 @@ def main() -> None:
             limits=limits,
             schema_retries=schema_retries,
             out_path=decisions_root / str(image_id) / name,
+            prompt_version=args.prompt_version,
+            image_path=image_path if args.judge_with_image else None,
         )
         n_calls += 0 if jcached else jrec.get("http_attempts", 0)
         n_fail["judge"] += int(jrec["failure"])

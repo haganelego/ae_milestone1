@@ -89,5 +89,5 @@ outputs/pgsg/runs/
 data/processed/robovis2027/degraded_images/
 
 # ROBOVIS2027 bulky per-state outputs (summaries CSV/JSON stay trackable)
-outputs/robovis2027/*/graphs/
+outputs/robovis2027/*/graphs*/
 outputs/robovis2027/*/raw_responses/

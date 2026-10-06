@@ -14,8 +14,12 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
 from milestone1.stop_policy import (  # noqa: E402
+    BENEFIT_GATED,
+    BENEFIT_GATED_OBS,
+    MAIN_CONDITIONS,
     OBSERVED_ONLY,
     PROPOSED,
+    U_RULE_BENEFIT_GATED,
     UNKNOWN_CONSERVATIVE,
     build_conditions,
     fixed_method_name,
@@ -269,3 +273,57 @@ def test_score_level_outputs_null_items_failure_record_is_missing() -> None:
     scores, outcome = score_level_outputs(_graph(), CHECKS_OBJ, record, CONDITIONS)
     assert outcome == "decision_failure"
     assert scores[PROPOSED] is None
+
+
+# --------------------------------------------------------------------------
+# Exploratory benefit_gated rule
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("basis", "benefit", "u"), [(1, 2, 2), (2, 1, 1), (2, 0, 0), (0, 2, 0)]
+)
+def test_benefit_gated_utility(basis: int, benefit: int, u: int) -> None:
+    judgment = _judge("o1", basis=basis, benefit=benefit)
+    assert item_utility(_obs(), judgment, GRAPH, u_rule=U_RULE_BENEFIT_GATED) == u
+
+
+@pytest.mark.parametrize(
+    "judgment",
+    [
+        _judge("o1", limitation="unknown"),
+        _judge("o1", status="resolved"),
+    ],
+)
+def test_benefit_gated_keeps_the_plan_gate(judgment: JudgmentItem) -> None:
+    assert item_utility(_obs(), judgment, GRAPH, u_rule=U_RULE_BENEFIT_GATED) == 0
+    assert (
+        item_utility(_obs(region=None), _judge("o1"), GRAPH, u_rule="benefit_gated")
+        == 0
+    )
+
+
+def test_unknown_u_rule_raises() -> None:
+    with pytest.raises(ValueError):
+        item_utility(_obs(), _judge("o1"), GRAPH, u_rule="nope")
+
+
+def test_exploratory_conditions_are_labelled() -> None:
+    bg, bg_obs = CONDITIONS[BENEFIT_GATED], CONDITIONS[BENEFIT_GATED_OBS]
+    assert bg.include_hypotheses and not bg_obs.include_hypotheses
+    assert bg.exploratory and bg_obs.exploratory
+    assert bg.theta == CFG["proposal"]["theta"] and bg.consecutive_k == K
+    assert "exploratory" in bg.status_label
+    assert all(not CONDITIONS[n].exploratory for n in MAIN_CONDITIONS)
+    assert set(build_conditions(CFG, include_exploratory=False)) == set(MAIN_CONDITIONS)
+
+
+def test_benefit_gated_level_score_vs_min_rule() -> None:
+    # basis 1 / benefit 2 on both items: min-rule u=1, benefit_gated u=2.
+    checks = Checks((_obs(),), (_hyp(),))
+    judgments = Judgments((_judge("o1", basis=1), _judge("h1", basis=1)))
+    assert level_score(checks, judgments, GRAPH, CONDITIONS[PROPOSED]).c == 1
+    bg = level_score(checks, judgments, GRAPH, CONDITIONS[BENEFIT_GATED])
+    obs = level_score(checks, judgments, GRAPH, CONDITIONS[BENEFIT_GATED_OBS])
+    assert (bg.a, bg.h, bg.c) == (2, 2, 2)
+    assert obs.c == 2

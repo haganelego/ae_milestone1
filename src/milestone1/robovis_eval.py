@@ -1,7 +1,9 @@
 """Stop-quality evaluation for ROBOVIS2027 (plan §9).
 
-Inputs are per-image, per-level recall values ``q_t`` (R@50) from
-``stage_metrics.csv`` and a long table of stops
+Inputs are per-image, per-level values ``q_t`` of a selectable metric
+(``evaluation.q_metric``: R50 by default, or e.g. ``relsg_gt``) from
+``stage_metrics.csv`` (mR@50 always uses the per-predicate R@50 sidecar)
+and a long table of stops
 (``image_id, method, stop_t, natural_stop, forced_terminal, failure_count``).
 
 Undefined quantities are never filled with the final level: oracle-based MAE
@@ -12,20 +14,38 @@ from __future__ import annotations
 
 import math
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pandas as pd
 
+from milestone1.robovis_sgdet import NUM_PREDICATES, OFFICIAL_MR_EPS
 from milestone1.stop_policy import fixed_method_name
 
 ORACLE_DEFINED = "defined"
 ORACLE_UNSTABLE_TAIL = "unstable_tail"
 ORACLE_ZERO_RECOVERY = "zero_recovery"
 ORACLE_INVALID_LEVELS = "invalid_levels"
+ORACLE_STATUSES = (
+    ORACLE_DEFINED,
+    ORACLE_UNSTABLE_TAIL,
+    ORACLE_ZERO_RECOVERY,
+    ORACLE_INVALID_LEVELS,
+)
+# Oracle definitions: the plan's relative-stable oracle is the main one; the two
+# others are auxiliary, noise-robust variants (reported beside it, never instead).
+ORACLE_RELATIVE_STABLE = "relative_stable"
+ORACLE_MONOTONE_STABLE = "monotone_stable"
+ORACLE_GAIN_BASED = "gain_based"
+MAIN_ORACLE = ORACLE_RELATIVE_STABLE
+AUX_ORACLES = (ORACLE_MONOTONE_STABLE, ORACLE_GAIN_BASED)
+ORACLE_DEFINITIONS = (MAIN_ORACLE, *AUX_ORACLES)
+DEFAULT_ORACLE_GAIN_DELTA = 0.05
 FLOAT_TOL = 1e-12
+# q_t metric used when none is configured; its outputs keep the legacy layout.
+DEFAULT_Q_METRIC = "R50"
 
 STAGE_REQUIRED_COLUMNS = ("image_id", "t", "valid")
 PRED_HITS_BASE_COLUMNS = ("image_id", "t", "pred_id", "n_gt")
@@ -50,6 +70,18 @@ def recall_column(recall_k: int) -> str:
     return f"R{recall_k}"
 
 
+def configured_q_metric(cfg: Mapping[str, Any], override: str | None = None) -> str:
+    """q_t metric: CLI override, else ``evaluation.q_metric``, else R50."""
+    if override:
+        return override
+    return str(cfg["evaluation"].get("q_metric", DEFAULT_Q_METRIC))
+
+
+def q_output_dir(base: Path, q_metric: str) -> Path:
+    """R50 keeps the legacy layout (``base``); other metrics go to base/q_<metric>."""
+    return base if q_metric == DEFAULT_Q_METRIC else base / f"q_{q_metric}"
+
+
 def _to_bool(value: Any) -> bool:
     if isinstance(value, bool | np.bool_):
         return bool(value)
@@ -65,16 +97,17 @@ class RecallCurves:
     q: dict[int, np.ndarray]
     valid: dict[int, np.ndarray]
     num_levels: int
+    metric: str = DEFAULT_Q_METRIC
 
     def all_valid(self, image_id: int) -> bool:
         v = self.valid[image_id]
         return bool(v.all()) and not bool(np.isnan(self.q[image_id]).any())
 
 
-def load_stage_metrics(path: str | Path, recall_k: int) -> pd.DataFrame:
-    """Read stage_metrics.csv; only image_id, t, valid and R@k are required."""
+def load_stage_metrics(path: str | Path, q_metric: str) -> pd.DataFrame:
+    """Read stage_metrics.csv; only image_id, t, valid and ``q_metric`` are required."""
     df = pd.read_csv(path)
-    col = recall_column(recall_k)
+    col = q_metric
     missing = [c for c in (*STAGE_REQUIRED_COLUMNS, col) if c not in df.columns]
     if missing:
         raise ValueError(f"{path}: missing columns {missing}")
@@ -86,8 +119,9 @@ def load_stage_metrics(path: str | Path, recall_k: int) -> pd.DataFrame:
     return df
 
 
-def build_curves(stage: pd.DataFrame, recall_k: int, num_levels: int) -> RecallCurves:
-    col = recall_column(recall_k)
+def build_curves(stage: pd.DataFrame, q_metric: str, num_levels: int) -> RecallCurves:
+    """q_t curves of the selected per-level metric (e.g. R50, relsg_gt)."""
+    col = q_metric
     q: dict[int, np.ndarray] = {}
     valid: dict[int, np.ndarray] = {}
     for rec in stage.to_dict("records"):
@@ -99,7 +133,7 @@ def build_curves(stage: pd.DataFrame, recall_k: int, num_levels: int) -> RecallC
         if 1 <= t <= num_levels:
             q[image_id][t - 1] = float(rec[col])
             valid[image_id][t - 1] = bool(rec["valid"])
-    return RecallCurves(dict(sorted(q.items())), valid, num_levels)
+    return RecallCurves(dict(sorted(q.items())), valid, num_levels, q_metric)
 
 
 def load_predicate_hits(path: str | Path, recall_k: int) -> pd.DataFrame | None:
@@ -158,6 +192,104 @@ def relative_stable_oracle(
     return OracleResult(ORACLE_DEFINED, int(np.argmax(suffix_ok)) + 1, qmax)
 
 
+def _invalid_or_zero(qa: np.ndarray, va: np.ndarray) -> OracleResult | None:
+    """Shared undefined cases: invalid/missing levels, or zero recovery."""
+    if len(qa) == 0 or np.isnan(qa).any() or not va.all():
+        qmax = float(np.nanmax(qa)) if len(qa) and not np.isnan(qa).all() else math.nan
+        return OracleResult(ORACLE_INVALID_LEVELS, None, qmax)
+    if float(qa.max()) <= 0.0:
+        return OracleResult(ORACLE_ZERO_RECOVERY, None, float(qa.max()))
+    return None
+
+
+def _as_arrays(
+    q: Sequence[float] | np.ndarray, valid: Sequence[bool] | np.ndarray | None
+) -> tuple[np.ndarray, np.ndarray]:
+    qa = np.asarray(q, dtype=float)
+    va = np.ones(len(qa), dtype=bool) if valid is None else np.asarray(valid, bool)
+    return qa, va
+
+
+def isotonic_increasing(values: Sequence[float] | np.ndarray) -> np.ndarray:
+    """Least-squares non-decreasing fit (pool-adjacent-violators, unit weights)."""
+    blocks: list[list[float]] = []  # [mean, count]
+    for v in np.asarray(values, dtype=float):
+        blocks.append([float(v), 1.0])
+        while len(blocks) > 1 and blocks[-2][0] > blocks[-1][0]:
+            m2, n2 = blocks.pop()
+            m1, n1 = blocks.pop()
+            blocks.append([(m1 * n1 + m2 * n2) / (n1 + n2), n1 + n2])
+    return np.concatenate([np.full(int(n), m) for m, n in blocks])
+
+
+def monotone_stable_oracle(
+    q: Sequence[float] | np.ndarray,
+    valid: Sequence[bool] | np.ndarray | None,
+    ratio: float,
+) -> OracleResult:
+    """Relative-stable rule applied to the isotonic (non-decreasing) envelope of q.
+
+    The envelope is monotone, so the oracle is the first t with
+    env_t >= ratio * max(env); there is no ``unstable_tail`` case. ``qmax``
+    reports the envelope maximum.
+    """
+    qa, va = _as_arrays(q, valid)
+    undefined = _invalid_or_zero(qa, va)
+    if undefined is not None:
+        return undefined
+    env = isotonic_increasing(qa)
+    env_max = float(env.max())
+    t = int(np.argmax(env >= ratio * env_max - FLOAT_TOL)) + 1
+    return OracleResult(ORACLE_DEFINED, t, env_max)
+
+
+def gain_based_oracle(
+    q: Sequence[float] | np.ndarray,
+    valid: Sequence[bool] | np.ndarray | None,
+    delta: float,
+) -> OracleResult:
+    """First t with max_{u>t} q_u - q_t < delta (absolute, in q units).
+
+    The final level always satisfies it (no later level), so the oracle is
+    defined whenever all levels are valid and qmax > 0.
+    """
+    qa, va = _as_arrays(q, valid)
+    undefined = _invalid_or_zero(qa, va)
+    if undefined is not None:
+        return undefined
+    # future_max[i] = max(q[i+1:]); -inf for the last level.
+    future_max = np.append(np.flip(np.maximum.accumulate(np.flip(qa[1:]))), -np.inf)
+    ok = (future_max - qa) < delta - FLOAT_TOL
+    return OracleResult(ORACLE_DEFINED, int(np.argmax(ok)) + 1, float(qa.max()))
+
+
+@dataclass(frozen=True)
+class OracleParams:
+    ratio: float
+    gain_delta: float = DEFAULT_ORACLE_GAIN_DELTA
+
+    @classmethod
+    def from_config(cls, cfg: Mapping[str, Any]) -> OracleParams:
+        ev = cfg["evaluation"]
+        return cls(
+            ratio=float(ev["oracle_ratio"]),
+            gain_delta=float(ev.get("oracle_gain_delta", DEFAULT_ORACLE_GAIN_DELTA)),
+        )
+
+
+def compute_oracles(
+    q: Sequence[float] | np.ndarray,
+    valid: Sequence[bool] | np.ndarray | None,
+    params: OracleParams,
+) -> dict[str, OracleResult]:
+    """All oracle definitions for one image."""
+    return {
+        ORACLE_RELATIVE_STABLE: relative_stable_oracle(q, valid, params.ratio),
+        ORACLE_MONOTONE_STABLE: monotone_stable_oracle(q, valid, params.ratio),
+        ORACLE_GAIN_BASED: gain_based_oracle(q, valid, params.gain_delta),
+    }
+
+
 def residual(q: Sequence[float] | np.ndarray, stop_t: int) -> float:
     """max(0, qmax - q_stop)."""
     qa = np.asarray(q, dtype=float)
@@ -173,23 +305,29 @@ def residual(q: Sequence[float] | np.ndarray, stop_t: int) -> float:
 class EvalSet:
     ids: tuple[int, ...]
     excluded: dict[int, str]
-    oracle: dict[int, OracleResult]
+    oracle: dict[int, OracleResult]  # main (relative-stable) oracle
+    oracles: dict[str, dict[int, OracleResult]] = field(default_factory=dict)
 
 
-def build_eval_set(curves: RecallCurves, ratio: float) -> EvalSet:
-    """Images with all levels present and valid; oracle per eval image."""
+def build_eval_set(
+    curves: RecallCurves,
+    ratio: float,
+    gain_delta: float = DEFAULT_ORACLE_GAIN_DELTA,
+) -> EvalSet:
+    """Images with all levels present and valid; every oracle definition per image."""
+    params = OracleParams(ratio, gain_delta)
     ids: list[int] = []
     excluded: dict[int, str] = {}
-    oracle: dict[int, OracleResult] = {}
+    oracles: dict[str, dict[int, OracleResult]] = {d: {} for d in ORACLE_DEFINITIONS}
     for image_id in sorted(curves.q):
         if not curves.all_valid(image_id):
             excluded[image_id] = ORACLE_INVALID_LEVELS
             continue
         ids.append(image_id)
-        oracle[image_id] = relative_stable_oracle(
-            curves.q[image_id], curves.valid[image_id], ratio
-        )
-    return EvalSet(tuple(ids), excluded, oracle)
+        results = compute_oracles(curves.q[image_id], curves.valid[image_id], params)
+        for definition, res in results.items():
+            oracles[definition][image_id] = res
+    return EvalSet(tuple(ids), excluded, oracles[MAIN_ORACLE], oracles)
 
 
 # --------------------------------------------------------------------------
@@ -240,6 +378,7 @@ def per_image_metrics(
                 "abs_err_oracle": abs(stop_t - orc.t)
                 if orc.t is not None
                 else math.nan,
+                **_aux_oracle_fields(eval_set, image_id, stop_t),
                 "natural_stop": bool(r["natural_stop"]),
                 "forced_terminal": bool(r["forced_terminal"]),
                 "failure_count": int(r["failure_count"]),
@@ -247,27 +386,51 @@ def per_image_metrics(
         )
     df = pd.DataFrame(rows)
     if not df.empty:
-        df["oracle_t"] = df["oracle_t"].astype("Int64")
+        for col in ["oracle_t", *(f"oracle_t_{d}" for d in AUX_ORACLES)]:
+            if col in df.columns:
+                df[col] = df[col].astype("Int64")
     return df
 
 
+def _aux_oracle_fields(eval_set: EvalSet, image_id: int, stop_t: int) -> dict[str, Any]:
+    """oracle_t_<def> and abs_err_<def> for the auxiliary oracle definitions."""
+    out: dict[str, Any] = {}
+    for d in AUX_ORACLES:
+        res = eval_set.oracles.get(d, {}).get(image_id)
+        t = res.t if res is not None else None
+        out[f"oracle_t_{d}"] = t
+        out[f"abs_err_{d}"] = abs(stop_t - t) if t is not None else math.nan
+    return out
+
+
 def mean_recall_at_stop(
-    stops: pd.DataFrame, pred_hits: pd.DataFrame | None, image_ids: Sequence[int]
+    stops: pd.DataFrame,
+    pred_hits: pd.DataFrame | None,
+    image_ids: Sequence[int],
+    *,
+    official: bool = True,
 ) -> float:
-    """Dataset-level mR: mean over predicates of sum(hits)/sum(n_gt) at stop_t."""
+    """mR at each image's stop level (same convention as robovis_sgdet).
+
+    Per predicate: mean over images whose GT contains it of hits/n_gt. Then
+    ``official=True``: sum / (NUM_PREDICATES + OFFICIAL_MR_EPS) (PGSG/Motifs,
+    absent predicates count as 0); ``official=False``: mean over present
+    predicates.
+    """
     if pred_hits is None:
         return math.nan
     sel = stops[stops["image_id"].isin(image_ids)][["image_id", "stop_t"]]
     merged = sel.merge(
         pred_hits, left_on=["image_id", "stop_t"], right_on=["image_id", "t"]
     )
+    merged = merged[merged["n_gt"] > 0]
     if merged.empty:
         return math.nan
-    agg = merged.groupby("pred_id")[["hits", "n_gt"]].sum()
-    agg = agg[agg["n_gt"] > 0]
-    if agg.empty:
-        return math.nan
-    return float((agg["hits"] / agg["n_gt"]).mean())
+    per_image_recall = merged["hits"] / merged["n_gt"]
+    per_pred = per_image_recall.groupby(merged["pred_id"]).mean()
+    if official:
+        return float(per_pred.sum() / (NUM_PREDICATES + OFFICIAL_MR_EPS))
+    return float(per_pred.mean())
 
 
 # --------------------------------------------------------------------------
@@ -326,16 +489,21 @@ def summarize(
         stop_sum = int(grp["stop_t"].sum())
         row: dict[str, Any] = {
             "method": method,
+            "q_metric": curves.metric,
             "n_images": len(grp),
             "mean_stop_t": float(grp["stop_t"].mean()),
-            "R50_stop": float(grp["q_stop"].mean()),
+            "q_stop": float(grp["q_stop"].mean()),
             "mR50_stop": mean_recall_at_stop(
                 stops[stops["method"] == method], pred_hits, ids
             ),
-            "R50_final": float(grp["q_final"].mean()),
+            "mR50_present_stop": mean_recall_at_stop(
+                stops[stops["method"] == method], pred_hits, ids, official=False
+            ),
+            "q_final": float(grp["q_final"].mean()),
             "mean_residual": float(grp["residual"].mean()),
             "oracle_mae": float(defined.mean()) if len(defined) else math.nan,
             "oracle_n": len(defined),
+            **_aux_oracle_mae(grp),
             "natural_stop_rate": float(grp["natural_stop"].mean()),
             "forced_terminal_rate": float(grp["forced_terminal"].mean()),
             "inference_failure_rate": (
@@ -344,13 +512,13 @@ def summarize(
             "images_with_failure": int((grp["failure_count"] > 0).sum()),
             "eq_fixed_lower": math.nan,
             "eq_fixed_weight_upper": math.nan,
-            "eq_fixed_R50": math.nan,
+            "eq_fixed_q": math.nan,
         }
         if method in adaptive_methods:
             mix = equal_observation_mix(row["mean_stop_t"], curves.num_levels)
             row["eq_fixed_lower"] = mix.lower
             row["eq_fixed_weight_upper"] = mix.weight_upper
-            row["eq_fixed_R50"] = float(mix_recall(qm, mix).mean())
+            row["eq_fixed_q"] = float(mix_recall(qm, mix).mean())
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -371,7 +539,7 @@ def _method_arrays(
 ) -> dict[str, np.ndarray]:
     grp = per_image[per_image["method"] == method].set_index("image_id").loc[list(ids)]
     return {
-        "R50_stop": grp["q_stop"].to_numpy(float),
+        "q_stop": grp["q_stop"].to_numpy(float),
         "stop_t": grp["stop_t"].to_numpy(float),
         "residual": grp["residual"].to_numpy(float),
     }
@@ -389,7 +557,7 @@ def paired_bootstrap(
 ) -> dict[str, Any]:
     """Paired bootstrap over images (same resample indices for every quantity).
 
-    Reports, per adaptive method, the mean and CI of R@50(stop), stop_t and
+    Reports, per adaptive method, the mean and CI of q(stop), stop_t and
     residual; the difference vs the equal-observation fixed mix (mix weights
     recomputed inside each resample from that resample's mean stop_t); and the
     requested pairwise method differences.
@@ -397,7 +565,8 @@ def paired_bootstrap(
     ids = list(eval_set.ids)
     n = len(ids)
     if n == 0:
-        return {"n_images": 0, "repeats": repeats, "seed": seed, "ci_level": ci_level}
+        return {"n_images": 0, "q_metric": curves.metric, "repeats": repeats,
+                "seed": seed, "ci_level": ci_level}  # fmt: skip
     qm = _q_matrix(curves, ids)
     rng = np.random.default_rng(seed)
     idx = rng.integers(0, n, size=(repeats, n))
@@ -415,7 +584,7 @@ def paired_bootstrap(
         mix = equal_observation_mix(
             float(arr["stop_t"][rows].mean()), curves.num_levels
         )
-        return float(arr["R50_stop"][rows].mean() - mix_recall(qm[rows], mix).mean())
+        return float(arr["q_stop"][rows].mean() - mix_recall(qm[rows], mix).mean())
 
     method_stats: dict[str, Any] = {}
     for m in adaptive_methods:
@@ -424,7 +593,7 @@ def paired_bootstrap(
         lo, hi = _ci(boot_eq, ci_level)
         method_stats[m] = {
             **{key: stat(values) for key, values in arr.items()},
-            "R50_minus_eq_fixed": {
+            "q_minus_eq_fixed": {
                 "mean": eq_diff(arr, full),
                 "ci_low": lo,
                 "ci_high": hi,
@@ -439,12 +608,23 @@ def paired_bootstrap(
 
     return {
         "n_images": n,
+        "q_metric": curves.metric,
         "repeats": repeats,
         "seed": seed,
         "ci_level": ci_level,
         "methods": method_stats,
         "pairwise": pairwise,
     }
+
+
+def _aux_oracle_mae(grp: pd.DataFrame) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for d in AUX_ORACLES:
+        col = f"abs_err_{d}"
+        errs = grp[col].dropna() if col in grp.columns else pd.Series(dtype=float)
+        out[f"oracle_mae_{d}"] = float(errs.mean()) if len(errs) else math.nan
+        out[f"oracle_n_{d}"] = len(errs)
+    return out
 
 
 def oracle_table(eval_set: EvalSet, curves: RecallCurves) -> pd.DataFrame:
@@ -467,11 +647,37 @@ def oracle_table(eval_set: EvalSet, curves: RecallCurves) -> pd.DataFrame:
     return df
 
 
-def oracle_status_counts(eval_set: EvalSet) -> Mapping[str, int]:
+def oracle_status_counts(
+    eval_set: EvalSet, definition: str = MAIN_ORACLE
+) -> Mapping[str, int]:
+    results = eval_set.oracles.get(definition) or (
+        eval_set.oracle if definition == MAIN_ORACLE else {}
+    )
     counts: dict[str, int] = {}
-    for orc in eval_set.oracle.values():
+    for orc in results.values():
         counts[orc.status] = counts.get(orc.status, 0) + 1
     return counts
+
+
+def oracle_profile(eval_set: EvalSet, num_levels: int, q_metric: str) -> pd.DataFrame:
+    """Per oracle definition: status counts, defined-at-last-level, median oracle_t."""
+    rows = []
+    for d in ORACLE_DEFINITIONS:
+        results = eval_set.oracles.get(d, {})
+        ts = [r.t for r in results.values() if r.t is not None]
+        counts = oracle_status_counts(eval_set, d)
+        rows.append(
+            {
+                "q_metric": q_metric,
+                "definition": d,
+                "role": "main" if d == MAIN_ORACLE else "auxiliary",
+                "n_eval": len(eval_set.ids),
+                **{s: int(counts.get(s, 0)) for s in ORACLE_STATUSES},
+                "defined_at_last_level": sum(t == num_levels for t in ts),
+                "median_oracle_t": float(np.median(ts)) if ts else math.nan,
+            }
+        )
+    return pd.DataFrame(rows)
 
 
 # --------------------------------------------------------------------------

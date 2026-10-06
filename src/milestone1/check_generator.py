@@ -15,7 +15,7 @@ import os
 import re
 import tempfile
 import time
-from dataclasses import dataclass
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +28,9 @@ from milestone1.ollama_client import (
     structured_chat,
 )
 
+PROMPT_V1 = "v1"
+PROMPT_V2 = "v2"
+PROMPT_VERSIONS = (PROMPT_V1, PROMPT_V2)
 PATH_F1 = "F1"
 PATH_F2 = "F2"
 VALID_PATHS = (PATH_F1, PATH_F2)
@@ -57,10 +60,21 @@ CHECK_TASK = (
     "invent visual evidence. Return the specified JSON contract."
 )
 
+# v2 (team-lead decision 2026-10-07): plan wording + scene-level scoping.
+CHECK_TASK_V2_ADDENDUM = (
+    "Observed issues are facts about the scene whose identity, category or extent "
+    "is unclear in the current view. Hypotheses are about the SCENE: objects or "
+    "relations that are plausibly present in this view but not yet confirmed. Do "
+    "not report graph bookkeeping (missing relations for an entity, low scores, "
+    "duplicate entities) as hypotheses."
+)
+TARGET_PLACEHOLDER_V1 = "<unclear observed fact>"
+TARGET_PLACEHOLDER_V2 = "<scene fact whose identity/category/extent is unclear>"
+
 CHECK_SCHEMA_TEMPLATE = """Return exactly one JSON object (no markdown, no text outside JSON):
 {{
   "observed_issues": [
-    {{"id": "o1", "anchor_ids": ["v3"], "target": "<unclear observed fact>",
+    {{"id": "o1", "anchor_ids": ["v3"], "target": "{target_placeholder}",
       "region_anchor_id": "v3", "evidence": "<short evidence>"}}
   ],
   "hypotheses": [
@@ -86,6 +100,11 @@ GRAPH_HEADER = (
     "(higher = more confident); they are not probabilities and can exceed 1."
 )
 F1_IMAGE_NOTE = "The attached image shows the current view described by this graph."
+MERGE_NOTE_TEMPLATE = (
+    "Entities with the same label and overlapping boxes (IoU > {iou}) are merged "
+    "into one entry (highest score kept). Only the top {max_entities} entities by "
+    "score and the top {max_relations} relations by triplet score are shown."
+)
 
 
 @dataclass(frozen=True)
@@ -99,12 +118,17 @@ class CheckLimits:
     max_entities: int
     box_decimals: int
     score_decimals: int
+    merge_iou: float | None = None  # v2 only: same-label entity merge threshold
 
 
-def limits_from_config(cfg: dict[str, Any]) -> CheckLimits:
+def limits_from_config(
+    cfg: dict[str, Any], prompt_version: str = PROMPT_V1
+) -> CheckLimits:
+    if prompt_version not in PROMPT_VERSIONS:
+        raise ValueError(f"unknown prompt version {prompt_version!r}")
     checks = cfg["checks"]
     proposal = cfg["proposal"]
-    return CheckLimits(
+    base = CheckLimits(
         max_observed_issues=int(proposal["max_observed_issues"]),
         max_hypotheses=int(proposal["max_hypotheses"]),
         max_string_chars=int(checks["max_string_chars"]),
@@ -112,6 +136,15 @@ def limits_from_config(cfg: dict[str, Any]) -> CheckLimits:
         max_entities=int(checks["max_entities_in_prompt"]),
         box_decimals=int(checks["box_decimals"]),
         score_decimals=int(checks["score_decimals"]),
+    )
+    if prompt_version == PROMPT_V1:
+        return base
+    v2 = checks["v2"]
+    return replace(
+        base,
+        max_relations=int(v2["max_relations_in_prompt"]),
+        max_entities=int(v2["max_entities_in_prompt"]),
+        merge_iou=float(v2["merge_iou"]),
     )
 
 
@@ -129,6 +162,8 @@ class RenderedGraph:
     n_entities_total: int
     n_relations_shown: int
     n_relations_total: int
+    entity_alias: dict[str, str] = field(default_factory=dict)
+    relation_alias: dict[str, str] = field(default_factory=dict)
 
 
 def _coarse_position(cx: float, cy: float) -> str:
@@ -166,10 +201,99 @@ def _select_entities(
     return sorted(chosen, key=lambda e: order[e["id"]])
 
 
+def box_iou(a: Any, b: Any) -> float:
+    """IoU of two xyxy boxes (continuous coordinates); 0 if either is missing."""
+    if not a or not b:
+        return 0.0
+    ix = max(0.0, min(a[2], b[2]) - max(a[0], b[0]))
+    iy = max(0.0, min(a[3], b[3]) - max(a[1], b[1]))
+    inter = ix * iy
+    area_a = max(0.0, a[2] - a[0]) * max(0.0, a[3] - a[1])
+    area_b = max(0.0, b[2] - b[0]) * max(0.0, b[3] - b[1])
+    union = area_a + area_b - inter
+    return inter / union if union > 0 else 0.0
+
+
+def merge_entities(
+    entities: list[dict[str, Any]], iou_threshold: float
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """Greedy same-label merge by score; returns (kept in graph order, alias->kept id)."""
+    by_score = sorted(entities, key=lambda e: -float(e.get("score", 0.0)))
+    kept: list[dict[str, Any]] = []
+    alias: dict[str, str] = {}
+    for entity in by_score:
+        match = next(
+            (
+                k
+                for k in kept
+                if k["label"] == entity["label"]
+                and box_iou(k.get("box_xyxy_base"), entity.get("box_xyxy_base"))
+                > iou_threshold
+            ),
+            None,
+        )
+        if match is None:
+            kept.append(entity)
+        else:
+            alias[entity["id"]] = match["id"]
+    order = {e["id"]: i for i, e in enumerate(entities)}
+    return sorted(kept, key=lambda e: order[e["id"]]), alias
+
+
+def remap_relations(
+    relations: list[dict[str, Any]], alias: dict[str, str]
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
+    """Apply entity aliases; drop self-loops; dedupe (sub, pred, obj) in rank order."""
+    out: list[dict[str, Any]] = []
+    first: dict[tuple[str, str, str], str] = {}
+    rel_alias: dict[str, str] = {}
+    for rel in relations:
+        sub = alias.get(rel["sub"], rel["sub"])
+        obj = alias.get(rel["obj"], rel["obj"])
+        if sub == obj:
+            continue
+        key = (sub, rel["pred"], obj)
+        if key in first:
+            rel_alias[rel["id"]] = first[key]
+            continue
+        first[key] = rel["id"]
+        out.append({**rel, "sub": sub, "obj": obj})
+    return out, rel_alias
+
+
+def _select_entities_strict(
+    entities: list[dict[str, Any]], relations: list[dict[str, Any]], cap: int
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Hard entity cap: relation endpoints first (by score), then others by score.
+
+    Relations whose endpoints did not fit are dropped.
+    """
+    referenced = {r["sub"] for r in relations} | {r["obj"] for r in relations}
+    by_score = sorted(entities, key=lambda e: -float(e.get("score", 0.0)))
+    chosen = [e for e in by_score if e["id"] in referenced][:cap]
+    room = max(0, cap - len(chosen))
+    chosen += [e for e in by_score if e["id"] not in referenced][:room]
+    ids = {e["id"] for e in chosen}
+    order = {e["id"]: i for i, e in enumerate(entities)}
+    kept_rel = [r for r in relations if r["sub"] in ids and r["obj"] in ids]
+    return sorted(chosen, key=lambda e: order[e["id"]]), kept_rel
+
+
 def render_graph(graph: dict[str, Any], limits: CheckLimits) -> RenderedGraph:
-    """Compact, state-only textual rendering of one graph."""
+    """Compact, state-only textual rendering of one graph.
+
+    v1 (merge_iou is None): top-N relations, their endpoints always shown.
+    v2: same-label IoU merge, strict entity cap, caps stated in the text.
+    Shown ids are always real graph ids (merge keeps the highest-score member).
+    """
     entities = list(graph.get("entities", []))
     relations = list(graph.get("relations", []))
+    labels = {e["id"]: e["label"] for e in entities}
+    entity_alias: dict[str, str] = {}
+    relation_alias: dict[str, str] = {}
+    if limits.merge_iou is not None:
+        entities, entity_alias = merge_entities(entities, limits.merge_iou)
+        relations, relation_alias = remap_relations(relations, entity_alias)
     entity_ids_all = {e["id"] for e in entities}
     valid_relations = [
         r
@@ -177,12 +301,23 @@ def render_graph(graph: dict[str, Any], limits: CheckLimits) -> RenderedGraph:
         if r["sub"] in entity_ids_all and r["obj"] in entity_ids_all
     ]
     kept_relations = valid_relations[: limits.max_relations]
-    kept_entities = _select_entities(entities, kept_relations, limits.max_entities)
-    labels = {e["id"]: e["label"] for e in entities}
+    if limits.merge_iou is None:
+        kept_entities = _select_entities(entities, kept_relations, limits.max_entities)
+    else:
+        kept_entities, kept_relations = _select_entities_strict(
+            entities, kept_relations, limits.max_entities
+        )
     base_size = graph.get("base_size")
     sd = limits.score_decimals
 
     lines = [GRAPH_HEADER, ""]
+    if limits.merge_iou is not None:
+        note = MERGE_NOTE_TEMPLATE.format(
+            iou=limits.merge_iou,
+            max_entities=limits.max_entities,
+            max_relations=limits.max_relations,
+        )
+        lines = [GRAPH_HEADER, note, ""]
     lines.append(f"Entities ({len(kept_entities)} shown of {len(entities)}):")
     if not kept_entities:
         lines.append("(none)")
@@ -216,6 +351,8 @@ def render_graph(graph: dict[str, Any], limits: CheckLimits) -> RenderedGraph:
         n_entities_total=len(entities),
         n_relations_shown=len(kept_relations),
         n_relations_total=len(valid_relations),
+        entity_alias=entity_alias,
+        relation_alias=relation_alias,
     )
 
 
@@ -224,17 +361,23 @@ def render_graph(graph: dict[str, Any], limits: CheckLimits) -> RenderedGraph:
 # ---------------------------------------------------------------------------
 
 
-def check_system_prompt(limits: CheckLimits) -> str:
+def check_system_prompt(limits: CheckLimits, prompt_version: str = PROMPT_V1) -> str:
+    is_v2 = prompt_version == PROMPT_V2
     schema = CHECK_SCHEMA_TEMPLATE.format(
         max_obs=limits.max_observed_issues,
         max_hyp=limits.max_hypotheses,
         max_chars=limits.max_string_chars,
+        target_placeholder=TARGET_PLACEHOLDER_V2 if is_v2 else TARGET_PLACEHOLDER_V1,
     )
-    return f"{COMMON_PREAMBLE}\n\n{CHECK_TASK}\n\n{schema}"
+    task = f"{CHECK_TASK} {CHECK_TASK_V2_ADDENDUM}" if is_v2 else CHECK_TASK
+    return f"{COMMON_PREAMBLE}\n\n{task}\n\n{schema}"
 
 
 def build_check_messages(
-    rendered: RenderedGraph, limits: CheckLimits, image_b64: str | None
+    rendered: RenderedGraph,
+    limits: CheckLimits,
+    image_b64: str | None,
+    prompt_version: str = PROMPT_V1,
 ) -> list[dict[str, Any]]:
     user_text = rendered.text
     if image_b64 is not None:
@@ -242,7 +385,8 @@ def build_check_messages(
     user: dict[str, Any] = {"role": "user", "content": user_text}
     if image_b64 is not None:
         user["images"] = [image_b64]
-    return [{"role": "system", "content": check_system_prompt(limits)}, user]
+    system = check_system_prompt(limits, prompt_version)
+    return [{"role": "system", "content": system}, user]
 
 
 # ---------------------------------------------------------------------------
@@ -438,8 +582,12 @@ def generate_checks(
     schema_retries: int,
     out_path: Path,
     image_path: Path | None = None,
+    prompt_version: str = PROMPT_V1,
 ) -> tuple[dict[str, Any], bool]:
-    """Run F1/F2 check generation for one state. Returns (record, from_cache)."""
+    """Run F1/F2 check generation for one state. Returns (record, from_cache).
+
+    ``limits`` must come from ``limits_from_config(cfg, prompt_version)``.
+    """
     if path not in VALID_PATHS:
         raise ValueError(f"unknown path {path!r}")
     if (path == PATH_F1) != (image_path is not None):
@@ -448,25 +596,26 @@ def generate_checks(
     image_b64, image_sha = (None, None)
     if image_path is not None:
         image_b64, image_sha = encode_image_file(image_path)
-    prompt_sha = sha256_text(check_system_prompt(limits))
+    prompt_sha = sha256_text(check_system_prompt(limits, prompt_version))
     graph_sha = sha256_text(rendered.text)
     settings_record = client.settings.record()
-    cache_key = sha256_json(
-        {
-            "stage": "checks",
-            "path": path,
-            "model": model,
-            "prompt_sha256": prompt_sha,
-            "options": settings_record,
-            "graph_sha256": graph_sha,
-            "image_sha256": image_sha,
-        }
-    )
+    key_fields: dict[str, Any] = {
+        "stage": "checks",
+        "path": path,
+        "model": model,
+        "prompt_sha256": prompt_sha,
+        "options": settings_record,
+        "graph_sha256": graph_sha,
+        "image_sha256": image_sha,
+    }
+    if prompt_version != PROMPT_V1:  # keep v1 keys identical to earlier runs
+        key_fields["prompt_version"] = prompt_version
+    cache_key = sha256_json(key_fields)
     cached = load_cached(out_path, cache_key)
     if cached is not None:
         return cached, True
 
-    messages = build_check_messages(rendered, limits, image_b64)
+    messages = build_check_messages(rendered, limits, image_b64, prompt_version)
     outcome = structured_chat(
         client,
         model,
@@ -477,6 +626,7 @@ def generate_checks(
     record: dict[str, Any] = {
         "path": path,
         "model": model,
+        "prompt_version": prompt_version,
         "image_id": graph.get("image_id"),
         "level": graph.get("level"),
         "prompt_sha256": prompt_sha,
@@ -490,6 +640,8 @@ def generate_checks(
             "n_entities_total": rendered.n_entities_total,
             "n_relations_shown": rendered.n_relations_shown,
             "n_relations_total": rendered.n_relations_total,
+            "entity_alias": rendered.entity_alias,
+            "relation_alias": rendered.relation_alias,
         },
         "checks": outcome.parsed,
         **outcome_fields(outcome),

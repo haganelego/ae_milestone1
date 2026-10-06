@@ -106,3 +106,73 @@ def test_mean_recall_official_divides_by_all_predicates() -> None:
     expected = 1.0 / (sg.NUM_PREDICATES + sg.OFFICIAL_MR_EPS)  # wearing 1.0, has 0.0
     assert sg.mean_recall_official([m], 50) == pytest.approx(expected)
     assert sg.mean_recall_present([m], 50) == pytest.approx(0.5)
+
+
+# --------------------------------------------------------------------------
+# GT-referenced RelSGScore (label sets, no boxes)
+# --------------------------------------------------------------------------
+CUP, TABLE, ON, NEAR = 3, 7, 21, 30
+
+
+def _scene(objects: list[int], rels: list[tuple[int, int, int]]) -> dict:
+    return {
+        "objects": [{"class_id": c} for c in objects],
+        "relationships": [
+            {"subject_class_id": s, "predicate_id": p, "object_class_id": o}
+            for s, p, o in rels
+        ],
+    }
+
+
+def _label_graph(
+    ents: list[tuple[int, float]], rels: list[tuple[int, int, int, float]]
+) -> dict:
+    """ents: (label_id, score); rels: (sub_idx, pred_id, obj_idx, trp_score)."""
+    return {
+        "entities": [
+            {"id": f"v{i + 1}", "label_id": lab, "score": sc}
+            for i, (lab, sc) in enumerate(ents)
+        ],
+        "relations": [
+            {"sub": f"v{s + 1}", "obj": f"v{o + 1}", "pred_id": p, "trp_score": ts}
+            for s, p, o, ts in rels
+        ],
+    }
+
+
+def test_set_recall_and_precision_on_label_sets() -> None:
+    gt_nodes, gt_trips = sg.gt_label_sets(
+        _scene([MAN, CUP, TABLE, CUP], [(CUP, ON, TABLE), (MAN, NEAR, TABLE)])
+    )
+    assert gt_nodes == {MAN, CUP, TABLE}
+    graph = _label_graph(
+        [(CUP, 0.9), (TABLE, 0.8), (SHIRT, 0.7), (CUP, 0.6)],
+        [(0, ON, 1, 0.5), (3, ON, 1, 0.4), (2, ON, 1, 0.3)],
+    )
+    r = sg.relsg_score(graph, gt_nodes, gt_trips, None, None)
+    assert r.node_recall == pytest.approx(2 / 3)  # duplicates collapse in sets
+    assert r.trip_recall == pytest.approx(1 / 2)
+    assert r.relsg == pytest.approx(0.5 * 2 / 3 + 0.5 * 1 / 2)
+    assert r.node_prec == pytest.approx(2 / 3)  # {cup, table, shirt}
+    assert r.trip_prec == pytest.approx(1 / 2)  # {(cup,on,table), (shirt,on,table)}
+
+
+def test_relsg_caps_keep_top_scored_items() -> None:
+    gt_nodes, gt_trips = {MAN}, {(MAN, NEAR, TABLE)}
+    graph = _label_graph(
+        [(CUP, 0.9), (MAN, 0.1), (TABLE, 0.5)],
+        [(0, ON, 2, 0.9), (1, NEAR, 2, 0.1)],
+    )
+    capped = sg.relsg_score(graph, gt_nodes, gt_trips, 1, 1)
+    assert capped.node_recall == 0.0 and capped.trip_recall == 0.0
+    uncapped = sg.relsg_score(graph, gt_nodes, gt_trips, None, None)
+    assert uncapped.relsg == pytest.approx(1.0)
+
+
+def test_relsg_nan_fallback_and_empty_prediction() -> None:
+    assert sg.combine_relsg(0.4, float("nan")) == pytest.approx(0.4)
+    assert sg.combine_relsg(float("nan"), 0.2) == pytest.approx(0.2)
+    assert np.isnan(sg.combine_relsg(float("nan"), float("nan")))
+    r = sg.relsg_score(_label_graph([], []), {MAN}, {(MAN, NEAR, TABLE)}, 20, 50)
+    assert r.relsg == 0.0
+    assert np.isnan(r.node_prec) and np.isnan(r.trip_prec)

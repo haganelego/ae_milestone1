@@ -175,3 +175,181 @@ def mean_recall_present(metrics: Sequence[ImageMetrics], k: int) -> float:
     if not per_pred:
         return 0.0
     return float(np.mean([np.mean(v) for v in per_pred.values()]))
+
+
+# --------------------------------------------------------------------------
+# GT-referenced RelSGScore (MIRU label-set score, boxes ignored)
+# --------------------------------------------------------------------------
+# Same combination rule as scripts/eval_topk_oracle.py::compute_rel_sg_score:
+# 0.5 * node_recall + 0.5 * triplet_recall over label SETS; if one reference
+# set is empty its component is NaN and the other component is used alone.
+RELSG_NODE_WEIGHT = 0.5
+RELSG_TRIP_WEIGHT = 0.5
+RELSG_DEFAULT_TOP_ENTITIES = 20
+RELSG_DEFAULT_TOP_RELATIONS = 50
+
+LabelTriplet = tuple[int, int, int]  # (sub class id, predicate id, obj class id)
+
+
+@dataclass(frozen=True)
+class RelSgScore:
+    node_recall: float
+    trip_recall: float
+    relsg: float
+    node_prec: float
+    trip_prec: float
+
+
+def gt_label_sets(scene_graph: dict[str, Any]) -> tuple[set[int], set[LabelTriplet]]:
+    """Object class-id set and (sub, pred, obj) id-triplet set of a GT graph."""
+    nodes = {int(o["class_id"]) for o in scene_graph["objects"]}
+    trips = {
+        (int(r["subject_class_id"]), int(r["predicate_id"]), int(r["object_class_id"]))
+        for r in scene_graph["relationships"]
+    }
+    return nodes, trips
+
+
+def pred_label_sets(
+    graph: dict[str, Any], top_entities: int | None, top_relations: int | None
+) -> tuple[set[int], set[LabelTriplet]]:
+    """Label sets of a graph JSON; ``None`` caps mean uncapped.
+
+    Entities: top-N by ``score``; relations: top-N by ``trp_score`` (stable
+    sort, so ties keep the stored rank order).
+    """
+    ents = sorted(graph["entities"], key=lambda e: -float(e["score"]))
+    rels = sorted(graph["relations"], key=lambda r: -float(r["trp_score"]))
+    ents = ents if top_entities is None else ents[:top_entities]
+    rels = rels if top_relations is None else rels[:top_relations]
+    label_of = {e["id"]: int(e["label_id"]) for e in graph["entities"]}
+    nodes = {int(e["label_id"]) for e in ents}
+    trips = {(label_of[r["sub"]], int(r["pred_id"]), label_of[r["obj"]]) for r in rels}
+    return nodes, trips
+
+
+def set_recall(pred: set, ref: set) -> float:
+    """|pred ∩ ref| / |ref|; NaN if the reference set is empty."""
+    return len(pred & ref) / len(ref) if ref else float("nan")
+
+
+def set_precision(pred: set, ref: set) -> float:
+    """|pred ∩ ref| / |pred|; NaN if the prediction set is empty."""
+    return len(pred & ref) / len(pred) if pred else float("nan")
+
+
+def combine_relsg(node_recall: float, trip_recall: float) -> float:
+    """MIRU combination with NaN fallback to the other component."""
+    node_nan, trip_nan = np.isnan(node_recall), np.isnan(trip_recall)
+    if trip_nan:
+        return float("nan") if node_nan else float(node_recall)
+    if node_nan:
+        return float(trip_recall)
+    return RELSG_NODE_WEIGHT * node_recall + RELSG_TRIP_WEIGHT * trip_recall
+
+
+def relsg_score(
+    graph: dict[str, Any],
+    gt_nodes: set[int],
+    gt_trips: set[LabelTriplet],
+    top_entities: int | None,
+    top_relations: int | None,
+) -> RelSgScore:
+    nodes, trips = pred_label_sets(graph, top_entities, top_relations)
+    node_recall = set_recall(nodes, gt_nodes)
+    trip_recall = set_recall(trips, gt_trips)
+    return RelSgScore(
+        node_recall=node_recall,
+        trip_recall=trip_recall,
+        relsg=combine_relsg(node_recall, trip_recall),
+        node_prec=set_precision(nodes, gt_nodes),
+        trip_prec=set_precision(trips, gt_trips),
+    )
+
+
+# --------------------------------------------------------------------------
+# Precision-aware metrics (robust to PGSG's dense, duplicated output)
+# --------------------------------------------------------------------------
+# Detection: top-K entities by score are matched one-to-one to GT objects
+# (label equal, +1-pixel IoU >= 0.5), greedily in score order, each prediction
+# taking the unclaimed GT with the highest IoU -> each GT counted once.
+# Triplets: in rank order each prediction may claim one not-yet-claimed GT
+# relation it matches (graph constraint), so duplicate predictions are false
+# positives. trip_prec@K = TP_K / min(K, #pred); F1@K uses that precision and
+# the one-to-one recall TP_K / #GT.
+DET_TOPK = 20
+F1_TOPK = 20
+TRIP_PREC_TOPK = (20, 50)
+
+
+def gt_objects(scene_graph: dict[str, Any]) -> tuple[np.ndarray, np.ndarray]:
+    """(labels (O,), xyxy boxes (O, 4)) of a GT scene graph."""
+    objs = scene_graph["objects"]
+    labels = np.array([int(o["class_id"]) for o in objs], dtype=int)
+    boxes = np.array([o["bbox"] for o in objs], dtype=float).reshape(-1, BOX_DIM)
+    return labels, boxes
+
+
+def det_match(
+    graph: dict[str, Any],
+    gt_labels: np.ndarray,
+    gt_boxes: np.ndarray,
+    top_k: int = DET_TOPK,
+    box_key: str = "box_xyxy_orig",
+) -> tuple[float, float]:
+    """(det_recall@K, det_prec@K); recall NaN without GT, precision NaN without preds."""
+    preds = sorted(graph["entities"], key=lambda e: -float(e["score"]))[:top_k]
+    claimed = np.zeros(len(gt_labels), dtype=bool)
+    tp = 0
+    for ent in preds:
+        cand = np.where((gt_labels == int(ent["label_id"])) & ~claimed)[0]
+        if len(cand) == 0:
+            continue
+        iou = iou_plus_one(np.asarray(ent[box_key]), gt_boxes[cand])[0]
+        best = int(np.argmax(iou))
+        if iou[best] >= IOU_THRESHOLD:
+            claimed[cand[best]] = True
+            tp += 1
+    recall = tp / len(gt_labels) if len(gt_labels) else float("nan")
+    precision = tp / len(preds) if preds else float("nan")
+    return recall, precision
+
+
+def one_to_one_tp(pred_to_gt: Sequence[Sequence[int]], k: int) -> int:
+    """True positives among the top-k predictions with one claim per GT."""
+    claimed: set[int] = set()
+    tp = 0
+    for hits in pred_to_gt[:k]:
+        free = [g for g in hits if g not in claimed]
+        if free:
+            claimed.add(free[0])
+            tp += 1
+    return tp
+
+
+def triplet_precision_f1(graph: dict[str, Any], gt: TripletSet) -> dict[str, float]:
+    """trip_prec@K for K in TRIP_PREC_TOPK and F1@F1_TOPK (graph constraint)."""
+    pred = pred_triplets(graph)
+    pred_to_gt = match_predictions(gt, pred)
+    out: dict[str, float] = {}
+    for k in TRIP_PREC_TOPK:
+        n = min(k, len(pred))
+        out[f"trip_prec{k}"] = one_to_one_tp(pred_to_gt, k) / n if n else float("nan")
+    tp = one_to_one_tp(pred_to_gt, F1_TOPK)
+    n = min(F1_TOPK, len(pred))
+    prec = tp / n if n else 0.0
+    rec = tp / len(gt) if len(gt) else 0.0
+    out[f"F1_{F1_TOPK}"] = 2 * prec * rec / (prec + rec) if prec + rec > 0 else 0.0
+    return out
+
+
+def precision_metrics(
+    graph: dict[str, Any], gt: TripletSet, gt_labels: np.ndarray, gt_boxes: np.ndarray
+) -> dict[str, float]:
+    """det_recall20, det_prec20, trip_prec20/50, F1_20 for one state."""
+    det_recall, det_prec = det_match(graph, gt_labels, gt_boxes)
+    return {
+        f"det_recall{DET_TOPK}": det_recall,
+        f"det_prec{DET_TOPK}": det_prec,
+        **triplet_precision_f1(graph, gt),
+    }

@@ -1,0 +1,224 @@
+{
+ "generated_at": "2026-10-07T08:11:16",
+ "script": "scripts/33_robovis_preflight.py",
+ "config": {
+  "path": "configs/robovis2027.yaml",
+  "sha256": "1329b91990482fbddacaeecac209177896c1864ba352c174338b729bf04528b9",
+  "spec_version": 1.0
+ },
+ "repo": {
+  "commit": "1dd1ba2547ea6e5046c6b637a0570c3048e44a6d",
+  "branch": "feature/robovis2027",
+  "dirty": [
+   "claude/docs/research/robovis2027-worklog.md",
+   "Pix2Grp_CVPR2024",
+   "configs/robovis2027.yaml",
+   "scripts/28_robovis_stage_metrics.py",
+   "scripts/29_robovis_checks.py",
+   "scripts/29b_robovis_checks_summary.py",
+   "scripts/30_robovis_replay_eval.py",
+   "scripts/31_robovis_figures.py",
+   "src/milestone1/check_generator.py",
+   "src/milestone1/judge.py",
+   "src/milestone1/robovis_eval.py",
+   "src/milestone1/robovis_replay.py",
+   "src/milestone1/robovis_sgdet.py",
+   "src/milestone1/stop_policy.py",
+   "tests/fixtures/make_robovis_synthetic.py",
+   "tests/fixtures/robovis_synthetic/stage_metrics.csv",
+   "tests/test_robovis_eval.py",
+   "tests/test_robovis_sgdet.py",
+   "tests/test_stop_policy.py",
+   "outputs/robovis2027/",
+   "scripts/32_robovis_signal_diag.py",
+   "scripts/33_robovis_preflight.py",
+   "src/milestone1/robovis_diag.py",
+   "tests/test_prompt_v2.py"
+  ]
+ },
+ "envs": {
+  "egtr": {
+   "project": "egtr",
+   "python": "3.11.15",
+   "torch": "2.7.1+cu128",
+   "cuda": "12.8",
+   "cudnn": 90701,
+   "cuda_available": true
+  },
+  "pgsg": {
+   "project": "envs/pgsg",
+   "python": "3.11.15",
+   "torch": "2.7.1+cu128",
+   "cuda": "12.8",
+   "cudnn": 90701,
+   "cuda_available": true
+  }
+ },
+ "hardware": {
+  "hostname": "hagane24",
+  "os": "Linux-7.0.0-34-generic-x86_64-with-glibc2.39",
+  "cpu_count": 24,
+  "ram_gib": 125.2,
+  "gpus": [
+   {
+    "name": "NVIDIA GeForce RTX 5080",
+    "vram_mib": 16303,
+    "driver": "580.173.02"
+   }
+  ],
+  "disk_free_gib": 413.4,
+  "disk_total_gib": 936.8
+ },
+ "vg": {
+  "vg_root": "/home/kanaoka/usr/dataset/vg",
+  "test.json_sha256": "e786550a74a2336c07139c23e6d952cdeac14bf3d04feddf2b210cdba1853238",
+  "rel.json_sha256": "ab5d435745d5683b4f672311a2ec8618d9126909d291b663deaf406c6497d32f",
+  "images_dir": "/home/kanaoka/usr/dataset/vg/images",
+  "images_count": 108249
+ },
+ "dataset": {
+  "selected_images": {
+   "path": "data/processed/robovis2027/selected_images.json",
+   "sha256": "66218ff1702b40ef265501007a80b80d602956bc19eb9ad542f3f1b86d26ff5e",
+   "counts": {
+    "test": 100,
+    "dev": 20
+   }
+  },
+  "levels_manifest": {
+   "path": "data/processed/robovis2027/levels_manifest.json",
+   "sha256": "4bf406eefcc19298ceebf0efa664306f94c835cb86593d8749e0087644afead1",
+   "n_images": 120
+  },
+  "degraded_images": {
+   "path": "data/processed/robovis2027/degraded_images",
+   "n_jpg": 2400,
+   "expected": 2400
+  }
+ },
+ "pgsg": {
+  "submodule_commit": "cff742070366a6e702a08b71130eb75fcc4d5f7a",
+  "checkpoint": {
+   "path": "Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth",
+   "filename": "vg_sgg.pth",
+   "sha256": "d90c63ca6e0f7ea516c5f0ae23e2520085011fbc2c04ee1c56f23a2e42e299eb"
+  },
+  "eval_config": {
+   "path": "configs/pgsg/rel_det_vg_eval_local.yaml",
+   "sha256": "359211ce7df4e2d12d7ca442e6aa256224d7d400437c71dd5b6fafe40bcd3396"
+  },
+  "categories_dict": {
+   "path": "data/processed/pgsg_vg/categories_dict.json",
+   "sha256": "921bf429ec237aecbd95ecb773f825e3c590342f59505cfea15e1bfcb3683975"
+  },
+  "license": {
+   "path": "Pix2Grp_CVPR2024/LICENSE.txt",
+   "first_line": "BSD 3-Clause License"
+  },
+  "generation_graph_block": {
+   "max_length": 1024,
+   "min_length": 768,
+   "top_p": 0.9,
+   "repetition_penalty": 1.1,
+   "num_segments": 36
+  },
+  "generation_resolved": {
+   "generation_mode": "sampling",
+   "use_nucleus_sampling": true,
+   "num_beams": 1,
+   "max_length": 1024,
+   "min_length": 768,
+   "min_length_note": "passed by the task but unused by PGSG generate()",
+   "top_p": 0.9,
+   "repetition_penalty_passed": 1.5,
+   "repetition_penalty_effective": 1.1,
+   "repetition_penalty_note": "med.py generate_from_encoder hard-codes 1.1 when sampling",
+   "hf_top_k": 50,
+   "seg_len": 32,
+   "segment_max_new_tokens": 32,
+   "segment_min_new_tokens": 24,
+   "num_segments": 36,
+   "prompt": "The visual scene of: ",
+   "prompt_length": 6,
+   "top_k_ent_label_num": 1,
+   "top_k_predicate_label_num": 3,
+   "post_proc_cfg": {
+    "ent_ampl_scale": 5.0,
+    "rel_ampl_scale": 2.0
+   },
+   "entity_nms_iou": 0.92,
+   "max_relations": 512
+  },
+  "generation_source": "outputs/robovis2027/dev_r0 (graph JSON + manifest)"
+ },
+ "ollama": {
+  "endpoint": "http://localhost:11434/api/chat",
+  "think": false,
+  "checks": {
+   "check_model": "qwen3.5:4b",
+   "judge_model": "qwen3.5:4b",
+   "json_mode": true,
+   "options": {
+    "temperature": 0,
+    "seed": 20271007,
+    "num_ctx": 8192,
+    "num_predict": 1536
+   },
+   "request_timeout_s": 300,
+   "backoff_base_s": 2.0,
+   "backoff_max_s": 30.0,
+   "max_relations_in_prompt": 50,
+   "max_entities_in_prompt": 60,
+   "max_string_chars": 240,
+   "box_decimals": 2,
+   "score_decimals": 2,
+   "v2": {
+    "max_relations_in_prompt": 20,
+    "max_entities_in_prompt": 30,
+    "merge_iou": 0.5
+   }
+  },
+  "ollama_version": "0.30.4",
+  "models": {
+   "qwen3.5:4b": {
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "size_bytes": 3389983735,
+    "details": {
+     "parent_model": "",
+     "format": "gguf",
+     "family": "qwen35",
+     "families": [
+      "qwen35"
+     ],
+     "parameter_size": "4.7B",
+     "quantization_level": "Q4_K_M",
+     "context_length": 262144,
+     "embedding_length": 2560
+    }
+   },
+   "qwen3.5:9b": {
+    "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7",
+    "size_bytes": 6594474711,
+    "details": {
+     "parent_model": "",
+     "format": "gguf",
+     "family": "qwen35",
+     "families": [
+      "qwen35"
+     ],
+     "parameter_size": "9.7B",
+     "quantization_level": "Q4_K_M",
+     "context_length": 262144,
+     "embedding_length": 4096
+    }
+   }
+  }
+ },
+ "budget": {
+  "max_model_calls": 9000,
+  "max_gpu_hours": null,
+  "concurrency": 1,
+  "schema_retries": 1,
+  "transient_retries": 5
+ }
+}

@@ -12,6 +12,9 @@ not on --levels. The torch seed of a batch is
 ``state_seed(chunk_image_ids, level, base_seed)`` (sha256-based). ``--limit``
 reproduces full-run outputs only when it is a multiple of --batch-size.
 
+--seed-offset N (N > 0) repeats the run with base seed + N into graphs_seed<N>/
+(manifest_seed<N>.json) for multi-seed q_t smoothing; graphs/ is never touched.
+
 Usage (from repo root):
   PYTHONPATH=Pix2Grp_CVPR2024 PYTHONDONTWRITEBYTECODE=1 uv run --project envs/pgsg \
     python scripts/25_pgsg_infer.py --config configs/robovis2027.yaml \
@@ -71,6 +74,13 @@ def parse_args() -> argparse.Namespace:
         "--base-seed", type=int, default=None, help="default: eval yaml run.seed"
     )
     parser.add_argument("--device", default="cuda")
+    parser.add_argument(
+        "--seed-offset",
+        type=int,
+        default=0,
+        help="N > 0: base seed + N, graphs -> <run>/graphs_seed<N>/, "
+        "manifest -> manifest_seed<N>.json (graphs/ untouched)",
+    )
     return parser.parse_args()
 
 
@@ -92,6 +102,17 @@ def git_info() -> dict[str, Any]:
             str(path.relative_to(REPO_ROOT)): sha256_file(path) for path in CODE_FILES
         },
     }
+
+
+def graphs_subdir(seed_offset: int) -> str:
+    """graphs/ for the base seed, graphs_seed<N>/ for offset N > 0."""
+    if seed_offset < 0:
+        raise ValueError("--seed-offset must be >= 0")
+    return "graphs" if seed_offset == 0 else f"graphs_seed{seed_offset}"
+
+
+def manifest_name(seed_offset: int) -> str:
+    return "manifest.json" if seed_offset == 0 else f"manifest_seed{seed_offset}.json"
 
 
 def write_json_atomic(path: Path, payload: Any) -> None:
@@ -158,11 +179,17 @@ class Runner:
         self.rt = pa.load_pgsg(self.eval_config, device=args.device)
         self.base_seed = (
             args.base_seed if args.base_seed is not None else int(self.rt.run_cfg.seed)
-        )
+        ) + args.seed_offset
+        self.graphs_subdir = graphs_subdir(args.seed_offset)
         self.generation = pa.graph_generation_block(self.rt.resolved)
 
     def graph_path(self, image_id: int, level: int) -> Path:
-        return self.out_dir / "graphs" / str(image_id) / f"{level_name(level)}.json"
+        return (
+            self.out_dir
+            / self.graphs_subdir
+            / str(image_id)
+            / f"{level_name(level)}.json"
+        )
 
     def run_chunk(self, ids: list[int], level: int) -> dict[str, dict[str, Any]]:
         """Generate one (image chunk, level) batch; returns manifest state records."""
@@ -261,7 +288,7 @@ def main() -> None:
     ids = [int(r["image_id"]) for r in rows]
     chunks = [ids[i : i + args.batch_size] for i in range(0, len(ids), args.batch_size)]
 
-    manifest_path = out_dir / "manifest.json"
+    manifest_path = out_dir / manifest_name(args.seed_offset)
     manifest = json.loads(manifest_path.read_text()) if manifest_path.exists() else {}
     if manifest and manifest.get("split") != args.split:
         raise ValueError(
@@ -297,6 +324,8 @@ def main() -> None:
             "batching": {
                 "batch_size": args.batch_size,
                 "base_seed": runner.base_seed,
+                "seed_offset": args.seed_offset,
+                "graphs_subdir": runner.graphs_subdir,
                 "rule": "batch = consecutive images of the split (selected_images rank order) at one level",
                 "seed_function": "milestone1.pgsg_adapter.state_seed(batch_image_ids, level, base_seed)",
                 "fallback": "if PGSG raises on an image with no parsable triplet, the chunk is re-run per image with state_seed([image_id], level, base_seed)",

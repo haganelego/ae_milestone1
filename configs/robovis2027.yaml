@@ -71,7 +71,12 @@ evaluation:
   bootstrap_seed: 20271007
   ci_level: 0.95
   oracle_ratio: 0.9             # relative-stable oracle: q_u >= ratio * qmax for all u >= t
-  recall_k: 50                  # q_t = R@50
+  recall_k: 50                  # k of R@k / mR@k (per-predicate sidecar)
+  q_metric: R50                 # stage_metrics column used as q_t (R50 | relsg_gt | ...)
+  relsg_top_entities: 20        # GT-RelSGScore cap: top-N entities by score (label set)
+  relsg_top_relations: 50       # GT-RelSGScore cap: top-N relations by trp_score (triplet set)
+  clean_merge_iou: 0.5          # cleaned observed graph G: same-label entity merge IoU (>)
+  clean_top_relations: 20       # cleaned observed graph G: top-K relations by trp_score
 
 execution:
   schema_retries: 1
@@ -109,3 +114,7 @@ checks:
   max_string_chars: 240
   box_decimals: 2              # normalized box coords in the rendering
   score_decimals: 2
+  v2:                          # --prompt-version v2 rendering overrides (F1_v2 / F1v_v2)
+    max_relations_in_prompt: 20
+    max_entities_in_prompt: 30 # strict cap (v1 always keeps relation endpoints)
+    merge_iou: 0.5             # merge same-label entities with box IoU > this

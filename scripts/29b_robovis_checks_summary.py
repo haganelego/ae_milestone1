@@ -44,6 +44,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--config", default="configs/robovis2027.yaml")
     p.add_argument("--run-id", required=True)
     p.add_argument("--variant", required=True, help="F1, F2, F2__9b, ...")
+    p.add_argument(
+        "--checks-variant",
+        default=None,
+        help="checks dir if different from --variant (judge-only runs, e.g. F2)",
+    )
     return p.parse_args()
 
 
@@ -177,10 +182,11 @@ def main() -> None:
     cfg = load_robovis_config(resolve(args.config))
     theta = int(cfg["proposal"]["theta"])
     run_root = resolve(cfg["output_root"]) / args.run_id
-    checks = iter_records(run_root / "checks" / args.variant)
+    checks_variant = args.checks_variant or args.variant
+    checks = iter_records(run_root / "checks" / checks_variant)
     decisions = iter_records(run_root / "decisions" / args.variant)
     if not checks:
-        sys.exit(f"no checks under {run_root / 'checks' / args.variant}")
+        sys.exit(f"no checks under {run_root / 'checks' / checks_variant}")
     checks_by_key = {(i, lv): r for i, lv, r in checks}
 
     levels = sorted({lv for _, lv, _ in checks})
@@ -203,6 +209,7 @@ def main() -> None:
     summary = {
         "run_id": args.run_id,
         "variant": args.variant,
+        "checks_variant": checks_variant,
         "theta": theta,
         "gate": f"status={GATE_STATUS} & limitation={GATE_LIMITATION} & anchors+region valid",
         "by_level": groups,

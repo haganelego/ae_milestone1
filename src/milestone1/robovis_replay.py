@@ -32,6 +32,7 @@ from milestone1.robovis_eval import (
     STOPS_COLUMNS,
     build_curves,
     build_eval_set,
+    configured_q_metric,
     fixed_stops,
     load_predicate_hits,
     load_stage_metrics,
@@ -42,6 +43,10 @@ from milestone1.robovis_eval import (
     summarize,
 )
 from milestone1.stop_policy import (
+    BENEFIT_GATED,
+    BENEFIT_GATED_OBS,
+    EXPLORATORY_LABEL,
+    MAIN_LABEL,
     OBSERVED_ONLY,
     PROPOSED,
     UNKNOWN_CONSERVATIVE,
@@ -69,17 +74,21 @@ class RunLayout:
 class EvalParams:
     num_levels: int
     recall_k: int
+    q_metric: str
     oracle_ratio: float
     bootstrap_repeats: int
     bootstrap_seed: int
     ci_level: float
 
     @classmethod
-    def from_config(cls, cfg: Mapping[str, Any]) -> EvalParams:
+    def from_config(
+        cls, cfg: Mapping[str, Any], q_metric: str | None = None
+    ) -> EvalParams:
         ev = cfg["evaluation"]
         return cls(
             num_levels=len(cfg["resolution"]["scales"]),
             recall_k=int(ev["recall_k"]),
+            q_metric=configured_q_metric(cfg, q_metric),
             oracle_ratio=float(ev["oracle_ratio"]),
             bootstrap_repeats=int(ev["bootstrap_repeats"]),
             bootstrap_seed=int(ev["bootstrap_seed"]),
@@ -177,7 +186,19 @@ def default_comparisons(num_levels: int) -> list[tuple[str, str]]:
         (PROPOSED, UNKNOWN_CONSERVATIVE),
         (PROPOSED, fixed_method_name(num_levels)),
         (OBSERVED_ONLY, fixed_method_name(num_levels)),
+        # Exploratory (plan deviation, needs sign-off).
+        (BENEFIT_GATED, BENEFIT_GATED_OBS),
+        (BENEFIT_GATED, fixed_method_name(num_levels)),
     ]
+
+
+FIXED_STATUS_LABEL = "baseline"
+
+
+def method_status(method: str, conditions: Mapping[str, Condition]) -> str:
+    """main / exploratory label of a method (fixed_k -> baseline)."""
+    cond = conditions.get(method)
+    return cond.status_label if cond is not None else FIXED_STATUS_LABEL
 
 
 def run_replay_eval(
@@ -186,15 +207,20 @@ def run_replay_eval(
     cfg: Mapping[str, Any],
     layout: RunLayout | None = None,
     image_ids: Sequence[int] | None = None,
+    q_metric: str | None = None,
 ) -> dict[str, Any]:
-    """Score all levels, replay stops, evaluate and write outputs. Returns a digest."""
+    """Score all levels, replay stops, evaluate and write outputs. Returns a digest.
+
+    ``q_metric`` overrides ``evaluation.q_metric`` (stage_metrics column used as
+    q_t for R(stop), residual, oracle, fixed curves, mix and bootstrap).
+    """
     layout = layout or RunLayout()
-    params = EvalParams.from_config(cfg)
+    params = EvalParams.from_config(cfg, q_metric)
     conditions = build_conditions(cfg)
     limits = ContractLimits.from_config(cfg)
 
-    stage = load_stage_metrics(input_dir / STAGE_METRICS_FILENAME, params.recall_k)
-    curves = build_curves(stage, params.recall_k, params.num_levels)
+    stage = load_stage_metrics(input_dir / STAGE_METRICS_FILENAME, params.q_metric)
+    curves = build_curves(stage, params.q_metric, params.num_levels)
     ids = sorted(curves.q) if image_ids is None else sorted(image_ids)
 
     c_rows: list[dict[str, Any]] = []
@@ -219,6 +245,15 @@ def run_replay_eval(
     per_image = per_image_metrics(stops, curves, eval_set)
     adaptive = list(conditions)
     summary = summarize(per_image, stops, curves, eval_set, pred_hits, adaptive)
+    summary.insert(
+        1, "status", [method_status(m, conditions) for m in summary["method"]]
+    )
+    # Main conditions first, then exploratory, then fixed baselines.
+    order = {MAIN_LABEL: 0, EXPLORATORY_LABEL: 1, FIXED_STATUS_LABEL: 2}
+    summary = summary.sort_values(
+        ["status", "method"],
+        key=lambda col: col.map(order) if col.name == "status" else col,
+    ).reset_index(drop=True)
     boot = paired_bootstrap(
         per_image,
         curves,
@@ -230,6 +265,8 @@ def run_replay_eval(
         params.ci_level,
     )
 
+    boot["condition_status"] = {n: c.status_label for n, c in conditions.items()}
+
     out_dir.mkdir(parents=True, exist_ok=True)
     c_table.to_csv(out_dir / "c_sequences.csv", index=False)
     stops.to_csv(out_dir / "stops.csv", index=False)
@@ -240,6 +277,7 @@ def run_replay_eval(
     eval_ids = {
         "input_dir": str(input_dir),
         "num_levels": params.num_levels,
+        "q_metric": params.q_metric,
         "n_eval": len(eval_set.ids),
         "eval_ids": list(eval_set.ids),
         "excluded": {str(k): v for k, v in eval_set.excluded.items()},
@@ -250,6 +288,8 @@ def run_replay_eval(
     return {
         "n_images": len(ids),
         "n_eval": len(eval_set.ids),
+        "q_metric": params.q_metric,
+        "oracle_status_counts": eval_ids["oracle_status_counts"],
         "outcomes": c_table.drop_duplicates(["image_id", "t"])["outcome"]
         .value_counts()
         .to_dict(),

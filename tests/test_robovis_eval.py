@@ -22,6 +22,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
+from milestone1.robovis_diag import auc, compare_paths, run_signal_diag  # noqa: E402
 from milestone1.robovis_eval import (  # noqa: E402
     ORACLE_DEFINED,
     ORACLE_INVALID_LEVELS,
@@ -30,15 +31,20 @@ from milestone1.robovis_eval import (  # noqa: E402
     FixedMix,
     RecallCurves,
     build_eval_set,
+    configured_q_metric,
     equal_observation_mix,
+    load_stage_metrics,
     mean_recall_at_stop,
     mix_recall,
     paired_bootstrap,
+    q_output_dir,
     relative_stable_oracle,
     residual,
     select_figure_examples,
 )
-from milestone1.robovis_replay import run_replay_eval  # noqa: E402
+from milestone1.robovis_replay import RunLayout, run_replay_eval  # noqa: E402
+from milestone1.robovis_sgdet import NUM_PREDICATES, OFFICIAL_MR_EPS  # noqa: E402
+from milestone1.stop_policy import build_conditions  # noqa: E402
 
 RATIO = 0.9
 FIXTURE = REPO_ROOT / "tests" / "fixtures" / "robovis_synthetic"
@@ -101,19 +107,22 @@ def test_mix_recall_interpolates_per_image() -> None:
     assert got == pytest.approx([0.7, 0.4])
 
 
-def test_mean_recall_at_stop_is_dataset_level_per_predicate() -> None:
+def test_mean_recall_at_stop_matches_official_convention() -> None:
     stops = pd.DataFrame({"image_id": [1, 2], "stop_t": [1, 2]})
     hits = pd.DataFrame(
         {
             "image_id": [1, 1, 2, 2],
             "t": [1, 1, 2, 2],
             "pred_id": [0, 1, 0, 1],
-            "n_gt": [2, 1, 2, 0],
-            "hits": [1, 1, 2, 0],
+            "n_gt": [2, 1, 4, 0],
+            "hits": [1, 1, 4, 0],
         }
     )
-    # pred 0: 3/4, pred 1: 1/1 -> mean 0.875
-    assert mean_recall_at_stop(stops, hits, [1, 2]) == pytest.approx(0.875)
+    # pred 0: mean(1/2, 4/4) = 0.75; pred 1: 1/1 (n_gt=0 row ignored).
+    present = mean_recall_at_stop(stops, hits, [1, 2], official=False)
+    assert present == pytest.approx(0.875)
+    official = mean_recall_at_stop(stops, hits, [1, 2])
+    assert official == pytest.approx(1.75 / (NUM_PREDICATES + OFFICIAL_MR_EPS))
     assert math.isnan(mean_recall_at_stop(stops, None, [1, 2]))
 
 
@@ -148,9 +157,9 @@ def test_paired_bootstrap_is_seeded_and_brackets_mean() -> None:
     first = paired_bootstrap(per_image, curves, eval_set, **kwargs)
     second = paired_bootstrap(per_image, curves, eval_set, **kwargs)
     assert first == second
-    diff = first["pairwise"]["a_minus_b"]["R50_stop"]
+    diff = first["pairwise"]["a_minus_b"]["q_stop"]
     assert diff["ci_low"] <= diff["mean"] <= diff["ci_high"]
-    eq = first["methods"]["a"]["R50_minus_eq_fixed"]
+    eq = first["methods"]["a"]["q_minus_eq_fixed"]
     # method "a" stops at a constant level -> identical to fixed_3.
     assert eq["mean"] == pytest.approx(0.0)
 
@@ -231,6 +240,10 @@ def test_replay_fixture_end_to_end(
     assert summary.loc["fixed_05", "mean_stop_t"] == 5
     assert summary.loc["proposed", "n_images"] == len(expected_eval)
     assert not math.isnan(summary.loc["proposed", "mR50_stop"])
+    assert summary.loc["proposed", "status"] == "main"
+    assert summary.loc["fixed_05", "status"] == "baseline"
+    assert "exploratory" in summary.loc["benefit_gated", "status"]
+    assert "exploratory" in summary.loc["benefit_gated_obs", "status"]
 
 
 def test_replay_without_decisions_forces_every_image(
@@ -244,3 +257,132 @@ def test_replay_without_decisions_forces_every_image(
     n_levels = len(fast_cfg["resolution"]["scales"])
     assert (adaptive["stop_t"] == n_levels).all()
     assert adaptive["forced_terminal"].all()
+
+
+# --------------------------------------------------------------------------
+# Signal diagnostic (robovis_diag)
+# --------------------------------------------------------------------------
+
+
+def test_auc_mann_whitney() -> None:
+    labels = np.array([True, True, False, False])
+    assert auc(np.array([2.0, 1.0, 0.0, 0.0]), labels) == pytest.approx(1.0)
+    assert auc(np.array([1.0, 1.0, 1.0, 1.0]), labels) == pytest.approx(0.5)
+    assert auc(np.array([0.0, 1.0, 1.0, 0.0]), labels) == pytest.approx(0.5)
+    assert math.isnan(auc(np.array([1.0]), np.array([True])))
+
+
+def test_signal_diag_on_fixture(
+    tmp_path: Path, no_network: None, fast_cfg: dict[str, Any]
+) -> None:
+    res = run_signal_diag(FIXTURE, tmp_path, fast_cfg, RunLayout())
+    n_levels = len(fast_cfg["resolution"]["scales"])
+    assert res.stats["levels"] == list(range(1, n_levels + 1))
+    for name in ("signal_per_state.csv", "signal_by_level.csv", "signal_stats.json"):
+        assert (tmp_path / name).exists(), name
+
+    s = res.states.set_index(["image_id", "t"])
+    # 1001 t7 = "a1h2": A=1, H=2 -> proposed 2, observed_only 1; two gate items.
+    row = s.loc[(1001, 7)]
+    assert (row["A"], row["H"], row["C_proposed"], row["C_observed_only"]) == (
+        1,
+        2,
+        2,
+        1,
+    )
+    assert (row["n_gate_items"], row["max_basis"], row["max_benefit"]) == (2, 2, 2)
+    # 1001 t1 = empty graph: A = max_u by rule, no items.
+    assert bool(s.loc[(1001, 1), "graph_empty"]) and s.loc[(1001, 1), "A"] == 2
+    # 1009 t4 = unknown limitation: not a gate item; uc variant gives 1.
+    row = s.loc[(1009, 4)]
+    assert (row["n_gate_items"], row["C_proposed"], row["C_unknown_conservative"]) == (
+        0,
+        0,
+        1,
+    )
+    # Failed states are NaN, not zero.
+    assert math.isnan(s.loc[(1002, 8), "C_proposed"])
+    # gain_left = qmax - q_t (q = R50 by default).
+    assert s.loc[(1001, 3), "gain_left"] == pytest.approx(0.78 - 0.05)
+
+    lvl = res.levels.set_index("t")
+    assert lvl["n_states"].eq(len(_expected())).all()
+    assert lvl.loc[1, "frac_C_proposed_ge_theta"] == pytest.approx(1.0)
+    assert {"C_proposed", "C_benefit_gated", "H", "A", "H_bg"} <= set(
+        res.stats["spearman"]
+    )
+    # 1001 t7 = "a1h2": basis 1 / benefit 2 on the observed issue -> A_bg = 2.
+    assert s.loc[(1001, 7), "A_bg"] == 2
+    assert s.loc[(1001, 7), "C_benefit_gated_obs"] == 2
+
+
+def test_compare_paths_one_row_per_path_and_condition(
+    tmp_path: Path, fast_cfg: dict[str, Any]
+) -> None:
+    res = run_signal_diag(FIXTURE, tmp_path, fast_cfg, RunLayout())
+    conditions = build_conditions(fast_cfg)
+    table = compare_paths({"X": res, "Y": res}, conditions, [1, 10, 20])
+    assert len(table) == 2 * len(conditions)
+    for col in ("frac_ge_theta_t01", "frac_ge_theta_t20", "rho_t", "rho_gain_left",
+                "auc_score", "auc_ge_theta", "status"):  # fmt: skip
+        assert col in table.columns
+    row = table[(table["path"] == "X") & (table["condition"] == "proposed")].iloc[0]
+    assert row["frac_ge_theta_t01"] == pytest.approx(1.0)
+
+
+# --------------------------------------------------------------------------
+# Selectable q metric
+# --------------------------------------------------------------------------
+
+
+def test_q_output_dir_keeps_legacy_layout_for_r50(tmp_path: Path) -> None:
+    assert q_output_dir(tmp_path, "R50") == tmp_path
+    assert q_output_dir(tmp_path, "relsg_gt") == tmp_path / "q_relsg_gt"
+
+
+def test_configured_q_metric_override_and_default(fast_cfg: dict[str, Any]) -> None:
+    assert configured_q_metric(fast_cfg) == fast_cfg["evaluation"]["q_metric"]
+    assert configured_q_metric(fast_cfg, "relsg_gt") == "relsg_gt"
+    no_key = {"evaluation": {}}
+    assert configured_q_metric(no_key) == "R50"
+
+
+def test_load_stage_metrics_missing_metric_column_raises() -> None:
+    with pytest.raises(ValueError, match="relsg_missing"):
+        load_stage_metrics(FIXTURE / "stage_metrics.csv", "relsg_missing")
+
+
+def test_replay_with_relsg_metric_uses_that_column(
+    tmp_path: Path, no_network: None, fast_cfg: dict[str, Any]
+) -> None:
+    run_replay_eval(FIXTURE, tmp_path / "r50", fast_cfg)
+    run_replay_eval(FIXTURE, tmp_path / "relsg", fast_cfg, q_metric="relsg_gt")
+    r50 = pd.read_csv(tmp_path / "r50" / "summary.csv").set_index("method")
+    rel = pd.read_csv(tmp_path / "relsg" / "summary.csv").set_index("method")
+    assert (rel["q_metric"] == "relsg_gt").all() and (r50["q_metric"] == "R50").all()
+    # Stops do not depend on q; q(stop) and the fixed curve do (relsg = sqrt(R50)).
+    assert rel.loc["proposed", "mean_stop_t"] == r50.loc["proposed", "mean_stop_t"]
+    assert rel.loc["fixed_05", "q_stop"] > r50.loc["fixed_05", "q_stop"]
+    # mR@50 is metric-independent.
+    assert rel.loc["proposed", "mR50_stop"] == pytest.approx(
+        r50.loc["proposed", "mR50_stop"]
+    )
+    boot = json.loads((tmp_path / "relsg" / "bootstrap.json").read_text())
+    assert boot["q_metric"] == "relsg_gt"
+    # Oracle on relsg: 1001 qmax = sqrt(.78); threshold 0.9*0.8832 = .7949 -> t8
+    # (sqrt(.70) = .8367) instead of t9 under R50.
+    oracle = pd.read_csv(tmp_path / "relsg" / "oracle.csv").set_index("image_id")
+    assert oracle.loc[1001, "oracle_t"] == 8
+
+
+def test_signal_diag_with_relsg_metric(
+    tmp_path: Path, fast_cfg: dict[str, Any]
+) -> None:
+    res = run_signal_diag(FIXTURE, tmp_path, fast_cfg, RunLayout(), q_metric="relsg_gt")
+    s = res.states.set_index(["image_id", "t"])
+    assert res.stats["q_metric"] == "relsg_gt"
+    assert s.loc[(1001, 3), "q"] == pytest.approx(0.05**0.5, abs=1e-4)
+    assert s.loc[(1001, 3), "R50"] == pytest.approx(0.05)
+    assert s.loc[(1001, 3), "gain_left"] == pytest.approx(
+        0.78**0.5 - 0.05**0.5, abs=1e-4
+    )

@@ -46,7 +46,19 @@ UNKNOWN_CONSERVATIVE_MIN_BASIS = 1
 PROPOSED = "proposed"
 OBSERVED_ONLY = "observed_only"
 UNKNOWN_CONSERVATIVE = "unknown_conservative"
+BENEFIT_GATED = "benefit_gated"
+BENEFIT_GATED_OBS = "benefit_gated_obs"
 FIXED_PREFIX = "fixed_"
+MAIN_CONDITIONS = (PROPOSED, OBSERVED_ONLY, UNKNOWN_CONSERVATIVE)
+EXPLORATORY_CONDITIONS = (BENEFIT_GATED, BENEFIT_GATED_OBS)
+EXPLORATORY_LABEL = "exploratory (plan deviation, needs sign-off)"
+MAIN_LABEL = "main"
+
+# u-rules: "min" = plan §6 min(basis, benefit); "benefit_gated" = benefit if
+# basis >= BENEFIT_GATED_MIN_BASIS (exploratory).
+U_RULE_MIN = "min"
+U_RULE_BENEFIT_GATED = "benefit_gated"
+BENEFIT_GATED_MIN_BASIS = 1
 
 
 @dataclass(frozen=True)
@@ -59,6 +71,12 @@ class Condition:
     theta: int
     consecutive_k: int
     max_u: int
+    u_rule: str = U_RULE_MIN
+    exploratory: bool = False
+
+    @property
+    def status_label(self) -> str:
+        return EXPLORATORY_LABEL if self.exploratory else MAIN_LABEL
 
 
 @dataclass(frozen=True)
@@ -76,14 +94,20 @@ class StopResult:
     failure_count: int
 
 
-def build_conditions(cfg: Mapping[str, Any] | None = None) -> dict[str, Condition]:
-    """The three adaptive conditions, parameterised from the robovis config."""
+def build_conditions(
+    cfg: Mapping[str, Any] | None = None, *, include_exploratory: bool = True
+) -> dict[str, Condition]:
+    """Adaptive conditions, parameterised from the robovis config.
+
+    Main: proposed, observed_only, unknown_conservative (plan §6).
+    Exploratory (plan deviation): benefit_gated, benefit_gated_obs.
+    """
     cfg = cfg if cfg is not None else load_robovis_config()
     proposal = cfg["proposal"]
     theta = int(proposal["theta"])
     k = int(proposal["consecutive_k"])
     max_u = int(proposal["max_u"])
-    return {
+    main = {
         PROPOSED: Condition(PROPOSED, True, False, theta, k, max_u),
         OBSERVED_ONLY: Condition(OBSERVED_ONLY, False, False, theta, k, max_u),
         UNKNOWN_CONSERVATIVE: Condition(
@@ -95,6 +119,22 @@ def build_conditions(cfg: Mapping[str, Any] | None = None) -> dict[str, Conditio
             max_u,
         ),
     }
+    if not include_exploratory:
+        return main
+    exploratory = {
+        name: Condition(
+            name,
+            include_hypotheses=name == BENEFIT_GATED,
+            unknown_conservative=False,
+            theta=theta,
+            consecutive_k=k,
+            max_u=max_u,
+            u_rule=U_RULE_BENEFIT_GATED,
+            exploratory=True,
+        )
+        for name in EXPLORATORY_CONDITIONS
+    }
+    return {**main, **exploratory}
 
 
 def fixed_method_name(level: int) -> str:
@@ -117,13 +157,20 @@ def item_utility(
     graph: GraphIndex,
     *,
     unknown_conservative: bool = False,
+    u_rule: str = U_RULE_MIN,
 ) -> int:
-    """u_j of one check item (plan §6)."""
+    """u_j of one check item (plan §6; ``u_rule`` selects the exploratory rule)."""
     if not (_anchors_valid(item, graph) and _region_valid(item, graph)):
         return 0
     if judgment.status != STATUS_UNRESOLVED:
         return 0
     if judgment.limitation == LIMITATION_LOW_RES:
+        if u_rule == U_RULE_BENEFIT_GATED:
+            if judgment.basis < BENEFIT_GATED_MIN_BASIS:
+                return 0
+            return judgment.resolution_benefit
+        if u_rule != U_RULE_MIN:
+            raise ValueError(f"unknown u_rule {u_rule!r}")
         return min(judgment.basis, judgment.resolution_benefit)
     if (
         unknown_conservative
@@ -148,6 +195,7 @@ def level_score(
                     by_id[it.id],
                     graph,
                     unknown_conservative=condition.unknown_conservative,
+                    u_rule=condition.u_rule,
                 )
                 for it in items
             ),
@@ -222,6 +270,68 @@ def _checks_payload(obj: Mapping[str, Any]) -> Any:
     return _payload(obj, CHECKS_PAYLOAD_KEYS)
 
 
+OUTCOME_OK = "ok"
+OUTCOME_EMPTY_GRAPH = "empty_graph"
+
+
+@dataclass(frozen=True)
+class ParsedLevel:
+    """Validated model outputs of one state (checks/judgments None if empty graph)."""
+
+    graph: GraphIndex
+    checks: Checks | None
+    judgments: Judgments | None
+
+
+def parse_level_outputs(
+    graph: Mapping[str, Any] | None,
+    checks_obj: Mapping[str, Any] | None,
+    decision_obj: Mapping[str, Any] | None,
+    limits: ContractLimits | None = None,
+) -> tuple[ParsedLevel | None, str]:
+    """Validate the raw on-disk objects of one state.
+
+    ``checks_obj`` may be the bare contract dict or a check_generator record
+    (payload under ``"checks"``, plus ``"failure"`` and metadata);
+    ``decision_obj`` is a judgment record (``"items"`` + ``"failure"``).
+    Returns (parsed or None, outcome tag). Outcome tags:
+    ``ok``, ``empty_graph``, ``missing_graph``, ``missing_checks``,
+    ``missing_decision``, ``checks_failure``, ``decision_failure``,
+    ``invalid_checks``, ``invalid_judgments``. Only ``ok``/``empty_graph``
+    return a ParsedLevel.
+    """
+    if graph is None:
+        return None, "missing_graph"
+    index = GraphIndex.from_graph(graph)
+    if index.is_empty:
+        # A_t = max_u regardless of model output (plan §6).
+        return ParsedLevel(index, None, None), OUTCOME_EMPTY_GRAPH
+    if checks_obj is None:
+        return None, "missing_checks"
+    if checks_obj.get(FAILURE_KEY) is True:
+        return None, "checks_failure"
+    if decision_obj is None:
+        return None, "missing_decision"
+    if decision_obj.get(FAILURE_KEY) is True:
+        return None, "decision_failure"
+    checks = validate_checks(_checks_payload(checks_obj), index, limits)
+    if not checks.ok or checks.value is None:
+        return None, "invalid_checks"
+    judgments = validate_judgments(
+        _payload(decision_obj, JUDGMENTS_PAYLOAD_KEYS), checks.value, limits
+    )
+    if not judgments.ok or judgments.value is None:
+        return None, "invalid_judgments"
+    return ParsedLevel(index, checks.value, judgments.value), OUTCOME_OK
+
+
+def parsed_level_score(parsed: ParsedLevel, condition: Condition) -> LevelScore:
+    """A_t, H_t, C_t of a validated state (empty graph handled)."""
+    if parsed.checks is None or parsed.judgments is None:
+        return empty_graph_score(condition)
+    return level_score(parsed.checks, parsed.judgments, parsed.graph, condition)
+
+
 def score_level_outputs(
     graph: Mapping[str, Any] | None,
     checks_obj: Mapping[str, Any] | None,
@@ -229,41 +339,11 @@ def score_level_outputs(
     conditions: Mapping[str, Condition],
     limits: ContractLimits | None = None,
 ) -> tuple[dict[str, int | None], str]:
-    """C_t per condition for one level from raw on-disk objects.
-
-    ``checks_obj`` may be the bare contract dict or a check_generator record
-    (payload under ``"checks"``, plus ``"failure"`` and metadata);
-    ``decision_obj`` is a judgment record (``"items"`` + ``"failure"``).
-    Returns (C_t by condition name, outcome tag). Outcome tags:
-    ``ok``, ``empty_graph``, ``missing_graph``, ``missing_checks``,
-    ``missing_decision``, ``checks_failure``, ``decision_failure``,
-    ``invalid_checks``, ``invalid_judgments``. Every outcome other than
-    ``ok``/``empty_graph`` yields C_t = None for all conditions.
-    """
-    missing: dict[str, int | None] = dict.fromkeys(conditions)
-    if graph is None:
-        return missing, "missing_graph"
-    index = GraphIndex.from_graph(graph)
-    if index.is_empty:
-        # A_t = max_u regardless of model output (plan §6).
-        return {n: empty_graph_score(c).c for n, c in conditions.items()}, "empty_graph"
-    if checks_obj is None:
-        return missing, "missing_checks"
-    if checks_obj.get(FAILURE_KEY) is True:
-        return missing, "checks_failure"
-    if decision_obj is None:
-        return missing, "missing_decision"
-    if decision_obj.get(FAILURE_KEY) is True:
-        return missing, "decision_failure"
-    checks = validate_checks(_checks_payload(checks_obj), index, limits)
-    if not checks.ok or checks.value is None:
-        return missing, "invalid_checks"
-    judgments = validate_judgments(
-        _payload(decision_obj, JUDGMENTS_PAYLOAD_KEYS), checks.value, limits
-    )
-    if not judgments.ok or judgments.value is None:
-        return missing, "invalid_judgments"
+    """C_t per condition for one state; None for every condition unless the
+    outcome is ``ok`` or ``empty_graph`` (see :func:`parse_level_outputs`)."""
+    parsed, outcome = parse_level_outputs(graph, checks_obj, decision_obj, limits)
+    if parsed is None:
+        return dict.fromkeys(conditions), outcome
     return {
-        name: level_score(checks.value, judgments.value, index, cond).c
-        for name, cond in conditions.items()
-    }, "ok"
+        name: parsed_level_score(parsed, cond).c for name, cond in conditions.items()
+    }, outcome
