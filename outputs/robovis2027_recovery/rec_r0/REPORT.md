@@ -1,17 +1,17 @@
 # ROBOVIS2027 recovery run `rec_r0` — report (plan of record 2026-10-08 v1.0)
 
-(Draft 2026-10-08 ≈03:00 JST; Phase A section to be completed when the held-out evaluation lands. Presentation follows the user's guidance: significance of differences, not point estimates, is what matters; see §6.6.)
+(2026-10-08 03:25 JST. All Phases A–D complete. Presentation follows the user's guidance: significance of differences vs level-agnostic comparators is what matters; fixed-level stops are schedule-aware references only.)
 
 ## 要約（日本語）
-- 計画書（`.claude/docs/research/robovis2027-recovery-plan.md`）のPhase B・C・Dは完了した。Phase A（事前登録held-out late fusion）は**未完了（PENDING）**である。
-- Phase A：text-4bのscoreは1536/1536件ある。image-only 9bは01:57の初回実行でscoreが0件だった（HTTP 500。VRAM競合が原因と推定）。同一条件での再実行が02:35から走っている。主条件hybrid_fuse_meanの結果はまだ出ていない。
+- 計画書（`.claude/docs/research/robovis2027-recovery-plan.md`）のPhase A・B・C・Dはすべて完了した。
+- Phase A（事前登録held-out、96枚、調整なし）：**主規則 hybrid_fuse_mean は再現しなかった**（有意セル 0/18、MAE 3.35 は画像のみ9b単独の 3.21 より悪い）。副規則 fuse_min は MAE 2.54 で、text 4b・画像のみ9b・信頼度baselineに対し MAE/R50/relsg のほぼ全セルで有意に優位（全96で9/9、≤18で8/9）。ただし停止が約2段階遅く観測量が揃っていない。同観測量では固定曲線上（Δ≈0）で、GT効率の改善はない。image-only 9bの初回採点は01:57に0件（HTTP 500、VRAM競合）で、同一条件の再実行（02:35–03:00、1536/1536、エラー0）で完了した。
 - Phase B：GTを見た上限は大きい（dev20 R50、b=15でO−F=+0.085）が、単一seedに由来する楽観を含む。二択oracleの余地はdev R50で+0.047。監査の結果、従来の「固定と同等」という比較は、F(b)より弱い隣接混合を相手にしていたと判明した（差は最大0.050）。
 - Phase C：seed間で選び合うと、二択oracleの余地は+0.016/+0.038（R50）に縮む。採否4条件はすべて満たした（GO）。ただし条件3の差は+0.004/+0.009と僅少で、relsg_gtは全seedで負だった。
 - Phase D（新60画像）：主比較であるR50のU方策と同継続率混合の差は、seedAで−0.007 [−0.025, +0.012]、seedBで−0.011 [−0.032, +0.010]。**両seedとも「正でない」**。fixed15とF(b)も下回った。MIRU流の「oracle停止との一致率」でも40–43%と偶然（50%）以下で、有意に優位な比較は一つもない。
 - 副指標relsg_gtは両seedで+0.023（CIは0を含まず、置換p 0.038/0.017）。ただしdevでは逆符号であり、計画§7に従い主結果には昇格しない。
 - 結論：物体別視認性Uによる「t10で止める／t20まで進む」の二択は、R50で画像に依存しない配分を上回らなかった。主張できる範囲は「物体別視認性による追加観測割当」の否定的・分析的結果に限られ、共起仮説やscene graph推論の新規性の証拠にはならない。
 - 旧MIRU集合の除外件数「29/35」の相違は、commit `2b038b2` の記録で解決した。c09=20が29件、c09=19が6件で、計35件を除外していた。
-- 未完了の成果物は `heldout_confirmatory.md` の結果節、Phase Aの図、`usage.jsonl` の3点。
+- 計画§8の成果物はすべて揃った（`heldout_confirmatory.md`、Phase A図、`usage.jsonl`、`failures.jsonl`、`reproduce.md` 更新済み）。
 
 ---
 
@@ -21,8 +21,8 @@
 |---|---|
 | date | 2026-10-08, ≈03:00 JST (draft) |
 | HEAD | `1b565f8` (Phase D), branch `feature/robovis2027`; working tree has untracked outputs |
-| complete | §1 preflight; Phase B (cache-only diagnostics + audit); Phase C (multiseed C.1, frozen U policy C.2, gate = GO); Phase D (seedA 1200 + seedB 180 PGSG states, v4 60 states, evaluation, MIRU-style significance table) |
-| pending | Phase A held-out fusion rows (image-only 9b re-run in progress since 02:35); `heldout_confirmatory.md` §4–5; Phase A GT-quality–observation figure; `usage.jsonl`; Phase E freeze (due 10/13) |
+| complete | §1 preflight; Phase A (held-out registered evaluation, `heldout_confirmatory.md`); Phase B (cache-only diagnostics + audit); Phase C (multiseed C.1, frozen U policy C.2, gate = GO); Phase D (seedA 1200 + seedB 180 PGSG states, v4 60 states, evaluation, MIRU-style significance table, conf_two_stage comparator) |
+| pending | Phase E freeze (due 10/13): figures polish, manuscript |
 
 Every number below cites a file under `outputs/robovis2027_recovery/rec_r0/` unless another path is given. The earlier consolidated report is `outputs/robovis2027/REPORT.md`; it is cited here, not repeated.
 
@@ -39,11 +39,11 @@ Fixed throughout: no model training, 20 resolution levels, primary metric R50, s
 
 | criterion | state |
 |---|---|
-| A complete | **No** (pending 9b scores → `scripts/42` → `heldout_confirmatory.md` §5) |
+| A complete | Yes (`heldout_confirmatory.md`, `outputs/heldout_eval/heldout_registered_table.md`) |
 | B complete | Yes |
 | C + gate record | Yes (`gate_decision.json`, GO) |
 | D (Go) | Yes |
-| figures / reproduce / limitations | Partial (Phase D figure only; `reproduce.md` needs its Phase D "as planned" markers updated; limitations §7.3) |
+| figures / reproduce / limitations | Yes (Phase D and Phase A figures; `reproduce.md` finalized; limitations §7.3) |
 
 ## 2. Preflight (plan §1)
 
@@ -98,7 +98,7 @@ Additional note: held-out96 ⊂ test100. Their PGSG (ROBOVIS) curves had been vi
 - v4: 400 checks, 400 decisions, 20 images × 20 levels.
 - h3: 100 states (20 × 5 levels).
 
-## 3. Phase A — pre-registered held-out late fusion (**PENDING**)
+## 3. Phase A — pre-registered held-out late fusion (**COMPLETE — primary not confirmed**)
 
 See `heldout_confirmatory.md` for the full record (registered conditions verbatim, selection history, incident, results placeholders).
 
@@ -136,7 +136,19 @@ Even in-sample, no fusion row has a Δ F CI wholly above 0. The registered claim
 
 **The 29/35 exclusion-count discrepancy is resolved.** The `2b038b2` commit message states "removed 35 (29@20, 6@19), refilled to 100 via deterministic seed-42 shuffle continuation"; `data_manifest.json` agrees (`miru_history@e1b8e56 ∩ miru100_current = 65`, so 35 replaced). 29 counts only the c09 = 20 images; 35 = 29 + 6 with c09 = 19.
 
-**Remaining Phase A work:** finish the 9b scores → `scripts/42_miru_gt_eval.py --dataset heldout` → fill `heldout_confirmatory.md` §4–5 (method table on all 96 and on the 73 subset; MAE and GT Δ side by side) and the GT-quality vs observation figure.
+**Results (registered conditions, no tuning; full table and significance in `heldout_confirmatory.md` §5 and `outputs/heldout_eval/heldout_registered_table.md`).**
+
+| method | stop | MAE all 96 / ≤18 | R50 | relsg | GT Δ vs legacy mix (R50 / relsg) | Δ vs F (pt) |
+|---|---|---|---|---|---|---|
+| **PRIMARY hybrid_fuse_mean** | 13.79 | **3.35 / 2.93** | .109 | .360 | −.008 [−.026, +.007] / −.016 [−.033, +.004] | −.018 / −.018 |
+| secondary fuse_min | 16.04 | **2.54 / 2.47** | .138 | .398 | −.005 [−.016, +.004] / −.001 [−.013, +.011] | −.009 / −.004 |
+| text 4b | 13.73 | 3.56 / 3.04 | .110 | .357 | −.007 / −.016 | −.017 / −.020 |
+| image-only 9b | 14.17 | 3.21 / 2.67 | .115 | .360 | −.010 / −.024 [−.049, −.001] | −.016 / −.024 |
+| baseline (node conf) | 14.73 | 3.46 / 3.40 | .108 | .361 | −.026 [−.050, −.004] / −.029 [−.048, −.010] | −.028 / −.029 |
+
+- **PRIMARY not confirmed:** 0/18 significance cells vs the level-agnostic comparators (text 4b, image-only 9b, baseline); its MAE is worse than image-only 9b alone. The in-sample MIRU-100 edge (2.59 vs 3.00; p ≈ .03 with CI touching 0 in the pairwise table) did not survive.
+- **Secondary fuse_min:** significantly better than all three comparators on |stop − c09|, R50 and relsg (all-96 9/9 ✓; ≤18 8/9 ✓), **but** it stops ≈2 levels later (not budget-matched) and at equal observation sits on the fixed curve (Δ ≈ 0); 21/96 never-saturating images reward late stopping. On ≤18 it still beats text 4b and baseline on MAE.
+- No method improves GT efficiency vs the legacy mix; all Δ F < 0. Figure: `outputs/heldout_eval/figures/heldout_quality_vs_level.png`.
 
 ## 4. Phase B — cache-only headroom (plan §4)
 
@@ -332,7 +344,7 @@ Against this simple level-agnostic confidence rule, the U policy shows no signif
 
 ### 7.1 Answers to the three questions
 
-1. **Held-out reproduction of late fusion: unknown (PENDING).** Only the node-confidence baseline is evaluated so far (MAE 3.458; below F for R50 −0.028 and relsg −0.029). In-sample on MIRU100 the registered primary had the lowest MAE (2.59) but no GT-efficiency gain over F.
+1. **Held-out reproduction of late fusion: the pre-registered PRIMARY (hybrid mean fusion) did NOT replicate** (0/18 significant cells; MAE 3.35 vs image-only 9b 3.21). The secondary fuse_min was significantly better than every level-agnostic comparator on MAE, R50 and relsg (all-96 9/9), but it observes ≈2 more levels, sits on the fixed curve at equal observation, and benefits from 21/96 never-saturating images; its gain is "later stopping that matches a late oracle", not GT efficiency.
 2. **Headroom for image-dependent allocation: small and partly noise.** GT-posterior oracles show large single-seed headroom (dev R50 O−F +0.085 at b=15; two-choice +0.047). Across seeds the two-choice R50 headroom is +0.016 / +0.038, positive in both directions and robust to tie order, concentrated in about 7/20 images with g > 0. relsg headroom does not transfer across seeds.
 3. **Can v4 visibility decide t10 vs t20? Not on the primary metric.** The frozen U policy loses to the same-p mix for R50 on 60 new images in both seeds (−0.007, −0.011; CIs include 0), is below fixed15 and F, and agrees with the two-choice oracle no better than chance. The dev gate pass (+0.004 / +0.009) did not transfer.
 
@@ -360,16 +372,16 @@ Against this simple level-agnostic confidence rule, the U policy shows no signif
 |---|---|---|
 | preflight.md | present (named `recovery_preflight.md`) | `rec_r0/` |
 | frozen_config.json / model_hashes.json / data_manifest.json | present | `rec_r0/` |
-| heldout_confirmatory.md | present, §4–5 **PENDING** | needs the 9b re-run → `scripts/42 --dataset heldout` |
+| heldout_confirmatory.md | present, complete | `outputs/heldout_eval/heldout_registered_table.{csv,md}`, `heldout_significance.csv`, `figures/heldout_quality_vs_level.{png,pdf}` |
 | budget_oracle.csv / fixed_mix.csv / shuffled_assignment.csv | present | plus `two_choice_oracle.csv`, `audit.md`, `diagnostics_manifest.json` |
 | multiseed_gain.csv / cross_seed_oracle.csv | present | plus `seed_differences.csv`, `stage_metrics_seed{0,1,2}.csv`, `multiseed_manifest.json` |
 | dev_two_stage.csv / gate_decision.json | present | plus `dev_two_stage_eval.csv`, `frozen_policy.json` |
 | test_selection.json / test_policy.csv | present | plus `selected_images_test_rec.json`, `levels_manifest_test_rec.json` |
 | test_summary.csv / seed_replication.csv | present | plus `phase_d_summary.json`, `method_comparison_miru_style.{md,csv}`, `stage_metrics_seed{A,B}.csv` |
-| figures/ | partial | Phase D figure present; Phase A figure pending |
-| usage.jsonl | **missing** | timings exist in `logs/*.log`, `reproduce.md`, v4 summary; to consolidate |
-| failures.jsonl | present | Phase A 9b incident; Phase D v4 HTTP-500 failures being appended |
-| REPORT.md | this document | update §3 when Phase A lands |
-| reproduce.md | present (draft 01:15) | Phase D steps marked "as planned"; they have since run (markers `SEEDA_DONE`, `SEEDB_DONE`) |
+| figures/ | present | Phase D figure (`rec_r0/figures/`), Phase A figure (`outputs/heldout_eval/figures/`) |
+| usage.jsonl | present | 8 stages (calls, failures, median/wall times) |
+| failures.jsonl | present, complete | Phase A incident + resolution; Phase D v4 HTTP-500 states (2) |
+| REPORT.md | this document | complete |
+| reproduce.md | present, finalized | all Phase A–D commands with actual counts/times |
 
 **Reproduction.** Follow `rec_r0/reproduce.md`. Entry points: `scripts/43_recovery_preflight.py`, `scripts/43_robovis_recovery_diag.py`, `scripts/45_recovery_multiseed_metrics.py`, `python -m milestone1.two_stage_policy --mode freeze|evaluate|apply`, `scripts/44_recovery_test_selection.py`, `scripts/46_recovery_test_rec.py`, `scripts/47_recovery_phase_d_eval.py`, and Phase A `scripts/40` / `scripts/11` / `scripts/42` under `MILESTONE1_CONFIG_OVERLAY=configs/config_heldout.yaml`. Commits: `48b964b` (A–C), `1b565f8` (D). Earlier context: `outputs/robovis2027/REPORT.md`.
