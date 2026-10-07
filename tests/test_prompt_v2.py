@@ -40,7 +40,9 @@ from milestone1.judge import (  # noqa: E402
 )
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
 
-LIMITS_V2 = replace(LIMITS, max_relations=20, max_entities=30, merge_iou=0.5)
+LIMITS_V2 = replace(
+    LIMITS, max_relations=20, max_entities=30, merge_iou=0.5, string_hint_chars=200
+)
 IMAGE_ID = SYNTHETIC_IMAGE_IDS[0]
 SCALE = 0.2066
 
@@ -103,6 +105,7 @@ def test_limits_from_config_v2_reads_overrides() -> None:
         0.5,
     )
     assert limits_from_config(load_robovis_config()).merge_iou is None
+    assert limits.string_hint_chars == 200 < limits.max_string_chars
 
 
 def test_v2_prompts_contain_scene_scoping_and_no_leak() -> None:
@@ -127,6 +130,10 @@ def test_judge_system_prompt_image_and_v2_benefit_definition() -> None:
     assert "small" in v2 and "attached image" in v2
     assert AXES_NOTE_V2 in v2 and BASIS_RULE_V2 in v2
     assert AXES_NOTE_V2 not in v1_text and AXES_NOTE_V2 not in img
+    hint = "under 200 characters"
+    assert hint in v2 and hint in check_system_prompt(LIMITS_V2, PROMPT_V2)
+    assert hint not in v1_text and hint not in check_system_prompt(LIMITS)
+    assert v2.index('"out_of_frame", "other"') < v2.index("Return exactly one JSON")
 
 
 def _image(tmp_path: Path) -> Path:
@@ -189,3 +196,30 @@ def test_generate_checks_v2_records_version_and_alias(tmp_path: Path) -> None:
     assert record["prompt_version"] == PROMPT_V2
     assert record["render"]["entity_alias"] == {"v2": "v1"}
     assert CHECK_TASK_V2_ADDENDUM in client.calls[0][0]["content"]
+
+
+def test_generate_checks_and_judge_record_extra_provenance(tmp_path: Path) -> None:
+    extra = {"graphs_subdir": "graphs_clean"}
+    rec, _ = generate_checks(
+        make_graph(IMAGE_ID),
+        client=FakeClient([json.dumps(VALID_CHECKS)]),
+        model="fake",
+        path=PATH_F1,
+        limits=LIMITS,
+        schema_retries=1,
+        out_path=tmp_path / "c.json",
+        image_path=_image(tmp_path),
+        record_extra=extra,
+    )
+    assert rec["graphs_subdir"] == "graphs_clean"
+    jrec, _ = judge_checks(
+        make_graph(IMAGE_ID),
+        {"path": "F1", "checks": {"observed_issues": [], "hypotheses": []}},
+        client=FakeClient([]),
+        model="fake",
+        limits=LIMITS,
+        schema_retries=1,
+        out_path=tmp_path / "d.json",
+        record_extra=extra,
+    )
+    assert jrec["graphs_subdir"] == "graphs_clean" and jrec["skipped_empty"]

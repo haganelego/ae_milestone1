@@ -19,6 +19,7 @@ No network or model client is touched.
 from __future__ import annotations
 
 import json
+import sys
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -28,14 +29,17 @@ import pandas as pd
 
 from milestone1.robovis_data import level_name
 from milestone1.robovis_eval import (
+    ORACLE_DEFINITIONS,
     PRED_HITS_FILENAME,
     STOPS_COLUMNS,
+    OracleParams,
     build_curves,
     build_eval_set,
     configured_q_metric,
     fixed_stops,
     load_predicate_hits,
     load_stage_metrics,
+    oracle_profile,
     oracle_status_counts,
     oracle_table,
     paired_bootstrap,
@@ -70,12 +74,47 @@ class RunLayout:
     decisions: str = "decisions"
 
 
+GRAPHS_RAW = "graphs"
+GRAPHS_CLEAN = "graphs_clean"
+# Check variants generated from the cleaned graph G carry a "G" name segment,
+# e.g. F1_v2_G, F1v_v2_G__9b (segments are separated by "_" / "__").
+CLEAN_VARIANT_SEGMENT = "G"
+PATH_SEGMENT_SEPARATOR = "_"
+GRAPHS_AUTO = "auto"
+
+
+def is_clean_graph_variant(path: str | None) -> bool:
+    """True if a "G" segment appears in the path name (F1_v2_G, F1v_v2_G__9b)."""
+    if not path:
+        return False
+    return CLEAN_VARIANT_SEGMENT in str(path).split(PATH_SEGMENT_SEPARATOR)
+
+
+def resolve_graphs_subdir(requested: str, path: str | None) -> str:
+    """Graph dir for a check path: ``auto`` -> graphs_clean for G variants.
+
+    Validation and the empty-graph rule must use the graph the LLM saw, so a
+    G variant replayed against raw graphs gets a warning on stderr.
+    """
+    is_clean_variant = is_clean_graph_variant(path)
+    if requested == GRAPHS_AUTO:
+        return GRAPHS_CLEAN if is_clean_variant else GRAPHS_RAW
+    if is_clean_variant and requested == GRAPHS_RAW:
+        print(
+            f"warning: path {path!r} was generated from {GRAPHS_CLEAN}/ but is "
+            f"replayed against {GRAPHS_RAW}/ (use --graphs-subdir auto)",
+            file=sys.stderr,
+        )
+    return requested
+
+
 @dataclass(frozen=True)
 class EvalParams:
     num_levels: int
     recall_k: int
     q_metric: str
     oracle_ratio: float
+    oracle_gain_delta: float
     bootstrap_repeats: int
     bootstrap_seed: int
     ci_level: float
@@ -90,6 +129,7 @@ class EvalParams:
             recall_k=int(ev["recall_k"]),
             q_metric=configured_q_metric(cfg, q_metric),
             oracle_ratio=float(ev["oracle_ratio"]),
+            oracle_gain_delta=OracleParams.from_config(cfg).gain_delta,
             bootstrap_repeats=int(ev["bootstrap_repeats"]),
             bootstrap_seed=int(ev["bootstrap_seed"]),
             ci_level=float(ev["ci_level"]),
@@ -240,7 +280,7 @@ def run_replay_eval(
         ],
         ignore_index=True,
     )
-    eval_set = build_eval_set(curves, params.oracle_ratio)
+    eval_set = build_eval_set(curves, params.oracle_ratio, params.oracle_gain_delta)
     pred_hits = load_predicate_hits(input_dir / PRED_HITS_FILENAME, params.recall_k)
     per_image = per_image_metrics(stops, curves, eval_set)
     adaptive = list(conditions)
@@ -254,6 +294,7 @@ def run_replay_eval(
         ["status", "method"],
         key=lambda col: col.map(order) if col.name == "status" else col,
     ).reset_index(drop=True)
+    summary.insert(2, "graphs_dir", layout.graphs)
     boot = paired_bootstrap(
         per_image,
         curves,
@@ -272,16 +313,24 @@ def run_replay_eval(
     stops.to_csv(out_dir / "stops.csv", index=False)
     per_image.to_csv(out_dir / "per_image.csv", index=False)
     oracle_table(eval_set, curves).to_csv(out_dir / "oracle.csv", index=False)
+    oracle_profile(eval_set, params.num_levels, params.q_metric).to_csv(
+        out_dir / "oracle_profile.csv", index=False
+    )
     summary.to_csv(out_dir / "summary.csv", index=False)
     (out_dir / "bootstrap.json").write_text(json.dumps(boot, indent=2))
     eval_ids = {
         "input_dir": str(input_dir),
         "num_levels": params.num_levels,
         "q_metric": params.q_metric,
+        "graphs_dir": layout.graphs,
         "n_eval": len(eval_set.ids),
         "eval_ids": list(eval_set.ids),
         "excluded": {str(k): v for k, v in eval_set.excluded.items()},
         "oracle_status_counts": dict(oracle_status_counts(eval_set)),
+        "oracle_status_counts_by_definition": {
+            d: dict(oracle_status_counts(eval_set, d)) for d in ORACLE_DEFINITIONS
+        },
+        "oracle_gain_delta": params.oracle_gain_delta,
         "mR50_available": pred_hits is not None,
     }
     (out_dir / "eval_set_ids.json").write_text(json.dumps(eval_ids, indent=2))

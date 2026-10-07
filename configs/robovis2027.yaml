@@ -71,8 +71,12 @@ evaluation:
   bootstrap_seed: 20271007
   ci_level: 0.95
   oracle_ratio: 0.9             # relative-stable oracle: q_u >= ratio * qmax for all u >= t
+  oracle_gain_delta: 0.05       # auxiliary gain_based oracle (not used in main results)
   recall_k: 50                  # k of R@k / mR@k (per-predicate sidecar)
   q_metric: R50                 # stage_metrics column used as q_t (R50 | relsg_gt | ...)
+  report_q_metrics:             # agreed evaluation metrics (user decision 2026-10-07); report shows only these
+    R50: primary
+    relsg_gt: secondary
   relsg_top_entities: 20        # GT-RelSGScore cap: top-N entities by score (label set)
   relsg_top_relations: 50       # GT-RelSGScore cap: top-N relations by trp_score (triplet set)
   clean_merge_iou: 0.5          # cleaned observed graph G: same-label entity merge IoU (>)
@@ -107,6 +111,7 @@ checks:
     num_ctx: 8192
     num_predict: 1536
   request_timeout_s: 300
+  retry_temperature: 0.3       # schema retry only (attempt 2); attempt 1 uses options.temperature
   backoff_base_s: 2.0          # transient retry sleep = base * 2^attempt, capped
   backoff_max_s: 30.0
   max_relations_in_prompt: 50  # top-N by trp_score (graph is already sorted)
@@ -118,3 +123,4 @@ checks:
     max_relations_in_prompt: 20
     max_entities_in_prompt: 30 # strict cap (v1 always keeps relation endpoints)
     merge_iou: 0.5             # merge same-label entities with box IoU > this
+    string_hint_chars: 200     # prompt-only hint; validator keeps max_string_chars

@@ -28,6 +28,8 @@ import requests
 
 HTTP_TOO_MANY_REQUESTS = 429
 SEED_RETRY_INCREMENT = 1  # schema retry i uses seed + i (plan decision 2026-10-07)
+# Schema retries also switch to ``retry_temperature`` when configured (team-lead
+# decision 2026-10-07): temperature 0 is greedy, so seed alone changes nothing.
 HTTP_SERVER_ERROR_MIN = 500
 USAGE_KEYS = (
     "prompt_eval_count",
@@ -59,6 +61,7 @@ class OllamaSettings:
     transient_retries: int
     backoff_base_s: float
     backoff_max_s: float
+    retry_temperature: float | None = None  # schema retries only; None = unchanged
 
     def record(self) -> dict[str, Any]:
         """Settings that affect model output (stored next to every result)."""
@@ -200,6 +203,8 @@ class StructuredOutcome:
     usage: list[dict[str, Any]] = field(default_factory=list)
     seeds: list[int | None] = field(default_factory=list)
     seed_used: int | None = None
+    temperatures: list[float | None] = field(default_factory=list)
+    temperature_used: float | None = None
 
 
 def structured_chat(
@@ -223,16 +228,23 @@ def structured_chat(
         http_attempts=0,
     )
     base_seed = client.settings.options.get("seed")
+    base_temperature = client.settings.options.get("temperature")
+    retry_temperature = client.settings.retry_temperature
     for attempt in range(1 + schema_retries):
         outcome.attempts += 1
         seed = None
-        override = None
+        temperature = base_temperature
+        override: dict[str, Any] = {}
         if base_seed is not None:
             seed = int(base_seed) + attempt * SEED_RETRY_INCREMENT
-            override = {"seed": seed}
+            override["seed"] = seed
+        if attempt > 0 and retry_temperature is not None:
+            temperature = retry_temperature
+            override["temperature"] = temperature
         outcome.seeds.append(seed)
+        outcome.temperatures.append(temperature)
         try:
-            result = client.chat(model, messages, override)
+            result = client.chat(model, messages, override or None)
         except OllamaError as exc:
             outcome.error = f"http: {exc}"
             return outcome
@@ -250,6 +262,7 @@ def structured_chat(
                 outcome.attempt_errors.append([])
                 outcome.parsed = normalized
                 outcome.seed_used = seed
+                outcome.temperature_used = temperature
                 outcome.failure = False
                 outcome.error = None
                 return outcome
@@ -284,4 +297,9 @@ def settings_from_config(cfg: dict[str, Any]) -> OllamaSettings:
         transient_retries=int(cfg["execution"]["transient_retries"]),
         backoff_base_s=float(checks["backoff_base_s"]),
         backoff_max_s=float(checks["backoff_max_s"]),
+        retry_temperature=(
+            float(checks["retry_temperature"])
+            if checks.get("retry_temperature") is not None
+            else None
+        ),
     )

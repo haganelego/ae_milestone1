@@ -25,7 +25,11 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from milestone1.config import resolve  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
 from milestone1.robovis_eval import configured_q_metric, q_output_dir  # noqa: E402
-from milestone1.robovis_replay import RunLayout, run_replay_eval  # noqa: E402
+from milestone1.robovis_replay import (  # noqa: E402
+    RunLayout,
+    resolve_graphs_subdir,
+    run_replay_eval,
+)
 
 SUMMARY_COLUMNS = [
     "method",
@@ -56,7 +60,12 @@ def parse_args() -> argparse.Namespace:
         help="check path tag as written by script 29 (e.g. F1, F2, F1__tag): "
         "reads checks/<path>, decisions/<path>, writes eval/<path>",
     )
-    p.add_argument("--graphs-subdir", default="graphs")
+    p.add_argument(
+        "--graphs-subdir",
+        default="graphs",
+        help="graph dir the checks were generated from (graphs | graphs_clean | "
+        "auto: graphs_clean for paths with a 'G' segment, e.g. F1_v2_G__9b); recorded in summary.csv",
+    )
     p.add_argument("--checks-subdir", default=None, help="default: checks[/<path>]")
     p.add_argument(
         "--decisions-subdir", default=None, help="default: decisions[/<path>]"
@@ -87,7 +96,7 @@ def main() -> None:
         run_dir / _subdir(args.eval_subdir, "eval", args.path), q_metric
     )
     layout = RunLayout(
-        args.graphs_subdir,
+        resolve_graphs_subdir(args.graphs_subdir, args.path),
         _subdir(args.checks_subdir, "checks", args.path),
         _subdir(args.decisions_subdir, "decisions", args.path),
     )

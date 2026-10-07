@@ -68,6 +68,7 @@ CHECK_TASK_V2_ADDENDUM = (
     "not report graph bookkeeping (missing relations for an entity, low scores, "
     "duplicate entities) as hypotheses."
 )
+STRING_HINT_TEMPLATE = "Each string field must be under {chars} characters."
 TARGET_PLACEHOLDER_V1 = "<unclear observed fact>"
 TARGET_PLACEHOLDER_V2 = "<scene fact whose identity/category/extent is unclear>"
 
@@ -119,6 +120,7 @@ class CheckLimits:
     box_decimals: int
     score_decimals: int
     merge_iou: float | None = None  # v2 only: same-label entity merge threshold
+    string_hint_chars: int | None = None  # v2 only: prompt hint (< max_string_chars)
 
 
 def limits_from_config(
@@ -145,6 +147,7 @@ def limits_from_config(
         max_relations=int(v2["max_relations_in_prompt"]),
         max_entities=int(v2["max_entities_in_prompt"]),
         merge_iou=float(v2["merge_iou"]),
+        string_hint_chars=int(v2["string_hint_chars"]),
     )
 
 
@@ -369,8 +372,11 @@ def check_system_prompt(limits: CheckLimits, prompt_version: str = PROMPT_V1) ->
         max_chars=limits.max_string_chars,
         target_placeholder=TARGET_PLACEHOLDER_V2 if is_v2 else TARGET_PLACEHOLDER_V1,
     )
-    task = f"{CHECK_TASK} {CHECK_TASK_V2_ADDENDUM}" if is_v2 else CHECK_TASK
-    return f"{COMMON_PREAMBLE}\n\n{task}\n\n{schema}"
+    if not is_v2:
+        return f"{COMMON_PREAMBLE}\n\n{CHECK_TASK}\n\n{schema}"
+    task = f"{CHECK_TASK} {CHECK_TASK_V2_ADDENDUM}"
+    hint = STRING_HINT_TEMPLATE.format(chars=limits.string_hint_chars)
+    return f"{COMMON_PREAMBLE}\n\n{task}\n\n{hint}\n{schema}"
 
 
 def build_check_messages(
@@ -562,6 +568,8 @@ def outcome_fields(outcome: StructuredOutcome) -> dict[str, Any]:
         "attempts": outcome.attempts,
         "seeds": outcome.seeds,
         "seed_used": outcome.seed_used,
+        "temperatures": outcome.temperatures,
+        "temperature_used": outcome.temperature_used,
         "http_attempts": outcome.http_attempts,
         "elapsed_s": round(outcome.elapsed_s, 3),
         "usage": outcome.usage,
@@ -583,8 +591,11 @@ def generate_checks(
     out_path: Path,
     image_path: Path | None = None,
     prompt_version: str = PROMPT_V1,
+    record_extra: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Run F1/F2 check generation for one state. Returns (record, from_cache).
+
+    ``record_extra`` is provenance merged into the written record (not the prompt).
 
     ``limits`` must come from ``limits_from_config(cfg, prompt_version)``.
     """
@@ -646,6 +657,7 @@ def generate_checks(
         "checks": outcome.parsed,
         **outcome_fields(outcome),
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        **(record_extra or {}),
     }
     write_json_atomic(out_path, record)
     return record, False

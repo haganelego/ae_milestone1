@@ -72,6 +72,11 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--prompt-version", choices=PROMPT_VERSIONS, default=PROMPT_V1)
     p.add_argument(
+        "--graphs-subdir",
+        default="graphs",
+        help="graph dir under the run (e.g. graphs_clean for the cleaned graph G)",
+    )
+    p.add_argument(
         "--judge-with-image",
         action="store_true",
         help="judge also receives the current-state JPEG (F1 only; variant F1v)",
@@ -176,7 +181,8 @@ def main() -> None:
     judge_model = args.judge_model or cfg["checks"]["judge_model"]
 
     run_root = resolve(cfg["output_root"]) / args.run_id
-    graphs_root = run_root / "graphs"
+    graphs_root = run_root / args.graphs_subdir
+    extra = {"graphs_subdir": args.graphs_subdir}
     if not graphs_root.is_dir():
         sys.exit(f"no graphs under {graphs_root}")
     variant = args.variant_name or (
@@ -199,7 +205,7 @@ def main() -> None:
         f"{len(states)} states | path={args.path} check_model={check_model} "
         f"judge={'on:' + judge_model if args.judge else 'off'} "
         f"prompt={args.prompt_version} judge_image={args.judge_with_image} "
-        f"variant={variant} options={settings.record()}"
+        f"variant={variant} graphs={args.graphs_subdir} options={settings.record()}"
     )
     n_calls = 0
     n_fail = {"checks": 0, "judge": 0}
@@ -234,6 +240,7 @@ def main() -> None:
                 out_path=checks_root / str(image_id) / name,
                 image_path=image_path,
                 prompt_version=args.prompt_version,
+                record_extra=extra,
             )
         n_calls += 0 if cached else rec["http_attempts"]
         n_fail["checks"] += int(rec["failure"])
@@ -263,6 +270,7 @@ def main() -> None:
             out_path=decisions_root / str(image_id) / name,
             prompt_version=args.prompt_version,
             image_path=image_path if args.judge_with_image else None,
+            record_extra=extra,
         )
         n_calls += 0 if jcached else jrec.get("http_attempts", 0)
         n_fail["judge"] += int(jrec["failure"])

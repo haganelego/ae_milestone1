@@ -25,6 +25,8 @@ from milestone1.robovis_report import (  # noqa: E402
     demote_headings,
     fmt,
     md_table,
+    report_metric_roles,
+    section_graph_stats,
 )
 
 FIXTURE = REPO_ROOT / "tests" / "fixtures" / "robovis_synthetic"
@@ -143,6 +145,22 @@ def test_build_report_marks_missing_inputs(
         notes=notes,
     )
     assert "### X (q = R50)" in text
+    # Oracle profile from stage_metrics: all three definitions, main first.
+    assert "| R50 | relative_stable | main | 9 | 7 | 1 | 1 | 0 |" in text
+    assert (
+        "| R50 | monotone_stable | auxiliary, not used in main results | 9 | 8 | 0 | 1 | 0 |"
+        in text
+    )
+    # Auxiliary MAE is a separate, labelled table, not a column of the main table.
+    assert "Oracle MAE under the auxiliary definitions (auxiliary, not used" in text
+    main_header = next(
+        ln for ln in text.splitlines() if ln.startswith("| method | status")
+    )
+    assert "MAE gain_based" not in main_header
+    assert "Graphs replayed: `graphs`." in text
+    # Fixture has no clean columns -> the G statistics table says so.
+    assert "## Observed graph G statistics" in text
+    assert "_not available: stage_metrics.csv columns" in text
     assert "| proposed | main |" in text
     assert "| benefit_gated | exploratory* |" in text
     assert "| fixed_20 | baseline |" in text
@@ -169,3 +187,19 @@ def test_fig1_dot_source_is_valid_graph() -> None:
     gt_edges = [ln for ln in dot.splitlines() if ln.strip().startswith("gt ->")]
     assert gt_edges == ['  gt -> score [style=dashed, color="#8c8c8c"];']
     json.dumps(module.NODES)  # node table is plain data
+
+
+def test_report_metric_roles_from_config() -> None:
+    roles = report_metric_roles(load_robovis_config())
+    assert roles == {"R50": "primary", "relsg_gt": "secondary"}
+    assert report_metric_roles({"evaluation": {}}) == {"R50": "primary"}
+
+
+def test_graph_stats_section_raw_vs_g(tmp_path: Path) -> None:
+    (tmp_path / "stage_metrics.csv").write_text(
+        "image_id,t,valid,R50,R50_clean,det_prec20,det_prec20_clean\n"
+        "1,1,1,0.2,0.1,0.5,0.6\n2,1,1,0.4,0.3,0.7,0.8\n3,1,0,0.9,0.9,0.9,0.9\n"
+    )
+    lines = section_graph_stats(tmp_path)
+    assert "| t | R50 (raw) | R50 (G) | det_prec20 (raw) | det_prec20 (G) |" in lines
+    assert "| 1 | 0.300 | 0.200 | 0.600 | 0.700 |" in lines  # invalid row excluded

@@ -18,12 +18,20 @@ from typing import Any
 
 import pandas as pd
 
-from milestone1.robovis_eval import DEFAULT_Q_METRIC, q_output_dir
+from milestone1.robovis_eval import (
+    AUX_ORACLE_ROLE,
+    AUX_ORACLES,
+    DEFAULT_Q_METRIC,
+    ORACLE_STATUSES,
+    OracleParams,
+    oracle_profile_from_stage,
+    q_output_dir,
+)
 from milestone1.stop_policy import EXPLORATORY_LABEL, MAIN_LABEL, fixed_method_name
 
 FLOAT_DIGITS = 3
 HEADING_DEMOTE = 2  # included docs: "# x" -> "### x"
-ORACLE_STATUSES = ("defined", "unstable_tail", "zero_recovery", "invalid_levels")
+DEFAULT_ORACLE_RATIO = 0.9  # only used when build_report gets no OracleParams
 NA_TEXT = "n/a"
 STATUS_SHORT = {
     MAIN_LABEL: "main",
@@ -32,8 +40,10 @@ STATUS_SHORT = {
 }
 EXPLORATORY_FOOTNOTE = f"\\* exploratory = {EXPLORATORY_LABEL}."
 STATUS_ORDER = {MAIN_LABEL: 0, EXPLORATORY_LABEL: 1, "baseline": 2}
-STAGE_PROFILE_COLUMNS = ("scale", "n_valid", "R50", "R100", "mR50_official", "relsg_gt",
-                         "node_recall_gt", "trip_recall_gt")  # fmt: skip
+STAGE_PROFILE_COLUMNS = ("scale", "n_valid", "R50", "R100", "mR50_official", "relsg_gt")
+# Observed-graph statistics (raw PGSG graph vs cleaned graph G): descriptive only.
+GRAPH_STAT_PAIRS = (("R50", "R50_clean"), ("det_prec20", "det_prec20_clean"))
+AUX_ORACLE_NOTE = AUX_ORACLE_ROLE
 METHOD_COLUMNS = ("method", "status", "n_images", "mean_stop_t", "q_stop", "mR50_stop",
                   "mean_residual", "oracle_mae", "oracle_n", "forced_terminal_rate",
                   "inference_failure_rate", "eq_fixed_q")  # fmt: skip
@@ -196,35 +206,31 @@ def section_dataset(selection_manifest: Path) -> list[str]:
 
 
 def _oracle_lines(
-    run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str]
+    run_dir: Path, q_metrics: Sequence[str], params: OracleParams, num_levels: int
 ) -> list[str]:
-    rows = []
+    """Oracle status per q metric x definition, computed from stage_metrics.csv."""
+    stage = run_dir / "stage_metrics.csv"
+    if not stage.exists():
+        return [na("stage_metrics.csv (oracle profile)")]
+    rows: list[dict[str, Any]] = []
     for m in q_metrics:
-        src = next((eval_dir(run_dir, p, m) for p in paths
-                    if (eval_dir(run_dir, p, m) / "oracle.csv").exists()), None)  # fmt: skip
-        if src is None:
-            rows.append({"q_metric": m, "note": na("oracle.csv")})
-            continue
-        ids = read_json(src / "eval_set_ids.json") or {}
-        oracle = pd.read_csv(src / "oracle.csv")
-        defined = oracle[oracle["oracle_status"] == "defined"]
-        n_last = int((defined["oracle_t"] == ids.get("num_levels", -1)).sum())
-        counts = ids.get("oracle_status_counts")
-        # Statuses absent from the counts occurred 0 times in a known eval set.
-        status_counts = (
-            {k: int(counts.get(k, 0)) for k in ORACLE_STATUSES}
-            if counts is not None
-            else {}
-        )
-        rows.append({"q_metric": m, "n_eval": ids.get("n_eval"), **status_counts,
-                     "defined_at_last_level": n_last, "note": rel(src, run_dir)})  # fmt: skip
-    cols = ["q_metric", "n_eval", "defined", "unstable_tail", "zero_recovery",
-            "invalid_levels", "defined_at_last_level", "note"]  # fmt: skip
-    return ["Relative-stable oracle status (eval set):", "", *md_table(rows, cols)]
+        try:
+            rows += df_rows(oracle_profile_from_stage(stage, m, params, num_levels))
+        except ValueError as exc:  # metric column absent / not numeric
+            rows.append({"q_metric": m, "definition": na(str(exc))})
+    cols = ["q_metric", "definition", "role", "n_eval", *ORACLE_STATUSES,
+            "defined_at_last_level", "median_oracle_t"]  # fmt: skip
+    return [
+        f"Oracle status on the eval set (main = relative_stable, ratio {params.ratio};"
+        f" {AUX_ORACLE_ROLE}: monotone_stable = same rule on the isotonic envelope,"
+        f" gain_based = first t with max_(u>t) q_u - q_t < {params.gain_delta}):",
+        "",
+        *md_table(rows, cols),
+    ]
 
 
 def section_recall_profile(
-    run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str]
+    run_dir: Path, q_metrics: Sequence[str], params: OracleParams, num_levels: int
 ) -> list[str]:
     lines = ["## PGSG recall profile", ""]
     summ = read_json(run_dir / "stage_summary.json")
@@ -237,7 +243,7 @@ def section_recall_profile(
         lines += [f"Mean over {summ.get('n_images', NA_TEXT)} images per level"
                   " (`stage_summary.json`; mR50 = official /50.001 convention).", ""]  # fmt: skip
         lines += md_table(rows, ["t", *STAGE_PROFILE_COLUMNS])
-    return lines + ["", *_oracle_lines(run_dir, paths, q_metrics)]
+    return lines + ["", *_oracle_lines(run_dir, q_metrics, params, num_levels)]
 
 
 def section_pilot(run_dir: Path) -> list[str]:
@@ -262,6 +268,15 @@ def _ci_text(stat: Mapping[str, float] | None) -> str:
     return f"{fmt(stat['mean'])} [{fmt(stat['ci_low'])}, {fmt(stat['ci_high'])}]"
 
 
+def _aux_mae_cells(row: Mapping[str, Any]) -> dict[str, str]:
+    """'MAE (n)' cells for the auxiliary oracle definitions."""
+    cells = {}
+    for d in AUX_ORACLES:
+        mae, n = row.get(f"oracle_mae_{d}"), row.get(f"oracle_n_{d}")
+        cells[f"MAE {d} (n)"] = NA_TEXT if n is None else f"{fmt(mae)} ({fmt(n)})"
+    return cells
+
+
 def _replay_coverage(edir: Path) -> str | None:
     path = edir / "c_sequences.csv"
     if not path.exists():
@@ -271,13 +286,21 @@ def _replay_coverage(edir: Path) -> str | None:
     return f"replay coverage: {1 - missing:.1%} of states have a C_t ({missing:.1%} missing)"
 
 
+def report_metric_roles(cfg: Mapping[str, Any]) -> dict[str, str]:
+    """Agreed evaluation metrics and their role (primary / secondary)."""
+    roles = cfg["evaluation"].get("report_q_metrics") or {DEFAULT_Q_METRIC: "primary"}
+    return {str(k): str(v) for k, v in roles.items()}
+
+
 def section_methods(run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str],
-                    num_levels: int) -> list[str]:  # fmt: skip
+                    num_levels: int,
+                    metric_roles: Mapping[str, str] | None = None) -> list[str]:  # fmt: skip
     lines = ["## Stop-policy results per path", "", EXPLORATORY_FOOTNOTE]
     for path in paths:
         for m in q_metrics:
             edir = eval_dir(run_dir, path, m)
-            lines += ["", f"### {path} (q = {m})", ""]
+            role = (metric_roles or {}).get(m)
+            lines += ["", f"### {path} (q = {m}{', ' + role if role else ''})", ""]
             summary_path = edir / "summary.csv"
             if not summary_path.exists():
                 lines.append(na(rel(summary_path, run_dir)))
@@ -285,12 +308,18 @@ def section_methods(run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str
             summary = _ordered_methods(pd.read_csv(summary_path), num_levels)
             boot = read_json(edir / "bootstrap.json") or {}
             rows = []
+            aux_rows = []
             for r in df_rows(summary):
+                aux_rows.append({"method": r["method"], **_aux_mae_cells(r)})
                 stat = (
                     boot.get("methods", {}).get(r["method"], {}).get("q_minus_eq_fixed")
                 )
                 rows.append({**r, "status": STATUS_SHORT.get(r["status"], r["status"]),
                              "q_stop - eq_fixed_q [95% CI]": _ci_text(stat)})  # fmt: skip
+            graphs_dir = (
+                summary["graphs_dir"].iloc[0] if "graphs_dir" in summary else None
+            )
+            lines += [f"Graphs replayed: `{graphs_dir or NA_TEXT}`.", ""]
             lines += md_table(rows, [*METHOD_COLUMNS, "q_stop - eq_fixed_q [95% CI]"])
             lines.append("")
             for key in PAIRWISE_KEYS:
@@ -298,13 +327,45 @@ def section_methods(run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str
                 lines.append(f"- {key} (q_stop): {_ci_text(stat)}")
             coverage = _replay_coverage(edir)
             lines.append(f"- {coverage}" if coverage else "- " + na("c_sequences.csv"))
+            aux_cols = [f"MAE {d} (n)" for d in AUX_ORACLES]
+            lines += ["", f"Oracle MAE under the auxiliary definitions ({AUX_ORACLE_NOTE}):",
+                      "", *md_table(aux_rows, ["method", *aux_cols])]  # fmt: skip
             lines += ["", image_line(edir / "figures" / "fig2_fixed_curve.png", run_dir, f"Fig 2 {path} {m}"),
                       image_line(edir / "figures" / "fig3_examples.png", run_dir, f"Fig 3 {path} {m}"),
                       image_line(edir / "signal_by_level.png", run_dir, f"signal by level {path} {m}")]  # fmt: skip
     return lines
 
 
-def section_signal_compare(run_dir: Path) -> list[str]:
+def section_graph_stats(run_dir: Path) -> list[str]:
+    """Raw PGSG graph vs cleaned graph G, per level (descriptive, not evaluation)."""
+    lines = [
+        "## Observed graph G statistics",
+        "",
+        "Raw PGSG graph vs the cleaned graph G given to the check generator, mean over"
+        " valid images per level. Descriptive only; these are not evaluation metrics.",
+        "",
+    ]
+    path = run_dir / "stage_metrics.csv"
+    if not path.exists():
+        return lines + [na("stage_metrics.csv")]
+    df = pd.read_csv(path)
+    cols = [c for pair in GRAPH_STAT_PAIRS for c in pair]
+    missing = [c for c in cols if c not in df.columns]
+    if missing:
+        return lines + [na(f"stage_metrics.csv columns {missing}")]
+    valid = df[df["valid"].astype(str).str.lower().isin(["1", "true"])]
+    numeric = valid[["t", *cols]].apply(pd.to_numeric, errors="coerce")
+    means = numeric.groupby("t")[cols].mean().reset_index()
+    rename = {raw: f"{raw} (raw)" for raw, _ in GRAPH_STAT_PAIRS}
+    rename |= {g: f"{raw} (G)" for raw, g in GRAPH_STAT_PAIRS}
+    rows = [{("t" if k == "t" else rename[k]): v for k, v in r.items()}
+            for r in df_rows(means)]  # fmt: skip
+    for r in rows:
+        r["t"] = int(r["t"])
+    return lines + md_table(rows, ["t", *(rename[c] for c in cols)])
+
+
+def section_signal_compare(run_dir: Path, q_metrics: Sequence[str]) -> list[str]:
     path = run_dir / "eval" / "signal_compare.csv"
     lines = ["## Signal diagnostic across paths", ""]
     if not path.exists():
@@ -312,7 +373,12 @@ def section_signal_compare(run_dir: Path) -> list[str]:
     df = pd.read_csv(path)
     if "q_metric" not in df.columns:
         df.insert(1, "q_metric", DEFAULT_Q_METRIC)
-    df = df.sort_values(["q_metric", "path", "condition"])
+    df = df[df["q_metric"].isin(q_metrics)]
+    order = {m: i for i, m in enumerate(q_metrics)}
+    df = df.sort_values(
+        ["q_metric", "path", "condition"],
+        key=lambda col: col.map(order) if col.name == "q_metric" else col,
+    )
     lines += [
         "AUC = predicting gain_left > 0 on qmax > 0 states; rho over pooled states.",
         "",
@@ -431,18 +497,22 @@ def build_report(
     q_metrics: Sequence[str],
     num_levels: int,
     notes: Path | None,
+    oracle_params: OracleParams | None = None,
+    metric_roles: Mapping[str, str] | None = None,
     header_lines: Sequence[str] = (),
 ) -> str:
     """Assemble the full report markdown for one run directory."""
     run_dir = output_root / run_id
+    oracle_params = oracle_params or OracleParams(DEFAULT_ORACLE_RATIO)
     sections: list[list[str]] = [
         [f"# ROBOVIS2027 report: {run_id}", "", *header_lines],
         section_manifest(output_root, run_dir),
         section_dataset(selection_manifest),
         figure1_lines(output_root, run_dir),
-        section_recall_profile(run_dir, paths, q_metrics),
-        section_methods(run_dir, paths, q_metrics, num_levels),
-        section_signal_compare(run_dir),
+        section_recall_profile(run_dir, q_metrics, oracle_params, num_levels),
+        section_graph_stats(run_dir),
+        section_methods(run_dir, paths, q_metrics, num_levels, metric_roles),
+        section_signal_compare(run_dir, q_metrics),
         section_usage(run_dir),
         section_pilot(run_dir),
         section_notes(notes),

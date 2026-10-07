@@ -18,6 +18,7 @@ from milestone1.check_generator import (
     PROMPT_V1,
     PROMPT_V2,
     PROMPT_VERSIONS,
+    STRING_HINT_TEMPLATE,
     CheckLimits,
     check_ids,
     load_cached,
@@ -101,6 +102,12 @@ Field rules:
 - limitation: one of "low_resolution", "occluded", "out_of_frame", "other", "unknown".
 - reason: plain string, at most {max_chars} characters."""
 
+LIMITATION_ENUM_NOTE_V2 = (
+    "limitation must be exactly one of: "
+    + ", ".join(f'"{v}"' for v in LIMITATIONS)
+    + "."
+)
+
 CHECKS_HEADER = "Checks to judge (evidence records derived from the graph above):"
 IDS_NOTE = "Return one item for each of these check ids, each exactly once: {ids}"
 
@@ -122,9 +129,13 @@ def judge_system_prompt(
         basis_rule=basis_rule,
         benefit_rule=benefit_rule,
     )
-    if is_v2:
-        schema = f"{schema}\n\n{AXES_NOTE_V2}"
-    return f"{COMMON_PREAMBLE}\n\n{task}\n\n{schema}"
+    if not is_v2:
+        return f"{COMMON_PREAMBLE}\n\n{task}\n\n{schema}"
+    hint = STRING_HINT_TEMPLATE.format(chars=limits.string_hint_chars)
+    return (
+        f"{COMMON_PREAMBLE}\n\n{task}\n\n{AXES_NOTE_V2}\n\n"
+        f"{hint}\n{LIMITATION_ENUM_NOTE_V2}\n{schema}"
+    )
 
 
 def render_checks(checks: dict[str, Any]) -> str:
@@ -217,6 +228,7 @@ def judge_checks(
     out_path: Path,
     prompt_version: str = PROMPT_V1,
     image_path: Path | None = None,
+    record_extra: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Judge one state's checks. Returns (record, from_cache).
 
@@ -244,6 +256,7 @@ def judge_checks(
         "options": client.settings.record(),
         "skipped_empty": False,
         "created_at": time.strftime("%Y-%m-%dT%H:%M:%S"),
+        **(record_extra or {}),
     }
     if checks_record.get("failure") or checks_record.get("checks") is None:
         record = {

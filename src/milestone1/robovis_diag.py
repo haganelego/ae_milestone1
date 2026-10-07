@@ -337,7 +337,12 @@ def run_signal_diag(
         input_dir, stage, levels, conditions, limits, layout, q_metric
     )
     per_level = by_level(states, conditions)
-    stats = {"q_metric": q_metric, "levels": levels, **signal_stats(states, conditions)}
+    stats = {
+        "q_metric": q_metric,
+        "graphs_dir": layout.graphs,
+        "levels": levels,
+        **signal_stats(states, conditions),
+    }
     out_dir.mkdir(parents=True, exist_ok=True)
     states.to_csv(out_dir / "signal_per_state.csv", index=False)
     per_level.to_csv(out_dir / "signal_by_level.csv", index=False)
@@ -382,6 +387,7 @@ def compare_paths(
             row: dict[str, Any] = {
                 "path": path,
                 "q_metric": st.get("q_metric"),
+                "graphs_dir": st.get("graphs_dir"),
                 "condition": name,
                 "status": cond.status_label,
                 "n_states": st["n_states"],

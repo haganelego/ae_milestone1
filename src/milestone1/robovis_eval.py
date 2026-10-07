@@ -43,11 +43,15 @@ MAIN_ORACLE = ORACLE_RELATIVE_STABLE
 AUX_ORACLES = (ORACLE_MONOTONE_STABLE, ORACLE_GAIN_BASED)
 ORACLE_DEFINITIONS = (MAIN_ORACLE, *AUX_ORACLES)
 DEFAULT_ORACLE_GAIN_DELTA = 0.05
+# User decision 2026-10-07: evaluation stays as planned; variants are kept but labelled.
+AUX_ORACLE_ROLE = "auxiliary, not used in main results"
 FLOAT_TOL = 1e-12
 # q_t metric used when none is configured; its outputs keep the legacy layout.
 DEFAULT_Q_METRIC = "R50"
 
 STAGE_REQUIRED_COLUMNS = ("image_id", "t", "valid")
+# stage_metrics columns that can never be a q metric.
+NON_METRIC_COLUMNS = ("image_id", "split", "t", "scale", "valid", "n_gt_rel")
 PRED_HITS_BASE_COLUMNS = ("image_id", "t", "pred_id", "n_gt")
 PRED_HITS_FILENAME = "stage_predicate_hits.csv"
 STOPS_COLUMNS = (
@@ -108,6 +112,8 @@ def load_stage_metrics(path: str | Path, q_metric: str) -> pd.DataFrame:
     """Read stage_metrics.csv; only image_id, t, valid and ``q_metric`` are required."""
     df = pd.read_csv(path)
     col = q_metric
+    if col in NON_METRIC_COLUMNS:
+        raise ValueError(f"{col!r} is an identifier column, not a q metric")
     missing = [c for c in (*STAGE_REQUIRED_COLUMNS, col) if c not in df.columns]
     if missing:
         raise ValueError(f"{path}: missing columns {missing}")
@@ -115,7 +121,13 @@ def load_stage_metrics(path: str | Path, q_metric: str) -> pd.DataFrame:
     df["image_id"] = df["image_id"].astype(int)
     df["t"] = df["t"].astype(int)
     df["valid"] = df["valid"].map(_to_bool)
-    df[col] = pd.to_numeric(df[col], errors="coerce")
+    raw = df[col]
+    coerced = pd.to_numeric(raw, errors="coerce")
+    # Blank cells (invalid rows) become NaN; any other non-numeric text is an error.
+    non_numeric = raw.notna() & (raw.astype(str).str.strip() != "") & coerced.isna()
+    if non_numeric.any():
+        raise ValueError(f"{path}: column {col!r} is not numeric")
+    df[col] = coerced
     return df
 
 
@@ -638,13 +650,29 @@ def oracle_table(eval_set: EvalSet, curves: RecallCurves) -> pd.DataFrame:
                 "in_eval_set": orc is not None,
                 "oracle_status": orc.status if orc else eval_set.excluded[image_id],
                 "oracle_t": orc.t if orc else None,
+                **{
+                    key: value
+                    for d in AUX_ORACLES
+                    for key, value in _aux_oracle_columns(eval_set, d, image_id).items()
+                },
                 "qmax": float(np.nanmax(q)) if not np.isnan(q).all() else math.nan,
                 "q_final": float(q[-1]),
             }
         )
     df = pd.DataFrame(rows)
-    df["oracle_t"] = df["oracle_t"].astype("Int64")
+    for col in ["oracle_t", *(f"{d}_t" for d in AUX_ORACLES)]:
+        df[col] = df[col].astype("Int64")
     return df
+
+
+def _aux_oracle_columns(
+    eval_set: EvalSet, definition: str, image_id: int
+) -> dict[str, Any]:
+    res = eval_set.oracles.get(definition, {}).get(image_id)
+    if res is None:
+        return {f"{definition}_status": eval_set.excluded.get(image_id),
+                f"{definition}_t": None}  # fmt: skip
+    return {f"{definition}_status": res.status, f"{definition}_t": res.t}
 
 
 def oracle_status_counts(
@@ -670,7 +698,7 @@ def oracle_profile(eval_set: EvalSet, num_levels: int, q_metric: str) -> pd.Data
             {
                 "q_metric": q_metric,
                 "definition": d,
-                "role": "main" if d == MAIN_ORACLE else "auxiliary",
+                "role": "main" if d == MAIN_ORACLE else AUX_ORACLE_ROLE,
                 "n_eval": len(eval_set.ids),
                 **{s: int(counts.get(s, 0)) for s in ORACLE_STATUSES},
                 "defined_at_last_level": sum(t == num_levels for t in ts),
@@ -722,3 +750,14 @@ def select_figure_examples(
             "median": {"image_id": median_id, "residual_diff": float(diff[median_id])},
         },
     }  # fmt: skip
+
+
+def oracle_profile_from_stage(
+    stage_path: Path, q_metric: str, params: OracleParams, num_levels: int
+) -> pd.DataFrame:
+    """oracle_profile for one q metric computed directly from stage_metrics.csv."""
+    curves = build_curves(
+        load_stage_metrics(stage_path, q_metric), q_metric, num_levels
+    )
+    eval_set = build_eval_set(curves, params.ratio, params.gain_delta)
+    return oracle_profile(eval_set, num_levels, q_metric)

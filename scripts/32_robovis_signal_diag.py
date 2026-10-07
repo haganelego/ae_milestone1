@@ -44,7 +44,7 @@ from milestone1.robovis_eval import (  # noqa: E402
     configured_q_metric,
     q_output_dir,
 )
-from milestone1.robovis_replay import RunLayout  # noqa: E402
+from milestone1.robovis_replay import RunLayout, resolve_graphs_subdir  # noqa: E402
 from milestone1.stop_policy import (  # noqa: E402
     OUTCOME_EMPTY_GRAPH,
     OUTCOME_OK,
@@ -72,6 +72,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--paths", default=None, help="comma list: F1,F2,F2__9b,...")
     p.add_argument("--path", default=None, help="single path (alias of --paths)")
     p.add_argument("--compare-levels", default=DEFAULT_COMPARE_LEVELS)
+    p.add_argument(
+        "--graphs-subdir",
+        default="graphs",
+        help="graphs | graphs_clean | auto (graphs_clean for paths with a 'G' segment, per path)",
+    )
     p.add_argument(
         "--q-metric",
         default=None,
@@ -137,9 +142,11 @@ def run_one(
     cfg: dict,
     levels: list[int] | None,
     q_metric: str,
+    graphs_subdir: str,
 ) -> DiagResult:
     out_dir = q_output_dir(run_dir / "eval" / path, q_metric)
-    layout = RunLayout("graphs", f"checks/{path}", f"decisions/{path}")
+    graphs = resolve_graphs_subdir(graphs_subdir, path)
+    layout = RunLayout(graphs, f"checks/{path}", f"decisions/{path}")
     res = run_signal_diag(input_dir, out_dir, cfg, layout, levels, q_metric)
     theta = int(cfg["proposal"]["theta"])
     title = f"{run_dir.name} {path} (q={q_metric})"
@@ -147,7 +154,7 @@ def run_one(
     cols = ["t", "n", "n_missing", "A_mean", "H_mean", "C_proposed_mean",
             "C_benefit_gated_mean", "frac_C_proposed_ge_theta",
             "frac_C_benefit_gated_ge_theta", "q_mean", "gain_left_mean"]  # fmt: skip
-    print(f"===== {path} -> {out_dir}")
+    print(f"===== {path} (graphs: {graphs}) -> {out_dir}")
     with pd.option_context("display.width", 250, "display.max_columns", 30):
         print(res.levels[cols].round(3).to_string(index=False))
     return res
@@ -180,12 +187,15 @@ def main() -> None:
     compare_levels = [int(x) for x in args.compare_levels.split(",")]
 
     q_metric = configured_q_metric(cfg, args.q_metric)
-    results = {p: run_one(p, run_dir, input_dir, cfg, levels, q_metric) for p in paths}
+    results = {
+        p: run_one(p, run_dir, input_dir, cfg, levels, q_metric, args.graphs_subdir)
+        for p in paths
+    }
     compare = compare_paths(results, build_conditions(cfg), compare_levels)
     out_path = run_dir / "eval" / COMPARE_FILENAME
     full = write_compare(compare, out_path, paths, q_metric)
     show = (
-        ["path", "q_metric", "condition", "n_valid"]
+        ["path", "q_metric", "graphs_dir", "condition", "n_valid"]
         + [c for c in full.columns if c.startswith("frac_ge_theta")]
         + ["rho_t", "p_t", "rho_gain_left", "p_gain_left", "auc_score", "auc_ge_theta"]
     )

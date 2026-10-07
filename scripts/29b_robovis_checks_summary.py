@@ -45,6 +45,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--run-id", required=True)
     p.add_argument("--variant", required=True, help="F1, F2, F2__9b, ...")
     p.add_argument(
+        "--graphs-subdir",
+        default="graphs",
+        help="graph dir used for the anchor check (graphs_clean for variants *_G)",
+    )
+    p.add_argument(
         "--checks-variant",
         default=None,
         help="checks dir if different from --variant (judge-only runs, e.g. F2)",
@@ -197,7 +202,7 @@ def main() -> None:
             (
                 d,
                 checks_by_key.get((i, lv)),
-                load_entity_ids(run_root / "graphs", i, lv),
+                load_entity_ids(run_root / args.graphs_subdir, i, lv),
             )
             for i, lv, d in decisions
             if key == ALL_KEY or lv == key
@@ -210,6 +215,7 @@ def main() -> None:
         "run_id": args.run_id,
         "variant": args.variant,
         "checks_variant": checks_variant,
+        "graphs_subdir": args.graphs_subdir,
         "theta": theta,
         "gate": f"status={GATE_STATUS} & limitation={GATE_LIMITATION} & anchors+region valid",
         "by_level": groups,

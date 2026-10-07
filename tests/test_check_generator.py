@@ -56,6 +56,7 @@ SETTINGS = OllamaSettings(
     transient_retries=5,
     backoff_base_s=0.0,
     backoff_max_s=0.0,
+    retry_temperature=0.3,
 )
 IMAGE_ID = SYNTHETIC_IMAGE_IDS[0]
 LEVEL = 7
@@ -264,8 +265,10 @@ def test_generate_checks_schema_fail_then_success_records_two_attempts(
     assert record["attempts"] == 2
     assert record["failure"] is False and record["checks"] == VALID_CHECKS
     assert client.calls[0] == client.calls[1]  # same input on retry
-    assert client.overrides == [{"seed": 1}, {"seed": 2}]  # seed + 1 on retry
+    # retry: seed + 1 and retry temperature; first attempt keeps temperature 0
+    assert client.overrides == [{"seed": 1}, {"seed": 2, "temperature": 0.3}]
     assert record["seeds"] == [1, 2] and record["seed_used"] == 2
+    assert record["temperatures"] == [0, 0.3] and record["temperature_used"] == 0.3
 
 
 def test_generate_checks_two_schema_fails_records_failure(tmp_path: Path) -> None:
@@ -284,6 +287,7 @@ def test_generate_checks_empty_answer_is_valid_not_failure(tmp_path: Path) -> No
     record, _ = _run(client, tmp_path)
     assert record["failure"] is False and record["attempts"] == 1
     assert record["seed_used"] == 1
+    assert record["temperatures"] == [0] and record["temperature_used"] == 0
 
 
 def test_generate_checks_http_failure_is_recorded(tmp_path: Path) -> None:

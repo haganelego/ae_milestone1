@@ -2,7 +2,7 @@
 
 Usage:
     uv run --project egtr python scripts/36_robovis_report.py --run-id dev_r0 \
-        --paths F1,F2 --q-metrics R50,relsg_gt
+        --paths F1,F2
 
 Reads (all optional; missing inputs become a visible "not available" line):
   outputs/robovis2027/preflight.json, <run>/manifest.json, selection_manifest,
@@ -13,7 +13,7 @@ Reads (all optional; missing inputs become a visible "not available" line):
 ``--refresh`` first reruns scripts 37, 30, 31 and 32 (model-free) so the whole
 report is one command:
     uv run --project egtr python scripts/36_robovis_report.py --run-id dev_r0 \
-        --paths F1,F2 --q-metrics R50,relsg_gt --refresh
+        --paths F1,F2 --refresh
 """
 
 import argparse
@@ -27,8 +27,8 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.config import resolve  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
-from milestone1.robovis_eval import configured_q_metric  # noqa: E402
-from milestone1.robovis_report import build_report  # noqa: E402
+from milestone1.robovis_eval import OracleParams  # noqa: E402
+from milestone1.robovis_report import build_report, report_metric_roles  # noqa: E402
 
 NOTES_FILENAME = "report_notes.md"
 
@@ -38,7 +38,14 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--run-id", required=True)
     p.add_argument("--paths", required=True, help="comma list, e.g. F1,F2,F2__9b")
     p.add_argument(
-        "--q-metrics", default=None, help="comma list; default: config q_metric"
+        "--q-metrics",
+        default=None,
+        help="subset of evaluation.report_q_metrics (default: all of them, R50 first)",
+    )
+    p.add_argument(
+        "--graphs-subdir",
+        default="graphs",
+        help="for --refresh: graphs | graphs_clean | auto (graphs_clean for paths with a 'G' segment)",
     )
     p.add_argument("--notes", default=None, help="report_notes.md to include verbatim")
     p.add_argument("--out", default=None, help="default: <run>/report.md")
@@ -58,7 +65,11 @@ def run_step(script: str, *args: str) -> None:
 
 
 def refresh(
-    run_id: str, paths: list[str], q_metrics: list[str], config: str | None
+    run_id: str,
+    paths: list[str],
+    q_metrics: list[str],
+    config: str | None,
+    graphs_subdir: str,
 ) -> None:
     """Regenerate every eval output and figure the report reads (no model calls)."""
     cfg_args = ["--config", config] if config else []
@@ -66,10 +77,13 @@ def refresh(
     for m in q_metrics:
         for path in paths:
             common = ["--run-id", run_id, "--path", path, "--q-metric", m, *cfg_args]
-            run_step("30_robovis_replay_eval.py", *common)
+            run_step(
+                "30_robovis_replay_eval.py", *common, "--graphs-subdir", graphs_subdir
+            )
             run_step("31_robovis_figures.py", *common)
         run_step("32_robovis_signal_diag.py", "--run-id", run_id,
-                 "--paths", ",".join(paths), "--q-metric", m, *cfg_args)  # fmt: skip
+                 "--paths", ",".join(paths), "--q-metric", m,
+                 "--graphs-subdir", graphs_subdir, *cfg_args)  # fmt: skip
 
 
 def git_head() -> str:
@@ -96,13 +110,20 @@ def main() -> None:
     output_root = resolve(cfg["output_root"])
     run_dir = output_root / args.run_id
     paths = [p.strip() for p in args.paths.split(",") if p.strip()]
+    roles = report_metric_roles(cfg)
     q_metrics = (
         [m.strip() for m in args.q_metrics.split(",") if m.strip()]
         if args.q_metrics
-        else [configured_q_metric(cfg)]
+        else list(roles)
     )
+    unknown = [m for m in q_metrics if m not in roles]
+    if unknown:
+        raise SystemExit(
+            f"--q-metrics {unknown} are not agreed evaluation metrics "
+            f"(evaluation.report_q_metrics = {roles})"
+        )
     if args.refresh:
-        refresh(args.run_id, paths, q_metrics, args.config)
+        refresh(args.run_id, paths, q_metrics, args.config, args.graphs_subdir)
     notes = find_notes(args.notes, run_dir, output_root)
     header = [
         f"Generated {time.strftime('%Y-%m-%d %H:%M:%S')} by `scripts/36_robovis_report.py`"
@@ -117,6 +138,8 @@ def main() -> None:
         paths=paths,
         q_metrics=q_metrics,
         num_levels=len(cfg["resolution"]["scales"]),
+        oracle_params=OracleParams.from_config(cfg),
+        metric_roles=roles,
         notes=notes,
         header_lines=header,
     )

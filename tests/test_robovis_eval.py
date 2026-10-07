@@ -29,20 +29,29 @@ from milestone1.robovis_eval import (  # noqa: E402
     ORACLE_UNSTABLE_TAIL,
     ORACLE_ZERO_RECOVERY,
     FixedMix,
+    OracleParams,
     RecallCurves,
     build_eval_set,
     configured_q_metric,
     equal_observation_mix,
+    gain_based_oracle,
+    isotonic_increasing,
     load_stage_metrics,
     mean_recall_at_stop,
     mix_recall,
+    monotone_stable_oracle,
     paired_bootstrap,
     q_output_dir,
     relative_stable_oracle,
     residual,
     select_figure_examples,
 )
-from milestone1.robovis_replay import RunLayout, run_replay_eval  # noqa: E402
+from milestone1.robovis_replay import (  # noqa: E402
+    RunLayout,
+    is_clean_graph_variant,
+    resolve_graphs_subdir,
+    run_replay_eval,
+)
 from milestone1.robovis_sgdet import NUM_PREDICATES, OFFICIAL_MR_EPS  # noqa: E402
 from milestone1.stop_policy import build_conditions  # noqa: E402
 
@@ -386,3 +395,158 @@ def test_signal_diag_with_relsg_metric(
     assert s.loc[(1001, 3), "gain_left"] == pytest.approx(
         0.78**0.5 - 0.05**0.5, abs=1e-4
     )
+
+
+# --------------------------------------------------------------------------
+# Auxiliary oracle definitions
+# --------------------------------------------------------------------------
+
+GAIN_DELTA = 0.05
+
+
+def test_isotonic_increasing_pools_violators() -> None:
+    assert isotonic_increasing([3.0, 1.0, 2.0]) == pytest.approx([2.0, 2.0, 2.0])
+    assert isotonic_increasing([0.1, 0.2, 0.3]) == pytest.approx([0.1, 0.2, 0.3])
+    env = isotonic_increasing([0.2, 0.95, 0.7, 0.92, 1.0])
+    assert env == pytest.approx([0.2, 0.825, 0.825, 0.92, 1.0])
+    assert np.all(np.diff(env) >= 0)
+
+
+def test_monotone_stable_on_plan_example() -> None:
+    res = monotone_stable_oracle([0.2, 0.95, 0.7, 0.92, 1.0], None, RATIO)
+    assert (res.status, res.t) == (ORACLE_DEFINED, 4)
+
+
+def test_monotone_stable_defines_unstable_tail_case() -> None:
+    # Envelope [.1, .45, .45]: threshold .405 -> t2 (relative-stable: unstable_tail).
+    res = monotone_stable_oracle([0.1, 0.5, 0.4], None, RATIO)
+    assert (res.status, res.t) == (ORACLE_DEFINED, 2)
+    assert res.qmax == pytest.approx(0.45)
+
+
+def test_monotone_stable_is_robust_to_an_early_spike() -> None:
+    # A cumulative max would lock in the t2 spike (oracle t2); isotonic does not.
+    q = [0.0, 0.8, 0.0, 0.0, 0.0, 0.0, 0.5]
+    assert monotone_stable_oracle(q, None, RATIO).t == len(q)
+
+
+@pytest.mark.parametrize("oracle_fn", [monotone_stable_oracle, gain_based_oracle])
+def test_aux_oracles_undefined_cases(oracle_fn: Any) -> None:
+    param = RATIO if oracle_fn is monotone_stable_oracle else GAIN_DELTA
+    assert oracle_fn([0.0, 0.0, 0.0], None, param).status == ORACLE_ZERO_RECOVERY
+    invalid = oracle_fn([0.1, 0.5, 0.5], [True, False, True], param)
+    assert (invalid.status, invalid.t) == (ORACLE_INVALID_LEVELS, None)
+
+
+@pytest.mark.parametrize(
+    ("q", "delta", "t"),
+    [
+        ([0.2, 0.95, 0.7, 0.92, 1.0], GAIN_DELTA, 5),  # t2 gain .05 is not < .05
+        ([0.2, 0.95, 0.7, 0.92, 1.0], 0.5, 2),
+        ([0.1, 0.5, 0.4], GAIN_DELTA, 2),  # later levels only go down
+        ([0.5, 0.52, 0.53, 0.9], GAIN_DELTA, 4),
+        ([0.3], GAIN_DELTA, 1),  # final level always qualifies
+    ],
+)
+def test_gain_based_oracle(q: list[float], delta: float, t: int) -> None:
+    res = gain_based_oracle(q, None, delta)
+    assert (res.status, res.t) == (ORACLE_DEFINED, t)
+
+
+def test_oracle_params_from_config(fast_cfg: dict[str, Any]) -> None:
+    params = OracleParams.from_config(fast_cfg)
+    assert params.ratio == fast_cfg["evaluation"]["oracle_ratio"]
+    assert params.gain_delta == fast_cfg["evaluation"]["oracle_gain_delta"]
+    no_delta = {"evaluation": {"oracle_ratio": RATIO}}
+    assert OracleParams.from_config(no_delta).gain_delta == GAIN_DELTA
+
+
+def test_replay_reports_all_oracle_definitions(
+    tmp_path: Path, no_network: None, fast_cfg: dict[str, Any]
+) -> None:
+    run_replay_eval(FIXTURE, tmp_path, fast_cfg)
+    summary = pd.read_csv(tmp_path / "summary.csv").set_index("method")
+    # Fixture: 9 eval images, 1 zero_recovery, 1 unstable_tail (1006).
+    assert summary.loc["proposed", "oracle_n"] == 7
+    assert summary.loc["proposed", "oracle_n_monotone_stable"] == 8
+    assert summary.loc["proposed", "oracle_n_gain_based"] == 8
+    assert not math.isnan(summary.loc["proposed", "oracle_mae_gain_based"])
+    oracle = pd.read_csv(tmp_path / "oracle.csv").set_index("image_id")
+    assert oracle.loc[1006, "oracle_status"] == ORACLE_UNSTABLE_TAIL
+    assert oracle.loc[1006, "monotone_stable_status"] == ORACLE_DEFINED
+    assert oracle.loc[1007, "gain_based_status"] == ORACLE_INVALID_LEVELS
+    profile = pd.read_csv(tmp_path / "oracle_profile.csv").set_index("definition")
+    assert list(profile.index) == ["relative_stable", "monotone_stable", "gain_based"]
+    assert profile.loc["relative_stable", "role"] == "main"
+    assert profile.loc["monotone_stable", "defined"] == 8
+    ids = json.loads((tmp_path / "eval_set_ids.json").read_text())
+    by_def = ids["oracle_status_counts_by_definition"]
+    assert by_def["relative_stable"] == ids["oracle_status_counts"]
+    assert by_def["gain_based"]["defined"] == 8
+
+
+def test_q_metric_must_be_numeric_metric_column(tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match="identifier"):
+        load_stage_metrics(FIXTURE / "stage_metrics.csv", "split")
+    bad = tmp_path / "stage_metrics.csv"
+    bad.write_text("image_id,t,valid,R50\n1,1,1,high\n")
+    with pytest.raises(ValueError, match="not numeric"):
+        load_stage_metrics(bad, "R50")
+
+
+# --------------------------------------------------------------------------
+# Graph directory selection (raw graphs vs cleaned graph G)
+# --------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    ("requested", "path", "expected"),
+    [
+        ("auto", "F1v_v2_G", "graphs_clean"),
+        ("auto", "F1v_v2_G__9b", "graphs_clean"),
+        ("auto", "F1_v2_G__j9b", "graphs_clean"),
+        ("auto", "F1v_v2", "graphs"),
+        ("auto", "F2__9b", "graphs"),
+        ("auto", "F1_Gx", "graphs"),  # "Gx" is not the G segment
+        ("auto", None, "graphs"),
+        ("graphs_clean", "F1", "graphs_clean"),
+        ("graphs", "F1_v2_G", "graphs"),  # honoured, with a warning
+    ],
+)
+def test_resolve_graphs_subdir(
+    requested: str, path: str | None, expected: str, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert resolve_graphs_subdir(requested, path) == expected
+    warned = "warning" in capsys.readouterr().err
+    assert warned == (requested == "graphs" and path == "F1_v2_G")
+
+
+def test_is_clean_graph_variant() -> None:
+    assert is_clean_graph_variant("F1v_v2_G__9b")
+    assert not is_clean_graph_variant("G2")
+    assert not is_clean_graph_variant(None)
+
+
+def test_replay_records_graphs_dir_and_treats_missing_graph_as_missing(
+    tmp_path: Path, no_network: None, fast_cfg: dict[str, Any]
+) -> None:
+    run = tmp_path / "run"
+    shutil.copytree(FIXTURE, run)
+    shutil.copytree(run / "graphs", run / "graphs_clean")
+    # Remove one clean-graph level: it must become a missing C_t like any other.
+    (run / "graphs_clean" / "1010" / "level_12.json").unlink()
+    layout = RunLayout(graphs="graphs_clean")
+    run_replay_eval(run, tmp_path / "eval", fast_cfg, layout)
+    summary = pd.read_csv(tmp_path / "eval" / "summary.csv")
+    assert set(summary["graphs_dir"]) == {"graphs_clean"}
+    ids = json.loads((tmp_path / "eval" / "eval_set_ids.json").read_text())
+    assert ids["graphs_dir"] == "graphs_clean"
+    c = pd.read_csv(tmp_path / "eval" / "c_sequences.csv")
+    row = c[(c["image_id"] == 1010) & (c["t"] == 12)]
+    assert set(row["outcome"]) == {"missing_graph"} and row["C"].isna().all()
+    stops = pd.read_csv(tmp_path / "eval" / "stops.csv").set_index(
+        ["image_id", "method"]
+    )
+    # 1010 proposed: t12 was the first instant stop; now reset -> stop at t14.
+    assert stops.loc[(1010, "proposed"), "stop_t"] == 14
+    assert stops.loc[(1010, "proposed"), "failure_count"] == 1
