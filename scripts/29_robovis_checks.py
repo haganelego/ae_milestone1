@@ -46,6 +46,21 @@ def parse_int_list(text: str) -> list[int]:
     return [int(x) for x in text.replace(" ", "").split(",") if x]
 
 
+def load_history(
+    graphs_root: Path, image_id: int, level: int, n_history: int
+) -> tuple[list[dict[str, Any]], list[int]]:
+    """Graphs of the N preceding levels that exist, oldest first (+ their levels)."""
+    graphs: list[dict[str, Any]] = []
+    used: list[int] = []
+    for prev in range(max(1, level - n_history), level):
+        path = graphs_root / str(image_id) / f"level_{prev:02d}.json"
+        if path.exists():
+            with open(path) as f:
+                graphs.append(json.load(f))
+            used.append(prev)
+    return graphs, used
+
+
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     p.add_argument("--config", default="configs/robovis2027.yaml")
@@ -71,6 +86,13 @@ def parse_args() -> argparse.Namespace:
         help="explicit output dir name (e.g. F1v, F1_v2); overrides PATH[__tag]",
     )
     p.add_argument("--prompt-version", choices=PROMPT_VERSIONS, default=PROMPT_V1)
+    p.add_argument(
+        "--graph-history",
+        type=int,
+        default=0,
+        help="include the graphs of the N preceding levels (text only, oldest "
+        "first, no step numbers); variant gets suffix _h<N>",
+    )
     p.add_argument(
         "--graphs-subdir",
         default="graphs",
@@ -188,6 +210,9 @@ def main() -> None:
     variant = args.variant_name or (
         args.path + (f"__{args.out_tag}" if args.out_tag else "")
     )
+    history_suffix = f"_h{args.graph_history}"
+    if args.graph_history > 0 and not variant.endswith(history_suffix):
+        variant = f"{variant}{history_suffix}"
     checks_root = run_root / "checks" / (args.checks_from or variant)
     if args.checks_from and args.checks_from != variant:
         # Consistent per-variant path for replay/diagnostics: checks/<variant> -> source.
@@ -215,6 +240,14 @@ def main() -> None:
             break
         with open(graph_path) as f:
             graph = json.load(f)
+        history, history_levels = load_history(
+            graphs_root, image_id, level, args.graph_history
+        )
+        state_extra = {
+            **extra,
+            "graph_history_requested": args.graph_history,
+            "history_levels": history_levels,
+        }
         name = graph_path.name
         if args.checks_from:
             src = checks_root / str(image_id) / name
@@ -240,7 +273,8 @@ def main() -> None:
                 out_path=checks_root / str(image_id) / name,
                 image_path=image_path,
                 prompt_version=args.prompt_version,
-                record_extra=extra,
+                record_extra=state_extra,
+                history_graphs=history,
             )
         n_calls += 0 if cached else rec["http_attempts"]
         n_fail["checks"] += int(rec["failure"])
@@ -270,7 +304,8 @@ def main() -> None:
             out_path=decisions_root / str(image_id) / name,
             prompt_version=args.prompt_version,
             image_path=image_path if args.judge_with_image else None,
-            record_extra=extra,
+            record_extra=state_extra,
+            history_graphs=history,
         )
         n_calls += 0 if jcached else jrec.get("http_attempts", 0)
         n_fail["judge"] += int(jrec["failure"])

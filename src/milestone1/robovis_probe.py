@@ -20,6 +20,10 @@ For each probe configuration this module
   * ``probe_stop``: instant stop where ``sufficient`` is true;
   * ``probe_stop_next``: instant stop where ``next_step_helps`` is false.
 
+  * ``probe_gate_proposed`` / ``probe_gate_observed_only``: C_t = max_u
+    (continue) where the probe says not sufficient, else the judge's C_t of a
+    chosen decisions path; a missing/failed probe is a missing C_t.
+
 These policies are diagnostics, not plan conditions.
 """
 
@@ -47,13 +51,27 @@ from milestone1.robovis_eval import (
     q_output_dir,
     summarize,
 )
-from milestone1.robovis_replay import EvalParams
+from milestone1.robovis_replay import EvalParams, RunLayout, score_image
 from milestone1.robovis_stats import auc, spearman_stat
-from milestone1.stop_policy import fixed_method_name, replay_stop
+from milestone1.stop_policy import (
+    OBSERVED_ONLY,
+    PROPOSED,
+    build_conditions,
+    fixed_method_name,
+    replay_stop,
+)
+from milestone1.structured_io import ContractLimits
 
 PROBE_STOP = "probe_stop"
 PROBE_STOP_NEXT = "probe_stop_next"
 PROBE_POLICIES = (PROBE_STOP, PROBE_STOP_NEXT)
+# Combined policies: probe says "not sufficient" -> C = max_u (continue, analogue
+# of the plan's empty-graph clause); otherwise C = C_<condition> of a decisions path.
+GATE_PREFIX = "probe_gate_"
+GATED_CONDITIONS = (PROPOSED, OBSERVED_ONLY)
+GATE_POLICIES = tuple(f"{GATE_PREFIX}{c}" for c in GATED_CONDITIONS)
+GATE_STATUS = "exploratory (probe gate + judge C, not a plan condition)"
+REFERENCE_STATUS = "reference (ungated condition of the decisions path)"
 PROBE_STATUS = "exploratory (probe-only policy, not a plan condition)"
 FIXED_STATUS = "baseline"
 DETAIL_MIN, DETAIL_MAX = 0.0, 100.0
@@ -253,28 +271,123 @@ def probe_stops(states: pd.DataFrame, image_ids: Sequence[int], num_levels: int,
     return pd.DataFrame(rows)
 
 
+def gated_c_sequence(
+    states: pd.DataFrame,
+    image_id: int,
+    judge_c: Sequence[int | None],
+    max_u: int,
+) -> list[int | None]:
+    """C_t of the probe-gated policy.
+
+    probe ok & not sufficient -> max_u (keep observing); probe ok & sufficient ->
+    the judge's C_t (None if that state failed); probe missing/failed -> None
+    (communication failure, plan §6).
+    """
+    seq: list[int | None] = [None] * len(judge_c)
+    grp = states[(states["image_id"] == image_id) & (states["outcome"] == OUTCOME_OK)]
+    for r in grp.to_dict("records"):
+        t = int(r["t"])
+        seq[t - 1] = judge_c[t - 1] if bool(r["sufficient"]) else max_u
+    return seq
+
+
+def judge_c_table(
+    input_dir: Path,
+    image_ids: Sequence[int],
+    num_levels: int,
+    cfg: Mapping[str, Any],
+    layout: RunLayout,
+) -> dict[tuple[int, str], list[int | None]]:
+    """C_t sequences of the gated conditions for every image of a decisions path."""
+    conditions = {
+        n: c for n, c in build_conditions(cfg).items() if n in GATED_CONDITIONS
+    }
+    limits = ContractLimits.from_config(cfg)
+    out: dict[tuple[int, str], list[int | None]] = {}
+    for image_id in image_ids:
+        rows = score_image(input_dir, image_id, num_levels, conditions, limits, layout)
+        for name in conditions:
+            seq: list[int | None] = [None] * num_levels
+            for r in rows:
+                if r["condition"] == name:
+                    seq[int(r["t"]) - 1] = r["C"]
+            out[(int(image_id), name)] = seq
+    return out
+
+
+def gate_stops(
+    states: pd.DataFrame,
+    judge_c: Mapping[tuple[int, str], Sequence[int | None]],
+    image_ids: Sequence[int],
+    cfg: Mapping[str, Any],
+) -> pd.DataFrame:
+    """stops for the gated policies and for the ungated reference conditions."""
+    conditions = build_conditions(cfg)
+    rows = []
+    for name in GATED_CONDITIONS:
+        cond = conditions[name]
+        for image_id in image_ids:
+            base = list(judge_c[(int(image_id), name)])
+            for method, seq in (
+                (
+                    f"{GATE_PREFIX}{name}",
+                    gated_c_sequence(states, image_id, base, cond.max_u),
+                ),
+                (name, base),
+            ):
+                res = replay_stop(seq, cond.theta, cond.consecutive_k)
+                rows.append({"image_id": int(image_id), "method": method,
+                             "stop_t": res.stop_t, "natural_stop": res.natural_stop,
+                             "forced_terminal": res.forced_terminal,
+                             "failure_count": res.failure_count})  # fmt: skip
+    return pd.DataFrame(rows)
+
+
+def _status(method: str) -> str:
+    if method in PROBE_POLICIES:
+        return PROBE_STATUS
+    if method in GATE_POLICIES:
+        return GATE_STATUS
+    if method in GATED_CONDITIONS:
+        return REFERENCE_STATUS
+    return FIXED_STATUS
+
+
 def evaluate_probe_policies(
-    states: pd.DataFrame, curves: RecallCurves, params: EvalParams, consecutive_k: int
+    states: pd.DataFrame,
+    curves: RecallCurves,
+    params: EvalParams,
+    consecutive_k: int,
+    gate: pd.DataFrame | None = None,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
-    """(stops, summary, bootstrap) for the probe policies vs fixed stops."""
+    """(stops, summary, bootstrap) for the probe (and gated) policies vs fixed stops."""
     ids = sorted(curves.q)
-    stops = pd.concat(
-        [probe_stops(states, ids, params.num_levels, consecutive_k),
-         fixed_stops(ids, params.num_levels)],
-        ignore_index=True,
-    )  # fmt: skip
+    parts = [probe_stops(states, ids, params.num_levels, consecutive_k)]
+    if gate is not None:
+        parts.append(gate)
+    stops = pd.concat([*parts, fixed_stops(ids, params.num_levels)], ignore_index=True)
+    adaptive = list(PROBE_POLICIES)
+    final = fixed_method_name(params.num_levels)
+    comparisons: list[tuple[str, str]] = [
+        (PROBE_STOP, final),
+        (PROBE_STOP_NEXT, final),
+        (PROBE_STOP, PROBE_STOP_NEXT),
+    ]
+    if gate is not None:
+        adaptive += [*GATE_POLICIES, *GATED_CONDITIONS]
+        for name in GATED_CONDITIONS:
+            gated = f"{GATE_PREFIX}{name}"
+            comparisons += [(gated, final), (gated, name)]
+        comparisons.append((GATE_POLICIES[0], GATE_POLICIES[1]))
     eval_set = build_eval_set(curves, params.oracle_ratio, params.oracle_gain_delta)
     per_image = per_image_metrics(stops, curves, eval_set)
-    summary = summarize(per_image, stops, curves, eval_set, None, PROBE_POLICIES)
-    summary.insert(1, "status", [PROBE_STATUS if m in PROBE_POLICIES else FIXED_STATUS
-                                 for m in summary["method"]])  # fmt: skip
-    final = fixed_method_name(params.num_levels)
+    summary = summarize(per_image, stops, curves, eval_set, None, adaptive)
+    summary.insert(1, "status", [_status(m) for m in summary["method"]])
     boot = paired_bootstrap(
-        per_image, curves, eval_set, PROBE_POLICIES,
-        [(PROBE_STOP, final), (PROBE_STOP_NEXT, final), (PROBE_STOP, PROBE_STOP_NEXT)],
+        per_image, curves, eval_set, adaptive, comparisons,
         params.bootstrap_repeats, params.bootstrap_seed, params.ci_level,
     )  # fmt: skip
-    boot["policy_status"] = PROBE_STATUS
+    boot["policy_status"] = {m: _status(m) for m in adaptive}
     return stops, summary, boot
 
 
@@ -300,8 +413,13 @@ def run_probe_diag(
     cfg: Mapping[str, Any],
     probe_cfg: str,
     q_metric: str,
+    gate_layout: RunLayout | None = None,
 ) -> ProbeResult:
-    """Diagnostics + probe-only replay for one probe config and one q metric."""
+    """Diagnostics + probe-only replay for one probe config and one q metric.
+
+    With ``gate_layout`` (decisions path to gate), also replays
+    probe_gate_proposed / probe_gate_observed_only and the ungated references.
+    """
     params = EvalParams.from_config(cfg, q_metric)
     k = int(cfg["proposal"]["consecutive_k"])
     stage = load_stage_metrics(input_dir / "stage_metrics.csv", q_metric)
@@ -317,7 +435,14 @@ def run_probe_diag(
         **probe_stats(states),
         "monotonicity": monotonicity(states),
     }
-    stops, summary, boot = evaluate_probe_policies(states, curves, params, k)
+    gate = None
+    if gate_layout is not None:
+        ids = sorted(curves.q)
+        judge_c = judge_c_table(input_dir, ids, params.num_levels, cfg, gate_layout)
+        gate = gate_stops(states, judge_c, ids, cfg)
+        stats["gate_decisions"] = gate_layout.decisions
+        stats["gate_graphs"] = gate_layout.graphs
+    stops, summary, boot = evaluate_probe_policies(states, curves, params, k, gate)
     target = q_output_dir(out_dir, q_metric)
     target.mkdir(parents=True, exist_ok=True)
     states.to_csv(target / "probe_states.csv", index=False)
@@ -346,7 +471,8 @@ def compare_row(res: ProbeResult) -> dict[str, Any]:
         "mean_inversions": st["monotonicity"]["mean_inversions"],
     }  # fmt: skip
     summ = res.summary.set_index("method")
-    for policy in PROBE_POLICIES:
+    row["gate_decisions"] = res.stats.get("gate_decisions")
+    for policy in (*PROBE_POLICIES, *GATE_POLICIES, *GATED_CONDITIONS):
         if policy not in summ.index:
             continue
         stat = (
@@ -361,4 +487,13 @@ def compare_row(res: ProbeResult) -> dict[str, Any]:
             f"{policy}_diff_ci_high": stat.get("ci_high", math.nan),
             f"{policy}_forced_rate": summ.loc[policy, "forced_terminal_rate"],
         }
+    final = fixed_method_name(int(res.levels["t"].max()))
+    for a, b in [(g, final) for g in GATE_POLICIES] + [
+        (f"{GATE_PREFIX}{c}", c) for c in GATED_CONDITIONS
+    ]:
+        stat = res.bootstrap.get("pairwise", {}).get(f"{a}_minus_{b}", {}).get("q_stop")
+        if stat:
+            row[f"{a}_minus_{b}"] = stat["mean"]
+            row[f"{a}_minus_{b}_ci_low"] = stat["ci_low"]
+            row[f"{a}_minus_{b}_ci_high"] = stat["ci_high"]
     return row

@@ -124,3 +124,8 @@ checks:
     max_entities_in_prompt: 30 # strict cap (v1 always keeps relation endpoints)
     merge_iou: 0.5             # merge same-label entities with box IoU > this
     string_hint_chars: 200     # prompt-only hint; validator keeps max_string_chars
+  v4:                          # judge v4 (bbox-grounded visibility, variant F1g_v4_*)
+    top_entities: 8            # top-K graph entities by score drawn + listed
+    overlay_line_width: 1      # thin rectangle (px, base image)
+    overlay_color: [255, 0, 0]
+    overlay_font_size: 10

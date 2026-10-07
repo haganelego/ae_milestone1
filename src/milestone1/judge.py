@@ -26,6 +26,8 @@ from milestone1.check_generator import (
     load_cached,
     outcome_fields,
     render_graph,
+    render_history,
+    with_history,
     write_json_atomic,
 )
 from milestone1.ollama_client import (
@@ -210,10 +212,12 @@ def build_judge_messages(
     limits: CheckLimits,
     prompt_version: str = PROMPT_V1,
     image_b64: str | None = None,
+    history_text: str = "",
 ) -> list[dict[str, Any]]:
     ids_note = IDS_NOTE.format(ids=", ".join(check_ids(checks)))
+    graph_block = with_history(history_text, graph_text)
     user_text = (
-        f"{graph_text}\n\n{CHECKS_HEADER}\n{render_checks(checks)}\n\n{ids_note}"
+        f"{graph_block}\n\n{CHECKS_HEADER}\n{render_checks(checks)}\n\n{ids_note}"
     )
     if image_b64 is not None:
         user_text = f"{JUDGE_IMAGE_NOTE}\n\n{user_text}"
@@ -291,8 +295,11 @@ def judge_checks(
     prompt_version: str = PROMPT_V1,
     image_path: Path | None = None,
     record_extra: dict[str, Any] | None = None,
+    history_graphs: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Judge one state's checks. Returns (record, from_cache).
+
+    ``history_graphs``: earlier graphs of the same view, oldest first (text only).
 
     ``limits`` and ``prompt_version`` must match those used for the checks
     (same rendering, so anchors resolve). ``image_path`` -> image judge (F1v).
@@ -363,13 +370,16 @@ def judge_checks(
         key_fields["image_sha256"] = image_sha
     if prompt_version != PROMPT_V1:
         key_fields["prompt_version"] = prompt_version
+    history_text = render_history(history_graphs, limits)
+    if history_text:  # keep no-history keys identical to earlier runs
+        key_fields["history_sha256"] = sha256_text(history_text)
     cache_key = sha256_json(key_fields)
     cached = load_cached(out_path, cache_key)
     if cached is not None:
         return cached, True
 
     messages = build_judge_messages(
-        rendered.text, checks, limits, prompt_version, image_b64
+        rendered.text, checks, limits, prompt_version, image_b64, history_text
     )
     outcome = structured_chat(
         client,
@@ -384,6 +394,8 @@ def judge_checks(
         "graph_sha256": graph_sha,
         "image_sha256": image_sha,
         "image_sent_as": IMAGE_SENT_AS if image_path is not None else None,
+        "graph_history": len(history_graphs or []),
+        "history_sha256": sha256_text(history_text) if history_text else None,
         "cache_key": cache_key,
         "items": None if outcome.parsed is None else outcome.parsed["items"],
         **outcome_fields(outcome),

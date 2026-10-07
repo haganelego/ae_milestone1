@@ -23,16 +23,20 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 
 from milestone1.robovis_data import level_name, load_robovis_config  # noqa: E402
 from milestone1.robovis_probe import (  # noqa: E402
+    GATE_STATUS,
     OUTCOME_FAILURE,
     OUTCOME_INVALID,
     OUTCOME_MISSING,
     OUTCOME_OK,
     PROBE_STATUS,
+    REFERENCE_STATUS,
     compare_row,
     count_inversions,
+    gated_c_sequence,
     parse_probe,
     run_probe_diag,
 )
+from milestone1.robovis_replay import RunLayout  # noqa: E402
 
 FIXTURE = REPO_ROOT / "tests" / "fixtures" / "robovis_synthetic"
 RATIO = 0.9
@@ -172,7 +176,7 @@ def test_probe_diag_end_to_end(probe_run: Path, fast_cfg: dict[str, Any]) -> Non
     assert summary.loc["probe_stop", "n_images"] == 9  # 1007 excluded (invalid level)
     boot = json.loads((out / "bootstrap.json").read_text())
     assert "probe_stop_minus_fixed_20" in boot["pairwise"]
-    assert boot["policy_status"] == PROBE_STATUS
+    assert boot["policy_status"]["probe_stop"] == PROBE_STATUS
 
     row = compare_row(res)
     assert row["cfg"] == "toy" and row["q_metric"] == "R50"
@@ -191,3 +195,63 @@ def test_probe_diag_relsg_metric_goes_to_subdir(
     assert res.stats["q_metric"] == "relsg_gt"
     # relsg_gt = sqrt(R50) in the fixture: still monotone in the probe's R50 ratio.
     assert res.stats["rho_detail_qratio"]["rho"] > 0.9
+
+
+# --------------------------------------------------------------------------
+# Probe gate + judge C (probe_gate_proposed / probe_gate_observed_only)
+# --------------------------------------------------------------------------
+
+
+def test_probe_gate_policies(probe_run: Path, fast_cfg: dict[str, Any]) -> None:
+    out = probe_run / "eval" / "probe" / "toy"
+    res = run_probe_diag(
+        probe_run, probe_run / "probe" / "toy", out, fast_cfg, "toy", "R50", RunLayout()
+    )
+    stops = pd.read_csv(out / "stops.csv").set_index(["image_id", "method"])
+
+    def stop(image_id: int, method: str) -> int:
+        return int(stops.loc[(image_id, method), "stop_t"])
+
+    # 1001: judge alone stops at t9 (C=1 at t8,t9); the probe says "not
+    # sufficient" until t8 (.70/.78 < .9) -> gated: t9 (C=1), t10 (C=0) -> t10.
+    assert (stop(1001, "proposed"), stop(1001, "probe_gate_proposed")) == (9, 10)
+    # 1010: observed_only alone stops at t2 (A=0 from t1); gated waits until the
+    # probe is sufficient at t11 -> t11, t12 -> t12. proposed is unchanged (t13).
+    assert (stop(1010, "observed_only"), stop(1010, "probe_gate_observed_only")) == (
+        2,
+        12,
+    )
+    assert (stop(1010, "proposed"), stop(1010, "probe_gate_proposed")) == (13, 13)
+    # 1004: failed probe at t19 is a missing C_t -> reset -> forced terminal.
+    row = stops.loc[(1004, "probe_gate_proposed")]
+    assert (row["stop_t"], bool(row["forced_terminal"]), row["failure_count"]) == (
+        20,
+        True,
+        1,
+    )
+    assert not bool(stops.loc[(1004, "proposed"), "forced_terminal"])
+
+    summary = pd.read_csv(out / "summary.csv").set_index("method")
+    assert summary.loc["probe_gate_proposed", "status"] == GATE_STATUS
+    assert summary.loc["proposed", "status"] == REFERENCE_STATUS
+    boot = json.loads((out / "bootstrap.json").read_text())
+    assert "probe_gate_proposed_minus_proposed" in boot["pairwise"]
+    assert "probe_gate_proposed_minus_fixed_20" in boot["pairwise"]
+    assert "probe_gate_proposed_minus_probe_gate_observed_only" in boot["pairwise"]
+    assert res.stats["gate_decisions"] == "decisions"
+
+    row = compare_row(res)
+    for col in ("probe_gate_proposed_mean_stop", "probe_gate_proposed_diff_ci_low",
+                "probe_gate_proposed_minus_proposed", "probe_gate_proposed_minus_fixed_20",
+                "proposed_mean_stop", "gate_decisions"):  # fmt: skip
+        assert col in row, col
+
+
+def test_gated_c_sequence_rules() -> None:
+    states = pd.DataFrame({
+        "image_id": [1, 1, 1], "t": [1, 2, 3],
+        "outcome": [OUTCOME_OK, OUTCOME_OK, OUTCOME_FAILURE],
+        "sufficient": [0.0, 1.0, math.nan],
+    })  # fmt: skip
+    assert gated_c_sequence(states, 1, [0, None, 0], max_u=2) == [2, None, None]
+    assert gated_c_sequence(states, 1, [1, 1, 1], max_u=2) == [2, 1, None]

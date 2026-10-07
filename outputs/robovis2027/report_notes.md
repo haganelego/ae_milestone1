@@ -23,3 +23,6 @@ Status as of 2026-10-07 (JST morning). Updated as the run proceeds; see `.claude
 
 ## User-approved deviation (2026-10-07, judge v3)
 - `resolved` is relaxed to "about 90 % of what should be visible is visible" (early resolution accepted). The judge is told only how much sharper the next observation will be (a constant ≈17 % per side, since the schedule is geometric); the level index, absolute scale and remaining-step count are never passed. This is the only departure from plan §5's input restrictions and was approved by the user because the stop rule targets approach-driven resolution gain.
+
+## User decision (2026-10-07 evening): grounded visibility instead of resolution reading
+- A judge that estimates image resolution directly was rejected as task-specific. Judge v4 instead asks, per claimed object (top-8 entities of G, boxes drawn on the image), whether the object is clearly visible and identifiable inside its box; unclear objects become observed issues with basis 2 / benefit 2 deterministically. Hypotheses are unchanged (reused). Named variant `F1g_v4_G__9b`.

@@ -10,7 +10,11 @@ Writes outputs/robovis2027/<run_id>/eval/probe/<cfg>[/q_<metric>]/
        outputs/robovis2027/<run_id>/eval/probe/probe_compare.csv (cfg x q metric; upserted)
 
 probe_stop / probe_stop_next are EXPLORATORY probe-only policies (k-consecutive
-replay of sufficient=true / next_step_helps=false), not plan conditions.
+replay of sufficient=true / next_step_helps=false). probe_gate_proposed /
+probe_gate_observed_only gate the judge C_t of --decisions-path (default
+F1v_v3_G__9b, graphs auto) with the probe: not sufficient -> C = 2 (continue).
+None of these are plan conditions; the ungated proposed / observed_only of the
+decisions path are reported as references.
 """
 
 import argparse
@@ -25,13 +29,19 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from milestone1.config import resolve  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
 from milestone1.robovis_probe import compare_row, run_probe_diag  # noqa: E402
+from milestone1.robovis_replay import RunLayout, resolve_graphs_subdir  # noqa: E402
 from milestone1.robovis_report import report_metric_roles  # noqa: E402
 
 COMPARE_FILENAME = "probe_compare.csv"
+DEFAULT_DECISIONS_PATH = "F1v_v3_G__9b"
+NO_GATE = "none"
 SHOW_COLUMNS = ["cfg", "q_metric", "n_states", "failure_rate", "rho_detail_t",
                 "rho_detail_qratio", "auc_detail", "auc_not_next", "frac_monotone",
                 "mean_inversions", "probe_stop_mean_stop", "probe_stop_diff",
-                "probe_stop_next_mean_stop", "probe_stop_next_diff"]  # fmt: skip
+                "probe_stop_next_mean_stop", "probe_stop_next_diff",
+                "probe_gate_proposed_mean_stop", "probe_gate_proposed_diff",
+                "probe_gate_proposed_minus_proposed", "proposed_mean_stop",
+                "probe_gate_observed_only_diff"]  # fmt: skip
 
 
 def parse_args() -> argparse.Namespace:
@@ -43,6 +53,14 @@ def parse_args() -> argparse.Namespace:
     )
     p.add_argument("--input-dir", default=None, help="default: <output_root>/<run_id>")
     p.add_argument("--probe-subdir", default="probe")
+    p.add_argument(
+        "--decisions-path",
+        default=DEFAULT_DECISIONS_PATH,
+        help="decisions path gated by the probe (probe_gate_*); 'none' to skip",
+    )
+    p.add_argument(
+        "--graphs-subdir", default="auto", help="graphs | graphs_clean | auto"
+    )
     p.add_argument("--config", default=None)
     return p.parse_args()
 
@@ -70,6 +88,17 @@ def main() -> None:
         else list(report_metric_roles(cfg))
     )
     out_root = run_dir / "eval" / "probe"
+    gate_layout = None
+    if args.decisions_path.lower() != NO_GATE:
+        path = args.decisions_path
+        if (input_dir / "decisions" / path).exists():
+            gate_layout = RunLayout(
+                resolve_graphs_subdir(args.graphs_subdir, path),
+                f"checks/{path}",
+                f"decisions/{path}",
+            )
+        else:
+            print(f"gate skipped: decisions/{path} not found")
     rows = []
     for probe_cfg in cfgs:
         probe_dir = input_dir / args.probe_subdir / probe_cfg
@@ -78,7 +107,13 @@ def main() -> None:
             continue
         for m in metrics:
             res = run_probe_diag(
-                input_dir, probe_dir, out_root / probe_cfg, cfg, probe_cfg, m
+                input_dir,
+                probe_dir,
+                out_root / probe_cfg,
+                cfg,
+                probe_cfg,
+                m,
+                gate_layout,
             )
             rows.append(compare_row(res))
             print(f"===== {probe_cfg} (q={m}) outcomes={res.stats['outcomes']}")

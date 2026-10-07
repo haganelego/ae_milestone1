@@ -108,6 +108,13 @@ GRAPH_HEADER = (
     "(higher = more confident); they are not probabilities and can exceed 1."
 )
 F1_IMAGE_NOTE = "The attached image shows the current view described by this graph."
+# --graph-history N: earlier graphs of the same view, oldest first, without ids,
+# scores, boxes, step numbers or scales (ids are not comparable across states).
+HISTORY_HEADER = (
+    "Earlier observations of the same view, oldest first. Their objects are "
+    "listed by label only; cite only ids of the current graph."
+)
+CURRENT_HEADER = "Current observation:"
 MERGE_NOTE_TEMPLATE = (
     "Entities with the same label and overlapping boxes (IoU > {iou}) are merged "
     "into one entry (highest score kept). Only the top {max_entities} entities by "
@@ -398,13 +405,56 @@ def check_system_prompt(limits: CheckLimits, prompt_version: str = PROMPT_V1) ->
     return f"{COMMON_PREAMBLE}\n\n{task}\n\n{hint}\n{schema}"
 
 
+def _history_entry(graph: dict[str, Any], limits: CheckLimits) -> str:
+    entities = list(graph.get("entities", []))
+    relations = list(graph.get("relations", []))
+    if limits.merge_iou is not None:
+        entities, alias = merge_entities(entities, limits.merge_iou)
+        relations, _ = remap_relations(relations, alias)
+    labels = {e["id"]: e["label"] for e in entities}
+    by_score = sorted(entities, key=lambda e: -float(e.get("score", 0.0)))
+    counts: dict[str, int] = {}
+    for e in by_score[: limits.max_entities]:
+        counts[e["label"]] = counts.get(e["label"], 0) + 1
+    objects = ", ".join(f"{k} x{v}" if v > 1 else k for k, v in counts.items())
+    rels = [r for r in relations if r["sub"] in labels and r["obj"] in labels]
+    # label-level dedupe (same triple between different same-label entities)
+    triples = "; ".join(
+        dict.fromkeys(
+            f"{labels[r['sub']]} {r['pred']} {labels[r['obj']]}"
+            for r in rels[: limits.max_relations]
+        )
+    )
+    return f"objects: {objects or '(none)'} | relations: {triples or '(none)'}"
+
+
+def render_history(graphs: list[dict[str, Any]] | None, limits: CheckLimits) -> str:
+    """Compact text for earlier graphs (oldest first); '' when there are none."""
+    if not graphs:
+        return ""
+    lines = [HISTORY_HEADER]
+    last = len(graphs)
+    for n, graph in enumerate(graphs, start=1):
+        tag = " (oldest)" if n == 1 and last > 1 else ""
+        tag = " (most recent)" if n == last and last > 1 else tag
+        lines.append(f"Earlier observation {n}{tag}: {_history_entry(graph, limits)}")
+    return "\n".join(lines)
+
+
+def with_history(history_text: str, current_text: str) -> str:
+    if not history_text:
+        return current_text
+    return f"{history_text}\n\n{CURRENT_HEADER}\n{current_text}"
+
+
 def build_check_messages(
     rendered: RenderedGraph,
     limits: CheckLimits,
     image_b64: str | None,
     prompt_version: str = PROMPT_V1,
+    history_text: str = "",
 ) -> list[dict[str, Any]]:
-    user_text = rendered.text
+    user_text = with_history(history_text, rendered.text)
     if image_b64 is not None:
         user_text = f"{F1_IMAGE_NOTE}\n\n{user_text}"
     user: dict[str, Any] = {"role": "user", "content": user_text}
@@ -611,8 +661,11 @@ def generate_checks(
     image_path: Path | None = None,
     prompt_version: str = PROMPT_V1,
     record_extra: dict[str, Any] | None = None,
+    history_graphs: list[dict[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Run F1/F2 check generation for one state. Returns (record, from_cache).
+
+    ``history_graphs``: earlier graphs of the same view, oldest first (text only).
 
     ``record_extra`` is provenance merged into the written record (not the prompt).
 
@@ -640,12 +693,17 @@ def generate_checks(
     }
     if prompt_version != PROMPT_V1:  # keep v1 keys identical to earlier runs
         key_fields["prompt_version"] = prompt_version
+    history_text = render_history(history_graphs, limits)
+    if history_text:  # keep no-history keys identical to earlier runs
+        key_fields["history_sha256"] = sha256_text(history_text)
     cache_key = sha256_json(key_fields)
     cached = load_cached(out_path, cache_key)
     if cached is not None:
         return cached, True
 
-    messages = build_check_messages(rendered, limits, image_b64, prompt_version)
+    messages = build_check_messages(
+        rendered, limits, image_b64, prompt_version, history_text
+    )
     outcome = structured_chat(
         client,
         model,
@@ -665,6 +723,8 @@ def generate_checks(
         "image_sent_as": IMAGE_SENT_AS if image_path is not None else None,
         "options": settings_record,
         "cache_key": cache_key,
+        "graph_history": len(history_graphs or []),
+        "history_sha256": sha256_text(history_text) if history_text else None,
         "render": {
             "n_entities_shown": rendered.n_entities_shown,
             "n_entities_total": rendered.n_entities_total,
