@@ -87,6 +87,11 @@ def parse_args() -> argparse.Namespace:
         help="JSON list / one id per line; overrides --split selection (Phase D)",
     )
     p.add_argument("--graphs-subdir", default="graphs_clean")
+    p.add_argument(
+        "--degraded-root",
+        default=None,
+        help="override paths.degraded_images (<root>/<id>/level_XX.jpg, 384-base)",
+    )
     p.add_argument("--variant-name", default=None, help="default F1g_v4_G__<model>")
     p.add_argument("--hyp-checks", default="F1v_v2_G__9b")
     p.add_argument("--hyp-decisions", default="F1v_v3_G__9b")
@@ -280,7 +285,7 @@ def main() -> None:
     run_root = resolve(cfg["output_root"]) / args.run_id
     if not args.summarize:
         client = OllamaClient(settings_from_config(cfg))
-        degraded = resolve(cfg["paths"]["degraded_images"])
+        degraded = resolve(args.degraded_root or cfg["paths"]["degraded_images"])
         levels = [int(x) for x in args.levels.split(",") if x]
         ids = (
             read_image_ids(resolve(args.image_ids_file))

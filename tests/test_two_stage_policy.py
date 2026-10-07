@@ -200,3 +200,5 @@ def test_read_image_ids_formats(tmp_path: Path) -> None:
     (tmp_path / "b.txt").write_text("4\n5,test\n")
     assert tsp.read_image_ids(tmp_path / "a.json") == [1, 2, 3]
     assert tsp.read_image_ids(tmp_path / "b.txt") == [4, 5]
+    (tmp_path / "sel.json").write_text('{"seed": 1, "selected_ids": [9, 7]}')
+    assert tsp.read_image_ids(tmp_path / "sel.json") == [9, 7]

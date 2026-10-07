@@ -1,0 +1,27 @@
+{
+  "dry_run_dev": false,
+  "inputs": {
+    "policy": "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/test_policy.csv",
+    "seedA": "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/stage_metrics_seedA.csv",
+    "seedB": [
+      "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/stage_metrics_seedB.csv"
+    ]
+  },
+  "primary": {
+    "metric": "R50",
+    "seedA_policy_minus_mix": -0.007126883055555561,
+    "ci": [
+      -0.024553406874999996,
+      0.012057990006944377
+    ],
+    "seedA_verdict": "not positive",
+    "seedB": {
+      "B": -0.010666564444444443
+    },
+    "combined_verdict": [
+      "not positive"
+    ]
+  },
+  "rules": "plan \u00a77: seeds never averaged; positive with CI including 0 -> unconfirmed; seedA positive and seedB negative -> unstable",
+  "F_note": "GT-posterior reference on seedA, not a method"
+}

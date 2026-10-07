@@ -302,8 +302,11 @@ def freeze_dev(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def read_image_ids(path: str | Path) -> list[int]:
-    """JSON list (ints or {"image_id": ..}) or one id per line."""
+    """JSON list (ints or {"image_id": ..}), a selection JSON with
+    ``selected_ids`` (e.g. rec_r0/test_selection.json), or one id per line."""
     text = Path(path).read_text().strip()
+    if text.startswith("{"):
+        return [int(x) for x in json.loads(text)["selected_ids"]]
     if text.startswith("["):
         items = json.loads(text)
         return [int(x["image_id"] if isinstance(x, dict) else x) for x in items]
