@@ -66,7 +66,7 @@ Root causes (failure analysis): hypotheses are graph bookkeeping or already-obse
 
 Findings: (a) text 4b reproduces MIRU; (b) early fusion (image in the SGG prompt) hurts via confabulated "graph stable" reasons (99 % of flipped states) and loss of the blur cue; (c) MIRU's published VLM baseline used θ 0.8 (stale) — at 0.70 it ties SGG-text 4b; (d) under GT scoring no method, including fusion, beats the equal-observation fixed stop (all CIs include 0).
 
-### 2.4 Pre-registered held-out test (pending)
+### 2.4 Pre-registered held-out test (complete 2026-10-08; see §5 addendum and `outputs/robovis2027_recovery/rec_r0/heldout_confirmatory.md`)
 96 GT-only images (ROBOVIS test100 minus 4 overlap), MIRU conditions. Primary: `hybrid_fuse_mean(vlm image-only 9b, llm_sgg text 4b)`, θ 0.70, k=2; secondary `fuse_min`. Primary set = all 96; comparative = stop_c09 ≤ 18 subset (73). Distribution shift noted: 21/96 never saturate under c09 (MIRU 100 had been filtered to ≤ 18).
 
 ## 3. Status of the hypotheses
@@ -74,7 +74,7 @@ Findings: (a) text 4b reproduces MIRU; (b) early fusion (image in the SGG prompt
 - H2 (trade-off with over-observation): not testable (no improvement).
 - "Adding the current image to the SGG judge improves stopping": **refuted** (hurts).
 - "Adaptive stopping beats fixed stopping per observation under GT scoring": **not supported** for any method, incl. MIRU's.
-- Only positive, in-sample number: late-fusion MAE 2.59 (post hoc) — awaiting held-out confirmation.
+- Late-fusion MAE 2.59 (in-sample, post hoc): the pre-registered primary did NOT replicate on held-out 96 (0/18 significant); the secondary fuse_min was significantly better on MAE/R50/relsg vs level-agnostic comparators but stops ≈2 levels later (on the fixed curve at equal observation).
 
 ## 4. What is defensible for a paper (negative/analytical)
 1. GT-referenced, equal-observation evaluation framework for resolution-aware stopping (fixed-stop curve + paired bootstrap), applied to EGTR and PGSG.
