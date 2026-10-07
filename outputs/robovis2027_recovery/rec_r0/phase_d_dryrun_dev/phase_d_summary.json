@@ -1,0 +1,30 @@
+{
+  "dry_run_dev": true,
+  "inputs": {
+    "policy": "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/dev_two_stage.csv",
+    "seedA": "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/../../robovis2027/dev_r0/stage_metrics.csv",
+    "seedB": [
+      "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/stage_metrics_seed1.csv",
+      "/home/kanaoka/usr/github/milestone_1/outputs/robovis2027_recovery/rec_r0/stage_metrics_seed2.csv"
+    ]
+  },
+  "primary": {
+    "metric": "R50",
+    "seedA_policy_minus_mix": -0.010036717499999986,
+    "ci": [
+      -0.04144842875000004,
+      0.024418409624999974
+    ],
+    "seedA_verdict": "not positive",
+    "seedB": {
+      "B1": 0.0037688225000000186,
+      "B2": 0.009199384999999977
+    },
+    "combined_verdict": [
+      "not positive",
+      "not positive"
+    ]
+  },
+  "rules": "plan \u00a77: seeds never averaged; positive with CI including 0 -> unconfirmed; seedA positive and seedB negative -> unstable",
+  "F_note": "GT-posterior reference on seedA, not a method"
+}
