@@ -24,6 +24,7 @@ from milestone1.miru_gt import (  # noqa: E402
 from milestone1.miru_methods import (  # noqa: E402
     StopParams,
     consecutive_k_stop,
+    fuse_series,
     fused_scores,
     load_existing_method_stops,
     load_object_confidence,
@@ -195,3 +196,39 @@ def test_egtr_label_sets() -> None:
     nodes, trips = egtr_label_sets(_pred(), NAME2ID)
     assert nodes == {77, 111}
     assert trips == {(77, 47, 111), (77, 20, 39)}
+
+
+# --------------------------------------------------------------------------
+# Late fusion (zero-call)
+# --------------------------------------------------------------------------
+
+
+def test_fuse_series_mean_min_and_missing_levels() -> None:
+    a = {1: {5: 0.9, 6: 0.6, 7: 0.8}}
+    b = {1: {5: 0.5, 6: 0.9}}  # level 7 missing in b -> left out (scores 0)
+    assert fuse_series([a, b], "mean") == {
+        1: {5: pytest.approx(0.7), 6: pytest.approx(0.75)}
+    }
+    assert fuse_series([a, b], "min") == {1: {5: 0.5, 6: 0.6}}
+
+
+def test_registry_fusion_methods(tmp_path: Path) -> None:
+    _write_scores(tmp_path / "img", 1, {5: 0.9, 6: 0.9, 7: 0.9})
+    _write_scores(tmp_path / "txt", 1, {5: 0.5, 6: 0.6, 7: 0.9})
+    cfg = copy.deepcopy(load_config())
+    cfg["evaluation_extra"] = {
+        "score_methods": {"img": str(tmp_path / "img"), "txt": str(tmp_path / "txt")},
+        "hybrid_methods": [],
+        "fusion_methods": {
+            "fuse_mean": {"sources": ["img", "txt"], "op": "mean", "hybrid": False},
+            "fuse_min": {"sources": ["img", "txt"], "op": "min", "hybrid": False},
+            "fuse_gone": {"sources": ["img", "nope"], "op": "mean", "hybrid": False},
+        },
+        "k_options": [1, 2],
+    }
+    res = registered_score_methods(cfg, [1], tmp_path)
+    # mean: .70, .75, .90 -> k1 at 5, k2 at 6; min: .5, .6, .9 -> k1 at 7, k2 never.
+    assert (res.stops["fuse_mean_k1"][1], res.stops["fuse_mean_k2"][1]) == (5, 6)
+    assert (res.stops["fuse_min_k1"][1], res.stops["fuse_min_k2"][1]) == (7, MAX)
+    assert "fuse_gone_k1" not in res.stops
+    assert "hybrid_fuse_mean_k1" not in res.stops

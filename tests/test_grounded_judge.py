@@ -128,3 +128,38 @@ def test_reuse_hypotheses_drops_unjudged(failure: bool) -> None:
         assert kept == [] and dropped == ["h1"]
     else:
         assert kept == [hyp] and items[0]["id"] == "h1" and dropped == []
+
+
+def test_validate_v4_accepts_absent_rejects_other_strings() -> None:
+    ok = {"objects": [{"id": "v1", "clear": "absent", "note": "only grass"}]}
+    assert validate_v4(ok, ["v1"], 240)[1] == []
+    bad = {"objects": [{"id": "v1", "clear": "missing", "note": ""}]}
+    assert validate_v4(bad, ["v1"], 240)[0] is None
+
+
+def test_derive_observed_absent_is_unsupported_and_ranked_after_unresolved() -> None:
+    ents = [e for e in _graph()["entities"] if e["id"] in {"v1", "v2", "v3", "v4"}]
+    objects = [
+        {"id": "v1", "clear": "absent", "note": "just road"},  # highest score
+        {"id": "v2", "clear": 2, "note": "wheel"},
+        {"id": "v3", "clear": 1, "note": "blurry"},
+        {"id": "v4", "clear": 0, "note": "indistinct"},
+    ]
+    issues, items = derive_observed(objects, ents, 3)
+    assert [i["anchor_ids"][0] for i in issues] == ["v4", "v3", "v1"]
+    absent = items[2]
+    assert (absent["status"], absent["basis"], absent["resolution_benefit"]) == (
+        "unsupported",
+        2,
+        0,
+    )
+    assert absent["limitation"] == "other"
+    issues1, items1 = derive_observed(objects[:2], ents, 1)
+    assert items1[0]["status"] == "unsupported"  # absent ranks before resolved
+
+
+def test_v4_prompt_defines_absent() -> None:
+    g = _graph()
+    text = build_v4_prompt(top_entities(g, 8), g["base_size"], 2, 200)
+    assert '"absent"' in text and "only when you can see the region clearly" in text
+    assert "level" not in text.lower() and "resolution" not in text.lower()

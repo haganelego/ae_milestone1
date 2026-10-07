@@ -39,6 +39,8 @@ from milestone1.check_generator import (  # noqa: E402
 )
 from milestone1.config import resolve  # noqa: E402
 from milestone1.grounded_judge import (  # noqa: E402
+    CLEAR_ABSENT,
+    CLEAR_GRADES,
     PROMPT_V4,
     build_v4_prompt,
     derive_observed,
@@ -73,6 +75,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--variant-name", default=None, help="default F1g_v4_G__<model>")
     p.add_argument("--hyp-checks", default="F1v_v2_G__9b")
     p.add_argument("--hyp-decisions", default="F1v_v3_G__9b")
+    p.add_argument(
+        "--num-ctx",
+        type=int,
+        default=None,
+        help="override checks.options.num_ctx (e.g. 16384 to share the ollama "
+        "runner with other jobs); recorded in options / cache key",
+    )
     p.add_argument("--summarize", action="store_true")
     return p.parse_args()
 
@@ -206,29 +215,51 @@ def run_state(
 
 
 def summarize(run_root: Path, variant: str) -> None:
+    """Per-level rating distribution (0/1/2/absent) + mean of numeric ratings."""
     rows: dict[int, list[dict[str, Any]]] = {}
     for path in sorted((run_root / "decisions" / variant).glob("*/level_*.json")):
         rec = load_json(path) or {}
         rows.setdefault(int(rec.get("level", 0)), []).append(rec)
-    print(f"{variant}\nlevel  n fail mean_clear  frac0  frac1  frac2  median_s")
+    out: dict[str, Any] = {}
+    print(f"{variant}\nlevel  n fail mean_num  frac0  frac1  frac2 absent  median_s")
     for level in sorted(rows):
         recs = rows[level]
-        clears = [o["clear"] for r in recs for o in (r.get("v4_objects") or [])]
+        ratings = [o["clear"] for r in recs for o in (r.get("v4_objects") or [])]
+        numeric = [c for c in ratings if c != CLEAR_ABSENT]
         lat = [r["elapsed_s"] / r["attempts"] for r in recs if r.get("attempts")]
-        n_c = len(clears) or 1
-        mean = statistics.fmean(clears) if clears else float("nan")
-        fracs = [sum(c == g for c in clears) / n_c for g in (0, 1, 2)]
+        n_r = len(ratings) or 1
+        dist = {
+            str(g): round(sum(c == g for c in ratings) / n_r, ROUND_DIGITS)
+            for g in CLEAR_GRADES
+        }
+        mean = round(statistics.fmean(numeric), ROUND_DIGITS) if numeric else None
+        out[str(level)] = {
+            "n_states": len(recs),
+            "n_failures": sum(bool(r.get("failure")) for r in recs),
+            "n_ratings": len(ratings),
+            "rating_fractions": dist,
+            "mean_numeric_clear": mean,
+            "median_latency_s": round(statistics.median(lat), ROUND_DIGITS)
+            if lat
+            else None,
+        }
+        cells = [dist[str(g)] for g in CLEAR_GRADES]
         print(
-            f"{level:5} {len(recs):2} {sum(bool(r.get('failure')) for r in recs):4} "
-            f"{mean:10.{ROUND_DIGITS}f} "
-            + " ".join(f"{f:6.2f}" for f in fracs)
+            f"{level:5} {len(recs):2} {out[str(level)]['n_failures']:4} "
+            f"{'   -' if mean is None else f'{mean:8.3f}'} "
+            + " ".join(f"{c:6.2f}" for c in cells)
             + f" {statistics.median(lat) if lat else 0:9.1f}"
         )
+    summary_path = run_root / "summaries" / f"v4_summary_{variant}.json"
+    write_json_atomic(summary_path, {"variant": variant, "by_level": out})
+    print(f"-> {summary_path}")
 
 
 def main() -> None:
     args = parse_args()
     cfg = load_robovis_config(resolve(args.config))
+    if args.num_ctx is not None:
+        cfg["checks"]["options"]["num_ctx"] = args.num_ctx
     slug = args.model.split(":")[-1]
     variant = args.variant_name or f"F1g_v4_G__{slug}"
     run_root = resolve(cfg["output_root"]) / args.run_id

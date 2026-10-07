@@ -91,3 +91,7 @@ data/processed/robovis2027/degraded_images/
 # ROBOVIS2027 bulky per-state outputs (summaries CSV/JSON stay trackable)
 outputs/robovis2027/*/graphs*/
 outputs/robovis2027/*/raw_responses/
+
+# Held-out MIRU confirmation (configs/config_heldout.yaml)
+data/processed/robovis2027_miru/degraded_images/
+outputs/robovis2027_miru/egtr_predictions/

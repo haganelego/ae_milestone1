@@ -143,20 +143,15 @@ class ScoreMethodResult:
     coverage: dict[str, float]  # key -> fraction of (image, level) score files present
 
 
-def score_method_stops(
+def stops_from_series(
     key: str,
-    score_dir: Path,
-    image_ids: Sequence[int],
+    series: Mapping[int, Mapping[int, float]],
     params: StopParams,
     conf: Mapping[tuple[int, int], float] | None,
-) -> tuple[dict[str, dict[int, int]], float]:
-    """Stops of ``<key>_k<k>`` (and ``hybrid_<key>_k<k>`` if conf is given)."""
+) -> dict[str, dict[int, int]]:
+    """``<key>_k<k>`` (and ``hybrid_<key>_k<k>`` if conf is given) from score series."""
     stops: dict[str, dict[int, int]] = {}
-    n_levels = params.max_level - params.start_level + 1
-    present = 0
-    for image_id in image_ids:
-        scores = load_scores(score_dir, image_id, params.start_level, params.max_level)
-        present += len(scores)
+    for image_id, scores in series.items():
         fused = (
             fused_scores(scores, conf, image_id, params) if conf is not None else None
         )
@@ -166,13 +161,54 @@ def score_method_stops(
             )
             if fused is not None:
                 stops.setdefault(f"{HYBRID_PREFIX}{key}_k{k}", {})[image_id] = (
-                    consecutive_k_stop(
-                        fused, params.hybrid_threshold, k, params.start_level,
-                        params.max_level,
-                    )
+                    consecutive_k_stop(fused, params.hybrid_threshold, k,
+                                       params.start_level, params.max_level)
                 )  # fmt: skip
+    return stops
+
+
+def load_series(
+    score_dir: Path, image_ids: Sequence[int], params: StopParams
+) -> tuple[dict[int, dict[int, float]], float]:
+    """Per-image score series and coverage (present files / expected files)."""
+    series = {
+        int(i): load_scores(score_dir, int(i), params.start_level, params.max_level)
+        for i in image_ids
+    }
+    n_levels = params.max_level - params.start_level + 1
+    present = sum(len(v) for v in series.values())
     coverage = present / (n_levels * len(image_ids)) if image_ids else 0.0
-    return stops, coverage
+    return series, coverage
+
+
+def score_method_stops(
+    key: str,
+    score_dir: Path,
+    image_ids: Sequence[int],
+    params: StopParams,
+    conf: Mapping[tuple[int, int], float] | None,
+) -> tuple[dict[str, dict[int, int]], float]:
+    """Stops of ``<key>_k<k>`` (and ``hybrid_<key>_k<k>`` if conf is given)."""
+    series, coverage = load_series(score_dir, image_ids, params)
+    return stops_from_series(key, series, params, conf), coverage
+
+
+FUSION_OPS = {"mean": lambda vals: sum(vals) / len(vals), "min": min, "max": max}
+
+
+def fuse_series(
+    sources: Sequence[Mapping[int, Mapping[int, float]]], op: str
+) -> dict[int, dict[int, float]]:
+    """Level-wise late fusion; a level missing in any source is left out (-> 0)."""
+    fn = FUSION_OPS[op]
+    out: dict[int, dict[int, float]] = {}
+    for image_id in sources[0]:
+        per = [src.get(image_id, {}) for src in sources]
+        common = set(per[0]).intersection(*per[1:])
+        out[image_id] = {
+            lvl: float(fn([p[lvl] for p in per])) for lvl in sorted(common)
+        }
+    return out
 
 
 def registered_score_methods(
@@ -180,15 +216,18 @@ def registered_score_methods(
     image_ids: Sequence[int],
     metrics_dir: Path,
 ) -> ScoreMethodResult:
-    """All ``evaluation_extra.score_methods`` whose directory exists."""
+    """``evaluation_extra.score_methods`` (existing dirs) + ``fusion_methods``."""
     extra = cfg.get("evaluation_extra") or {}
     params = StopParams.from_config(cfg)
     hybrid_keys = set(extra.get("hybrid_methods") or [])
+    fusions = extra.get("fusion_methods") or {}
+    hybrid_keys |= {name for name, spec in fusions.items() if spec.get("hybrid", True)}
     conf = (
         load_object_confidence(metrics_dir / "all_metrics.csv") if hybrid_keys else None
     )
     stops: dict[str, dict[int, int]] = {}
     coverage: dict[str, float] = {}
+    series_by_key: dict[str, dict[int, dict[int, float]]] = {}
     for key, spec in (extra.get("score_methods") or {}).items():
         # spec: "<dir>" or {"dir": "<dir>", "threshold": float}
         rel_dir = spec["dir"] if isinstance(spec, Mapping) else spec
@@ -199,12 +238,26 @@ def registered_score_methods(
         if not score_dir.exists():
             print(f"  skip score method {key}: {score_dir} not found")
             continue
-        got, cov = score_method_stops(
-            key, score_dir, image_ids, method_params,
-            conf if key in hybrid_keys else None,
-        )  # fmt: skip
-        stops.update(got)
+        series, cov = load_series(score_dir, image_ids, method_params)
+        series_by_key[key] = series
         coverage[key] = cov
+        stops.update(stops_from_series(
+            key, series, method_params, conf if key in hybrid_keys else None))  # fmt: skip
+    for name, spec in fusions.items():
+        missing = [src for src in spec["sources"] if src not in series_by_key]
+        if missing:
+            print(f"  skip fusion {name}: sources {missing} not available")
+            continue
+        fused = fuse_series([series_by_key[src] for src in spec["sources"]], spec["op"])
+        n_levels = params.max_level - params.start_level + 1
+        coverage[name] = sum(len(v) for v in fused.values()) / (
+            n_levels * len(image_ids)
+        )
+        fusion_params = replace(
+            params, threshold=float(spec.get("threshold", params.threshold))
+        )
+        stops.update(stops_from_series(
+            name, fused, fusion_params, conf if name in hybrid_keys else None))  # fmt: skip
     return ScoreMethodResult(stops, coverage)
 
 

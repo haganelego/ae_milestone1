@@ -1,0 +1,22 @@
+# Held-out confirmation overlay for the MIRU pipeline (2026-10-08).
+# Use: MILESTONE1_CONFIG_OVERLAY=configs/config_heldout.yaml <any MIRU script>
+# Deep-merged onto configs/config.yaml by milestone1.config.load_config: every
+# setting (scales, bilinear, EGTR gates 0.1/0.005, top-k 20/30, LLM/VLM settings)
+# is inherited unchanged; only the image set and the output locations change, so
+# no MIRU output is overwritten.
+# Image set: ROBOVIS2027 test100 (GT-only selection, seed 42) minus the 4 images
+# that overlap the MIRU 100 -> 96 images (data/processed/robovis2027_miru/selection_note.json).
+# Pre-registered rule (team-lead 2026-10-08): hybrid_fuse_mean(vlm image-only 9b,
+# llm_sgg text 4b), theta 0.70, k=2; secondary fuse_min.
+paths:
+  selected_images: data/processed/robovis2027_miru/selected_images.json
+  degraded_images: data/processed/robovis2027_miru/degraded_images
+  gt_scene_graphs: data/processed/robovis2027_miru/gt_scene_graphs
+  egtr_predictions: outputs/robovis2027_miru/egtr_predictions
+  metrics: outputs/robovis2027_miru/metrics
+  llm_inputs: outputs/robovis2027_miru/llm_inputs
+  llm_scores: outputs/robovis2027_miru/llm_scores
+  figures: outputs/robovis2027_miru/figures
+
+vlm_sgg:
+  output_root: outputs/robovis2027_miru/llm_scores_vlm

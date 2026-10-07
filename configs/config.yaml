@@ -188,6 +188,12 @@ evaluation_extra:
     vlm_sgg_single_4b: outputs/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_img_single
     vlm_sgg_single_9b: outputs/llm_scores_vlm/qwen3.5-9b_h5_rel_on_conf_on_img_single
   hybrid_methods: [llm_sgg_text_4b, llm_sgg_text_9b, vlm_sgg_single_4b, vlm_sgg_single_9b]
+  # Zero-call LATE fusion of score_methods keys (level-wise mean / min; a level
+  # missing in either source scores 0 as in MIRU). Same theta / k / hybrid as above.
+  fusion_methods:
+    fuse_mean_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: mean}
+    fuse_min_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: min}
+    fuse_mean_vlmimg9b_text9b: {sources: [vlm_single_9b, llm_sgg_text_9b], op: mean}
   k_options: [1, 2]
   gt_eval_dir: outputs/miru_gt_eval     # EGTR-vs-VG-GT stage metrics + comparison table
   final_methods:                        # rows of the comparison table (missing -> skipped)
@@ -208,3 +214,9 @@ evaluation_extra:
     - hybrid_llm_sgg_text_9b_k2
     - hybrid_vlm_sgg_single_4b_k2
     - hybrid_vlm_sgg_single_9b_k2
+    - fuse_mean_vlmimg9b_text4b_k2
+    - fuse_min_vlmimg9b_text4b_k2
+    - fuse_mean_vlmimg9b_text9b_k2
+    - hybrid_fuse_mean_vlmimg9b_text4b_k2
+    - hybrid_fuse_min_vlmimg9b_text4b_k2
+    - hybrid_fuse_mean_vlmimg9b_text9b_k2

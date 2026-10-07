@@ -81,6 +81,13 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--json-mode", choices=("on", "off"), default=None)
     p.add_argument("--out-tag", default="", help="suffix for checks/decisions dirs")
     p.add_argument(
+        "--num-ctx",
+        type=int,
+        default=None,
+        help="override checks.options.num_ctx (e.g. 16384 to share the ollama "
+        "runner with other jobs); recorded in options / cache key",
+    )
+    p.add_argument(
         "--variant-name",
         default=None,
         help="explicit output dir name (e.g. F1v, F1_v2); overrides PATH[__tag]",
@@ -192,6 +199,8 @@ def main() -> None:
     if args.judge_with_image and (args.path != PATH_F1 or not args.judge):
         sys.exit("--judge-with-image requires --path F1 and --judge")
     cfg = load_robovis_config(resolve(args.config))
+    if args.num_ctx is not None:
+        cfg["checks"]["options"]["num_ctx"] = args.num_ctx
     if args.json_mode is not None:
         cfg["checks"]["json_mode"] = args.json_mode == "on"
     settings = settings_from_config(cfg)

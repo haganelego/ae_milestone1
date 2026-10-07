@@ -21,20 +21,27 @@ from typing import Any
 from PIL import Image, ImageDraw, ImageFont
 
 PROMPT_V4 = "v4"
-CLEAR_GRADES = (0, 1, 2)
+CLEAR_ABSENT = "absent"  # region clearly visible, object not there -> unsupported
+CLEAR_GRADES = (0, 1, 2, CLEAR_ABSENT)
 CLEAR_RESOLVED = 2
 BENEFIT_FOR_CLEAR = {0: 1, 1: 2}  # clear 0 -> benefit 1, clear 1 -> benefit 2
+# Observed-issue slot priority: unresolved (0, 1) first, then absent, then resolved.
+SLOT_ORDER = {0: 0, 1: 1, CLEAR_ABSENT: 2, CLEAR_RESOLVED: 3}
 BASIS_GROUNDED = 2
 RESOLVED_LIMITATION = "other"
+ABSENT_LIMITATION = "other"
 UNRESOLVED_LIMITATION = "low_resolution"
 
 V4_PROMPT = (
     "The scene graph claims these objects exist at the drawn boxes. For each "
     "listed id, judge from the image: can you clearly see and identify that object "
-    'inside its box? Return JSON {"objects":[{"id":"<listed id>","clear":0|1|2,'
-    '"note":"<short>"}]} where 2 = clearly visible and identifiable, 1 = something '
-    "is there but its identity or extent is unclear, 0 = cannot confirm any such "
-    "object at that box. Judge every listed id exactly once."
+    'inside its box? Return JSON {"objects":[{"id":"<listed id>",'
+    '"clear":0|1|2|"absent","note":"<short>"}]} where 2 = clearly visible and '
+    "identifiable, 1 = something is there but its identity or extent is unclear, "
+    '0 = cannot tell what is in the box (indistinct/blurry), "absent" = the box '
+    "region is clearly visible and does NOT contain that object (something else "
+    'or background). Use "absent" only when you can see the region clearly '
+    "enough to say the object is not there. Judge every listed id exactly once."
 )
 # Format-only addendum (smoke 1: the model copied the example id and returned bare
 # lists); does not change what is judged.
@@ -135,7 +142,7 @@ def draw_overlay(
 def validate_v4(
     data: Any, expected_ids: list[str], max_chars: int
 ) -> tuple[dict[str, Any] | None, list[str]]:
-    """Every listed id exactly once; clear in {0,1,2}; note a short string."""
+    """Every listed id exactly once; clear in {0,1,2,"absent"}; note a string."""
     if not isinstance(data, dict) or not isinstance(data.get("objects"), list):
         return None, ["top level must be an object with an 'objects' list"]
     errors: list[str] = []
@@ -154,7 +161,7 @@ def validate_v4(
             continue
         clear = obj.get("clear")
         if isinstance(clear, bool) or clear not in CLEAR_GRADES:
-            errors.append(f"{where}.clear must be 0, 1 or 2: {clear!r}")
+            errors.append(f'{where}.clear must be 0, 1, 2 or "absent": {clear!r}')
         note = obj.get("note")
         if not isinstance(note, str):
             errors.append(f"{where}.note must be a string")
@@ -176,17 +183,19 @@ def derive_observed(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """(observed_issues, judgment items) from per-object ratings, capped.
 
-    Least clear first; ties by higher graph score; ids o1..oN in that order.
+    Slot order 0, 1, absent, 2 (absent never displaces unresolved items); ties by
+    higher graph score; ids o1..oN in that order. Mapping: 0/1 -> unresolved,
+    low_resolution, benefit 1/2; absent -> unsupported, benefit 0; 2 -> resolved.
     """
     info = {e["id"]: e for e in entities}
     ranked = sorted(
-        objects, key=lambda o: (o["clear"], -float(info[o["id"]].get("score", 0.0)))
+        objects,
+        key=lambda o: (SLOT_ORDER[o["clear"]], -float(info[o["id"]].get("score", 0.0))),
     )[:max_observed]
     issues: list[dict[str, Any]] = []
     items: list[dict[str, Any]] = []
     for n, obj in enumerate(ranked, start=1):
         check_id = f"o{n}"
-        resolved = obj["clear"] == CLEAR_RESOLVED
         issues.append(
             {
                 "id": check_id,
@@ -197,20 +206,25 @@ def derive_observed(
             }
         )
         items.append(
-            {
-                "id": check_id,
-                "status": "resolved" if resolved else "unresolved",
-                "basis": BASIS_GROUNDED,
-                "resolution_benefit": 0
-                if resolved
-                else BENEFIT_FOR_CLEAR[obj["clear"]],
-                "limitation": RESOLVED_LIMITATION
-                if resolved
-                else UNRESOLVED_LIMITATION,
-                "reason": obj["note"],
-            }
+            {"id": check_id, **_judgment_for(obj["clear"]), "reason": obj["note"]}
         )
     return issues, items
+
+
+def _judgment_for(clear: Any) -> dict[str, Any]:
+    if clear == CLEAR_RESOLVED:
+        status, benefit, limitation = "resolved", 0, RESOLVED_LIMITATION
+    elif clear == CLEAR_ABSENT:
+        status, benefit, limitation = "unsupported", 0, ABSENT_LIMITATION
+    else:
+        status, benefit = "unresolved", BENEFIT_FOR_CLEAR[clear]
+        limitation = UNRESOLVED_LIMITATION
+    return {
+        "status": status,
+        "basis": BASIS_GROUNDED,
+        "resolution_benefit": benefit,
+        "limitation": limitation,
+    }
 
 
 def reuse_hypotheses(

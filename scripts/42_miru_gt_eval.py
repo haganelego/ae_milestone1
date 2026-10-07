@@ -67,6 +67,8 @@ LEGACY_LLM_NOTE = "legacy cache (llm_ablation: temp 0.3, gate 0.3)"
 LEGACY_VLM_NOTE = "legacy cache (vlm_stop.csv: threshold 0.8)"
 LEGACY_VLM_SCORES_NOTE = "legacy cache (vlm_scores, recomputed at 0.70)"
 LEGACY_SCORE_KEYS = ("vlm_single_4b", "vlm_single_9b")
+FUSION_PREFIX = "fuse_"
+FUSION_NOTE = "late fusion (zero-call)"
 
 
 def parse_args() -> argparse.Namespace:
@@ -222,7 +224,10 @@ def main() -> None:
     for m in registry.stops:
         key = registry_key(m)
         cov = registry.coverage.get(key, math.nan)
-        label = LEGACY_VLM_SCORES_NOTE if key in LEGACY_SCORE_KEYS else "score dir"
+        label = (
+            LEGACY_VLM_SCORES_NOTE if key in LEGACY_SCORE_KEYS
+            else FUSION_NOTE if key.startswith(FUSION_PREFIX) else "score dir"
+        )  # fmt: skip
         sources[m] = f"{label}, coverage {cov:.0%}" if cov < 1 else label
     methods = {**existing, **registry.stops}
     print(f"methods: {len(existing)} from CSVs, {len(registry.stops)} from score dirs; "
