@@ -81,3 +81,11 @@ Findings: (a) text 4b reproduces MIRU; (b) early fusion (image in the SGG prompt
 2. Finding: adaptive stopping methods (confidence, LLM-on-SGG, image VLM, hybrids, fusion) match oracle timing but do not exceed the fixed-stop curve in GT recall per observation.
 3. Failure analysis: single-snapshot VLM sufficiency judgments are calibration-bound; early fusion of image + SGG induces confabulated stability; co-occurrence hypotheses from local VLMs rarely name genuinely missing objects.
 4. Correction to MIRU: VLM-vs-LLM comparison was threshold-inconsistent; at equal θ they tie.
+
+## 5. Addendum — recovery plan run `rec_r0` (2026-10-08)
+Plan of record: `robovis2027-recovery-plan.md`. Full report: `outputs/robovis2027_recovery/rec_r0/REPORT.md` (Phase A pending at the time of writing). Key outcomes:
+- Phase B (cache-only): single-seed omniscient headroom is large but ≈ half of the two-choice R50 headroom is sampling noise (cross-seed +0.016/+0.038 vs same-seed +0.05). Audit: earlier "≈0 vs fixed" comparisons used a weak adjacent mix; against the best fixed mixture F(b) no dev20 rule is ≥ 0 and the j9b "+0.056" CI vanishes.
+- Phase C: gate GO on all four criteria (margins tiny: policy − mix R50 +0.004/+0.009 on dev seeds 1/2).
+- Phase D (60 new images, frozen two-stage U policy from v4 visibility at t10): **R50 policy − same-p random mix = −0.007 [−0.025, +0.012] (seedA), −0.011 [−0.032, +0.010] (seedB) → not positive**; oracle agreement 40–43 % (chance 50 %). relsg_gt +0.023 on both seeds (significant) but secondary and reversed vs dev → not promotable.
+- Comparator framing (user): fixed-level stops and F(b) are schedule-aware references, not comparators; fair comparators are same-protocol random assignment and level-agnostic observation-based baselines.
+- Phase A (pre-registered late fusion on held-out 96, EGTR pipeline): pending the image-only 9b scores (first run failed with 0 files under VRAM contention; rerun unchanged).

@@ -624,3 +624,6 @@ The working tree also holds uncommitted outputs and code changes: held-out confi
 | Image-vs-text diagnosis | `outputs/llm_scores_vlm/diag_img_vs_text.md` |
 | Held-out (pending) | `outputs/heldout_eval/miru_method_table.md`, `outputs/robovis2027_miru/logs/` |
 | Pending ROBOVIS runs | `outputs/robovis2027/dev_r0/decisions/F1v_v3_G__9b_h3/` (complete, unsummarized), `decisions/F1g_v4_G__9b/` (in progress) |
+
+---
+**Addendum (2026-10-08):** the follow-up recovery plan and its results (Phases A–D) are in `outputs/robovis2027_recovery/rec_r0/REPORT.md`. Note the comparator correction there: the "Δ vs eq_fixed" columns in this report use the legacy adjacent fixed mix, which is weaker than the best fixed mixture F(b) by up to 0.05 R50; against F no dev20 rule is ≥ 0. Also, per later guidance, fixed-level stops are schedule-aware references rather than fair comparators for an online observer.
