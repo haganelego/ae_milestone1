@@ -7,6 +7,15 @@ Writes  outputs/robovis2027/<run_id>/overlays/<id>/level_XX.jpg
         outputs/robovis2027/<run_id>/checks/<variant>/<id>/level_XX.json
         outputs/robovis2027/<run_id>/decisions/<variant>/<id>/level_XX.json
 
+Phase D (t10 only, given images, then the frozen policy; no GT):
+  uv run --project egtr python scripts/29d_robovis_grounded_v4.py --run-id <test_run> \
+      --model qwen3.5:9b --levels 10 --image-ids-file <ids.json> --num-ctx 16384
+  PYTHONPATH=src uv run --project egtr python -m milestone1.two_stage_policy \
+      --mode apply --run-id <test_run> --image-ids-file <ids.json> \
+      --out-csv outputs/robovis2027_recovery/<rec_run>/test_policy.csv
+  (the cleaned graphs must exist under outputs/robovis2027/<test_run>/graphs_clean;
+   hypotheses are reused only if --hyp-checks/--hyp-decisions exist for that run)
+
 Run (smoke):
   uv run --project egtr python scripts/29d_robovis_grounded_v4.py --run-id dev_r0 \
       --model qwen3.5:9b --levels 1,5,10,15,20 --limit 5
@@ -59,6 +68,7 @@ from milestone1.ollama_client import (  # noqa: E402
     structured_chat,
 )
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
+from milestone1.two_stage_policy import read_image_ids  # noqa: E402
 
 ROUND_DIGITS = 3
 
@@ -71,6 +81,11 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--model", required=True)
     p.add_argument("--levels", default="1,5,10,15,20")
     p.add_argument("--limit", type=int, default=None, help="max number of images")
+    p.add_argument(
+        "--image-ids-file",
+        default=None,
+        help="JSON list / one id per line; overrides --split selection (Phase D)",
+    )
     p.add_argument("--graphs-subdir", default="graphs_clean")
     p.add_argument("--variant-name", default=None, help="default F1g_v4_G__<model>")
     p.add_argument("--hyp-checks", default="F1v_v2_G__9b")
@@ -267,7 +282,12 @@ def main() -> None:
         client = OllamaClient(settings_from_config(cfg))
         degraded = resolve(cfg["paths"]["degraded_images"])
         levels = [int(x) for x in args.levels.split(",") if x]
-        for image_id in dev_ids(cfg, args.split)[: args.limit]:
+        ids = (
+            read_image_ids(resolve(args.image_ids_file))
+            if args.image_ids_file
+            else dev_ids(cfg, args.split)
+        )
+        for image_id in ids[: args.limit]:
             for level in levels:
                 name = f"level_{level:02d}.json"
                 graph = load_json(run_root / args.graphs_subdir / str(image_id) / name)

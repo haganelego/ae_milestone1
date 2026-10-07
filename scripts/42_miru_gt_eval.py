@@ -2,6 +2,12 @@
 
 Usage:
     uv run --project egtr python scripts/42_miru_gt_eval.py [--rebuild-stage] [--repeats N]
+    uv run --project egtr python scripts/42_miru_gt_eval.py --dataset heldout
+
+``--dataset heldout`` loads configs/config_heldout.yaml as an overlay and uses its
+``heldout_eval`` block: pre-registered image selection, stop_c09 recomputed from
+the new EGTR L20 predictions, baseline / node confidence from the predictions,
+score dirs under outputs/heldout_scores, outputs under outputs/heldout_eval.
 
 1. Stage metrics of the cached EGTR predictions vs VG-150 GT (original image
    coordinates): R@K (stored <= 30 relations) and GT RelSGScore per image x level
@@ -22,6 +28,7 @@ fallback; ``at_final_level`` (stop_t == 20) is reported instead of a forced rate
 import argparse
 import json
 import math
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -32,12 +39,17 @@ import pandas as pd
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 
-from milestone1.config import load_config, resolve  # noqa: E402
+from milestone1.config import CONFIG_OVERLAY_ENV, load_config, resolve  # noqa: E402
 from milestone1.miru_gt import build_stage_metrics  # noqa: E402
 from milestone1.miru_methods import (  # noqa: E402
     HYBRID_PREFIX,
     load_existing_method_stops,
     registered_score_methods,
+)
+from milestone1.miru_oracle import (  # noqa: E402
+    baseline_stops,
+    object_confidence,
+    topk_oracle,
 )
 from milestone1.robovis_eval import (  # noqa: E402
     PRED_HITS_FILENAME,
@@ -55,6 +67,16 @@ from milestone1.robovis_eval import (  # noqa: E402
 from milestone1.stop_policy import fixed_method_name  # noqa: E402
 
 STAGE_FILENAME = "stage_metrics.csv"
+STAGE_META_FILENAME = (
+    "stage_metrics.meta.json"  # cache key: prediction dir + file count
+)
+# dataset -> (config block, overlay). The held-out overlay redirects paths and
+# defines its own ``heldout_eval`` block (a dict deep-merge would otherwise keep
+# MIRU's evaluation_extra score dirs).
+DATASETS: dict[str, dict[str, str | None]] = {
+    "miru": {"block": "evaluation_extra", "overlay": None},
+    "heldout": {"block": "heldout_eval", "overlay": "configs/config_heldout.yaml"},
+}
 ORACLE_CSV = "outputs/metrics/topk_oracle/oracle_topk_per_image.csv"
 ORACLE_COLUMN = "stop_c09"
 Q_METRICS = ("R50", "relsg_gt")
@@ -73,10 +95,15 @@ FUSION_NOTE = "late fusion (zero-call)"
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    p.add_argument("--dataset", choices=sorted(DATASETS), default="miru",
+                   help="miru: evaluation_extra block; heldout: heldout_eval block "
+                        "of configs/config_heldout.yaml (overlay)")  # fmt: skip
+    p.add_argument("--overlay", default=None,
+                   help="config overlay (default: the dataset's overlay, if any)")  # fmt: skip
     p.add_argument("--rebuild-stage", action="store_true")
     p.add_argument("--repeats", type=int, default=DEFAULT_REPEATS)
     p.add_argument("--all-methods", action="store_true",
-                   help="table rows for every method, not just evaluation_extra.final_methods")  # fmt: skip
+                   help="table rows for every method, not just the block's final_methods")  # fmt: skip
     return p.parse_args()
 
 
@@ -87,21 +114,44 @@ def registry_key(method: str) -> str:
 
 
 def ensure_stage_metrics(
-    cfg: dict, ids: list[int], out_dir: Path, rebuild: bool
+    cfg: dict, pred_dir: Path, ids: list[int], out_dir: Path, rebuild: bool
 ) -> Path:
     path = out_dir / STAGE_FILENAME
-    if path.exists() and not rebuild:
+    meta_path = out_dir / STAGE_META_FILENAME
+    meta = {"pred_dir": str(pred_dir), "n_images": len(ids),
+            "n_files": count_prediction_files(pred_dir, ids)}  # fmt: skip
+    cached = json.loads(meta_path.read_text()) if meta_path.exists() else None
+    if path.exists() and not rebuild and cached == meta:
         return path
     rows, hits = build_stage_metrics(
-        resolve(cfg["paths"]["egtr_predictions"]), ids,
+        pred_dir, ids,
         int(cfg["resolution_levels"]["num_levels"]),
         cfg["paths"]["vg_root"], cfg["paths"]["vg_split"],
     )  # fmt: skip
     out_dir.mkdir(parents=True, exist_ok=True)
     pd.DataFrame(rows).to_csv(path, index=False)
     pd.DataFrame(hits).to_csv(out_dir / PRED_HITS_FILENAME, index=False)
+    meta_path.write_text(json.dumps(meta, indent=2))
     print(f"built {path} ({len(rows)} rows)")
     return path
+
+
+def count_prediction_files(pred_dir: Path, ids: list[int]) -> int:
+    return sum(1 for i in ids for _ in (pred_dir / str(i)).glob("level_*.json"))
+
+
+def require_complete_predictions(
+    pred_dir: Path, ids: list[int], num_levels: int
+) -> None:
+    """Stop early (no partial caches) if any image x level prediction is missing."""
+    missing = [(i, t) for i in ids for t in range(1, num_levels + 1)
+               if not (pred_dir / str(i) / f"level_{t:02d}.json").exists()]  # fmt: skip
+    if missing:
+        n_img = len({i for i, _ in missing})
+        raise SystemExit(
+            f"EGTR predictions incomplete under {pred_dir}: {len(missing)} files missing "
+            f"({n_img} images), e.g. {missing[:3]}; rerun when inference has finished"
+        )
 
 
 def oracle_mae(
@@ -163,7 +213,9 @@ def ci_text(stat: dict[str, float] | None) -> str:
     return f"{stat['mean']:+.3f} [{stat['ci_low']:+.3f}, {stat['ci_high']:+.3f}]"
 
 
-def build_table(methods, sources, ids, oracle, results, num_levels) -> pd.DataFrame:  # noqa: ANN001
+def build_table(
+    methods, sources, ids, oracle, results, num_levels, sat_max
+) -> pd.DataFrame:  # noqa: ANN001
     final = fixed_method_name(num_levels)
     rows = []
     for name in [*methods, final]:
@@ -171,6 +223,13 @@ def build_table(methods, sources, ids, oracle, results, num_levels) -> pd.DataFr
                                "n": len(ids)}  # fmt: skip
         stops = methods.get(name) or dict.fromkeys(ids, num_levels)
         row.update(oracle_mae(stops, oracle, ids))
+        # MIRU's image set was restricted to stop_c09 <= 18 ("saturating"); report
+        # the same subset of a new image set separately.
+        sat_ids = [i for i in ids if oracle[i] <= sat_max]
+        row["n_sat"] = len(sat_ids)
+        row["mae_c09_sat"] = (
+            oracle_mae(stops, oracle, sat_ids)["mae_c09"] if sat_ids else math.nan
+        )
         row["at_final_level"] = float(np.mean([stops[i] == num_levels for i in ids]))
         for q, (summary, boot) in results.items():
             s = summary.set_index("method")
@@ -183,15 +242,22 @@ def build_table(methods, sources, ids, oracle, results, num_levels) -> pd.DataFr
             row[f"{q}_minus_eq_fixed_ci"] = ci_text(st)
             row[f"{q}_minus_fixed20_ci"] = ci_text(
                 boot["pairwise"][f"{name}_minus_{final}"]["q_stop"]
-            )
+            )  # F = GT-posterior best fixed mixture on this set, at the method's mean stop.
+            row[f"{q}_F_at_mean_stop"] = s.loc[name, "F_at_mean_stop"]
+            stf = boot["methods"][name]["q_minus_F"]
+            row[f"{q}_minus_F"] = stf["mean"]
+            row[f"{q}_minus_F_ci"] = ci_text(stf)
+
         rows.append(row)
     return pd.DataFrame(rows)
 
 
 def to_markdown(table: pd.DataFrame) -> str:
-    cols = ["method", "source", "mean_stop", "mae_c09", "medae_c09", "at_final_level",
-            "R50_stop", "R50_minus_eq_fixed_ci", "relsg_gt_stop",
-            "relsg_gt_minus_eq_fixed_ci", "relsg_gt_minus_fixed20_ci"]  # fmt: skip
+    cols = ["method", "source", "mean_stop", "mae_c09", "medae_c09", "mae_c09_sat", "n_sat",
+            "at_final_level",
+            "R50_stop", "R50_minus_eq_fixed_ci", "R50_minus_F_ci", "relsg_gt_stop",
+            "relsg_gt_minus_eq_fixed_ci", "relsg_gt_minus_F_ci",
+            "relsg_gt_minus_fixed20_ci"]  # fmt: skip
     cols = [c for c in cols if c in table.columns]
     lines = ["| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
     for r in table.to_dict("records"):
@@ -201,26 +267,101 @@ def to_markdown(table: pd.DataFrame) -> str:
             cells.append("n/a" if v is None or (isinstance(v, float) and math.isnan(v))
                          else f"{v:.3f}" if isinstance(v, float) else str(v))  # fmt: skip
         lines.append("| " + " | ".join(cells) + " |")
-    return "\n".join(lines) + "\n"
+    notes = [
+        "",
+        "- `*_minus_eq_fixed_ci`: legacy comparator (adjacent two-level fixed mix at the "
+        "method's mean stop).",
+        "- `*_minus_F_ci`: q_stop - F(mean_stop), F = GT-posterior best fixed mixture on "
+        "this set (upper concave hull of the fixed curve; a reference, not a method); "
+        "paired bootstrap recomputes the mean stop and F per resample.",
+    ]
+    return "\n".join(lines + notes) + "\n"
+
+
+def load_dataset_config(dataset: str, overlay: str | None) -> dict[str, Any]:
+    """Base config + optional overlay (MILESTONE1_CONFIG_OVERLAY mechanism)."""
+    overlay = overlay or DATASETS[dataset]["overlay"]
+    if overlay:
+        os.environ[CONFIG_OVERLAY_ENV] = overlay
+    else:
+        os.environ.pop(CONFIG_OVERLAY_ENV, None)
+    return load_config()
+
+
+def resolve_image_ids(cfg: dict[str, Any], block: dict[str, Any]) -> list[int]:
+    """Image ids: derived from ``block.selection`` (cross-checked against
+    ``paths.selected_images`` if that file exists), else paths.selected_images."""
+    listed_path = resolve(cfg["paths"]["selected_images"])
+    listed = (
+        [int(i) for i in json.loads(listed_path.read_text())]
+        if listed_path.exists() else None
+    )  # fmt: skip
+    sel = block.get("selection")
+    if not sel:
+        if listed is None:
+            raise SystemExit(f"{listed_path} not found")
+        return listed
+    source = json.loads(resolve(sel["from"]).read_text())
+    exclude = {int(i) for i in json.loads(resolve(sel["exclude"]).read_text())}
+    derived = [int(r["image_id"]) for r in source
+               if r.get("split") == sel["split"] and int(r["image_id"]) not in exclude]  # fmt: skip
+    if listed is not None and set(listed) != set(derived):
+        raise SystemExit(
+            f"{listed_path} ({len(listed)}) differs from the pre-registered selection "
+            f"({len(derived)}): {sorted(set(listed) ^ set(derived))[:10]}"
+        )
+    return derived
+
+
+def oracle_stops(
+    cfg: dict[str, Any], block: dict[str, Any], pred_dir: Path, ids: list[int],
+    num_levels: int, out_dir: Path,
+) -> dict[int, int]:  # fmt: skip
+    """stop_c09 from the MIRU CSV (``oracle: csv``) or recomputed from EGTR L20."""
+    if block.get("oracle", "csv") == "csv":
+        df = pd.read_csv(resolve(block.get("oracle_csv", ORACLE_CSV)))
+        return {
+            int(r["image_id"]): int(r[ORACLE_COLUMN]) for r in df.to_dict("records")
+        }
+    orc = topk_oracle(pred_dir, ids, num_levels)
+    rows = [{"image_id": i, ORACLE_COLUMN: orc.stops[i],
+             **{f"rel_sgscore_L{lv:02d}": orc.core_scores[i][lv]
+                for lv in range(1, num_levels + 1)}} for i in ids]  # fmt: skip
+    out_dir.mkdir(parents=True, exist_ok=True)
+    pd.DataFrame(rows).to_csv(out_dir / "oracle_topk_per_image.csv", index=False)
+    return orc.stops
 
 
 def main() -> None:
     args = parse_args()
-    cfg = load_config()
-    extra = cfg.get("evaluation_extra") or {}
+    cfg = load_dataset_config(args.dataset, args.overlay)
+    block = cfg.get(DATASETS[args.dataset]["block"]) or {}
     num_levels = int(cfg["resolution_levels"]["num_levels"])
-    ids = [
-        int(i) for i in json.loads(resolve(cfg["paths"]["selected_images"]).read_text())
-    ]
-    out_dir = resolve(extra.get("gt_eval_dir", "outputs/miru_gt_eval"))
-    metrics_dir = resolve(cfg["paths"]["metrics"])
+    paths = {**cfg["paths"], **(block.get("paths") or {})}
+    cfg = {**cfg, "paths": paths}
+    ids = resolve_image_ids(cfg, block)
+    pred_dir = resolve(paths["egtr_predictions"])
+    out_dir = resolve(block.get("gt_eval_dir", "outputs/miru_gt_eval"))
+    metrics_dir = resolve(paths["metrics"])
+    print(f"dataset={args.dataset} overlay={cfg.get('_overlay')} images={len(ids)} "
+          f"predictions={pred_dir} -> {out_dir}")  # fmt: skip
 
-    stage_path = ensure_stage_metrics(cfg, ids, out_dir, args.rebuild_stage)
-    existing = load_existing_method_stops(metrics_dir, ids)
-    registry = registered_score_methods(cfg, ids, metrics_dir)
-    sources = {m: LEGACY_LLM_NOTE for m in existing}
-    sources.update({m: LEGACY_VLM_NOTE for m in existing if m.startswith("vlm_")})
-    sources["baseline"] = "MIRU CSV (node confidence)"
+    require_complete_predictions(pred_dir, ids, num_levels)
+    stage_path = ensure_stage_metrics(cfg, pred_dir, ids, out_dir, args.rebuild_stage)
+    sources: dict[str, str] = {}
+    conf = None
+    if block.get("legacy_csv_methods", True):
+        existing = load_existing_method_stops(metrics_dir, ids)
+        sources = {m: LEGACY_LLM_NOTE for m in existing}
+        sources.update({m: LEGACY_VLM_NOTE for m in existing if m.startswith("vlm_")})
+        sources["baseline"] = "MIRU CSV (node confidence)"
+    else:
+        # Node confidence and the baseline straight from the EGTR predictions.
+        conf = object_confidence(pred_dir, ids, num_levels)
+        theta = float(cfg["baseline"]["mean_object_conf_threshold"])
+        existing = {"baseline": baseline_stops(conf, ids, theta, num_levels)}
+        sources["baseline"] = f"node confidence >= {theta} (from predictions)"
+    registry = registered_score_methods(cfg, ids, metrics_dir, block, conf)
     for m in registry.stops:
         key = registry_key(m)
         cov = registry.coverage.get(key, math.nan)
@@ -230,27 +371,26 @@ def main() -> None:
         )  # fmt: skip
         sources[m] = f"{label}, coverage {cov:.0%}" if cov < 1 else label
     methods = {**existing, **registry.stops}
-    print(f"methods: {len(existing)} from CSVs, {len(registry.stops)} from score dirs; "
+    print(f"methods: {len(existing)} baseline/CSV, {len(registry.stops)} from score dirs; "
           f"coverage {registry.coverage}")  # fmt: skip
-    wanted = extra.get("final_methods") or list(methods)
+    wanted = block.get("final_methods") or list(methods)
     if not args.all_methods:
         missing = [m for m in wanted if m not in methods]
         if missing:
             print(f"not available yet (skipped): {missing}")
         methods = {m: methods[m] for m in wanted if m in methods}
 
-    oracle_df = pd.read_csv(resolve(ORACLE_CSV))
-    oracle = {
-        int(r["image_id"]): int(r[ORACLE_COLUMN]) for r in oracle_df.to_dict("records")
-    }
+    oracle = oracle_stops(cfg, block, pred_dir, ids, num_levels, out_dir)
+    sat_max = int(block.get("saturating_max_stop", num_levels))
     results = {q: gt_secondary(stage_path, methods, ids, q, out_dir, num_levels, args.repeats)
                for q in Q_METRICS}  # fmt: skip
-    table = build_table(methods, sources, ids, oracle, results, num_levels)
+    table = build_table(methods, sources, ids, oracle, results, num_levels, sat_max)
     table.to_csv(out_dir / "miru_method_table.csv", index=False)
     (out_dir / "miru_method_table.md").write_text(to_markdown(table))
     with pd.option_context("display.width", 250, "display.max_columns", 30):
-        print(table[["method", "mean_stop", "mae_c09", "R50_stop", "R50_minus_eq_fixed_ci",
-                     "relsg_gt_stop", "relsg_gt_minus_eq_fixed_ci"]].round(3).to_string(index=False))  # fmt: skip
+        print(table[["method", "mean_stop", "mae_c09", "mae_c09_sat", "R50_stop",
+                     "R50_minus_eq_fixed_ci", "relsg_gt_stop",
+                     "relsg_gt_minus_eq_fixed_ci"]].round(3).to_string(index=False))  # fmt: skip
     print(f"-> {out_dir / 'miru_method_table.md'}")
 
 

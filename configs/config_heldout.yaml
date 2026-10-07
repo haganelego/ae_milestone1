@@ -6,8 +6,18 @@
 # no MIRU output is overwritten.
 # Image set: ROBOVIS2027 test100 (GT-only selection, seed 42) minus the 4 images
 # that overlap the MIRU 100 -> 96 images (data/processed/robovis2027_miru/selection_note.json).
-# Pre-registered rule (team-lead 2026-10-08): hybrid_fuse_mean(vlm image-only 9b,
-# llm_sgg text 4b), theta 0.70, k=2; secondary fuse_min.
+# PRE-REGISTRATION (team-lead approved 2026-10-08, recorded before any held-out score exists):
+#   rule      PRIMARY hybrid_fuse_mean(vlm image-only 9b, llm_sgg text 4b), theta 0.70, k=2;
+#             secondary fuse_min(vlm image-only 9b, llm_sgg text 4b), theta 0.70, k=2.
+#   primary   all 96 images: MAE vs stop_c09 (recomputed from the held-out EGTR L20).
+#   compare   stop_c09 <= 18 subset (73 images; reproduces MIRU's selection condition).
+#   baselines text 4b alone, image-only 9b alone, hybrid text 4b (+ node confidence),
+#             node-confidence baseline, fixed-level curve.
+#   GT        R50 / relsg_gt equal-observation deltas on both image sets.
+#   inputs    image-only 9b = scripts/11 single mode with MIRU decoding unchanged
+#             (temperature 0.3, num_predict 1024, NO JSON mode, unseeded; vlm.num_ctx only
+#             sizes the context); text 4b = scripts/40 text condition (vlm_sgg settings).
+#             Fusion inputs therefore match the rule as registered on the MIRU 100.
 paths:
   selected_images: data/processed/robovis2027_miru/selected_images.json
   degraded_images: data/processed/robovis2027_miru/degraded_images
@@ -17,6 +27,43 @@ paths:
   llm_inputs: outputs/robovis2027_miru/llm_inputs
   llm_scores: outputs/robovis2027_miru/llm_scores
   figures: outputs/robovis2027_miru/figures
+  vlm_scores: outputs/robovis2027_miru/vlm_scores   # read by scripts/11 (default outputs/vlm_scores)
 
 vlm_sgg:
   output_root: outputs/robovis2027_miru/llm_scores_vlm
+
+# ── A2: held-out evaluation block (scripts/42_miru_gt_eval.py --dataset heldout) ──
+# Own block, not evaluation_extra: a dict deep-merge would keep MIRU's score dirs.
+# Pre-registered (worklog 2026-10-08 00:40): no tuning; theta 0.70, k=2.
+heldout_eval:
+  selection:                      # pre-registered image set, cross-checked vs paths.selected_images
+    from: data/processed/robovis2027/selected_images.json
+    split: test
+    exclude: data/processed/selected_images.json   # the MIRU 100
+  oracle: compute                 # stop_c09 recomputed from the new EGTR L20 (top-10 / top-5, coef 0.9)
+  saturating_max_stop: 18         # MIRU kept stop_c09 <= 18; report that subset too (mae_c09_sat)
+  legacy_csv_methods: false       # baseline + node confidence from the new EGTR predictions
+  k_options: [2]
+  score_methods:
+    llm_sgg_text_4b: outputs/robovis2027_miru/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_text
+    vlm_single_9b: outputs/robovis2027_miru/vlm_scores/qwen3.5-9b/single   # image-only VLM (script 11 layout)
+  hybrid_methods: [llm_sgg_text_4b]
+  fusion_methods:
+    fuse_mean_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: mean}
+    fuse_min_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: min}
+  gt_eval_dir: outputs/heldout_eval
+  final_methods:
+    - hybrid_fuse_mean_vlmimg9b_text4b_k2   # PRIMARY (pre-registered)
+    - fuse_min_vlmimg9b_text4b_k2           # secondary (pre-registered)
+    - fuse_mean_vlmimg9b_text4b_k2
+    - llm_sgg_text_4b_k2
+    - vlm_single_9b_k2
+    - hybrid_llm_sgg_text_4b_k2             # "hybrid_4b" comparator (text 4b + node confidence)
+    - baseline
+
+# Image-only VLM for the pre-registered rule: 9b single mode only, script-11
+# settings otherwise unchanged (prompt, max_image_side 512, request options).
+vlm:
+  models: [qwen3.5:9b]
+  modes: [single]
+  num_ctx: 16384   # same as concurrent 9b clients -> no reload; prompt ~0.5k tokens, outputs unaffected

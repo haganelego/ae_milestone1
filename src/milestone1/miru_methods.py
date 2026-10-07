@@ -215,16 +215,25 @@ def registered_score_methods(
     cfg: Mapping[str, Any],
     image_ids: Sequence[int],
     metrics_dir: Path,
+    block: Mapping[str, Any] | None = None,
+    conf: Mapping[tuple[int, int], float] | None = None,
 ) -> ScoreMethodResult:
-    """``evaluation_extra.score_methods`` (existing dirs) + ``fusion_methods``."""
-    extra = cfg.get("evaluation_extra") or {}
-    params = StopParams.from_config(cfg)
+    """``score_methods`` (existing dirs) + ``fusion_methods`` of an evaluation block.
+
+    ``block`` defaults to ``cfg["evaluation_extra"]``; ``conf`` (mean object
+    confidence per (image, level)) defaults to ``<metrics_dir>/all_metrics.csv``.
+    """
+    extra = block if block is not None else (cfg.get("evaluation_extra") or {})
+    params = replace(
+        StopParams.from_config(cfg),
+        k_options=tuple(int(k) for k in extra.get("k_options", (1, 2))),
+    )
     hybrid_keys = set(extra.get("hybrid_methods") or [])
     fusions = extra.get("fusion_methods") or {}
     hybrid_keys |= {name for name, spec in fusions.items() if spec.get("hybrid", True)}
-    conf = (
-        load_object_confidence(metrics_dir / "all_metrics.csv") if hybrid_keys else None
-    )
+    if conf is None and hybrid_keys:
+        conf = load_object_confidence(metrics_dir / "all_metrics.csv")
+
     stops: dict[str, dict[int, int]] = {}
     coverage: dict[str, float] = {}
     series_by_key: dict[str, dict[int, dict[int, float]]] = {}

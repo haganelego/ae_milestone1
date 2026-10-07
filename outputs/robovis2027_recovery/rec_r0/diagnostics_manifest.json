@@ -1,0 +1,34 @@
+{
+  "generated": "2026-10-08T01:02:10",
+  "git_head": "079ee22dab0335fc8cc77605ec49507bcf3de746",
+  "inputs": {
+    "dev20": {
+      "path": "outputs/robovis2027/dev_r0/stage_metrics.csv",
+      "sha256": "39597e90a21a2f4fb005bde9f7b48770334482e2596dd732b35c8e2a7f5c0477"
+    },
+    "test100": {
+      "path": "outputs/robovis2027/test_r0/stage_metrics.csv",
+      "sha256": "689b53451c37a4f5b78f56db6fc4ba3600b1b9adc42215c7ab8f0c08abf493ea"
+    },
+    "miru100": {
+      "path": "outputs/miru_gt_eval/stage_metrics.csv",
+      "sha256": "757cb3073c754633c8e958b79136af37d092b9a60fc0a619f282350b2e665be5"
+    },
+    "heldout96": {
+      "path": "outputs/heldout_eval/stage_metrics.csv",
+      "sha256": "e505c85f1f28fbca41b9990748b667f01867bbb9c326b0f7bc0282e518d80c90"
+    }
+  },
+  "budgets": [
+    10,
+    12,
+    15,
+    18
+  ],
+  "metrics": [
+    "R50",
+    "relsg_gt"
+  ],
+  "shuffle_repeats": 1000,
+  "note": "GT-posterior reference, not a method"
+}

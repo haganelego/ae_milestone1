@@ -1,0 +1,397 @@
+{
+ "generated_at": "2026-10-08T00:53:01",
+ "script": "scripts/44_recovery_test_selection.py",
+ "source": {
+  "vg_root": "/home/kanaoka/usr/dataset/vg",
+  "split": "test",
+  "test.json_sha256": "e786550a74a2336c07139c23e6d952cdeac14bf3d04feddf2b210cdba1853238",
+  "rel.json_sha256": "ab5d435745d5683b4f672311a2ec8618d9126909d291b663deaf406c6497d32f"
+ },
+ "criteria": {
+  "min_gt_objects": 5,
+  "min_gt_relations": 3
+ },
+ "procedure": "eligible ids minus all excluded ids, sorted ascending, random.Random(seed).shuffle, first n",
+ "seed": 20261008,
+ "n_test_images": 26446,
+ "n_eligible": 18887,
+ "n_excluded_total": 1243,
+ "n_excluded_eligible": 1039,
+ "n_pool": 17848,
+ "excluded_sets": {
+  "robovis_dev20": {
+   "n": 20,
+   "n_in_eligible": 20,
+   "source": "data/processed/robovis2027/selected_images.json split=dev (rank order)"
+  },
+  "robovis_test100": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "data/processed/robovis2027/selected_images.json split=test (rank order)"
+  },
+  "miru100_current": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "data/processed/selected_images.json"
+  },
+  "heldout96": {
+   "n": 96,
+   "n_in_eligible": 96,
+   "source": "data/processed/robovis2027_miru/selected_images.json"
+  },
+  "pgsg_official_eval_pilot": {
+   "n": 1000,
+   "n_in_eligible": 796,
+   "source": "data/processed/pgsg_vg/selected_test_ids.json (first 1000 test.json images; aggregate PGSG validation runs)"
+  },
+  "miru_history@e1b8e56": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "git show e1b8e56:data/processed/selected_images.json"
+  },
+  "miru_history@2b038b2^": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "git show 2b038b2^:data/processed/selected_images.json"
+  },
+  "miru_history@2b038b2": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "git show 2b038b2:data/processed/selected_images.json"
+  },
+  "miru_history@archive/query-conditioned-wip": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "git show archive/query-conditioned-wip:data/processed/selected_images.json"
+  },
+  "miru_history@origin/feature/query-conditioned-bayesian-stop": {
+   "n": 100,
+   "n_in_eligible": 100,
+   "source": "git show origin/feature/query-conditioned-bayesian-stop:data/processed/selected_images.json"
+  },
+  "robovis_smoke_a3": {
+   "n": 3,
+   "n_in_eligible": 3,
+   "source": "outputs/robovis2027/smoke_a3/graphs"
+  },
+  "miru_schedule_compare": {
+   "n": 3,
+   "n_in_eligible": 3,
+   "source": "data/processed/schedule_compare/a_geometric"
+  }
+ },
+ "selected_ids": [
+  2322283,
+  2336446,
+  2333226,
+  2412105,
+  2334764,
+  2417606,
+  2415308,
+  2324573,
+  2415257,
+  2412382,
+  2414937,
+  2335899,
+  2333304,
+  2316194,
+  2416461,
+  2328599,
+  2327523,
+  2341912,
+  2342545,
+  2328407,
+  2411552,
+  2325001,
+  2340285,
+  2318430,
+  2327916,
+  2319070,
+  2320026,
+  2317692,
+  2411592,
+  2340262,
+  2318081,
+  2332300,
+  2318541,
+  2337098,
+  2322265,
+  2325201,
+  2413017,
+  2340819,
+  2319981,
+  2336620,
+  2319822,
+  2334081,
+  2332490,
+  2327084,
+  2324297,
+  2336057,
+  2338929,
+  2335016,
+  2326130,
+  2337715,
+  2334087,
+  2318087,
+  2336093,
+  2413540,
+  2335012,
+  2315415,
+  2318399,
+  2317197,
+  2328684,
+  2414489
+ ],
+ "selected_sha256_ordered": "bdca3b28f3f1258eed943991fe7f814e4433db2d26d5ad4ea837d7866b3caf6f",
+ "selected_gt_counts": {
+  "2322283": {
+   "objects": 8,
+   "relations": 8
+  },
+  "2336446": {
+   "objects": 15,
+   "relations": 8
+  },
+  "2333226": {
+   "objects": 7,
+   "relations": 4
+  },
+  "2412105": {
+   "objects": 12,
+   "relations": 27
+  },
+  "2334764": {
+   "objects": 12,
+   "relations": 5
+  },
+  "2417606": {
+   "objects": 13,
+   "relations": 7
+  },
+  "2415308": {
+   "objects": 22,
+   "relations": 5
+  },
+  "2324573": {
+   "objects": 7,
+   "relations": 4
+  },
+  "2415257": {
+   "objects": 6,
+   "relations": 3
+  },
+  "2412382": {
+   "objects": 21,
+   "relations": 13
+  },
+  "2414937": {
+   "objects": 6,
+   "relations": 3
+  },
+  "2335899": {
+   "objects": 11,
+   "relations": 11
+  },
+  "2333304": {
+   "objects": 8,
+   "relations": 3
+  },
+  "2316194": {
+   "objects": 20,
+   "relations": 11
+  },
+  "2416461": {
+   "objects": 32,
+   "relations": 11
+  },
+  "2328599": {
+   "objects": 14,
+   "relations": 5
+  },
+  "2327523": {
+   "objects": 12,
+   "relations": 10
+  },
+  "2341912": {
+   "objects": 10,
+   "relations": 5
+  },
+  "2342545": {
+   "objects": 28,
+   "relations": 9
+  },
+  "2328407": {
+   "objects": 28,
+   "relations": 9
+  },
+  "2411552": {
+   "objects": 28,
+   "relations": 15
+  },
+  "2325001": {
+   "objects": 11,
+   "relations": 4
+  },
+  "2340285": {
+   "objects": 14,
+   "relations": 6
+  },
+  "2318430": {
+   "objects": 9,
+   "relations": 8
+  },
+  "2327916": {
+   "objects": 9,
+   "relations": 4
+  },
+  "2319070": {
+   "objects": 6,
+   "relations": 5
+  },
+  "2320026": {
+   "objects": 24,
+   "relations": 9
+  },
+  "2317692": {
+   "objects": 19,
+   "relations": 4
+  },
+  "2411592": {
+   "objects": 16,
+   "relations": 6
+  },
+  "2340262": {
+   "objects": 14,
+   "relations": 10
+  },
+  "2318081": {
+   "objects": 20,
+   "relations": 13
+  },
+  "2332300": {
+   "objects": 16,
+   "relations": 3
+  },
+  "2318541": {
+   "objects": 21,
+   "relations": 7
+  },
+  "2337098": {
+   "objects": 17,
+   "relations": 4
+  },
+  "2322265": {
+   "objects": 9,
+   "relations": 6
+  },
+  "2325201": {
+   "objects": 7,
+   "relations": 5
+  },
+  "2413017": {
+   "objects": 20,
+   "relations": 11
+  },
+  "2340819": {
+   "objects": 11,
+   "relations": 6
+  },
+  "2319981": {
+   "objects": 15,
+   "relations": 9
+  },
+  "2336620": {
+   "objects": 6,
+   "relations": 4
+  },
+  "2319822": {
+   "objects": 12,
+   "relations": 6
+  },
+  "2334081": {
+   "objects": 14,
+   "relations": 4
+  },
+  "2332490": {
+   "objects": 12,
+   "relations": 9
+  },
+  "2327084": {
+   "objects": 11,
+   "relations": 5
+  },
+  "2324297": {
+   "objects": 11,
+   "relations": 6
+  },
+  "2336057": {
+   "objects": 22,
+   "relations": 11
+  },
+  "2338929": {
+   "objects": 10,
+   "relations": 3
+  },
+  "2335016": {
+   "objects": 7,
+   "relations": 3
+  },
+  "2326130": {
+   "objects": 27,
+   "relations": 13
+  },
+  "2337715": {
+   "objects": 8,
+   "relations": 4
+  },
+  "2334087": {
+   "objects": 29,
+   "relations": 22
+  },
+  "2318087": {
+   "objects": 8,
+   "relations": 3
+  },
+  "2336093": {
+   "objects": 12,
+   "relations": 6
+  },
+  "2413540": {
+   "objects": 9,
+   "relations": 5
+  },
+  "2335012": {
+   "objects": 6,
+   "relations": 4
+  },
+  "2315415": {
+   "objects": 23,
+   "relations": 12
+  },
+  "2318399": {
+   "objects": 25,
+   "relations": 17
+  },
+  "2317197": {
+   "objects": 11,
+   "relations": 6
+  },
+  "2328684": {
+   "objects": 20,
+   "relations": 8
+  },
+  "2414489": {
+   "objects": 8,
+   "relations": 4
+  }
+ },
+ "training_split_independence": {
+  "assertable": true,
+  "evidence": [
+   "Local VG-150 splits are disjoint: train.json (57,723) / val.json (5,000) / test.json (26,446) share 0 image ids.",
+   "Pix2Grp DATASET.MD: VG follows the BGNN / Tang 'Unbiased SGG' protocol; its loader (lavis/datasets/datasets/vg_rel_detection.py) trains on h5 split flag 0 and tests on split flag 2.",
+   "The standard VG-150 test split has 26,446 images, matching the local test.json used here."
+  ],
+  "caveat": "The authors' VG-SGG h5 files are not available locally, so the identity of their train split with ours is inferred from the published protocol and the matching test-split size, not byte-verified."
+ }
+}

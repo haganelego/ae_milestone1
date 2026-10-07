@@ -42,6 +42,7 @@ def run_vlm_scoring(
     max_image_side: int,
     timeout: int,
     sat_threshold: float,
+    num_ctx: int | None = None,
 ) -> list[dict]:
     """Run VLM scoring for one model+mode combo across all images and levels.
 
@@ -80,7 +81,12 @@ def run_vlm_scoring(
                         degraded_root / str(img_id) / f"{level_name}.jpg"
                     )
                     result = score_vlm_single(
-                        img_path, model, chat_endpoint, max_image_side, timeout
+                        img_path,
+                        model,
+                        chat_endpoint,
+                        max_image_side,
+                        timeout,
+                        num_ctx=num_ctx,
                     )
                 else:  # sequence
                     # Collect recent history images
@@ -164,6 +170,7 @@ def main() -> None:
     sat_threshold = vlm_cfg["saturation_threshold"]
     max_image_side = vlm_cfg["max_image_side"]
     timeout = vlm_cfg["request_timeout"]
+    num_ctx = vlm_cfg.get("num_ctx")  # optional; absent in MIRU config (ollama default)
     num_levels = cfg["resolution_levels"]["num_levels"]
 
     selected_path = resolve(cfg["paths"]["selected_images"])
@@ -171,7 +178,8 @@ def main() -> None:
         image_ids = json.load(f)
 
     degraded_root = resolve(cfg["paths"]["degraded_images"])
-    vlm_output_root = resolve("outputs/vlm_scores")
+    # paths.vlm_scores (optional; set by configs/config_heldout.yaml) keeps MIRU outputs intact.
+    vlm_output_root = resolve(cfg["paths"].get("vlm_scores", "outputs/vlm_scores"))
     metrics_root = resolve(cfg["paths"]["metrics"])
 
     # Ordered: 4b models first, then 9b, to minimize VRAM reloads
@@ -219,6 +227,7 @@ def main() -> None:
                 max_image_side=max_image_side,
                 timeout=timeout,
                 sat_threshold=sat_threshold,
+                num_ctx=num_ctx,
             )
             all_stop_rows.extend(rows)
 

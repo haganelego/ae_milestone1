@@ -86,8 +86,13 @@ def call_vlm(
     model: str,
     chat_endpoint: str,
     timeout: int = 300,
+    num_ctx: int | None = None,
 ) -> str:
     """Call Ollama chat API with images and return the response text.
+
+    ``num_ctx`` (optional) only sizes the context window; the short image prompts
+    never approach ollama's default, so outputs are unaffected. Matching another
+    concurrent client's num_ctx avoids model reloads.
 
     Uses a ThreadPoolExecutor with wall-clock timeout to handle cases
     where ollama keeps the connection alive with slow token generation.
@@ -108,6 +113,7 @@ def call_vlm(
         "options": {
             "temperature": 0.3,
             "num_predict": 1024,
+            **({"num_ctx": num_ctx} if num_ctx else {}),
         },
     }
     with ThreadPoolExecutor(max_workers=1) as pool:
@@ -147,11 +153,14 @@ def score_vlm_single(
     chat_endpoint: str,
     max_image_side: int = 512,
     timeout: int = 300,
+    num_ctx: int | None = None,
 ) -> dict[str, Any]:
     """Score saturation using a single image (VLM single mode)."""
     try:
         b64 = _load_and_downscale_image(image_path, max_image_side)
-        raw = call_vlm(VLM_SINGLE_PROMPT, [b64], model, chat_endpoint, timeout)
+        raw = call_vlm(
+            VLM_SINGLE_PROMPT, [b64], model, chat_endpoint, timeout, num_ctx=num_ctx
+        )
         result = _parse_llm_json(raw)
         return _normalize_result(result)
     except Exception as e:

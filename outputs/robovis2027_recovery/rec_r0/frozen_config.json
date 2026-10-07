@@ -1,0 +1,187 @@
+{
+ "generated_at": "2026-10-08T00:52:10",
+ "git": {
+  "head": "079ee22dab0335fc8cc77605ec49507bcf3de746",
+  "branch": "feature/robovis2027",
+  "dirty": [
+   "claude/docs/research/robovis2027-worklog.md",
+   "Pix2Grp_CVPR2024",
+   "configs/config_heldout.yaml",
+   "outputs/miru_gt_eval/miru_method_table.csv",
+   "outputs/miru_gt_eval/miru_method_table.md",
+   "scripts/11_vlm_saturation_scoring.py",
+   "scripts/42_miru_gt_eval.py",
+   "src/milestone1/miru_methods.py",
+   "src/milestone1/vlm.py",
+   "tests/test_miru_eval.py",
+   "data/processed/robovis2027_miru/",
+   "outputs/heldout_eval/",
+   "outputs/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_img_single/",
+   "outputs/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_text/",
+   "outputs/llm_scores_vlm/qwen3.5-9b_h5_rel_on_conf_on_img_single/",
+   "outputs/llm_scores_vlm/qwen3.5-9b_h5_rel_on_conf_on_text/",
+   "outputs/llm_scores_vlm/run.pid",
+   "outputs/miru_gt_eval/eval/",
+   "outputs/miru_gt_eval/stage_metrics.csv",
+   "outputs/miru_gt_eval/stage_metrics.meta.json",
+   "outputs/miru_gt_eval/stage_predicate_hits.csv",
+   "outputs/robovis2027/dev_r0/checks/",
+   "outputs/robovis2027/dev_r0/decisions/",
+   "outputs/robovis2027/dev_r0/eval/",
+   "outputs/robovis2027/dev_r0/failure_analysis/",
+   "outputs/robovis2027/dev_r0/failure_analysis_full20/",
+   "outputs/robovis2027/dev_r0/manifest.json",
+   "outputs/robovis2027/dev_r0/manifest_seed1.json",
+   "outputs/robovis2027/dev_r0/official_eval/",
+   "outputs/robovis2027/dev_r0/official_validation.json",
+   "outputs/robovis2027/dev_r0/overlays/",
+   "outputs/robovis2027/dev_r0/pgsg_signals.csv",
+   "outputs/robovis2027/dev_r0/probe/",
+   "outputs/robovis2027/dev_r0/report.md",
+   "outputs/robovis2027/dev_r0/stage_metrics.csv",
+   "outputs/robovis2027/dev_r0/stage_predicate_hits.csv",
+   "outputs/robovis2027/dev_r0/stage_predicate_hits.jsonl",
+   "outputs/robovis2027/dev_r0/stage_summary.json",
+   "outputs/robovis2027/dev_r0/summaries/",
+   "outputs/robovis2027/dev_r0/usage.jsonl",
+   "outputs/robovis2027/figures/",
+   "outputs/robovis2027/smoke_a3/",
+   "outputs/robovis2027/synthetic_r0/",
+   "outputs/robovis2027/test_r0/clean_metrics_oracle.json",
+   "outputs/robovis2027/test_r0/eval/",
+   "outputs/robovis2027/test_r0/manifest.json",
+   "outputs/robovis2027/test_r0/pgsg_signals.csv",
+   "outputs/robovis2027/test_r0/pgsg_signals_corr.csv",
+   "outputs/robovis2027/test_r0/recall_profile.json",
+   "outputs/robovis2027/test_r0/relsg_profile.json",
+   "outputs/robovis2027/test_r0/stage_metrics.csv",
+   "outputs/robovis2027/test_r0/stage_predicate_hits.csv",
+   "outputs/robovis2027/test_r0/stage_predicate_hits.jsonl",
+   "outputs/robovis2027/test_r0/stage_summary.json",
+   "outputs/robovis2027_miru/",
+   "outputs/robovis2027_recovery/",
+   "scripts/43_recovery_preflight.py",
+   "src/milestone1/recovery_diagnostics.py",
+   "src/milestone1/two_stage_policy.py",
+   "tests/test_two_stage_policy.py"
+  ]
+ },
+ "configs": {
+  "configs/robovis2027.yaml": {
+   "sha256": "bdc43fa9efea865de778969d621520ef47c22bc814fd7e7baa3b612fac5a3f1f",
+   "content": "# ROBOVIS2027 experiment config (PGSG + resolution-recovery stop policy).\n# Plan initial YAML (spec_version 1.0) expanded to block form, plus local paths.\n# All relative paths are resolved against the repository root.\n\nspec_version: 1.0\n\noutput_root: outputs/robovis2027\n\ndataset:\n  vg_root: /home/kanaoka/usr/dataset/vg   # images/, test.json, rel.json (VG-150)\n  source_split: test                     # VG-150 test split (== PGSG test split)\n  dev_count: 20                          # images after the test block in shuffled order\n  test_count: 100                        # first N of shuffled order; truncatable to 60\n  seed: 42                               # random.Random(seed).shuffle on sorted ids\n  min_gt_objects: 5                      # GT-only eligibility (plan \u00a78)\n  min_gt_relations: 3\n  base_max_side: 384                     # pre-shrink so max(W,H)=384 (PGSG input is 384x384)\n\npaths:\n  root: data/processed/robovis2027\n  selected_images: data/processed/robovis2027/selected_images.json\n  eligible_ids: data/processed/robovis2027/eligible_ids.json\n  selection_manifest: data/processed/robovis2027/selection_manifest.json\n  degraded_images: data/processed/robovis2027/degraded_images   # <image_id>/level_XX.jpg\n  levels_manifest: data/processed/robovis2027/levels_manifest.json\n  miru_selected_images: data/processed/selected_images.json     # old MIRU 100 (read-only)\n\nresolution:\n  # Must equal configs/config.yaml resolution_levels.scales (asserted in script 27).\n  # Geometric schedule scale_t = 0.05 * 20^((t-1)/19), t = 1..20.\n  scales:\n    - 0.05\n    - 0.0585\n    - 0.0685\n    - 0.0802\n    - 0.0940\n    - 0.1100\n    - 0.1288\n    - 0.1508\n    - 0.1765\n    - 0.2066\n    - 0.2419\n    - 0.2832\n    - 0.3316\n    - 0.3882\n    - 0.4545\n    - 0.5321\n    - 0.6229\n    - 0.7293\n    - 0.8538\n    - 1.0\n  interpolation: bilinear      # downscale and upscale (and pre-shrink)\n  output_format: JPEG\n  jpeg_quality: 95             # every level incl. level_20 is re-encoded identically\n\nproposal:\n  max_hypotheses: 3\n  max_observed_issues: 3\n  theta: 2\n  consecutive_k: 2\n  unknown_conservative_theta: 1   # separately named variant (plan \u00a76)\n  max_u: 2                        # u_j = min(basis, benefit) in {0,1,2}; empty graph -> A_t = max_u\n\nevaluation:\n  reference: vg_existing_gt\n  primary: SGDet_R50\n  secondary: SGDet_mR50\n  iou_threshold: 0.5\n  judge_enabled: false\n  bootstrap_repeats: 2000\n  bootstrap_seed: 20271007\n  ci_level: 0.95\n  oracle_ratio: 0.9             # relative-stable oracle: q_u >= ratio * qmax for all u >= t\n  oracle_gain_delta: 0.05       # auxiliary gain_based oracle (not used in main results)\n  recall_k: 50                  # k of R@k / mR@k (per-predicate sidecar)\n  q_metric: R50                 # stage_metrics column used as q_t (R50 | relsg_gt | ...)\n  report_q_metrics:             # agreed evaluation metrics (user decision 2026-10-07); report shows only these\n    R50: primary\n    relsg_gt: secondary\n  relsg_top_entities: 20        # GT-RelSGScore cap: top-N entities by score (label set)\n  relsg_top_relations: 50       # GT-RelSGScore cap: top-N relations by trp_score (triplet set)\n  clean_merge_iou: 0.5          # cleaned observed graph G: same-label entity merge IoU (>)\n  clean_top_relations: 20       # cleaned observed graph G: top-K relations by trp_score\n\nexecution:\n  schema_retries: 1\n  transient_retries: 5\n  max_model_calls: 9000\n  concurrency: 1\n\npgsg:\n  checkpoint: Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth\n  env: envs/pgsg\n  eval_config: configs/pgsg/rel_det_vg_eval_local.yaml\n\nllm:\n  model: qwen3.5:4b\n  endpoint: http://localhost:11434/api/chat\n  think: false                 # qwen3.5 <think> mode off -> plain JSON output\n\n# Check generator (F1/F2) + judgment (owned by check_generator.py / judge.py).\n# Model id, endpoint and think flag come from `llm:` above; retry counts from\n# `execution:`; item caps from `proposal:`.\nchecks:\n  check_model: qwen3.5:4b      # F1 (image + graph) and F2 (graph only)\n  judge_model: qwen3.5:4b      # text-only judgment\n  json_mode: true              # ollama `format: \"json\"`; false -> plain text + parse\n  options:                     # passed verbatim as ollama `options`\n    temperature: 0\n    seed: 20271007\n    num_ctx: 8192\n    num_predict: 1536\n  request_timeout_s: 300\n  retry_temperature: 0.3       # schema retry only (attempt 2); attempt 1 uses options.temperature\n  backoff_base_s: 2.0          # transient retry sleep = base * 2^attempt, capped\n  backoff_max_s: 30.0\n  max_relations_in_prompt: 50  # top-N by trp_score (graph is already sorted)\n  max_entities_in_prompt: 60   # entities used by kept relations first, then by score\n  max_string_chars: 240\n  box_decimals: 2              # normalized box coords in the rendering\n  score_decimals: 2\n  v2:                          # --prompt-version v2 rendering overrides (F1_v2 / F1v_v2)\n    max_relations_in_prompt: 20\n    max_entities_in_prompt: 30 # strict cap (v1 always keeps relation endpoints)\n    merge_iou: 0.5             # merge same-label entities with box IoU > this\n    string_hint_chars: 200     # prompt-only hint; validator keeps max_string_chars\n  v4:                          # judge v4 (bbox-grounded visibility, variant F1g_v4_*)\n    top_entities: 8            # top-K graph entities by score drawn + listed\n    overlay_line_width: 1      # thin rectangle (px, base image)\n    overlay_color: [255, 0, 0]\n    overlay_font_size: 10\n"
+  },
+  "configs/config.yaml": {
+   "sha256": "4c01633f5dc86aa0c843e1b19e58ffb1f057bd8f2fbf7ceb900a52535f913706",
+   "content": "# Milestone 1: Semantic information saturation detection from SGG output\n# All paths are relative to repository root (milestone_1/).\n\npaths:\n  vg_root: /home/kanaoka/usr/dataset/vg          # images/, train.json, val.json, test.json, rel.json\n  vg_split: test                                  # which VG split to draw GT + images from\n  egtr_repo: egtr                                 # EGTR submodule (imported, never modified)\n  egtr_artifact: egtr/checkpoint/egtr__pretrained_detr__SenseTime__deformable-detr__batch__32__epochs__150_50__lr__1e-05_0.0001__visual_genome__finetune__version_0/batch__64__epochs__50_25__lr__2e-07_2e-06_0.0002__visual_genome__finetune/version_0\n  egtr_architecture: SenseTime/deformable-detr\n  selected_images: data/processed/selected_images.json\n  degraded_images: data/processed/degraded_images\n  gt_scene_graphs: data/processed/gt_scene_graphs\n  egtr_predictions: outputs/egtr_predictions\n  metrics: outputs/metrics\n  llm_inputs: outputs/llm_inputs\n  llm_scores: outputs/llm_scores\n  figures: outputs/figures\n\ndataset:\n  name: visual_genome\n  num_images: 100           # scaled up after 10-image validation\n  min_gt_objects: 5\n  min_gt_relationships: 3\n  use_person_subset: false\n  seed: 42\n\nresolution_levels:\n  num_levels: 20\n  # Geometric (log-spaced) schedule: scale_t = 0.05 * 20^((t-1)/19), constant\n  # ratio r = 20^(1/19) \u2248 1.171 per level (each level +~17% resolution).\n  # Rationale: equal RELATIVE resolution gain per level => ~uniform perceptual /\n  # information increment (Weber-Fechner / equal log-resolution octave), and\n  # corresponds to a constant-fraction (\"exponential\") approach (distance *= ~0.854\n  # per step). Replaces the hand-picked near-linear list whose per-level change was\n  # large at low scale and flat (L15+) at high scale.\n  scales:\n    - 0.05\n    - 0.0585\n    - 0.0685\n    - 0.0802\n    - 0.0940\n    - 0.1100\n    - 0.1288\n    - 0.1508\n    - 0.1765\n    - 0.2066\n    - 0.2419\n    - 0.2832\n    - 0.3316\n    - 0.3882\n    - 0.4545\n    - 0.5321\n    - 0.6229\n    - 0.7293\n    - 0.8538\n    - 1.00\n  # bilinear downscale/upscale: area-averaging low-pass that matches optical/sensor\n  # capture of a distant object (smooth blur, not blocky aliasing). Chosen as the\n  # adopted model for \"robot approaching -> resolution recovers\"; nearest-neighbor\n  # results are archived under outputs/runs/nearest/ for comparison.\n  interpolation: bilinear\n\negtr:\n  object_conf_threshold: 0.1\n  relation_conf_threshold: 0.005\n  top_k_objects: 20\n  top_k_relationships: 30\n\nmetrics:\n  sg_score:\n    node_weight: 0.5\n    relation_weight: 0.5\n  sg_score_rel_heavy:\n    node_weight: 0.4\n    relation_weight: 0.6\n  oracle_thresholds: [0.3, 0.4, 0.5, 0.6]\n  main_oracle_threshold: 0.5\n  gain_epsilon: 0.02\n  gain_k: 3\n\nbaseline:\n  mean_object_conf_threshold: 0.35\n  mean_object_conf_thresholds: [0.3, 0.35, 0.4]\n  consecutive_k: 1\n\nllm:\n  provider: ollama\n  model: qwen3.5:4b\n  endpoint: http://localhost:11434/api/generate\n  start_level: 5\n  history_length: 5\n  # Recalibrated 0.8 -> 0.70: minimizes LLM-SGG (4b, k=2) MAE vs stop_c09\n  # (3.46 -> 3.27); 0.8 stopped too late (mean 15.7 vs oracle ~13.5).\n  saturation_threshold: 0.70\n  use_consecutive_stop: false\n  consecutive_k: 2\n  input_object_conf_threshold: 0.3\n  input_relation_conf_threshold: 0.005\n  input_top_k_objects: 20\n  input_top_k_relationships: 30\n  request_timeout: 120\n\n# \u2500\u2500 Evaluation extensions (VLM baseline / ablation / analysis) \u2500\u2500\n\n# ollama chat endpoint (supports text + images via \"images\" field, \"think\": false)\nollama_chat_endpoint: http://localhost:11434/api/chat\n\nvlm:\n  # qwen3.5:4b and :9b are both vision-capable -> same model family as the LLM-on-SGG\n  # approach, giving a capability-controlled \"image vs structured-SG-text\" comparison.\n  models: [qwen3.5:4b, qwen3.5:9b]\n  modes: [single, sequence]      # single = current-level image; sequence = recent history images\n  sequence_history: 3            # number of recent level-images for sequence mode (cost-bounded)\n  start_level: 5\n  saturation_threshold: 0.7\n  consecutive_k: 2\n  max_image_side: 512            # downscale images sent to VLM for transport speed (blur already baked in)\n  request_timeout: 300\n\nablation:\n  # One-factor-at-a-time (OFAT) from this base config; LLM-input factors require new\n  # scored runs, post-hoc factors (consecutive_k, sg weights, hybrid) are computed from cache.\n  base:\n    model: qwen3.5:9b\n    history_length: 5\n    relation_on: true\n    confidence_on: true\n  llm_models: [qwen3.5:4b, qwen3.5:9b]       # model-size axis (at base config)\n  history_lengths: [1, 3, 5]                  # history axis (at base, 9b)\n  relation_on_options: [true, false]          # node-only vs node+relation (at base, 9b)\n  confidence_on_options: [true, false]        # include confidences in LLM input (at base, 9b)\n  consecutive_k_options: [1, 2]               # post-hoc stop rule\n  sg_score_weights:                           # post-hoc SGScore recomputation\n    balanced: [0.5, 0.5]\n    rel_heavy: [0.4, 0.6]\n  hybrid:                                      # fusion of node-confidence + LLM saturation_score\n    conf_weight: 0.5\n    llm_weight: 0.5\n    threshold: 0.5                             # recalibrated for the 0.1 object gate (obj_conf range ~0.1-0.5)\n\nconvergence:\n  epsilon: 0.02\n  k: 3\n  min_level: 5\n\nanalysis:\n  # which methods to analyze \"what was missing at the stop level\" for\n  stop_methods: [oracle, baseline, llm, vlm_single, vlm_sequence]\n\n# VLM + SGG saturation scoring (scaled-down MIRU follow-up, 2026-10-07; scripts/40).\n# Same prompt (llm.py SATURATION_PROMPT) and 5-level SGG history as LLM-SGG; condition\n# img_single additionally attaches the CURRENT level image (script-11 preprocessing).\n# Both conditions (text / img_single) are re-scored with these identical settings.\nvlm_sgg:\n  output_root: outputs/llm_scores_vlm\n  think: false\n  json_mode: true\n  options:\n    temperature: 0\n    seed: 42\n    num_ctx: 16384             # ~9.2k-token SGG prompts + image tokens + output\n    num_predict: 1024\n  schema_retries: 1            # re-ask once on unparseable / invalid JSON ...\n  retry_temperature: 0.3       # ... at MIRU's original temperature (greedy retry is identical)\n  transient_retries: 5\n  backoff_base_s: 2.0\n  backoff_max_s: 30.0\n  request_timeout_s: 300\n\n# \u2500\u2500 MIRU stop-method registry + GT-based secondary evaluation (scripts/42) \u2500\u2500\nevaluation_extra:\n  # llm_sgg_text_* are A1's text-only controls re-run with the same decoding as\n  # vlm_sgg_single_* (JSON mode, current EGTR gate 0.1); llm_sgg_*_h5_* / hybrid_{4b,9b}_*\n  # are the legacy llm_ablation cache (temperature 0.3, no JSON mode, gate 0.3).\n  # Score-directory methods (MIRU llm_scores format: <dir>/<image_id>/level_XX.json\n  # with saturation_score). Each key K yields K_k1/K_k2 with llm.saturation_threshold\n  # (or a per-method \"threshold\") and the script-13 consecutive-k rule; keys listed\n  # in hybrid_methods also yield hybrid_K_k1/k2 (ablation.hybrid fusion).\n  # Recomputing outputs/llm_ablation dirs reproduces llm_ablation_*_stop.csv and\n  # hybrid_stop.csv exactly. NOTE: outputs/metrics/vlm_stop.csv is stale (threshold\n  # 0.8); vlm_single_* below recompute the same scores at the current 0.70.\n  score_methods:\n    vlm_single_4b: outputs/vlm_scores/qwen3.5-4b/single\n    vlm_single_9b: outputs/vlm_scores/qwen3.5-9b/single\n    # A1's 2x2 (scripts/40): same client/settings/input, image on/off only.\n    llm_sgg_text_4b: outputs/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_text\n    llm_sgg_text_9b: outputs/llm_scores_vlm/qwen3.5-9b_h5_rel_on_conf_on_text\n    vlm_sgg_single_4b: outputs/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_img_single\n    vlm_sgg_single_9b: outputs/llm_scores_vlm/qwen3.5-9b_h5_rel_on_conf_on_img_single\n  hybrid_methods: [llm_sgg_text_4b, llm_sgg_text_9b, vlm_sgg_single_4b, vlm_sgg_single_9b]\n  # Zero-call LATE fusion of score_methods keys (level-wise mean / min; a level\n  # missing in either source scores 0 as in MIRU). Same theta / k / hybrid as above.\n  fusion_methods:\n    fuse_mean_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: mean}\n    fuse_min_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: min}\n    fuse_mean_vlmimg9b_text9b: {sources: [vlm_single_9b, llm_sgg_text_9b], op: mean}\n  k_options: [1, 2]\n  gt_eval_dir: outputs/miru_gt_eval     # EGTR-vs-VG-GT stage metrics + comparison table\n  final_methods:                        # rows of the comparison table (missing -> skipped)\n    - baseline\n    - llm_sgg_4b_h5_k2\n    - llm_sgg_9b_h5_k2\n    - hybrid_4b_k2\n    - hybrid_9b_k2\n    - vlm_4b_single_k2\n    - vlm_9b_single_k2\n    - vlm_single_4b_k2\n    - vlm_single_9b_k2\n    - llm_sgg_text_4b_k2\n    - llm_sgg_text_9b_k2\n    - vlm_sgg_single_4b_k2\n    - vlm_sgg_single_9b_k2\n    - hybrid_llm_sgg_text_4b_k2\n    - hybrid_llm_sgg_text_9b_k2\n    - hybrid_vlm_sgg_single_4b_k2\n    - hybrid_vlm_sgg_single_9b_k2\n    - fuse_mean_vlmimg9b_text4b_k2\n    - fuse_min_vlmimg9b_text4b_k2\n    - fuse_mean_vlmimg9b_text9b_k2\n    - hybrid_fuse_mean_vlmimg9b_text4b_k2\n    - hybrid_fuse_min_vlmimg9b_text4b_k2\n    - hybrid_fuse_mean_vlmimg9b_text9b_k2\n"
+  },
+  "configs/config_heldout.yaml": {
+   "sha256": "a0f8cbaf2599dbbd54d460a6d464b89ac8316de0ab220b8e8768c543f2c5b38a",
+   "content": "# Held-out confirmation overlay for the MIRU pipeline (2026-10-08).\n# Use: MILESTONE1_CONFIG_OVERLAY=configs/config_heldout.yaml <any MIRU script>\n# Deep-merged onto configs/config.yaml by milestone1.config.load_config: every\n# setting (scales, bilinear, EGTR gates 0.1/0.005, top-k 20/30, LLM/VLM settings)\n# is inherited unchanged; only the image set and the output locations change, so\n# no MIRU output is overwritten.\n# Image set: ROBOVIS2027 test100 (GT-only selection, seed 42) minus the 4 images\n# that overlap the MIRU 100 -> 96 images (data/processed/robovis2027_miru/selection_note.json).\n# PRE-REGISTRATION (team-lead approved 2026-10-08, recorded before any held-out score exists):\n#   rule      PRIMARY hybrid_fuse_mean(vlm image-only 9b, llm_sgg text 4b), theta 0.70, k=2;\n#             secondary fuse_min(vlm image-only 9b, llm_sgg text 4b), theta 0.70, k=2.\n#   primary   all 96 images: MAE vs stop_c09 (recomputed from the held-out EGTR L20).\n#   compare   stop_c09 <= 18 subset (73 images; reproduces MIRU's selection condition).\n#   baselines text 4b alone, image-only 9b alone, hybrid text 4b (+ node confidence),\n#             node-confidence baseline, fixed-level curve.\n#   GT        R50 / relsg_gt equal-observation deltas on both image sets.\n#   inputs    image-only 9b = scripts/11 single mode with MIRU decoding unchanged\n#             (temperature 0.3, num_predict 1024, NO JSON mode, unseeded; vlm.num_ctx only\n#             sizes the context); text 4b = scripts/40 text condition (vlm_sgg settings).\n#             Fusion inputs therefore match the rule as registered on the MIRU 100.\npaths:\n  selected_images: data/processed/robovis2027_miru/selected_images.json\n  degraded_images: data/processed/robovis2027_miru/degraded_images\n  gt_scene_graphs: data/processed/robovis2027_miru/gt_scene_graphs\n  egtr_predictions: outputs/robovis2027_miru/egtr_predictions\n  metrics: outputs/robovis2027_miru/metrics\n  llm_inputs: outputs/robovis2027_miru/llm_inputs\n  llm_scores: outputs/robovis2027_miru/llm_scores\n  figures: outputs/robovis2027_miru/figures\n  vlm_scores: outputs/robovis2027_miru/vlm_scores   # read by scripts/11 (default outputs/vlm_scores)\n\nvlm_sgg:\n  output_root: outputs/robovis2027_miru/llm_scores_vlm\n\n# \u2500\u2500 A2: held-out evaluation block (scripts/42_miru_gt_eval.py --dataset heldout) \u2500\u2500\n# Own block, not evaluation_extra: a dict deep-merge would keep MIRU's score dirs.\n# Pre-registered (worklog 2026-10-08 00:40): no tuning; theta 0.70, k=2.\nheldout_eval:\n  selection:                      # pre-registered image set, cross-checked vs paths.selected_images\n    from: data/processed/robovis2027/selected_images.json\n    split: test\n    exclude: data/processed/selected_images.json   # the MIRU 100\n  oracle: compute                 # stop_c09 recomputed from the new EGTR L20 (top-10 / top-5, coef 0.9)\n  saturating_max_stop: 18         # MIRU kept stop_c09 <= 18; report that subset too (mae_c09_sat)\n  legacy_csv_methods: false       # baseline + node confidence from the new EGTR predictions\n  k_options: [2]\n  score_methods:\n    llm_sgg_text_4b: outputs/robovis2027_miru/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_text\n    vlm_single_9b: outputs/robovis2027_miru/vlm_scores/qwen3.5-9b/single   # image-only VLM (script 11 layout)\n  hybrid_methods: [llm_sgg_text_4b]\n  fusion_methods:\n    fuse_mean_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: mean}\n    fuse_min_vlmimg9b_text4b: {sources: [vlm_single_9b, llm_sgg_text_4b], op: min}\n  gt_eval_dir: outputs/heldout_eval\n  final_methods:\n    - hybrid_fuse_mean_vlmimg9b_text4b_k2   # PRIMARY (pre-registered)\n    - fuse_min_vlmimg9b_text4b_k2           # secondary (pre-registered)\n    - fuse_mean_vlmimg9b_text4b_k2\n    - llm_sgg_text_4b_k2\n    - vlm_single_9b_k2\n    - hybrid_llm_sgg_text_4b_k2             # \"hybrid_4b\" comparator (text 4b + node confidence)\n    - baseline\n\n# Image-only VLM for the pre-registered rule: 9b single mode only, script-11\n# settings otherwise unchanged (prompt, max_image_side 512, request options).\nvlm:\n  models: [qwen3.5:9b]\n  modes: [single]\n  num_ctx: 16384   # same as concurrent 9b clients -> no reload; prompt ~0.5k tokens, outputs unaffected\n"
+  },
+  "configs/pgsg/rel_det_vg_eval_local.yaml": {
+   "sha256": "359211ce7df4e2d12d7ca442e6aa256224d7d400437c71dd5b6fafe40bcd3396",
+   "content": "# Local copy of Pix2Grp_CVPR2024/lavis/projects/blip/eval/rel_det_vg_pgsg_eval.yaml\n# (PGSG standard SGDet on VG-150) with every /public/... path overridden.\n# Data is produced by scripts/23_pgsg_convert_vg.py; run via scripts/24_pgsg_eval.sh.\n# Absolute paths assume repo root /home/kanaoka/usr/github/milestone_1.\n\nmodel:\n  arch: blip_rel_detection_pgsg\n  model_type: base_vg\n\n  max_txt_len: 512 # test time\n  dump_pred: False\n  dump_dir: \"/home/kanaoka/usr/github/milestone_1/outputs/pgsg/dump\"\n\n  seg_len: 32\n\n  sgcls_on: False\n  predcls_on: False\n\n  top_k_ent_label_num: 1\n  top_k_predicate_label_num: 3\n\n  finetuned: \"/home/kanaoka/usr/github/milestone_1/Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth\"\n\n  close_clser: False\n\n  num_coord_bin: 640\n  image_size: 384\n  cate_dict_url: \"/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/categories_dict.json\"\n\n  post_proc_cfg:\n    ent_ampl_scale: 5.0\n    rel_ampl_scale: 2.0\n\n\ndatasets:\n  vg_rel_detection_eval: # name of the dataset builder\n    vis_processor:\n        eval:\n          name: \"blip_det_image_eval\"\n          image_size: 384\n        train:\n          name: \"blip_det_image_eval\"\n          image_size: 384\n    text_processor:\n        eval:\n          name: \"blip_caption\"\n    build_info:\n      # url == storage (absolute) so the builder just logs \"Using existing file\".\n      annotations:\n        val:\n          url:\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-val.h5\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json\n          storage:\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-val.h5\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json\n        test:\n          url:\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-test.h5\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json\n          storage:\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/VG-SGG-test.h5\n            - /home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/image_data.json\n      images:\n        storage: /home/kanaoka/usr/dataset/vg/images\n\nrun:\n  task: relation_detection\n  batch_size_train: 4\n  batch_size_eval: 4\n  num_workers: 2\n\n  max_len: 1024\n  min_len: 768\n  num_beams: 1\n\n  experiments_mode: sggen # sggen sgcls\n  generation_mode: sampling # official setting; \"search\" = greedy (deterministic)\n\n  seed: 42\n  output_dir: \"/home/kanaoka/usr/github/milestone_1/outputs/pgsg/runs\"\n\n  evaluate: True\n  test_splits: [\"test\"]\n\n  device: \"cuda\"\n  world_size: 1\n  dist_url: \"env://\"\n  distributed: True\n\n  zeroshot_cfg:\n    zs_triplets: \"/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/zeroshot_triplet.pytorch\"\n    zs_predicate: [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 16, 18, 20, 22, 23, 25, 26, 27, 31, 34, 35, 36, 40, 41, 42, 44, 48]\n\n  cate_dict_url: \"/home/kanaoka/usr/github/milestone_1/data/processed/pgsg_vg/categories_dict.json\"\n"
+  }
+ },
+ "pgsg_generation_resolved": {
+  "generation_mode": "sampling",
+  "use_nucleus_sampling": true,
+  "num_beams": 1,
+  "max_length": 1024,
+  "min_length": 768,
+  "min_length_note": "passed by the task but unused by PGSG generate()",
+  "top_p": 0.9,
+  "repetition_penalty_passed": 1.5,
+  "repetition_penalty_effective": 1.1,
+  "repetition_penalty_note": "med.py generate_from_encoder hard-codes 1.1 when sampling",
+  "hf_top_k": 50,
+  "seg_len": 32,
+  "segment_max_new_tokens": 32,
+  "segment_min_new_tokens": 24,
+  "num_segments": 36,
+  "prompt": "The visual scene of: ",
+  "prompt_length": 6,
+  "top_k_ent_label_num": 1,
+  "top_k_predicate_label_num": 3,
+  "post_proc_cfg": {
+   "ent_ampl_scale": 5.0,
+   "rel_ampl_scale": 2.0
+  },
+  "entity_nms_iou": 0.92,
+  "max_relations": 512
+ },
+ "pgsg_graph_generation_block": {
+  "max_length": 1024,
+  "min_length": 768,
+  "top_p": 0.9,
+  "repetition_penalty": 1.1,
+  "num_segments": 36
+ },
+ "pgsg_batching": {
+  "batch_size": 4,
+  "base_seed": 42,
+  "rule": "batch = consecutive images of the split (selected_images rank order) at one level",
+  "seed_function": "milestone1.pgsg_adapter.state_seed(batch_image_ids, level, base_seed)",
+  "fallback": "if PGSG raises on an image with no parsable triplet, the chunk is re-run per image with state_seed([image_id], level, base_seed)"
+ },
+ "pgsg_seed0_batches": [
+  [
+   2316824,
+   2317939,
+   2317365,
+   2338594
+  ],
+  [
+   2322814,
+   2415737,
+   2321764,
+   2330374
+  ],
+  [
+   2325790,
+   2413447,
+   2411677,
+   2327211
+  ],
+  [
+   2339062,
+   2415400,
+   2412699,
+   2321170
+  ],
+  [
+   2412319,
+   2319328,
+   2322043,
+   2325889
+  ]
+ ],
+ "resolution": {
+  "base_max_side": 384,
+  "scales": [
+   0.05,
+   0.0585,
+   0.0685,
+   0.0802,
+   0.094,
+   0.11,
+   0.1288,
+   0.1508,
+   0.1765,
+   0.2066,
+   0.2419,
+   0.2832,
+   0.3316,
+   0.3882,
+   0.4545,
+   0.5321,
+   0.6229,
+   0.7293,
+   0.8538,
+   1.0
+  ],
+  "interpolation": "bilinear",
+  "jpeg_quality": 95
+ }
+}

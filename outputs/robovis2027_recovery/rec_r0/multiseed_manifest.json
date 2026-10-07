@@ -1,0 +1,31 @@
+{
+ "script": "scripts/45_recovery_multiseed_metrics.py",
+ "dev_run": "outputs/robovis2027/dev_r0",
+ "seed_dirs": {
+  "0": "graphs",
+  "1": "graphs_seed1",
+  "2": "graphs_seed2"
+ },
+ "base_seeds": {
+  "0": 42,
+  "1": 43,
+  "2": 44
+ },
+ "levels": [
+  5,
+  10,
+  15,
+  20
+ ],
+ "metrics": [
+  "R50",
+  "relsg_gt"
+ ],
+ "gain": "q20 - q10",
+ "missing": "empty cell (never 0)",
+ "pgsg_manifests": [
+  "manifest.json",
+  "manifest_seed1.json",
+  "manifest_seed2.json"
+ ]
+}

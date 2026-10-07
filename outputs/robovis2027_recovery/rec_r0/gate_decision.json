@@ -1,0 +1,60 @@
+{
+  "decided_at": "2026-10-08T01:05+09:00",
+  "plan": ".claude/docs/research/robovis2027-recovery-plan.md (§5.3)",
+  "config_sha256_16": "bdc43fa9efea865d",
+  "frozen_policy": {
+    "tau": 0.5,
+    "p_tie": 0.6666666666666666
+  },
+  "criteria": {
+    "1_v4_valid_at_t10": {
+      "value": "20/20",
+      "threshold": ">=18/20",
+      "pass": true,
+      "source": "rec_r0/dev_two_stage.csv"
+    },
+    "2_cross_seed_two_choice_oracle_R50": {
+      "seed1_to_2": 0.015962,
+      "seed2_to_1": 0.037628,
+      "mean": 0.026795,
+      "threshold": "both>0 and mean>=0.01",
+      "pass": true,
+      "source": "rec_r0/cross_seed_oracle.csv",
+      "secondary_relsg": {
+        "seed1_to_2": -0.00976,
+        "seed2_to_1": 0.007402,
+        "note": "not a gate criterion; sign flips"
+      }
+    },
+    "3_frozen_U_policy_vs_mix_R50": {
+      "seed1": 0.0037688,
+      "seed2": 0.0091994,
+      "threshold": "both>0",
+      "pass": true,
+      "source": "rec_r0/dev_two_stage_eval.csv",
+      "secondary_relsg": {
+        "seed0": -0.0321,
+        "seed1": -0.0172,
+        "seed2": -0.026,
+        "note": "negative on all seeds; not a gate criterion"
+      }
+    },
+    "4_budget_by_10_12": {
+      "estimate": "PGSG 1380 states ≈1.2 h GPU + v4 60 calls ≈15 min + eval; local only",
+      "pass": true
+    }
+  },
+  "decision": "GO",
+  "caveats": [
+    "criterion-3 margins are small (+0.004, +0.009 R50) with n=20; sign-only criterion per plan",
+    "relsg_gt secondary negative for the policy on all seeds",
+    "U is discrete (K=8): 6/20 dev images tie at tau; hash drives tie decisions",
+    "same-seed two-choice headroom (+0.047) shrinks to +0.016/+0.038 cross-seed (sampling noise component)"
+  ],
+  "phase_D": {
+    "test_selection": "rec_r0/test_selection.json (60 ids, seed 20261008)",
+    "seedA": "base 42, 60x20 states, 384-base",
+    "seedB": "t in {10,15,20} only, 180 states",
+    "v4": "t10 only, 60 calls, 9b, frozen policy applied without GT"
+  }
+}

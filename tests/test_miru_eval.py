@@ -5,6 +5,8 @@ Data-dependent parity tests skip when the MIRU outputs are not present.
 """
 
 import copy
+import csv
+import importlib.util
 import json
 import sys
 from pathlib import Path
@@ -31,6 +33,11 @@ from milestone1.miru_methods import (  # noqa: E402
     load_scores,
     registered_score_methods,
     score_method_stops,
+)
+from milestone1.miru_oracle import (  # noqa: E402
+    baseline_stops,
+    object_confidence,
+    topk_oracle,
 )
 
 START, MAX = 5, 20
@@ -232,3 +239,100 @@ def test_registry_fusion_methods(tmp_path: Path) -> None:
     assert (res.stops["fuse_min_k1"][1], res.stops["fuse_min_k2"][1]) == (7, MAX)
     assert "fuse_gone_k1" not in res.stops
     assert "hybrid_fuse_mean_k1" not in res.stops
+
+
+# --------------------------------------------------------------------------
+# Held-out support: oracle / confidence / baseline from predictions, selection
+# --------------------------------------------------------------------------
+
+
+def _write_pred(root: Path, image_id: int, level: int, labels: list[str],
+                trips: list[tuple[str, str, str]], conf: float) -> None:  # fmt: skip
+    d = root / str(image_id)
+    d.mkdir(parents=True, exist_ok=True)
+    pred = {
+        "objects": [{"label": lab, "confidence": conf} for lab in labels],
+        "relationships": [{"subject_label": s, "predicate": p, "object_label": o,
+                           "triplet_score": 0.1} for s, p, o in trips],
+    }  # fmt: skip
+    (d / f"level_{level:02d}.json").write_text(json.dumps(pred))
+
+
+def test_topk_oracle_conf_and_baseline_from_predictions(tmp_path: Path) -> None:
+    max_level = 4
+    full = ["man", "shirt"]
+    trip = [("man", "wearing", "shirt")]
+    _write_pred(tmp_path, 1, 1, [], [], 0.0)
+    _write_pred(tmp_path, 1, 2, ["man"], [], 0.2)  # core = node 1/2 only
+    _write_pred(tmp_path, 1, 3, full, [], 0.4)  # 0.5*1 + 0.5*0 = 0.5
+    _write_pred(tmp_path, 1, 4, full, trip, 0.36)  # 1.0 (L20 reference)
+    orc = topk_oracle(tmp_path, [1], max_level)
+    assert orc.core_scores[1][2] == pytest.approx(0.25)
+    assert orc.core_scores[1][3] == pytest.approx(0.5)
+    assert orc.stops[1] == 4
+    conf = object_confidence(tmp_path, [1], max_level)
+    assert conf[(1, 1)] == 0.0 and conf[(1, 3)] == 0.4
+    assert baseline_stops(conf, [1], 0.35, max_level) == {1: 3}
+    assert baseline_stops(conf, [1], 0.9, max_level) == {1: max_level}
+
+
+@pytest.mark.skipif(
+    not (METRICS / "all_metrics.csv").exists(), reason="MIRU outputs absent"
+)
+def test_prediction_based_quantities_match_miru_csvs() -> None:
+    cfg = load_config()
+    ids = json.loads(resolve(cfg["paths"]["selected_images"]).read_text())
+    pred = resolve(cfg["paths"]["egtr_predictions"])
+    conf = object_confidence(pred, ids, MAX)
+    assert conf == load_object_confidence(METRICS / "all_metrics.csv")
+    assert (
+        baseline_stops(conf, ids, 0.35, MAX)
+        == load_existing_method_stops(METRICS, ids)["baseline"]
+    )
+    canon = {}
+    with open(METRICS / "topk_oracle" / "oracle_topk_per_image.csv") as f:
+        for r in csv.DictReader(f):
+            canon[int(r["image_id"])] = int(r["stop_c09"])
+    assert topk_oracle(pred, ids, MAX).stops == canon
+
+
+def _script42() -> Any:
+    spec = importlib.util.spec_from_file_location(
+        "miru42", REPO_ROOT / "scripts" / "42_miru_gt_eval.py"
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+def test_heldout_selection_and_completeness(tmp_path: Path) -> None:
+    s42 = _script42()
+    src = tmp_path / "robovis.json"
+    src.write_text(json.dumps([{"image_id": i, "split": sp} for i, sp in
+                               [(1, "test"), (2, "test"), (3, "dev"), (4, "test")]]))  # fmt: skip
+    excl = tmp_path / "miru.json"
+    excl.write_text(json.dumps([2]))
+    listed = tmp_path / "listed.json"
+    block = {"selection": {"from": str(src), "split": "test", "exclude": str(excl)}}
+    cfg = {"paths": {"selected_images": str(listed)}}
+    assert s42.resolve_image_ids(cfg, block) == [1, 4]  # list file absent -> derived
+    listed.write_text(json.dumps([4, 1]))
+    assert s42.resolve_image_ids(cfg, block) == [1, 4]  # same set -> ok
+    listed.write_text(json.dumps([1, 2]))
+    with pytest.raises(SystemExit):
+        s42.resolve_image_ids(cfg, block)
+    _write_pred(tmp_path / "pred", 1, 1, ["man"], [], 0.5)
+    with pytest.raises(SystemExit):
+        s42.require_complete_predictions(tmp_path / "pred", [1], 2)
+    s42.require_complete_predictions(tmp_path / "pred", [1], 1)
+
+
+def test_registry_block_and_conf_override(tmp_path: Path) -> None:
+    _write_scores(tmp_path / "t", 1, {5: 0.2, 6: 0.2})
+    block = {"score_methods": {"t": str(tmp_path / "t")}, "hybrid_methods": ["t"],
+             "k_options": [2]}  # fmt: skip
+    conf = {(1, 5): 0.9, (1, 6): 0.9}  # hybrid = 0.5*0.9 + 0.5*0.2 = 0.55 >= 0.5
+    res = registered_score_methods(load_config(), [1], tmp_path, block, conf)
+    assert set(res.stops) == {"t_k2", "hybrid_t_k2"}
+    assert (res.stops["t_k2"][1], res.stops["hybrid_t_k2"][1]) == (MAX, 6)

@@ -21,6 +21,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from milestone1.recovery_diagnostics import best_fixed_mixture
 from milestone1.robovis_sgdet import NUM_PREDICATES, OFFICIAL_MR_EPS
 from milestone1.stop_policy import fixed_method_name
 
@@ -480,6 +481,15 @@ def mix_recall(q_matrix: np.ndarray, mix: FixedMix) -> np.ndarray:
 # --------------------------------------------------------------------------
 
 
+F_NOTE = "F = GT-posterior best fixed mixture on this set"
+
+
+def best_fixed_value(q_matrix: np.ndarray, budget: float) -> float:
+    """F(budget): best image-independent mixture of fixed levels, expected level <= budget
+    (upper concave hull of the mean curve); a GT-posterior reference, not a method."""
+    return best_fixed_mixture(q_matrix.mean(axis=0), budget).value
+
+
 def _q_matrix(curves: RecallCurves, ids: Sequence[int]) -> np.ndarray:
     return np.vstack([curves.q[i] for i in ids])
 
@@ -525,12 +535,17 @@ def summarize(
             "eq_fixed_lower": math.nan,
             "eq_fixed_weight_upper": math.nan,
             "eq_fixed_q": math.nan,
+            "F_at_mean_stop": math.nan,
+            "q_minus_F": math.nan,
         }
         if method in adaptive_methods:
             mix = equal_observation_mix(row["mean_stop_t"], curves.num_levels)
             row["eq_fixed_lower"] = mix.lower
             row["eq_fixed_weight_upper"] = mix.weight_upper
             row["eq_fixed_q"] = float(mix_recall(qm, mix).mean())
+            # F = GT-posterior best fixed mixture on this set (upper concave hull).
+            row["F_at_mean_stop"] = best_fixed_value(qm, row["mean_stop_t"])
+            row["q_minus_F"] = row["q_stop"] - row["F_at_mean_stop"]
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -598,11 +613,18 @@ def paired_bootstrap(
         )
         return float(arr["q_stop"][rows].mean() - mix_recall(qm[rows], mix).mean())
 
+    def f_diff(arr: dict[str, np.ndarray], rows: np.ndarray) -> float:
+        # Both the mean stop and the fixed curve F is built from are resampled.
+        return float(arr["q_stop"][rows].mean()
+                     - best_fixed_value(qm[rows], float(arr["stop_t"][rows].mean())))  # fmt: skip
+
     method_stats: dict[str, Any] = {}
     for m in adaptive_methods:
         arr = arrays[m]
         boot_eq = np.array([eq_diff(arr, rows) for rows in idx])
         lo, hi = _ci(boot_eq, ci_level)
+        boot_f = np.array([f_diff(arr, rows) for rows in idx])
+        f_lo, f_hi = _ci(boot_f, ci_level)
         method_stats[m] = {
             **{key: stat(values) for key, values in arr.items()},
             "q_minus_eq_fixed": {
@@ -610,6 +632,12 @@ def paired_bootstrap(
                 "ci_low": lo,
                 "ci_high": hi,
             },
+            "q_minus_F": {
+                "mean": f_diff(arr, full),
+                "ci_low": f_lo,
+                "ci_high": f_hi,
+                "note": F_NOTE,
+            },  # fmt: skip
         }
 
     pairwise: dict[str, Any] = {}

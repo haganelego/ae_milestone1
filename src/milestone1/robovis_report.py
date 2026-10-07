@@ -31,6 +31,10 @@ from milestone1.robovis_judge_quality import LOWRES_ROLE
 from milestone1.stop_policy import EXPLORATORY_LABEL, MAIN_LABEL, fixed_method_name
 
 FLOAT_DIGITS = 3
+F_COLUMN = "q_stop - F(mean_stop) [95% CI]"
+F_TABLE_NOTE = ("F = GT-posterior best fixed mixture on this set (upper concave hull of the "
+                "fixed curve; a reference, not a method). eq_fixed_q is the legacy adjacent "
+                "two-level mix.")  # fmt: skip
 HEADING_DEMOTE = 2  # included docs: "# x" -> "### x"
 DEFAULT_ORACLE_RATIO = 0.9  # only used when build_report gets no OracleParams
 NA_TEXT = "n/a"
@@ -319,13 +323,18 @@ def section_methods(run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str
                 stat = (
                     boot.get("methods", {}).get(r["method"], {}).get("q_minus_eq_fixed")
                 )
+                stat_f = boot.get("methods", {}).get(r["method"], {}).get("q_minus_F")
                 rows.append({**r, "status": STATUS_SHORT.get(r["status"], r["status"]),
-                             "q_stop - eq_fixed_q [95% CI]": _ci_text(stat)})  # fmt: skip
+                             "q_stop - eq_fixed_q [95% CI]": _ci_text(stat),
+                             F_COLUMN: _ci_text(stat_f)})  # fmt: skip
             graphs_dir = (
                 summary["graphs_dir"].iloc[0] if "graphs_dir" in summary else None
             )
             lines += [f"Graphs replayed: `{graphs_dir or NA_TEXT}`.", ""]
-            lines += md_table(rows, [*METHOD_COLUMNS, "q_stop - eq_fixed_q [95% CI]"])
+            lines += md_table(
+                rows, [*METHOD_COLUMNS, "q_stop - eq_fixed_q [95% CI]", F_COLUMN]
+            )
+            lines += ["", F_TABLE_NOTE]
             lines.append("")
             for key in PAIRWISE_KEYS:
                 stat = boot.get("pairwise", {}).get(key, {}).get("q_stop")

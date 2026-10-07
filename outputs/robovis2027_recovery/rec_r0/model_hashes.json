@@ -1,0 +1,25 @@
+{
+ "generated_at": "2026-10-08T00:52:10",
+ "pgsg": {
+  "checkpoint": "Pix2Grp_CVPR2024/PGSG-CVPR2024/vg_sgg.pth",
+  "sha256": "d90c63ca6e0f7ea516c5f0ae23e2520085011fbc2c04ee1c56f23a2e42e299eb",
+  "sha256_in_dev_manifest": "d90c63ca6e0f7ea516c5f0ae23e2520085011fbc2c04ee1c56f23a2e42e299eb",
+  "submodule_commit": "cff742070366a6e702a08b71130eb75fcc4d5f7a"
+ },
+ "egtr": {
+  "checkpoints": {
+   "epoch=03-validation_loss=1.71.ckpt": "8926640facecd2784160c221c048dd4209df7d623ceb3c9eda289a11cb1f84d5"
+  },
+  "submodule_commit": "811217de670ee1633097269bdfe4b9ea7e83dddf"
+ },
+ "ollama": {
+  "qwen3.5:4b": {
+   "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+   "size": 3389983735
+  },
+  "qwen3.5:9b": {
+   "digest": "6488c96fa5faab64bb65cbd30d4289e20e6130ef535a93ef9a49f42eda893ea7",
+   "size": 6594474711
+  }
+ }
+}
