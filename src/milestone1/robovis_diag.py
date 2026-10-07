@@ -25,11 +25,12 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
 
 from milestone1.robovis_data import level_name
 from milestone1.robovis_eval import FLOAT_TOL, configured_q_metric, load_stage_metrics
+from milestone1.robovis_judge_quality import add_judge_columns, judge_quality
 from milestone1.robovis_replay import RunLayout, read_json_or_none
+from milestone1.robovis_stats import auc, spearman_stat
 from milestone1.stop_policy import (
     BENEFIT_GATED,
     LIMITATION_LOW_RES,
@@ -46,6 +47,10 @@ from milestone1.stop_policy import (
 )
 from milestone1.structured_io import ContractLimits, GraphIndex
 
+STATUS_RESOLVED = "resolved"
+OK_OUTCOMES = (OUTCOME_OK, OUTCOME_EMPTY_GRAPH)
+
+JUDGE_QUALITY_FILENAME = "judge_quality.csv"
 LEVEL_FILE_RE = re.compile(r"^level_(\d+)\.json$")
 # Raw recall columns copied to signal_per_state for reference (if present).
 RAW_RECALL_COLUMNS = ("R50", "R100")
@@ -107,7 +112,7 @@ def state_signals(
     names = [c_column(n) for n in conditions]
     keys = ["A", "H", "A_bg", "H_bg", *names, "max_basis", "max_benefit", "max_u"]
     counts = ["n_observed", "n_hypotheses", "n_items", "n_gate_items",
-              "n_gate_observed", "n_gate_hypotheses"]  # fmt: skip
+              "n_gate_observed", "n_gate_hypotheses", "n_resolved", "n_lowres"]  # fmt: skip
     if parsed is None:
         return dict.fromkeys(keys + counts, math.nan)
 
@@ -151,6 +156,8 @@ def state_signals(
         "n_gate_items": sum(gate),
         "n_gate_observed": sum(gate[:n_obs]),
         "n_gate_hypotheses": sum(gate[n_obs:]),
+        "n_resolved": sum(j.status == STATUS_RESOLVED for j in judged),
+        "n_lowres": sum(j.limitation == LIMITATION_LOW_RES for j in judged),
     }
 
 
@@ -232,7 +239,7 @@ def collect_states(
 def by_level(states: pd.DataFrame, conditions: Mapping[str, Condition]) -> pd.DataFrame:
     rows = []
     for t, grp in states.groupby("t", sort=True):
-        ok = grp[grp["outcome"].isin([OUTCOME_OK, OUTCOME_EMPTY_GRAPH])]
+        ok = grp[grp["outcome"].isin(OK_OUTCOMES)]
         row: dict[str, Any] = {
             "t": t,
             "n_states": len(grp),
@@ -255,35 +262,13 @@ def by_level(states: pd.DataFrame, conditions: Mapping[str, Condition]) -> pd.Da
     return pd.DataFrame(rows)
 
 
-def _spearman(x: pd.Series, y: pd.Series) -> dict[str, Any]:
-    mask = x.notna() & y.notna()
-    n = int(mask.sum())
-    xs, ys = x[mask].astype(float), y[mask].astype(float)
-    if n < 3 or xs.nunique() < 2 or ys.nunique() < 2:
-        return {"rho": math.nan, "p": math.nan, "n": n}
-    res = spearmanr(xs, ys)
-    return {"rho": float(res.statistic), "p": float(res.pvalue), "n": n}
-
-
-def auc(scores: np.ndarray, labels: np.ndarray) -> float:
-    """ROC AUC = P(score_pos > score_neg) + 0.5 P(tie) (Mann-Whitney)."""
-    pos, neg = scores[labels], scores[~labels]
-    if len(pos) == 0 or len(neg) == 0:
-        return math.nan
-    greater = (pos[:, None] > neg[None, :]).sum()
-    ties = (pos[:, None] == neg[None, :]).sum()
-    return float((greater + 0.5 * ties) / (len(pos) * len(neg)))
-
-
 def signal_stats(
     states: pd.DataFrame, conditions: Mapping[str, Condition]
 ) -> dict[str, Any]:
     """Spearman(signal, target) over valid states, and AUCs for gain_left > 0."""
-    ok = states[
-        states["outcome"].isin([OUTCOME_OK, OUTCOME_EMPTY_GRAPH]) & states["valid"]
-    ]
+    ok = states[states["outcome"].isin(OK_OUTCOMES) & states["valid"]]
     spearman = {
-        sig: {tgt: _spearman(ok[sig], ok[tgt]) for tgt in CORR_TARGETS}
+        sig: {tgt: spearman_stat(ok[sig], ok[tgt]) for tgt in CORR_TARGETS}
         for sig in corr_signals(conditions)
     }
     aucs: dict[str, Any] = {}
@@ -337,15 +322,23 @@ def run_signal_diag(
         input_dir, stage, levels, conditions, limits, layout, q_metric
     )
     per_level = by_level(states, conditions)
+    theta = int(cfg["proposal"]["theta"])
+    ratio = float(cfg["evaluation"]["oracle_ratio"])
+    jq_table, jq_stats = judge_quality(
+        states, theta, ratio, [c_column(n) for n in conditions]
+    )
+    states = add_judge_columns(states, theta)
     stats = {
         "q_metric": q_metric,
         "graphs_dir": layout.graphs,
         "levels": levels,
         **signal_stats(states, conditions),
+        "judge_quality": jq_stats,
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     states.to_csv(out_dir / "signal_per_state.csv", index=False)
     per_level.to_csv(out_dir / "signal_by_level.csv", index=False)
+    jq_table.to_csv(out_dir / JUDGE_QUALITY_FILENAME, index=False)
     (out_dir / "signal_stats.json").write_text(json.dumps(stats, indent=2))
     return DiagResult(states, per_level, stats)
 
@@ -369,6 +362,22 @@ def bootstrap_mean_ci(
 # --------------------------------------------------------------------------
 
 COMPARE_AUC_SUBSET = "qmax_gt_0"
+
+
+def _judge_quality_cells(jq: Mapping[str, Any], condition: str) -> dict[str, Any]:
+    """signal_compare columns from the judge-quality diagnostic."""
+    if not jq:
+        return {}
+    return {
+        "rho_resolved_t": jq["rho_resolved_t"]["rho"],
+        "rho_resolved_qratio": jq["rho_resolved_qratio"]["rho"],
+        "auc_sufficient_C": jq["auc_sufficient_C"].get(c_column(condition), math.nan),
+        "auc_sufficient_resolved": jq["auc_sufficient_resolved"],
+        # Diagnostic only (not a stop condition).
+        "rho_lowres_qratio": jq["rho_lowres_qratio"]["rho"],
+        "auc_sufficient_lowres": jq["auc_sufficient_lowres"],
+        "n_sufficient": jq["n_sufficient"],
+    }
 
 
 def compare_paths(
@@ -410,5 +419,6 @@ def compare_paths(
             row["auc_score"] = aucs[f"C_{name}_score"]
             row["auc_ge_theta"] = aucs[f"C_{name}_ge_theta"]
             row["auc_subset"] = COMPARE_AUC_SUBSET
+            row.update(_judge_quality_cells(st.get("judge_quality") or {}, name))
             rows.append(row)
     return pd.DataFrame(rows)

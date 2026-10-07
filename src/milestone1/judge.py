@@ -17,7 +17,9 @@ from milestone1.check_generator import (
     IMAGE_SENT_AS,
     PROMPT_V1,
     PROMPT_V2,
+    PROMPT_V3,
     PROMPT_VERSIONS,
+    RENDER_FAMILY,
     STRING_HINT_TEMPLATE,
     CheckLimits,
     check_ids,
@@ -83,6 +85,40 @@ Example (synthetic, illustrative only; not about the supplied input):
   "resolution_benefit": 2, "limitation": "low_resolution", "reason": "Specific
   'man holding X' relation supports it; the held object is tiny and blurry, so
   more detail would reveal what it is."}"""
+# v3 (user-approved 2026-10-07): lenient "resolved" + next-step gain only. The
+# per-step ratio comes from limits.next_step_ratio; never index, scale or steps left.
+PERCENT = 100
+RESOLVED_RULE_V3 = (
+    "Mark an item resolved when the current view already shows roughly 90 % of "
+    "what would be visible at full detail for that item: its category/identity/"
+    "extent can be stated with reasonable confidence even if minor blur remains. "
+    "Do not keep items unresolved merely because some detail could still be sharper."
+)
+NEXT_STEP_NOTE_V3 = (
+    "Observation proceeds by approaching the scene. The next observation will be "
+    "about {pct} % sharper per side than this one (x{lin:.2f} linear, "
+    "about x{pix:.1f} pixels)."
+)
+BENEFIT_RULE_V3 = """- resolution_benefit: integer 0, 1 or 2: 2 = that next step would plausibly
+  reveal or confirm the target; 1 = only a much larger improvement might; 0 = no
+  realistic improvement helps (off-frame, occluded, or already clear)."""
+AXES_NOTE_V3 = """basis and resolution_benefit are independent axes: judge each on its own. A
+high basis does not imply a low resolution_benefit, and an item can score 2 on
+both.
+Examples (synthetic, illustrative only; not about the supplied input):
+  check: {"id": "h1", "kind": "missing_object", "candidate": "small object held
+  by the man", "anchor_ids": ["v1", "v2"], "relation_ids": ["e1"],
+  "region_anchor_id": "v1", "evidence": "man holding an unidentified object near
+  the table"}
+  judgment: {"id": "h1", "status": "unresolved", "basis": 2,
+  "resolution_benefit": 2, "limitation": "low_resolution", "reason": "Specific
+  'man holding X' relation supports it; the held object is only a few pixels
+  wide, so the next, sharper view would plausibly show what it is."}
+  check: {"id": "o1", "anchor_ids": ["v3"], "target": "identity of the animal
+  v3", "region_anchor_id": "v3", "evidence": "large animal labeled horse"}
+  judgment: {"id": "o1", "status": "resolved", "basis": 2,
+  "resolution_benefit": 0, "limitation": "other", "reason": "'horse' v3 is
+  clearly a horse; residual blur does not change it."}"""
 BENEFIT_IMAGE_RULE = (
     "  Judge resolution_benefit from how the region looks in the attached image."
 )
@@ -116,6 +152,8 @@ def judge_system_prompt(
     limits: CheckLimits, prompt_version: str = PROMPT_V1, with_image: bool = False
 ) -> str:
     """v1 text-only prompt is byte-identical to the original plan §7 version."""
+    if prompt_version == PROMPT_V3:
+        return _judge_system_prompt_v3(limits, with_image)
     is_v2 = prompt_version == PROMPT_V2
     basis_rule = BASIS_RULE_V2 if is_v2 else BASIS_RULE_V1
     benefit_rule = BENEFIT_RULE_V2 if is_v2 else BENEFIT_RULE_V1
@@ -135,6 +173,30 @@ def judge_system_prompt(
     return (
         f"{COMMON_PREAMBLE}\n\n{task}\n\n{AXES_NOTE_V2}\n\n"
         f"{hint}\n{LIMITATION_ENUM_NOTE_V2}\n{schema}"
+    )
+
+
+def _judge_system_prompt_v3(limits: CheckLimits, with_image: bool) -> str:
+    ratio = limits.next_step_ratio
+    if ratio is None:
+        raise ValueError("v3 judge needs limits.next_step_ratio (limits_from_config)")
+    task = JUDGE_TASK
+    benefit_rule = BENEFIT_RULE_V3
+    if with_image:
+        task = task.replace(TEXT_ONLY_EVIDENCE, IMAGE_EVIDENCE)
+        benefit_rule = f"{benefit_rule}\n{BENEFIT_IMAGE_RULE}"
+    next_step = NEXT_STEP_NOTE_V3.format(
+        pct=round((ratio - 1.0) * PERCENT), lin=ratio, pix=ratio * ratio
+    )
+    schema = JUDGE_SCHEMA_TEMPLATE.format(
+        max_chars=limits.max_string_chars,
+        basis_rule=BASIS_RULE_V2,
+        benefit_rule=benefit_rule,
+    )
+    hint = STRING_HINT_TEMPLATE.format(chars=limits.string_hint_chars)
+    return (
+        f"{COMMON_PREAMBLE}\n\n{task}\n\n{RESOLVED_RULE_V3} {next_step}\n\n"
+        f"{AXES_NOTE_V3}\n\n{hint}\n{LIMITATION_ENUM_NOTE_V2}\n{schema}"
     )
 
 
@@ -241,7 +303,7 @@ def judge_checks(
     if prompt_version not in PROMPT_VERSIONS:
         raise ValueError(f"unknown prompt version {prompt_version!r}")
     checks_version = checks_record.get("prompt_version", PROMPT_V1)
-    if checks_version != prompt_version:
+    if RENDER_FAMILY[checks_version] != RENDER_FAMILY[prompt_version]:
         raise ValueError(
             f"checks were generated with {checks_version}, judge uses {prompt_version}"
         )

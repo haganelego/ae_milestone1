@@ -27,6 +27,7 @@ from milestone1.robovis_eval import (
     oracle_profile_from_stage,
     q_output_dir,
 )
+from milestone1.robovis_judge_quality import LOWRES_ROLE
 from milestone1.stop_policy import EXPLORATORY_LABEL, MAIN_LABEL, fixed_method_name
 
 FLOAT_DIGITS = 3
@@ -44,6 +45,10 @@ STAGE_PROFILE_COLUMNS = ("scale", "n_valid", "R50", "R100", "mR50_official", "re
 # Observed-graph statistics (raw PGSG graph vs cleaned graph G): descriptive only.
 GRAPH_STAT_PAIRS = (("R50", "R50_clean"), ("det_prec20", "det_prec20_clean"))
 AUX_ORACLE_NOTE = AUX_ORACLE_ROLE
+LOWRES_NOTE = LOWRES_ROLE
+JUDGE_QUALITY_COLUMNS = ("path", "q_metric", "rho_resolved_t", "rho_resolved_qratio",
+                         "auc_sufficient_resolved", "auc_sufficient_C",
+                         "rho_lowres_qratio", "auc_sufficient_lowres", "n_sufficient")  # fmt: skip
 METHOD_COLUMNS = ("method", "status", "n_images", "mean_stop_t", "q_stop", "mR50_stop",
                   "mean_residual", "oracle_mae", "oracle_n", "forced_terminal_rate",
                   "inference_failure_rate", "eq_fixed_q")  # fmt: skip
@@ -383,9 +388,34 @@ def section_signal_compare(run_dir: Path, q_metrics: Sequence[str]) -> list[str]
         "AUC = predicting gain_left > 0 on qmax > 0 states; rho over pooled states.",
         "",
     ]
-    return lines + md_table(
-        df_rows(df), [c for c in COMPARE_COLUMNS if c in df.columns]
-    )
+    lines += md_table(df_rows(df), [c for c in COMPARE_COLUMNS if c in df.columns])
+    return lines + _judge_quality_lines(df)
+
+
+def _judge_quality_lines(df: pd.DataFrame) -> list[str]:
+    """Path-level judge-quality columns (one row per path x q metric)."""
+    cols = [c for c in JUDGE_QUALITY_COLUMNS if c in df.columns]
+    if len(cols) <= len(("path", "q_metric")):
+        return ["", na("judge-quality columns in signal_compare.csv")]
+    rows = df[df["condition"] == "proposed"]
+    if "n_sufficient" in rows.columns:
+        rows = rows.assign(n_sufficient=rows["n_sufficient"].astype("Int64"))
+    value_cols = [c for c in cols if c not in ("path", "q_metric")]
+    has_values = rows[value_cols].notna().any(axis=1)
+    missing = sorted(set(rows.loc[~has_values, "path"]))
+    out = [
+        "",
+        "Judge quality: does `resolved` / `low_resolution` track recovery q_t/qmax?"
+        f" sufficient = q_t/qmax >= oracle ratio. `frac_lowres` is a {LOWRES_NOTE}.",
+        "",
+        *md_table(df_rows(rows[has_values]), cols),
+    ]
+    if missing:
+        out += [
+            "",
+            na(f"judge-quality columns for {', '.join(missing)} (rerun script 32)"),
+        ]
+    return out
 
 
 def classify_error(error: str | None) -> str:

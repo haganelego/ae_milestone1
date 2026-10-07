@@ -46,6 +46,10 @@ from milestone1.robovis_eval import (  # noqa: E402
     residual,
     select_figure_examples,
 )
+from milestone1.robovis_judge_quality import (  # noqa: E402
+    add_judge_columns,
+    judge_quality,
+)
 from milestone1.robovis_replay import (  # noqa: E402
     RunLayout,
     is_clean_graph_variant,
@@ -550,3 +554,75 @@ def test_replay_records_graphs_dir_and_treats_missing_graph_as_missing(
     # 1010 proposed: t12 was the first instant stop; now reset -> stop at t14.
     assert stops.loc[(1010, "proposed"), "stop_t"] == 14
     assert stops.loc[(1010, "proposed"), "failure_count"] == 1
+
+
+# --------------------------------------------------------------------------
+# Judge-quality diagnostic
+# --------------------------------------------------------------------------
+
+
+def _judge_states() -> pd.DataFrame:
+    base = {"valid": True, "n_items": 2, "qmax": 1.0, "outcome": "ok"}
+    spec = [  # image, t, q_ratio, n_resolved, n_lowres, C_proposed
+        (1, 1, 0.2, 0, 2, 2), (1, 2, 0.6, 1, 1, 1), (1, 3, 1.0, 2, 0, 0),
+        (2, 1, 0.4, 0, 2, 2), (2, 2, 0.95, 2, 0, 0), (2, 3, 0.9, 1, 1, 1),
+    ]  # fmt: skip
+    rows = [
+        {**base, "image_id": i, "t": t, "frac_of_qmax": r, "n_resolved": nr,
+         "n_lowres": nl, "C_proposed": c}
+        for i, t, r, nr, nl, c in spec
+    ]  # fmt: skip
+    # Excluded: a failed state and an image that never recovers anything.
+    rows.append({**base, "image_id": 3, "t": 1, "frac_of_qmax": 0.5, "n_resolved": 2,
+                 "n_lowres": 0, "C_proposed": None, "outcome": "missing_checks"})  # fmt: skip
+    rows.append({**base, "image_id": 4, "t": 1, "frac_of_qmax": None, "qmax": 0.0,
+                 "n_resolved": 2, "n_lowres": 0, "C_proposed": 0})  # fmt: skip
+    return pd.DataFrame(rows)
+
+
+def test_judge_quality_calibration_and_auc() -> None:
+    table, stats = judge_quality(_judge_states(), theta=2, ratio=RATIO,
+                                 condition_columns=["C_proposed"])  # fmt: skip
+    assert stats["n_states"] == 6 and stats["n_sufficient"] == 3  # 1.0, .95, .9
+    # frac_resolved: sufficient {1, 1, .5} vs not {0, .5, 0} -> 8.5 / 9 pairs.
+    assert stats["auc_sufficient_resolved"] == pytest.approx(8.5 / 9)
+    # 1 - C: sufficient {1, 1, 0} vs not {-1, 0, -1} -> 8.5 / 9.
+    assert stats["auc_sufficient_C"]["C_proposed"] == pytest.approx(8.5 / 9)
+    assert stats["rho_resolved_qratio"]["rho"] > 0
+    # frac_lowres (diagnostic): sufficient {0, 0, .5} vs not {1, .5, 1};
+    # score 1 - frac_lowres: {1, 1, .5} vs {0, .5, 0} -> 8.5 / 9.
+    assert stats["auc_sufficient_lowres"] == pytest.approx(8.5 / 9)
+    assert stats["rho_lowres_qratio"]["rho"] < 0
+    assert stats["lowres_role"] == "diagnostic signal, not a stop condition"
+    cal = table[table["table"] == "calibration"].set_index("q_ratio_bin")
+    assert list(cal.index) == ["[0,0.5)", "[0.5,0.9)", "[0.9,1]"]
+    assert list(cal["n"]) == [2, 1, 3]
+    assert cal.loc["[0.9,1]", "frac_resolved_mean"] == pytest.approx(2.5 / 3)
+    assert cal.loc["[0,0.5)", "any_gate_theta_mean"] == pytest.approx(1.0)
+    lvl = table[table["table"] == "level"].set_index("t")
+    assert lvl.loc[1, "frac_lowres_mean"] == pytest.approx(1.0)
+
+
+def test_add_judge_columns_handles_no_items() -> None:
+    st = pd.DataFrame({"n_items": [0, 4], "n_resolved": [0, 1], "n_lowres": [0, 2],
+                       "C_proposed": [None, 2.0], "frac_of_qmax": [0.1, 0.2]})  # fmt: skip
+    out = add_judge_columns(st, theta=2)
+    assert (
+        math.isnan(out.loc[0, "frac_resolved"]) and out.loc[1, "frac_resolved"] == 0.25
+    )
+    assert (
+        math.isnan(out.loc[0, "any_gate_theta"]) and out.loc[1, "any_gate_theta"] == 1.0
+    )
+
+
+def test_signal_diag_writes_judge_quality(
+    tmp_path: Path, fast_cfg: dict[str, Any]
+) -> None:
+    res = run_signal_diag(FIXTURE, tmp_path, fast_cfg, RunLayout())
+    assert (tmp_path / "judge_quality.csv").exists()
+    assert "frac_resolved" in res.states.columns
+    table = compare_paths({"X": res}, build_conditions(fast_cfg), [1, 10, 20])
+    for col in ("rho_resolved_t", "rho_resolved_qratio", "auc_sufficient_C",
+                "auc_sufficient_resolved", "rho_lowres_qratio",
+                "auc_sufficient_lowres"):  # fmt: skip
+        assert col in table.columns

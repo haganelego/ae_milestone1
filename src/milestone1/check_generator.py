@@ -30,7 +30,10 @@ from milestone1.ollama_client import (
 
 PROMPT_V1 = "v1"
 PROMPT_V2 = "v2"
-PROMPT_VERSIONS = (PROMPT_V1, PROMPT_V2)
+PROMPT_V3 = "v3"  # judge v3 (lenient resolved, next-step gain); renders like v2
+PROMPT_VERSIONS = (PROMPT_V1, PROMPT_V2, PROMPT_V3)
+# Checks and judgments must share the rendering family so anchors resolve.
+RENDER_FAMILY = {PROMPT_V1: PROMPT_V1, PROMPT_V2: PROMPT_V2, PROMPT_V3: PROMPT_V2}
 PATH_F1 = "F1"
 PATH_F2 = "F2"
 VALID_PATHS = (PATH_F1, PATH_F2)
@@ -69,6 +72,10 @@ CHECK_TASK_V2_ADDENDUM = (
     "duplicate entities) as hypotheses."
 )
 STRING_HINT_TEMPLATE = "Each string field must be under {chars} characters."
+REGION_RULE_V3 = (
+    "Always set region_anchor_id to the observed object whose region you would "
+    "inspect; use null only if no observed object marks the region."
+)
 TARGET_PLACEHOLDER_V1 = "<unclear observed fact>"
 TARGET_PLACEHOLDER_V2 = "<scene fact whose identity/category/extent is unclear>"
 
@@ -121,6 +128,7 @@ class CheckLimits:
     score_decimals: int
     merge_iou: float | None = None  # v2 only: same-label entity merge threshold
     string_hint_chars: int | None = None  # v2 only: prompt hint (< max_string_chars)
+    next_step_ratio: float | None = None  # v3 only: per-step linear sharpness ratio
 
 
 def limits_from_config(
@@ -142,13 +150,22 @@ def limits_from_config(
     if prompt_version == PROMPT_V1:
         return base
     v2 = checks["v2"]
-    return replace(
+    limits = replace(
         base,
         max_relations=int(v2["max_relations_in_prompt"]),
         max_entities=int(v2["max_entities_in_prompt"]),
         merge_iou=float(v2["merge_iou"]),
         string_hint_chars=int(v2["string_hint_chars"]),
     )
+    if prompt_version != PROMPT_V3:
+        return limits
+    return replace(limits, next_step_ratio=next_step_ratio(cfg))
+
+
+def next_step_ratio(cfg: dict[str, Any]) -> float:
+    """Geometric per-step linear ratio of resolution.scales (no index or scale)."""
+    scales = [float(s) for s in cfg["resolution"]["scales"]]
+    return (scales[-1] / scales[0]) ** (1.0 / (len(scales) - 1))
 
 
 # ---------------------------------------------------------------------------
@@ -365,7 +382,7 @@ def render_graph(graph: dict[str, Any], limits: CheckLimits) -> RenderedGraph:
 
 
 def check_system_prompt(limits: CheckLimits, prompt_version: str = PROMPT_V1) -> str:
-    is_v2 = prompt_version == PROMPT_V2
+    is_v2 = prompt_version in (PROMPT_V2, PROMPT_V3)
     schema = CHECK_SCHEMA_TEMPLATE.format(
         max_obs=limits.max_observed_issues,
         max_hyp=limits.max_hypotheses,
@@ -375,6 +392,8 @@ def check_system_prompt(limits: CheckLimits, prompt_version: str = PROMPT_V1) ->
     if not is_v2:
         return f"{COMMON_PREAMBLE}\n\n{CHECK_TASK}\n\n{schema}"
     task = f"{CHECK_TASK} {CHECK_TASK_V2_ADDENDUM}"
+    if prompt_version == PROMPT_V3:
+        task = f"{task} {REGION_RULE_V3}"
     hint = STRING_HINT_TEMPLATE.format(chars=limits.string_hint_chars)
     return f"{COMMON_PREAMBLE}\n\n{task}\n\n{hint}\n{schema}"
 

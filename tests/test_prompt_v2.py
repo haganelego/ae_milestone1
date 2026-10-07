@@ -223,3 +223,49 @@ def test_generate_checks_and_judge_record_extra_provenance(tmp_path: Path) -> No
         record_extra=extra,
     )
     assert jrec["graphs_subdir"] == "graphs_clean" and jrec["skipped_empty"]
+
+
+def test_v3_judge_prompt_lenient_resolved_next_step_and_no_leak() -> None:
+    from milestone1.check_generator import PROMPT_V3, REGION_RULE_V3
+    from milestone1.judge import BENEFIT_RULE_V3, RESOLVED_RULE_V3
+
+    limits = limits_from_config(load_robovis_config(), PROMPT_V3)
+    assert limits.next_step_ratio is not None
+    assert abs(limits.next_step_ratio - 20 ** (1 / 19)) < 1e-9
+    text = judge_system_prompt(limits, PROMPT_V3, with_image=True)
+    assert RESOLVED_RULE_V3 in text and BENEFIT_RULE_V3 in text
+    assert "about 17 % sharper" in text and "x1.17" in text and "x1.4" in text
+    assert '"status": "resolved"' in text and BASIS_RULE_V2 in text
+    assert "level" not in text.lower() and "scale" not in text.lower()
+    assert IMAGE_EVIDENCE in text
+    assert REGION_RULE_V3 in check_system_prompt(limits, PROMPT_V3)
+    assert REGION_RULE_V3 not in check_system_prompt(limits, PROMPT_V2)
+
+
+def test_v3_judge_accepts_v2_checks_but_not_v1(tmp_path: Path) -> None:
+    from milestone1.check_generator import PROMPT_V3
+
+    limits = limits_from_config(load_robovis_config(), PROMPT_V3)
+    empty = {"observed_issues": [], "hypotheses": []}
+    rec, _ = judge_checks(
+        make_graph(IMAGE_ID),
+        {"path": "F1", "checks": empty, "prompt_version": PROMPT_V2},
+        client=FakeClient([]),
+        model="fake",
+        limits=limits,
+        schema_retries=1,
+        out_path=tmp_path / "d.json",
+        prompt_version=PROMPT_V3,
+    )
+    assert rec["skipped_empty"] and rec["prompt_version"] == PROMPT_V3
+    with pytest.raises(ValueError):
+        judge_checks(
+            make_graph(IMAGE_ID),
+            {"path": "F1", "checks": empty},
+            client=FakeClient([]),
+            model="fake",
+            limits=limits,
+            schema_retries=1,
+            out_path=tmp_path / "d2.json",
+            prompt_version=PROMPT_V3,
+        )

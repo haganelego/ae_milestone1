@@ -8,8 +8,8 @@ classifies every hypothesis with milestone1.failure_analysis
   failure_analysis/<V>.csv         one row per hypothesis / observed issue
   failure_analysis/<V>_states.csv  per state: GT labels absent from the rendering (headroom)
   failure_analysis/summary.md
-Graphs are read from graphs/ or, for variants whose name before any "__<model>"
-suffix ends in _G (generated from the cleaned graph G), graphs_clean/; --graphs-subdir V=dir overrides per variant.
+Graphs are read from graphs/ or, for G variants (a "G" segment in the
+variant name, milestone1.robovis_replay.is_clean_graph_variant), graphs_clean/; --graphs-subdir V=dir overrides per variant.
 The rendered entity set (what the model saw) is re-derived with
 check_generator.render_graph. The prompt version (v1/v2) is the one whose
 rendered-text sha256 equals the stored graph_sha256; mismatches are counted.
@@ -37,6 +37,7 @@ from milestone1.config import resolve  # noqa: E402
 from milestone1.gt import load_gt_scene_graphs  # noqa: E402
 from milestone1.ollama_client import sha256_text  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
+from milestone1.robovis_replay import is_clean_graph_variant  # noqa: E402
 
 CATEGORIES_PATH = REPO_ROOT / "data/processed/pgsg_vg/categories_dict.json"
 OUT_DIR = "failure_analysis"
@@ -45,8 +46,6 @@ N_EXAMPLES = 3
 HYP, OBS = "hypothesis", "observed_issue"
 RAW_GRAPHS = "graphs"
 CLEAN_GRAPHS = "graphs_clean"
-CLEAN_VARIANT_SUFFIX = "_G"
-MODEL_SUFFIX_SEP = "__"  # model / judge suffix of variant names (e.g. __9b)
 
 
 def parse_args() -> argparse.Namespace:
@@ -62,7 +61,13 @@ def parse_args() -> argparse.Namespace:
         "--graphs-subdir",
         default=None,
         help="per-variant graph dir overrides 'V=dir,V2=dir'; default: "
-        f"{CLEAN_GRAPHS} for variants ending in {CLEAN_VARIANT_SUFFIX}, else {RAW_GRAPHS}",
+        f"{CLEAN_GRAPHS} for G variants (is_clean_graph_variant), else {RAW_GRAPHS}",
+    )
+    parser.add_argument(
+        "--out-subdir",
+        default=OUT_DIR,
+        help=f"output dir inside the run (default {OUT_DIR}); use another name for "
+        "partial runs (e.g. a full-level run of a subset) so summaries are not clobbered",
     )
     parser.add_argument(
         "--levels",
@@ -84,8 +89,7 @@ def graphs_subdir_for(variant: str, overrides: dict[str, str]) -> str:
     """Same convention as A3: variants ending in _G were generated from G."""
     if variant in overrides:
         return overrides[variant]
-    base = variant.split(MODEL_SUFFIX_SEP)[0]  # F1v_v2_G__9b -> F1v_v2_G
-    return CLEAN_GRAPHS if base.endswith(CLEAN_VARIANT_SUFFIX) else RAW_GRAPHS
+    return CLEAN_GRAPHS if is_clean_graph_variant(variant) else RAW_GRAPHS
 
 
 def headroom(gt: dict[str, Any], rendered_labels: set[str]) -> dict[str, float]:
@@ -371,7 +375,7 @@ def main() -> None:
     limits = {v: cg.limits_from_config(cfg, v) for v in cg.PROMPT_VERSIONS}
     overrides = parse_overrides(args.graphs_subdir)
     levels = {int(x) for x in args.levels.split(",")} if args.levels else None
-    out_dir = run_dir / OUT_DIR
+    out_dir = run_dir / args.out_subdir
     out_dir.mkdir(parents=True, exist_ok=True)
     parts = [
         f"# Failure analysis of checks: {args.run_id}",

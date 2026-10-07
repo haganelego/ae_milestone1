@@ -34,6 +34,7 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 from milestone1.config import resolve  # noqa: E402
 from milestone1.robovis_data import load_robovis_config  # noqa: E402
 from milestone1.robovis_diag import (  # noqa: E402
+    JUDGE_QUALITY_FILENAME,
     DiagResult,
     bootstrap_mean_ci,
     compare_paths,
@@ -157,7 +158,28 @@ def run_one(
     print(f"===== {path} (graphs: {graphs}) -> {out_dir}")
     with pd.option_context("display.width", 250, "display.max_columns", 30):
         print(res.levels[cols].round(3).to_string(index=False))
+        print_judge_quality(out_dir, res.stats.get("judge_quality") or {})
     return res
+
+
+def print_judge_quality(out_dir: Path, jq: dict) -> None:
+    """Calibration bins + rank statistics of the judge's 'resolved' (zero-call)."""
+    table = pd.read_csv(out_dir / JUDGE_QUALITY_FILENAME)
+    cal = table[table["table"] == "calibration"]
+    print("judge quality: calibration by q_t/qmax")
+    print(cal[["q_ratio_bin", "n", "frac_resolved_mean", "frac_lowres_mean",
+               "any_gate_theta_mean", "C_proposed_mean"]].round(3).to_string(index=False))  # fmt: skip
+    if jq:
+        print(
+            f"rho(resolved,t)={jq['rho_resolved_t']['rho']:+.3f} "
+            f"rho(resolved,q/qmax)={jq['rho_resolved_qratio']['rho']:+.3f} "
+            f"AUC_sufficient(resolved)={jq['auc_sufficient_resolved']:.3f} "
+            f"AUC_sufficient(1-C_proposed)={jq['auc_sufficient_C']['C_proposed']:.3f} "
+            f"| diagnostic, not a stop rule: rho(frac_lowres,q/qmax)="
+            f"{jq['rho_lowres_qratio']['rho']:+.3f} "
+            f"AUC_sufficient(1-frac_lowres)={jq['auc_sufficient_lowres']:.3f} "
+            f"(n={jq['n_states']}, sufficient={jq['n_sufficient']})"
+        )
 
 
 def write_compare(
@@ -197,7 +219,18 @@ def main() -> None:
     show = (
         ["path", "q_metric", "graphs_dir", "condition", "n_valid"]
         + [c for c in full.columns if c.startswith("frac_ge_theta")]
-        + ["rho_t", "p_t", "rho_gain_left", "p_gain_left", "auc_score", "auc_ge_theta"]
+        + ["rho_t", "rho_gain_left", "auc_score", "auc_ge_theta"]
+        + [
+            c
+            for c in (
+                "rho_resolved_qratio",
+                "auc_sufficient_C",
+                "auc_sufficient_resolved",
+                "rho_lowres_qratio",
+                "auc_sufficient_lowres",
+            )
+            if c in full.columns
+        ]  # fmt: skip
     )
     with pd.option_context("display.width", 250, "display.max_columns", 30):
         print(full[show].round(3).to_string(index=False))
