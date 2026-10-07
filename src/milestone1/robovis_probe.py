@@ -73,7 +73,7 @@ GATE_POLICIES = tuple(f"{GATE_PREFIX}{c}" for c in GATED_CONDITIONS)
 GATE_STATUS = "exploratory (probe gate + judge C, not a plan condition)"
 REFERENCE_STATUS = "reference (ungated condition of the decisions path)"
 PROBE_STATUS = "exploratory (probe-only policy, not a plan condition)"
-FIXED_STATUS = "baseline"
+FIXED_STATUS = "schedule-aware reference"
 DETAIL_MIN, DETAIL_MAX = 0.0, 100.0
 PROBE_KEYS = ("detail_fraction", "sufficient", "next_step_helps", "reason")
 # Probe-run records nest the payload under this key (failure flag at top level).

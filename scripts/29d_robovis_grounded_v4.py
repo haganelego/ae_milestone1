@@ -185,6 +185,7 @@ def run_state(
     provenance = {
         "path": "F1",
         "model": args.model,
+        "options": client.settings.record(),  # think/format/options incl. num_ctx
         "prompt_version": PROMPT_V4,
         "image_id": image_id,
         "level": graph.get("level"),

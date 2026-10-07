@@ -254,7 +254,7 @@ def test_replay_fixture_end_to_end(
     assert summary.loc["proposed", "n_images"] == len(expected_eval)
     assert not math.isnan(summary.loc["proposed", "mR50_stop"])
     assert summary.loc["proposed", "status"] == "main"
-    assert summary.loc["fixed_05", "status"] == "baseline"
+    assert summary.loc["fixed_05", "status"] == "schedule-aware reference"
     assert "exploratory" in summary.loc["benefit_gated", "status"]
     assert "exploratory" in summary.loc["benefit_gated_obs", "status"]
 

@@ -1,0 +1,41 @@
+{
+  "policy": "conf_two_stage",
+  "created_at": "2026-10-08T02:46:21+0900",
+  "signal": "mean PGSG entity score of top-8 cleaned-G entities at t10",
+  "rule": "continue to t20 iff confidence < tau; ties: SHA256 hash < p_tie; missing -> t20",
+  "fit": {
+    "tau": 3.070230859730925,
+    "p_tie": 0.0,
+    "n_valid": 20,
+    "n_below": 10,
+    "n_tie": 0
+  },
+  "fit_source": {
+    "graphs": "outputs/robovis2027/dev_r0/graphs_clean",
+    "level": 10,
+    "image_ids": [
+      2316824,
+      2317365,
+      2317939,
+      2319328,
+      2321170,
+      2321764,
+      2322043,
+      2322814,
+      2325790,
+      2325889,
+      2327211,
+      2330374,
+      2338594,
+      2339062,
+      2411677,
+      2412319,
+      2412699,
+      2413447,
+      2415400,
+      2415737
+    ]
+  },
+  "gt_used": false,
+  "level_agnostic": true
+}

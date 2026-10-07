@@ -128,3 +128,73 @@ def test_seed_a_reference_uses_the_full_curve() -> None:
     refs = seed_a_references(_stage({1: curve, 2: curve}), "R50", 10.0)
     assert refs["F_at_mean_level"] == pytest.approx(0.5 + 0.5 * 5 / 15)
     assert refs["n_complete_series"] == 2
+
+
+# --------------------------------------------------------------------------
+# MIRU-style comparison
+# --------------------------------------------------------------------------
+
+
+def _levels(q10: list[float], q20: list[float], cont: list[bool]) -> pd_eval.SeedLevels:
+    q = np.column_stack([q10, np.add(q10, q20) / 2, q20])
+    return pd_eval.SeedLevels(
+        {"R50": q, "relsg_gt": q}, np.array(cont), tuple(range(len(cont)))
+    )
+
+
+def test_oracle_mix_and_stop_values() -> None:
+    lv = _levels([0.1, 0.1, 0.5, 0.2], [0.9, 0.2, 0.4, 0.3], [True, False, False, True])
+    orc = pd_eval.oracle_cont(
+        lv.q["R50"], 2
+    )  # g = .8, .1, -.1, .1 -> images 0 and 1 (stable)
+    assert list(orc) == [True, True, False, False]
+    vals = pd_eval.stop_values(lv.q["R50"], np.array([20, 10, 10, 20]), orc)
+    assert list(vals["mae"]) == [0, 10, 0, 10] and vals["agree"].mean() == 0.5
+    mix = pd_eval.mix_values(lv.q["R50"], 0.5, orc)
+    assert mix["mae"].mean() == pytest.approx(5.0) and mix[
+        "agree"
+    ].mean() == pytest.approx(0.5)
+    rows = pd_eval.method_rows(lv, "R50")
+    assert rows["GT two-choice oracle (reference)"]["agree"].mean() == 1.0
+    assert (
+        rows["fixed15"]["agree"].mean() == 0.0 and rows["fixed15"]["mae"].mean() == 5.0
+    )
+
+
+def test_significance_rows_online_comparators_only() -> None:
+    rng = np.random.default_rng(0)
+    q10 = rng.random(12) * 0.3
+    q20 = q10 + rng.random(12) * 0.4
+    cont = q20 - q10 > np.median(q20 - q10)  # a good policy: picks the high-gain half
+    lv = _levels(list(q10), list(q20), list(cont))
+    rows = pd_eval.significance_rows(lv, "R50", "R50", repeats=200, perm_repeats=200)
+    assert {(r["comparator"], r["column"]) for r in rows} == {
+        ("mix", col) for col in ("mae", "agree", "q")
+    }  # no conf decisions -> only the mix; fixed levels are never tested
+    mix_q = next(r for r in rows if r["column"] == "q")
+    assert mix_q["direction"] == "better" and mix_q["perm_p_better"] < 0.05
+    # conf_two_stage that picks the LOW-gain half -> policy significantly better (sign flip)
+    lv_conf = pd_eval.SeedLevels(lv.q, lv.cont, lv.ids, conf_cont=~cont)
+    rows = pd_eval.significance_rows(
+        lv_conf, "R50", "R50", repeats=200, perm_repeats=200
+    )
+    conf_q = next(
+        r for r in rows if r["comparator"] == "conf_two_stage" and r["column"] == "q"
+    )
+    assert conf_q["perm_test"] == "paired sign flip"
+    assert conf_q["diff_policy_minus_comparator"] > 0 and conf_q["significant"]
+
+
+def test_conf_two_stage_rule_and_fit() -> None:
+    fit = pd_eval.fit_conf_threshold([1.0, 2.0, 2.0, 3.0])
+    assert fit["tau"] == 2.0 and fit["n_below"] == 1 and fit["n_tie"] == 2
+    assert fit["p_tie"] == pytest.approx(0.5)  # (0.5*4 - 1) / 2
+    assert (
+        pd_eval.conf_decision(1, 1.0, 2.0, 0.5)[0] == 20
+    )  # low confidence -> continue
+    assert pd_eval.conf_decision(1, 3.0, 2.0, 0.5)[0] == 10
+    assert pd_eval.conf_decision(1, float("nan"), 2.0, 0.5) == (20, "failure_continue")
+    graph = {"entities": [{"id": f"v{i}", "score": float(i), "box_xyxy_base": [0, 0, 1, 1]}
+                          for i in range(10)]}  # fmt: skip
+    assert pd_eval.top_k_confidence(graph, 8) == pytest.approx(np.mean(range(2, 10)))
+    assert np.isnan(pd_eval.top_k_confidence({"entities": []}))

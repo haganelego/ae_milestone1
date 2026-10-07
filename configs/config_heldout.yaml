@@ -18,6 +18,13 @@
 #             (temperature 0.3, num_predict 1024, NO JSON mode, unseeded; vlm.num_ctx only
 #             sizes the context); text 4b = scripts/40 text condition (vlm_sgg settings).
 #             Fusion inputs therefore match the rule as registered on the MIRU 100.
+# CORRECTION 2026-10-08 02:40 JST (team-lead approved; appended before any held-out result for the registered
+#   rules or any LLM/VLM method was computed -- only the zero-call node-confidence baseline row existed in
+#   outputs/heldout_eval (00:57) and the text-4b scores existed unevaluated): the registered
+#   method key governs. hybrid_fuse_mean_vlmimg9b_text4b_k2 stops on 0.5*mean object confidence + 0.5*fused
+#   score >= ablation.hybrid.threshold (theta_hybrid 0.5), k=2, as implemented in milestone1.miru_methods and as
+#   used for the MIRU-100 reference row; the 'theta 0.70' above is a text inaccuracy for this hybrid key (0.70
+#   applies to the non-hybrid fuse_* rules, e.g. the secondary fuse_min). No method/threshold/evaluation change.
 paths:
   selected_images: data/processed/robovis2027_miru/selected_images.json
   degraded_images: data/processed/robovis2027_miru/degraded_images
@@ -43,6 +50,7 @@ heldout_eval:
   oracle: compute                 # stop_c09 recomputed from the new EGTR L20 (top-10 / top-5, coef 0.9)
   saturating_max_stop: 18         # MIRU kept stop_c09 <= 18; report that subset too (mae_c09_sat)
   legacy_csv_methods: false       # baseline + node confidence from the new EGTR predictions
+  require_complete_scores: true   # pre-registered: rows from partial score dirs are withheld
   k_options: [2]
   score_methods:
     llm_sgg_text_4b: outputs/robovis2027_miru/llm_scores_vlm/qwen3.5-4b_h5_rel_on_conf_on_text

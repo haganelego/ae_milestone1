@@ -1,0 +1,36 @@
+set,method,role,n,mean_level,mae_vs_R50_oracle,agree_R50_oracle,R50,mae_vs_relsg_oracle,agree_relsg_oracle,relsg_gt,R50_perm95,relsg_perm95
+Phase D seedA,U policy,proposed (frozen U),60,15.166666666666668,6.0,0.4,0.12900211666666667,5.0,0.5,0.4852394833333334,,
+Phase D seedA,mix (same p),online comparator (primary),60,15.166666666666668,4.994444444444445,0.5005555555555555,0.13612899972222223,4.994444444444445,0.5005555555555555,0.4622059977777777,"[0.1166, 0.1550]","[0.4364, 0.4871]"
+Phase D seedA,conf_two_stage,"online comparator (level-agnostic, observation-based)",60,14.666666666666668,5.5,0.45,0.13276701666666668,5.5,0.45,0.46182775000000004,,
+Phase D seedA,fixed10,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,10.0,5.166666666666667,0.48333333333333334,0.09900624999999999,5.166666666666667,0.48333333333333334,0.4006101,,
+Phase D seedA,fixed15,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,15.0,5.0,0.0,0.14191543333333334,5.0,0.0,0.4555031666666667,,
+Phase D seedA,fixed20,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,20.0,4.833333333333333,0.5166666666666667,0.17085673333333332,4.833333333333333,0.5166666666666667,0.5198279666666666,,
+Phase D seedA,GT two-choice oracle (reference),GT-posterior reference (upper bound),60,15.166666666666668,0.0,1.0,0.1846404,0.0,1.0,0.5298371666666667,,
+Phase D seedB (replication),U policy,proposed (frozen U),60,15.166666666666668,5.666666666666667,0.43333333333333335,0.12654226666666665,4.333333333333333,0.5666666666666667,0.48215396666666666,,
+Phase D seedB (replication),mix (same p),online comparator (primary),60,15.166666666666668,4.9944444444444445,0.5005555555555555,0.1372088311111111,4.994444444444444,0.5005555555555555,0.4595609077777778,"[0.1161, 0.1589]","[0.4385, 0.4799]"
+Phase D seedB (replication),conf_two_stage,"online comparator (level-agnostic, observation-based)",60,14.666666666666668,6.166666666666667,0.38333333333333336,0.12454893333333335,5.166666666666667,0.48333333333333334,0.4686988166666667,,
+Phase D seedB (replication),fixed10,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,10.0,5.166666666666667,0.48333333333333334,0.10667596666666666,5.166666666666667,0.48333333333333334,0.4252571,,
+Phase D seedB (replication),fixed15,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,15.0,5.0,0.0,0.1294175,5.0,0.0,0.4501388833333333,,
+Phase D seedB (replication),fixed20,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,60,20.0,4.833333333333333,0.5166666666666667,0.16577183333333334,4.833333333333333,0.5166666666666667,0.49165156666666665,,
+Phase D seedB (replication),GT two-choice oracle (reference),GT-posterior reference (upper bound),60,15.166666666666668,0.0,1.0,0.1822070166666667,0.0,1.0,0.5173904333333333,,
+dev seed0,U policy,proposed (frozen U),20,15.5,5.0,0.5,0.15816465,6.0,0.4,0.5009813999999999,,
+dev seed0,mix (same p),online comparator (primary),20,15.5,4.95,0.5049999999999999,0.16820136749999998,4.95,0.5049999999999999,0.5330765000000001,"[0.1339, 0.2026]","[0.5009, 0.5634]"
+dev seed0,conf_two_stage,"online comparator (level-agnostic, observation-based)",20,15.0,4.5,0.55,0.16302575000000002,4.5,0.55,0.5227421499999999,,
+dev seed0,fixed10,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,10.0,5.5,0.45,0.1342956,5.5,0.45,0.4565341,,
+dev seed0,fixed15,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,15.0,5.0,0.0,0.20080355,5.0,0.0,0.5380675000000001,,
+dev seed0,fixed20,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,20.0,4.5,0.55,0.19594245,4.5,0.55,0.5957021,,
+dev seed0,GT two-choice oracle (reference),GT-posterior reference (upper bound),20,15.5,0.0,1.0,0.21260910000000002,0.0,1.0,0.5921725999999999,,
+dev seed1,U policy,proposed (frozen U),20,15.5,6.0,0.4,0.1798313,5.0,0.5,0.5056805,,
+dev seed1,mix (same p),online comparator (primary),20,15.5,4.95,0.5049999999999999,0.17606247749999998,4.95,0.505,0.5228401024999999,"[0.1437, 0.2071]","[0.4851, 0.5569]"
+dev seed1,conf_two_stage,"online comparator (level-agnostic, observation-based)",20,15.0,3.5,0.65,0.18413685,4.5,0.55,0.5265213500000001,,
+dev seed1,fixed10,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,10.0,5.5,0.45,0.1381845,5.5,0.45,0.46703790000000006,,
+dev seed1,fixed15,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,15.0,5.0,0.0,0.17413689999999998,5.0,0.0,0.5268870999999999,,
+dev seed1,fixed20,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,20.0,4.5,0.55,0.20705355,4.5,0.55,0.5684964499999998,,
+dev seed1,GT two-choice oracle (reference),GT-posterior reference (upper bound),20,15.5,0.0,1.0,0.22205355,0.0,1.0,0.58693055,,
+dev seed2,U policy,proposed (frozen U),20,15.5,5.0,0.5,0.19691465,7.0,0.3,0.49724499999999994,,
+dev seed2,mix (same p),online comparator (primary),20,15.5,4.95,0.5049999999999999,0.18771526500000002,4.95,0.505,0.5232086025,"[0.1543, 0.2232]","[0.4916, 0.5557]"
+dev seed2,conf_two_stage,"online comparator (level-agnostic, observation-based)",20,15.0,3.5,0.65,0.191498,4.5,0.55,0.51304865,,
+dev seed2,fixed10,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,10.0,5.5,0.45,0.14999005,5.5,0.45,0.45170775,,
+dev seed2,fixed15,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,15.0,5.0,0.0,0.1496329,5.0,0.0,0.51628255,,
+dev seed2,fixed20,schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator,20,20.0,4.5,0.55,0.21858135,4.5,0.55,0.5817092999999999,,
+dev seed2,GT two-choice oracle (reference),GT-posterior reference (upper bound),20,15.5,0.0,1.0,0.23983135,0.0,1.0,0.5842145999999999,,

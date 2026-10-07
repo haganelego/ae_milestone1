@@ -41,7 +41,7 @@ LOW_LEVEL, HIGH_LEVEL = 10, 20
 METRICS = ("R50", "relsg_gt")
 SHUFFLE_REPEATS = 1000
 SHUFFLE_SEED = 20261008
-REFERENCE_NOTE = "GT-posterior reference, not a method"
+REFERENCE_NOTE = "schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator"
 TRUE_STRINGS = frozenset({"true", "1", "yes", "t"})
 
 

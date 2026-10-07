@@ -1,6 +1,6 @@
 # Phase A: pre-registered held-out confirmation (MIRU pipeline, 96 images)
 
-(Draft 2026-10-08 03:50 JST by A1, saved by the orchestrator; §4 rerun counts and §5 results to be filled when A2's evaluation runs.)
+(Draft 2026-10-08 by A1, saved by the orchestrator; §5 results to be filled from A2's evaluation.)
 
 The single source of truth is `configs/config_heldout.yaml`: its header comment and the `heldout_eval` block, registered at commit 48b964b before any held-out score existed. The method definitions live in `src/milestone1/miru_methods.py`. The evaluation is `scripts/42_miru_gt_eval.py --dataset heldout`, which writes to `outputs/heldout_eval/`.
 
@@ -37,7 +37,7 @@ The registered held-out set is unchanged.
 - **Image-only 9b, first attempt.** At 01:57:53 the scripts/11 start-up smoke test (an 8×8 image) got HTTP 500 from ollama. scripts/11 then skips the model by design, writes stop_level = −1 rows to `vlm_stop.csv` and exits. As a result 0 score files were written.
   - Most likely cause: GPU memory pressure. Two ollama runners were resident (4b and 9b) while PGSG Phase D used about 7 GB, and the ollama log shows repeated CUDA OOM from 02:01.
   - The incident is recorded in `rec_r0/failures.jsonl`. The failed `vlm_stop.csv` is kept in `rec_r0/logs/heldout_vlm_stop_failed_20261008_0157.csv`.
-- **Image-only 9b, rerun.** Started 02:35:51 with scripts/11, the overlay and the decoding all unchanged, after the GPU was free and the smoke test passed. Result: ___ / 1536 files, ___ errors. (to be filled)
+- **Image-only 9b, rerun.** Started 02:35:51 with scripts/11, the overlay and the decoding all unchanged, after the GPU was free and the smoke test passed. Result: 1536 / 1536 files (96 images × 16 levels), 0 errors, 0 parse errors; wall time 1451 s (02:35:51–03:00:02), median 0.92 s per call; script-11 log: total_calls=1536, failed=0 (`outputs/robovis2027_miru/logs/heldout_vlm9b_rerun.log`). Resolution recorded in `rec_r0/failures.jsonl`.
 - **No mixing.** No file from a different condition was used.
 
 ## 5. Results (A2, `outputs/heldout_eval/`)

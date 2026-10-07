@@ -163,7 +163,7 @@ def test_build_report_marks_missing_inputs(
     assert "_not available: stage_metrics.csv columns" in text
     assert "| proposed | main |" in text
     assert "| benefit_gated | exploratory* |" in text
-    assert "| fixed_20 | baseline |" in text
+    assert "| fixed_20 | schedule-aware reference |" in text
     assert "_not available: eval/Y/summary.csv_" in text
     assert "_not available: outputs/robovis2027/preflight.json" in text
     assert "_not available: " + str(tmp_path / "missing_selection.json") in text
@@ -171,7 +171,9 @@ def test_build_report_marks_missing_inputs(
     assert "nan" not in text.lower().replace("n/a", "")
     # Methods table order: main conditions before exploratory, fixed_20 last.
     assert text.index("| proposed | main |") < text.index("| benefit_gated |")
-    assert text.index("| benefit_gated |") < text.index("| fixed_20 | baseline |")
+    assert text.index("| benefit_gated |") < text.index(
+        "| fixed_20 | schedule-aware reference |"
+    )
 
 
 def test_fig1_dot_source_is_valid_graph() -> None:

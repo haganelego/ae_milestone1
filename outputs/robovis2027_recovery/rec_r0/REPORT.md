@@ -318,6 +318,16 @@ Per the user's guidance, the question is whether any method's score became *sign
 
 On the MIRU axis (agreement with the oracle stop) the policy is at or below chance for R50 (40–43% vs 50%) and at chance for relsg (50% / 57%). No comparison is significantly superior on the primary metric; the only significant superiority is relsg_gt vs the same-p mix and vs fixed10, on both seeds.
 
+**Level-agnostic observation-based comparator `conf_two_stage`** (`scripts/49_recovery_conf_two_stage.py`, zero-call, no GT): at t10 continue to t20 iff the mean PGSG entity score of the top-8 cleaned-G entities is below τ_conf = dev-seed0 median 3.0702 (no ties; frozen in `frozen_conf_policy.json`). Phase D: 28/60 continue (p = .467), 0 failures.
+
+| set | conf_two_stage: p / R50 / relsg / R50-oracle agreement | U − conf, R50 [CI], perm p | U − conf, relsg [CI], perm p |
+|---|---|---|---|
+| Phase D seedA | .467 / .1328 / .4618 / 45% | −.004 [−.029, +.022], .62 ✗ | +.023 [−.010, +.058], .09 ✗ |
+| Phase D seedB | .467 / .1245 / .4687 / 38% | +.002 [−.016, +.021], .43 ✗ | +.014 [−.008, +.036], .11 ✗ |
+| dev seed0 / 1 / 2 | .50 / — / — / 55–65% | −.005 / −.004 / +.005 ✗ | −.022 / −.021 / −.016 ✗ |
+
+Against this simple level-agnostic confidence rule, the U policy shows no significant advantage on either metric in any seed set. The legacy `eq_fixed` adjacent mix in the dev/MIRU/held-out tables also uses the level index; it is kept (with its CI) only because it was the previous plan's registered comparison, and is labelled accordingly.
+
 ## 7. Synthesis
 
 ### 7.1 Answers to the three questions

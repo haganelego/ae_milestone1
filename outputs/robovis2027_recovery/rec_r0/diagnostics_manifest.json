@@ -1,6 +1,6 @@
 {
-  "generated": "2026-10-08T01:02:10",
-  "git_head": "079ee22dab0335fc8cc77605ec49507bcf3de746",
+  "generated": "2026-10-08T02:48:49",
+  "git_head": "57e5a2469a3362e3c1454512b5114601fbe102e5",
   "inputs": {
     "dev20": {
       "path": "outputs/robovis2027/dev_r0/stage_metrics.csv",
@@ -30,5 +30,5 @@
     "relsg_gt"
   ],
   "shuffle_repeats": 1000,
-  "note": "GT-posterior reference, not a method"
+  "note": "schedule-aware reference (knows the level index; GT-posterior for F) \u2014 not a comparator"
 }

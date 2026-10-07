@@ -31,20 +31,21 @@ from milestone1.robovis_judge_quality import LOWRES_ROLE
 from milestone1.stop_policy import EXPLORATORY_LABEL, MAIN_LABEL, fixed_method_name
 
 FLOAT_DIGITS = 3
-F_COLUMN = "q_stop - F(mean_stop) [95% CI]"
-F_TABLE_NOTE = ("F = GT-posterior best fixed mixture on this set (upper concave hull of the "
-                "fixed curve; a reference, not a method). eq_fixed_q is the legacy adjacent "
-                "two-level mix.")  # fmt: skip
+F_COLUMN = "q_stop - F(mean_stop) (reference)"
+F_TABLE_NOTE = ("F = best fixed mixture on this set (upper concave hull of the fixed curve): "
+                "schedule-aware reference (knows the level index; GT-posterior) — not a "
+                "comparator; point estimate only. eq_fixed_q = legacy adjacent two-level fixed "
+                "mix — uses the level index; previous plan's registered comparison.")  # fmt: skip
 HEADING_DEMOTE = 2  # included docs: "# x" -> "### x"
 DEFAULT_ORACLE_RATIO = 0.9  # only used when build_report gets no OracleParams
 NA_TEXT = "n/a"
 STATUS_SHORT = {
     MAIN_LABEL: "main",
     EXPLORATORY_LABEL: "exploratory*",
-    "baseline": "baseline",
+    "schedule-aware reference": "schedule-aware reference",
 }
 EXPLORATORY_FOOTNOTE = f"\\* exploratory = {EXPLORATORY_LABEL}."
-STATUS_ORDER = {MAIN_LABEL: 0, EXPLORATORY_LABEL: 1, "baseline": 2}
+STATUS_ORDER = {MAIN_LABEL: 0, EXPLORATORY_LABEL: 1, "schedule-aware reference": 2}
 STAGE_PROFILE_COLUMNS = ("scale", "n_valid", "R50", "R100", "mR50_official", "relsg_gt")
 # Observed-graph statistics (raw PGSG graph vs cleaned graph G): descriptive only.
 GRAPH_STAT_PAIRS = (("R50", "R50_clean"), ("det_prec20", "det_prec20_clean"))
@@ -264,7 +265,7 @@ def section_pilot(run_dir: Path) -> list[str]:
 
 
 def _ordered_methods(summary: pd.DataFrame, num_levels: int) -> pd.DataFrame:
-    adaptive = summary[summary["status"] != "baseline"].copy()
+    adaptive = summary[summary["status"] != "schedule-aware reference"].copy()
     adaptive["_o"] = adaptive["status"].map(STATUS_ORDER).fillna(len(STATUS_ORDER))
     adaptive = adaptive.sort_values(["_o", "method"]).drop(columns="_o")
     final = summary[summary["method"] == fixed_method_name(num_levels)]
@@ -326,7 +327,7 @@ def section_methods(run_dir: Path, paths: Sequence[str], q_metrics: Sequence[str
                 stat_f = boot.get("methods", {}).get(r["method"], {}).get("q_minus_F")
                 rows.append({**r, "status": STATUS_SHORT.get(r["status"], r["status"]),
                              "q_stop - eq_fixed_q [95% CI]": _ci_text(stat),
-                             F_COLUMN: _ci_text(stat_f)})  # fmt: skip
+                             F_COLUMN: fmt(stat_f["mean"]) if stat_f else NA_TEXT})  # fmt: skip
             graphs_dir = (
                 summary["graphs_dir"].iloc[0] if "graphs_dir" in summary else None
             )

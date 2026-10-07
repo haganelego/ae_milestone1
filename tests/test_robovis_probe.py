@@ -172,7 +172,7 @@ def test_probe_diag_end_to_end(probe_run: Path, fast_cfg: dict[str, Any]) -> Non
 
     summary = pd.read_csv(out / "summary.csv").set_index("method")
     assert summary.loc["probe_stop", "status"] == PROBE_STATUS
-    assert summary.loc["fixed_20", "status"] == "baseline"
+    assert summary.loc["fixed_20", "status"] == "schedule-aware reference"
     assert summary.loc["probe_stop", "n_images"] == 9  # 1007 excluded (invalid level)
     boot = json.loads((out / "bootstrap.json").read_text())
     assert "probe_stop_minus_fixed_20" in boot["pairwise"]

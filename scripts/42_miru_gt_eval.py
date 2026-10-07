@@ -67,6 +67,7 @@ from milestone1.robovis_eval import (  # noqa: E402
 from milestone1.stop_policy import fixed_method_name  # noqa: E402
 
 STAGE_FILENAME = "stage_metrics.csv"
+SCHEDULE_AWARE = "schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator"
 STAGE_META_FILENAME = (
     "stage_metrics.meta.json"  # cache key: prediction dir + file count
 )
@@ -219,7 +220,7 @@ def build_table(
     final = fixed_method_name(num_levels)
     rows = []
     for name in [*methods, final]:
-        row: dict[str, Any] = {"method": name, "source": sources.get(name, "fixed baseline"),
+        row: dict[str, Any] = {"method": name, "source": sources.get(name, SCHEDULE_AWARE),
                                "n": len(ids)}  # fmt: skip
         stops = methods.get(name) or dict.fromkeys(ids, num_levels)
         row.update(oracle_mae(stops, oracle, ids))
@@ -255,9 +256,8 @@ def build_table(
 def to_markdown(table: pd.DataFrame) -> str:
     cols = ["method", "source", "mean_stop", "mae_c09", "medae_c09", "mae_c09_sat", "n_sat",
             "at_final_level",
-            "R50_stop", "R50_minus_eq_fixed_ci", "R50_minus_F_ci", "relsg_gt_stop",
-            "relsg_gt_minus_eq_fixed_ci", "relsg_gt_minus_F_ci",
-            "relsg_gt_minus_fixed20_ci"]  # fmt: skip
+            "R50_stop", "R50_minus_eq_fixed_ci", "R50_minus_F", "relsg_gt_stop",
+            "relsg_gt_minus_eq_fixed_ci", "relsg_gt_minus_F"]  # fmt: skip
     cols = [c for c in cols if c in table.columns]
     lines = ["| " + " | ".join(cols) + " |", "|" + "---|" * len(cols)]
     for r in table.to_dict("records"):
@@ -269,11 +269,11 @@ def to_markdown(table: pd.DataFrame) -> str:
         lines.append("| " + " | ".join(cells) + " |")
     notes = [
         "",
-        "- `*_minus_eq_fixed_ci`: legacy comparator (adjacent two-level fixed mix at the "
-        "method's mean stop).",
-        "- `*_minus_F_ci`: q_stop - F(mean_stop), F = GT-posterior best fixed mixture on "
-        "this set (upper concave hull of the fixed curve; a reference, not a method); "
-        "paired bootstrap recomputes the mean stop and F per resample.",
+        "- `*_minus_eq_fixed_ci`: legacy equal-observation fixed mix (adjacent two levels at "
+        "the method's mean stop) — uses the level index; previous plan's registered comparison.",
+        "- `*_minus_F`: q_stop - F(mean_stop), point estimate only; F = best fixed mixture "
+        "on this set: schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator.",
+        "- fixed_20: schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator.",
     ]
     return "\n".join(lines + notes) + "\n"
 
@@ -366,10 +366,20 @@ def main() -> None:
         key = registry_key(m)
         cov = registry.coverage.get(key, math.nan)
         label = (
-            LEGACY_VLM_SCORES_NOTE if key in LEGACY_SCORE_KEYS
+            LEGACY_VLM_SCORES_NOTE if key in LEGACY_SCORE_KEYS and args.dataset == "miru"
             else FUSION_NOTE if key.startswith(FUSION_PREFIX) else "score dir"
         )  # fmt: skip
         sources[m] = f"{label}, coverage {cov:.0%}" if cov < 1 else label
+    if block.get("require_complete_scores", False):
+        # Pre-registered evaluation: never score from partial score dirs.
+        partial = {k for k, cov in registry.coverage.items() if cov < 1.0}
+        dropped = [m for m in registry.stops if registry_key(m) in partial]
+        for m in dropped:
+            registry.stops.pop(m)
+        if partial:
+            print(
+                f"pending (incomplete score dirs {sorted(partial)}): {sorted(dropped)}"
+            )
     methods = {**existing, **registry.stops}
     print(f"methods: {len(existing)} baseline/CSV, {len(registry.stops)} from score dirs; "
           f"coverage {registry.coverage}")  # fmt: skip

@@ -125,7 +125,7 @@ def plot_fixed_curve(
         color=FIXED_COLOR,
         marker=".",
         linewidth=1.0,
-        label="fixed stop level",
+        label="fixed level (schedule-aware ref.)",
         zorder=1,
     )
     for row in fixed.itertuples(index=False):

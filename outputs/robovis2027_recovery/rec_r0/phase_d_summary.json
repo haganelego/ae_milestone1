@@ -23,5 +23,5 @@
     ]
   },
   "rules": "plan \u00a77: seeds never averaged; positive with CI including 0 -> unconfirmed; seedA positive and seedB negative -> unstable",
-  "F_note": "GT-posterior reference on seedA, not a method"
+  "F_note": "F on seedA: schedule-aware reference (knows the level index; GT-posterior for F) \u2014 not a comparator"
 }

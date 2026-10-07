@@ -481,7 +481,7 @@ def mix_recall(q_matrix: np.ndarray, mix: FixedMix) -> np.ndarray:
 # --------------------------------------------------------------------------
 
 
-F_NOTE = "F = GT-posterior best fixed mixture on this set"
+F_NOTE = "F = GT-posterior best fixed mixture on this set; schedule-aware reference (knows the level index; GT-posterior for F) — not a comparator"
 
 
 def best_fixed_value(q_matrix: np.ndarray, budget: float) -> float:

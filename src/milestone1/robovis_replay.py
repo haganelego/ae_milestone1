@@ -232,7 +232,7 @@ def default_comparisons(num_levels: int) -> list[tuple[str, str]]:
     ]
 
 
-FIXED_STATUS_LABEL = "baseline"
+FIXED_STATUS_LABEL = "schedule-aware reference"
 
 
 def method_status(method: str, conditions: Mapping[str, Condition]) -> str:

@@ -106,10 +106,17 @@ def plot(stage_a: pd.DataFrame, a_rows: list[dict[str, Any]], out_stem: Path) ->
     for ax, row in zip(axes, a_rows, strict=True):
         f = np.array([float(v) for v in row["fixed_curve"].split(";")])
         t = np.arange(1, NUM_LEVELS + 1)
-        ax.plot(t, f, color=COLORS["curve"], marker=".", lw=1, label="fixed level t")
+        ax.plot(
+            t,
+            f,
+            color=COLORS["curve"],
+            marker=".",
+            lw=1,
+            label="fixed level t (schedule-aware ref.)",
+        )
         hull = upper_hull(f)
         ax.plot(t[hull], f[hull], color=COLORS["F"], ls="--", lw=1,
-                label="F (best fixed mixture; GT-posterior)")  # fmt: skip
+                label="F (schedule-aware, GT-posterior ref.)")  # fmt: skip
         x = row["mean_level"]
         yerr = [[max(0.0, row["policy_minus_mix"] - row["ci_low"])],
                 [max(0.0, row["ci_high"] - row["policy_minus_mix"])]]  # fmt: skip
@@ -118,7 +125,7 @@ def plot(stage_a: pd.DataFrame, a_rows: list[dict[str, Any]], out_stem: Path) ->
         ax.scatter([x], [row["mix_q_same_p"]], marker="s", color=COLORS["mix"],
                    label="t10/t20 mix, same p", zorder=3)  # fmt: skip
         ax.scatter([FIXED_MID], [row["fixed15_q"]], marker="^", color=COLORS["fixed15"],
-                   label="fixed15", zorder=3)  # fmt: skip
+                   label="fixed15 (schedule-aware ref.)", zorder=3)  # fmt: skip
         ax.set_title(
             f"seedA {row['metric']}{' (primary)' if row['primary'] else ''}", fontsize=9
         )
