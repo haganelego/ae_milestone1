@@ -1,0 +1,82 @@
+{
+  "time": "2026-10-08T18:09:46+00:00",
+  "stages": {
+    "preflight": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "preflight.json": "75fc8426cd52fe7091a888c266b41d3aeec3c637d9108649d376e4670adb5030",
+        "effective_config.json": "f143ce9200a5d39b14e90acd4c949e74f1c15f553f80dc992f091d3128086b5c"
+      }
+    },
+    "probe": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "probe_summary.json": "fea913c79551da13f453fd541e84a15f0d2d09a1eb2b60ec76a5e01bae1ded60"
+      }
+    },
+    "prepare": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "schema_mapping.json": "1aa7f10a55ba2131973d24110d2a9461e2f28ff99c12ce073efbc5f5f401f714",
+        "dataset_flow.csv": "524ef2f84f15e24a78cba79cf39b7c729f88f86be8a6bf6ad7f27497690dd394",
+        "scan_summary.json": "65fec75c1c4fd719cf0cfda4e9d4f624ca4fb959089db9177a5a4610381fd5cc"
+      }
+    },
+    "screen_dev": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "adoption_dev.json": "bc6bd76959fdc0a5655261ae5128d55524e74b7437ef04a61a2eb5b4efc2a374",
+        "screening_repeat.json": "fc603783c2f66b999005c8576aa063379bb2aec708bf03ea51e331af697a7f7b"
+      }
+    },
+    "pilot": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "pilot_summary.json": "c7a17920db3a1ecf80e6550ddd3334a33195141173f17c539b32460c4632077d"
+      }
+    },
+    "pilot_calibration": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "pilot_calibration.json": "bdc9248e36ae9d5f1e91e969df9b4ee514eada867f636c463950453bb0650c1f"
+      }
+    },
+    "infer_dev": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "level_table_dev.csv": "5cfb326ff4a10d21ae94f95667a9df36680c8d52c635ccad5a07150bce14ea47"
+      }
+    },
+    "freeze": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "frozen_policy.json": "588b81c21e598086923f7235ba111177f7127c9419bfa50d2a1f0edf617a0afc",
+        "dev_threshold_grid.csv": "5b2db733afbaa8ad6c894615ac3dde7c3e53b5aad133a2a6c14c0d983933aee7"
+      }
+    },
+    "screen_test": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "adoption_test.json": "247f3b061997e88f529efb4374abcfa57bdd005c624391e6f193f553ca9d10aa"
+      }
+    },
+    "infer_test": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "level_table_test.csv": "471c3c4f4caa7b12e24eac37657ac3df206c40fc7d57d4903b94d12d96893bc6"
+      }
+    },
+    "evaluate": {
+      "status": "completed",
+      "artifacts_sha256": {
+        "stops.csv": "f97a2566f6649e25d324bb61a62c684c9035b8ba3365deec3369bfdc3a244667",
+        "method_summary.csv": "67954a6669b59ad20ea408d09db4b206306cb16c296c92f484b0ef47164a8707",
+        "paired_comparisons.csv": "e74bbca02fd03d4597323a2185577d5a269d5171589280ac11ff1f616c2a014a",
+        "bootstrap_summary.json": "7f767c95abea0ce9dd78e00cc6ded9d12e49ca9abba0e32f8ef8b20737b004df"
+      }
+    }
+  },
+  "complete": true,
+  "note": "hypothesis support is not a completion criterion (plan §13)",
+  "gate_override": null
+}
