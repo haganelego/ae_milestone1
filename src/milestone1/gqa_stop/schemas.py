@@ -154,6 +154,9 @@ def _validate_check_item(
     where = f"items[{index}]"
     if not isinstance(item, dict):
         return [f"{where}: not an object"], None
+    item_id = item.get("id")
+    if not isinstance(item_id, str) or not item_id:
+        return [f"{where}: id must be a non-empty string"], None
     answer, errors = check_answer(item.get("answer"), where)
     resolved = item.get("resolved")
     if not isinstance(resolved, bool):
@@ -163,7 +166,7 @@ def _validate_check_item(
     if errors:
         return errors, None
     row = {
-        "id": item["id"],
+        "id": item_id,
         "answer": answer,
         "resolved": resolved,
         "confidence": confidence,

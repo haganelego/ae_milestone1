@@ -126,3 +126,12 @@ def test_whole_content_must_be_json() -> None:
     assert parse_and_validate(fenced, validate_reader)[0] == {"answer": "red"}  # v2
     noisy = 'Sure: {"answer": "red"}'
     assert parse_and_validate(noisy, validate_reader)[0] is None
+
+
+def test_validate_checklist_item_without_id_is_schema_error() -> None:
+    from milestone1.gqa_stop.schemas import validate_checklist
+
+    obj = {"items": [{"answer": "red", "resolved": True, "confidence": 0.9}]}
+    parsed, errors = validate_checklist(obj, ["c1"])
+    assert parsed is None
+    assert any("id" in e for e in errors)
