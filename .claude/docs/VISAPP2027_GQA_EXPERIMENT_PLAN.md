@@ -522,3 +522,29 @@ L20 不一致 83 件のうち、rectangle/rectangular、triangle/triangular、ci
 ### A11. checklist prompt v2（2026-10-08、§11 Phase B の dev 改訂 1 回を使用、理由：形式不備）
 
 parser v2 導入後の pilot で checklist observer の初回形式 valid 率が 0.93（修復後 0.98）となり §11 の 0.95 を下回った。失敗 7/96 件の内訳は item の "id" 欠落 3、トップレベルが配列 3、項目省略 1。§8.4 の prompt に出力形式規則（"items" キーを持つオブジェクト、4 キー必須、id を入力どおり複写、全項目を返す、フェンス禁止、2 項目の例）のみを追加し v2 とした。意味的な指示は変更していない。これが §11 の dev prompt 改訂枠（最大 1 回）の使用であり、以後の改訂は不可。改訂後のゲートは §11 に従い初回 valid 率 ≥ 0.90。
+
+---
+
+## 17. v2: Consistency-stop（2026-10-09 事前登録、dev のみ先行。freeze/test はユーザー判断後）
+
+### 背景
+v1（§0〜16）の test 結果：Checklist-min/mean は正答率を保つが平均停止 Level 18.0 で、固定停止の凹包上に乗り、適応停止の利益なし（`.claude/docs/research/gqa-stop-v1-report.md`）。診断：停止信号が自己申告 confidence であり（DeCC, EMNLP 2024 が最も較正が悪いと示した信号。`.claude/docs/research/decc-paper.md`）、observer に元質問を渡しているため対象の存在確認が画像によらず yes になり（L1 で 32%、L5 で 61% が resolved）、全項目を 1 呼出しで答えるため項目が独立した証拠にならない。
+
+### 設計（DeCC の整合性原理を停止規則へ移植。再現ではない）
+各 Level・各質問で、元質問を渡さない独立した呼出しを行う。
+
+- **planner v2**（テキストのみ、元質問だけを見る）：{target: 対象名詞, synonyms: 最大 3 語, attribute: color|material|shape, referring_phrase: 名詞を伏せた指示句（例 "the object that is on the road"）または null（relate なし）} を 1 回生成し全 Level で固定。GQA の semantic/GT は渡さない。
+- **identify**（画像あり）：referring_phrase があれば "What is {referring_phrase}? Answer with the object name."、なければ "List the main objects visible in this image, up to five, as single nouns."。判定 a：正規化後の回答に target または synonyms が含まれるか（コード判定、単数化のみ）。
+- **attr_blind**（画像あり）："What {attribute} is {referring_phrase}?"。relate なしの場合は "What {attribute} is the {target}?" となり元質問と同義になる（退化を明記）。判定 b：正規化後の回答が共通 reader の回答と一致。
+- **recompose**（テキストのみ、画像なし、reader/direct の回答は見せない）：元質問と上記 2 つの QA ペアから短答を再構成。判定 c：正規化後の回答が共通 reader の回答と一致。
+- **共通 reader**：v1 と同一（prompt v2、同一 cache 可）。最終回答の採点に使用。
+
+停止スコア s(t) = a + b + c ∈ {0,1,2,3}。方策：s(t) ≥ θ が k 回連続した最初の Level で停止（θ ∈ {1,2,3}、k ∈ {1,2}、6 通りを dev で全列挙）。自己申告 confidence は停止に使わない（identify/attr_blind では要求しない）。
+
+### dev 先行の判断基準（ユーザー指示）
+dev 100 問（v1 と同一集合、再選別で同一性を検証）で全 20 Level を推論し、θ×k ごとに正答率・平均停止 Level・停止分布・「停止条件成立かつ誤答」の件数、成分 a/b/c の Level 別成立率、v1 Checklist-min と固定カーブとの比較を出す。v1 同様に Level 20 張り付き（0.95 を満たす設定の平均 ≥ 18）なら中止。閾値凍結と test はユーザー判断後に行う。
+
+### 実装
+- 新 run `visapp_gqa_v2`（`configs/gqa_stop_v2.json`）、data_root は v1 と共有（画像・split 凍結済み）、output_root は分離。
+- 役割 identify/attr_blind/recompose/planner_v2 と方式 consistency@{θ,k} を追加。既存 v1 役割・記録は変更しない。
+- `devgrid` コマンド：frozen_policy を書かずに dev の格子と分布を出力。test 側コマンドは v2 では凍結前に実行不可。
