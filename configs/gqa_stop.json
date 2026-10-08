@@ -18,7 +18,9 @@
       "final_argument_in": ["color", "material", "shape"],
       "max_relations": 2,
       "max_operations": 6,
-      "exclude_answer_word_in_question": true
+      "exclude_answer_word_in_question": true,
+      "exclude_negation": true,
+      "require_question_text_attribute_match": true
     },
     "stratification": {
       "cells": "attribute x relate_count{0,1}",
@@ -28,9 +30,9 @@
     },
     "max_questions_per_image": 2,
     "candidate_dev_questions": 300,
-    "candidate_dev_images_scan": 150,
+    "candidate_dev_images_scan": null,
     "candidate_test_questions": 800,
-    "candidate_test_images_scan": 400,
+    "candidate_test_images_scan": null,
     "target_dev_questions": 100,
     "target_test_questions": 200,
     "minimum_dev_questions": 30,

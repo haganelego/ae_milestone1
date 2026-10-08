@@ -504,3 +504,11 @@ dev 採用目標 100 問（候補枠 300 問、候補画像 150 枚相当）、t
 python -m milestone1.gqa_stop.cli probe --config configs/gqa_stop.json     # A3、prepare より前
 python -m milestone1.gqa_stop.cli pilot --split dev ... --calibration        # A4 の診断を含む
 ```
+
+### A2-bis（2026-10-08、推論前の明確化。A2 の候補走査規則を置換）
+
+- 画像走査上限は停止条件にしない。候補走査は画像を SHA256(`seed|image_id`) 順に歩き、全セルの候補枠が充足するか適格プールが尽きるまで続ける。`candidate_dev_images_scan` / `candidate_test_images_scan` は `null`（上限なし）とし、実際に走査した画像数は診断として記録するだけにする。dev を先に走査し、test は同じ hash 順で dev が止まった位置から続ける。dev で使った画像は test に使わない。
+- セル別候補枠：`dev_quota[c] = min(dev の設定比率枠, floor(cell_size[c] × f))`、`f = target_dev / (target_dev + target_test)`（現設定で 100/300 = 1/3。config から計算し、ハードコードしない）。`test_quota[c] = min(test の設定比率枠, cell_size[c] − dev_quota[c])`。`cell_size` は §3.1 の全規則と重複統合後の適格数。比率枠は最大剰余法による初期配分で、候補段階での再配分はしない。密なセルは比率枠で、希少セルは 1/3 分割で縛られる。そのため test は希少セルの候補枠の 2/3 以上を常に保持する。
+- 選別後の採用は A2 のまま（セルごと hash 順、不足の再配分順も同じ）。枠、セルサイズ、走査画像数、この規則を `dataset_flow.csv` と `worklog.md` に記録する。
+- 理由：適格数は material-r1 = 146、shape = 112（r0 76、r1 36）。150/400 枚の画像上限では、material-r1 の候補が dev 12 / test 14、shape が dev 11 / test 11 にとどまった。
+- 適用後の `prepare --dry-run`（モデル呼出しなし）：dev 265 問（使用 210 画像、走査 1,936 画像）。test 639 問（使用 480 画像、走査 3,531 画像、プールを走査し尽くした）。test の material-r1 は 98 枠中 89、shape-r0 は 51 枠中 46。この不足は、dev の走査範囲内にあって dev が採らなかった質問、および 1 画像 2 問の上限による。
