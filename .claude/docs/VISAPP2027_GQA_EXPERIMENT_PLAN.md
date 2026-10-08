@@ -512,3 +512,9 @@ python -m milestone1.gqa_stop.cli pilot --split dev ... --calibration        # A
 - 選別後の採用は A2 のまま（セルごと hash 順、不足の再配分順も同じ）。枠、セルサイズ、走査画像数、この規則を `dataset_flow.csv` と `worklog.md` に記録する。
 - 理由：適格数は material-r1 = 146、shape = 112（r0 76、r1 36）。150/400 枚の画像上限では、material-r1 の候補が dev 12 / test 14、shape が dev 11 / test 11 にとどまった。
 - 適用後の `prepare --dry-run`（モデル呼出しなし）：dev 265 問（使用 210 画像、走査 1,936 画像）。test 639 問（使用 480 画像、走査 3,531 画像、プールを走査し尽くした）。test の material-r1 は 98 枠中 89、shape-r0 は 51 枠中 46。この不足は、dev の走査範囲内にあって dev が採らなかった質問、および 1 画像 2 問の上限による。
+
+### A10. reader prompt v2（2026-10-08、probe 後・prepare 前の形式明確化）
+
+probe v1（§16 A3、reader のみ 198 問 × L1/5/10/20）の結果：全体正答率 0.37/0.41/0.51/0.58、L20 正答集合のうち L1 正答は 52%（color 32〜35%、material 50/64%、shape 64/73%）。どのセルも L1 ≥ 0.9 に該当せず、層化比率は据え置き（改訂枠は未使用）。
+L20 不一致 83 件のうち、rectangle/rectangular、triangle/triangular、circle/round、grey/gray、bricks/brick の語形違いが系統的に出た。§7.1 の完全一致評価では Level 間の語形の揺れが偽の誤答になるため、§8.1 の reader prompt に回答形式の 1 文（形状は形容詞形、gray の綴り、材質は単数名詞）を追加し v2 とする。
+これは §8 の「promptで短答形式を要求する」の範囲の形式指示であり、停止方式のデータを一切見ていない。§11 Phase B の prompt 改訂枠（planner/checklist の意味的改訂、最大 1 回）は消費しない。v1 は git 27e6993、probe v1 の記録は prompt hash 別に保存されたまま残す。probe は v2 で再実行し、以後の screening/全推論は v2 を用いる。
