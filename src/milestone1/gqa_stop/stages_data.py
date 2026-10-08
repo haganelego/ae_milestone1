@@ -11,7 +11,7 @@ from typing import Any
 import pandas as pd
 
 from . import dataset, sampling
-from .client import STATUS_VALID
+from .client import PARSE_VERSION, STATUS_VALID
 from .common import (
     StageError,
     atomic_write_json,
@@ -481,6 +481,7 @@ def screening_info(
         "model": ctx.settings.name,
         "digest": ctx.settings.digest,
         "reader_prompt_hash": ctx.prompts.hashes[READER_ROLE],
+        "parse_version": PARSE_VERSION,
         "prompt_hashes": ctx.prompts.hashes,
     }
 

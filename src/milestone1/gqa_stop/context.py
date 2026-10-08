@@ -14,6 +14,7 @@ import pandas as pd
 
 from . import dataset, sampling
 from .client import (
+    PARSE_VERSION,
     ModelSettings,
     OllamaTransport,
     PromptSet,
@@ -229,9 +230,21 @@ class Context:
             self.log(f"prompt revision {revisions}: hashes changed")
         for name, text in self.prompts.texts.items():
             atomic_write_text(self.paths.out(f"prompts/{name}.txt"), text)
+        old_parse = (previous or {}).get("parse_version", "parse-v1")
+        if previous is not None and old_parse != PARSE_VERSION:
+            self.log(
+                f"re-namespace: parser {old_parse} -> {PARSE_VERSION} "
+                "(a reply that is exactly one ```json fenced block is now unwrapped "
+                "before json.loads; previously such replies were format failures "
+                "and went through schema repair). New records live under "
+                f"<role>/<model>@<digest>/{PARSE_VERSION}/ and the parser version "
+                "is in the cache key, so no older record is reused; old records "
+                "stay on disk for provenance."
+            )
         atomic_write_json(
             hash_path,
             {
+                "parse_version": PARSE_VERSION,
                 "hashes": hashes,
                 "revisions": revisions,
                 "combined": sha256_text("".join(hashes[k] for k in sorted(hashes))),

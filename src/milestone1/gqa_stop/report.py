@@ -15,7 +15,7 @@ from typing import Any
 import matplotlib
 import pandas as pd
 
-from .client import model_tag
+from .client import record_tag
 from .common import (
     RunPaths,
     atomic_write_json,
@@ -497,7 +497,7 @@ def results_section(
         cats = pick_examples(stops, table, primary, int(cfg["seed"]))
         for cat, qids in cats.items():
             out.append(f"**{cat}**" + ("" if qids else ": none"))
-            tag = model_tag(cfg["model"]["name"], cfg["model"].get("digest"))
+            tag = record_tag(cfg["model"]["name"], cfg["model"].get("digest"))
             out.extend(example_block(paths, q, table, stops, tag) for q in qids)
     return out
 

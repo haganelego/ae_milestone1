@@ -123,7 +123,6 @@ def test_checklist_errors(items: list[dict], needle: str) -> None:
 
 def test_whole_content_must_be_json() -> None:
     fenced = "```json\n" + json.dumps({"answer": "red"}) + "\n```"
-    parsed, errors = parse_and_validate(fenced, validate_reader)
-    assert parsed is None and errors
+    assert parse_and_validate(fenced, validate_reader)[0] == {"answer": "red"}  # v2
     noisy = 'Sure: {"answer": "red"}'
     assert parse_and_validate(noisy, validate_reader)[0] is None

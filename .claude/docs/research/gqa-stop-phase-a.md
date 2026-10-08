@@ -123,3 +123,27 @@ All 12 items from the orchestrator's list are done. `tests/test_gqa_stop_review_
 10. **Model-tagged records.** Records live under `<role>/<model>@<digest12>/…`, and the model tag is in the cache key, so 9b and 4b records coexist.
 11. **Policy parameters.** `policy.start_level`, `consecutive_k` and `force_stop_level` are read through `policy_params`. Anything other than 1 / 1 / images.levels raises. The values are written into `frozen_policy.json` and used by evaluate.
 12. **Provenance.** Records carry the `stage` that created them. When a stage reuses records from another stage, `worklog.md` gets a provenance line, with an explicit note for probe records. Shared caching is kept.
+
+## Parser v2: fenced JSON (2026-10-09)
+
+**Why.** In the real dev run, qwen3.5:9b wrapped 737 of 759 first-attempt checklist replies in a single fenced
+block (```` ```json … ``` ````). Parser v1 called `json.loads` on the whole content, so each of these failed and
+went through the schema repair. Reader and direct replies were not fenced.
+
+**Changes.**
+- `client.PARSE_VERSION = "parse-v2"`. When the whole stripped content is exactly one fenced block, the fence
+  markers are removed and the entire inner text goes to `json.loads`. The opener may be ```` ```json ````,
+  ```` ``` ```` or a single-line form. Text around the fence, two fences, another language tag, or a non-JSON
+  inner text all still fail.
+- Records carry `fence_stripped`, `initial_valid` and `parse_version`.
+- `parse_version` is part of the cache key and the record directory (`<role>/<model>@<digest12>/parse-v2/…`).
+  No v1 record is reused, and v1 records stay on disk. The first engine start writes a re-namespace line to
+  worklog.md.
+- The screening state stores `parse_version`. `pilot`, `infer`, `freeze` and `evaluate` refuse a mismatch, so
+  `screen --split dev` must be re-run under v2.
+- Pilot summary reports `valid_rate_initial`, `valid_rate_after_repair` and `repair_rate` per role, counted
+  over calls actually made. The §11 format gate uses `valid_rate_initial`. The gate also refuses a pilot made
+  under another parser version.
+- Resume: a cached `schema_failure` record is final and is reused, not re-called. Only `transport_failure` is
+  re-called. Under v2 every key changes, so all old records are re-called.
+- Tests: new `tests/test_gqa_stop_parse.py`; the fake model now fences checklist replies. 179 tests pass.

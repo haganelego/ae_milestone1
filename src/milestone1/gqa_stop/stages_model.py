@@ -10,7 +10,7 @@ import pandas as pd
 
 from . import preflight as preflight_mod
 from .calibration import calibration_report
-from .client import model_tag
+from .client import PARSE_VERSION, model_tag
 from .common import (
     StageError,
     atomic_write_json,
@@ -158,19 +158,18 @@ def pilot(
             "calibration": calibration,
         },
     )
-    ctx.log(f"pilot done ({ctx.settings.name}): valid rates {summary['valid_rates']}")
+    ctx.log(
+        f"pilot done ({ctx.settings.name}): valid_rate_initial "
+        f"{summary['valid_rate_initial']} after_repair "
+        f"{summary['valid_rate_after_repair']} repair_rate {summary['repair_rate']}"
+    )
     ctx.note_reuse()
     return summary
 
 
 def pilot_summary(ctx: Context, table: pd.DataFrame, levels: Sequence[int]) -> dict:
     per_q = table.groupby("question_id").first()
-    rates = {
-        "reader": float((table["reader_status"] == VALID).mean()),
-        "direct": float((table["direct_status"] == VALID).mean()),
-        "checklist": float((table["check_status"] == VALID).mean()),
-        "planner": float((per_q["planner_status"] == VALID).mean()),
-    }
+    initial, after, repair = format_rates(table, per_q)
     reader_acc = table.groupby("level")["reader_correct"].mean()
     return {
         "model": ctx.settings.name,
@@ -180,9 +179,13 @@ def pilot_summary(ctx: Context, table: pd.DataFrame, levels: Sequence[int]) -> d
         "questions": int(table["question_id"].nunique()),
         "images": int(table["image_id"].nunique()),
         "levels": list(levels),
-        "valid_rates": rates,
+        "parse_version": PARSE_VERSION,
+        "valid_rate_initial": initial,
+        "valid_rate_after_repair": after,
+        "repair_rate": repair,
+        "format_gate_uses": "valid_rate_initial",
         "format_valid_target": FORMAT_VALID_TARGET,
-        "format_valid_ok": all(v >= FORMAT_VALID_TARGET for v in rates.values()),
+        "format_valid_ok": all(v >= FORMAT_VALID_TARGET for v in initial.values()),
         "reader_accuracy_by_level": {
             str(int(k)): float(v) for k, v in reader_acc.items()
         },
@@ -191,6 +194,37 @@ def pilot_summary(ctx: Context, table: pd.DataFrame, levels: Sequence[int]) -> d
         },
         "level1_headroom_note": "L1 reader accuracy >= 0.95 means little room to adapt",
     }
+
+
+ROLE_COLUMNS = {"reader": "reader", "direct": "direct", "checklist": "check"}
+NOT_CALLED = frozenset({"not_run", "planner_failure"})
+
+
+def format_rates(
+    table: pd.DataFrame, per_question: pd.DataFrame
+) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
+    """Per role over calls actually made: first-attempt valid rate, valid rate
+    after the single repair, and the share of calls that needed a repair."""
+    initial: dict[str, float] = {}
+    after: dict[str, float] = {}
+    repair: dict[str, float] = {}
+    frames = {
+        role: table[~table[f"{col}_status"].isin(NOT_CALLED)]
+        for role, col in ROLE_COLUMNS.items()
+    }
+    for role, col in ROLE_COLUMNS.items():
+        calls = frames[role]
+        if calls.empty:
+            continue
+        initial[role] = float(calls[f"{col}_initial_valid"].astype(bool).mean())
+        after[role] = float((calls[f"{col}_status"] == VALID).mean())
+        repair[role] = float((calls[f"{col}_attempts"] > 1).mean())
+    planner = per_question[per_question["planner_status"] != "not_run"]
+    if not planner.empty:
+        initial["planner"] = float(planner["planner_initial_valid"].astype(bool).mean())
+        after["planner"] = float((planner["planner_status"] == VALID).mean())
+        repair["planner"] = float((planner["planner_attempts"] > 1).mean())
+    return initial, after, repair
 
 
 # ---- infer -----------------------------------------------------------------------
@@ -215,6 +249,11 @@ def require_screening_match(ctx: Context, split: str) -> None:
             "screening model digest differs from the active model; re-screen"
         )
     require_reader_prompt(ctx, screening)
+    if screening.get("parse_version") != PARSE_VERSION:
+        raise StageError(
+            f"screening used parser {screening.get('parse_version')}, active is "
+            f"{PARSE_VERSION}: re-run `screen --split {split}`"
+        )
 
 
 def pilot_gate_failures(ctx: Context) -> list[str]:
@@ -227,8 +266,10 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
     summary = read_json(summary_path)
     if summary.get("prompt_hashes") != ctx.prompts.hashes:
         return ["prompts changed since the pilot: re-run `pilot --calibration`"]
+    if summary.get("parse_version") != PARSE_VERSION:
+        return ["parser changed since the pilot: re-run `pilot --calibration`"]
     failures: list[str] = []
-    rate = min(summary["valid_rates"].values())
+    rate = min(summary["valid_rate_initial"].values())  # §11 gate: first attempt
     revisions = int(read_json(ctx.paths.out("prompt_hashes.json")).get("revisions", 0))
     if rate < FORMAT_VALID_TARGET and revisions == 0:
         failures.append(

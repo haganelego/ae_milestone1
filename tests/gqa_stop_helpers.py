@@ -39,7 +39,8 @@ SHAPES = ("round", "square")
 OBJECTS = ("cup", "box", "sign", "chair", "plate", "bag")
 INPUT_MARKER = "Input data: "
 FAIL_PLAN_WORD = "kite"  # planner returns broken JSON for these questions
-FAIL_SCREEN_ANSWER = "glass"  # reader always wrong -> screening failure
+FAIL_SCREEN_ANSWER = "glass"
+FENCED_TEMPLATE = "```json\n{body}\n```"  # reader always wrong -> screening failure
 ROLE_PREFIX = {
     "You answer a question": "answer_only",
     "Answer the question about": "direct",
@@ -265,18 +266,27 @@ class FakeTransport:
                     ]
                 }
             )
-        return json.dumps(
-            {
-                "items": [
-                    {"id": "c1", "answer": "yes", "resolved": True, "confidence": 0.9},
-                    {
-                        "id": "c2",
-                        "answer": answer if solved else "unknown",
-                        "resolved": solved,
-                        "confidence": 0.96 if solved else 0.0,
-                    },
-                ]
-            }
+        # like qwen3.5:9b, the fake wraps checklist JSON in a ```json fence
+        return FENCED_TEMPLATE.format(
+            body=json.dumps(
+                {
+                    "items": [
+                        {
+                            "id": "c1",
+                            "answer": "yes",
+                            "resolved": True,
+                            "confidence": 0.9,
+                        },
+                        {
+                            "id": "c2",
+                            "answer": answer if solved else "unknown",
+                            "resolved": solved,
+                            "confidence": 0.96 if solved else 0.0,
+                        },
+                    ]
+                },
+                indent=2,
+            )
         )
 
 

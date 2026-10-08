@@ -283,6 +283,7 @@ class RequestEngine:
                 "model": self.settings.name,
                 "digest": self.settings.digest,
                 "model_tag": self.model_tag,
+                "parse_version": PARSE_VERSION,
                 "prompt_hash": self.prompts.hashes[spec.role],
                 "repair_prompt_hash": self._repair_hash(),
                 "input_hash": sha256_json(spec.input_data),
@@ -295,7 +296,11 @@ class RequestEngine:
         role_dir = ROLE_DIRS[spec.role] + (
             f"_{spec.namespace}" if spec.namespace else ""
         )
-        base = self.output_root / role_dir / self.model_tag
+        base = (
+            self.output_root
+            / role_dir
+            / record_tag(self.settings.name, self.settings.digest)
+        )
         if spec.level is None:
             return base / f"{spec.question_id}.json"
         return base / spec.question_id / f"{spec.level:02d}.json"
@@ -370,13 +375,16 @@ class RequestEngine:
                 break
             self.calls += 1
             raw = result.content
-            parsed, errors = parse_and_validate(raw, validator)
+            result_parse = parse_response(raw, validator)
+            parsed, errors = result_parse.parsed, result_parse.errors
+            fence_stripped = result_parse.fence_stripped
             status = STATUS_SCHEMA_FAILURE if errors else STATUS_VALID
             row = {
                 **row,
                 "status": status,
                 "errors": errors,
                 "raw": raw,
+                "fence_stripped": fence_stripped,
                 "http_attempts": result.http_attempts,
                 "elapsed_s": round(result.elapsed_s, 3),
                 "usage": result.usage,
@@ -453,6 +461,11 @@ class RequestEngine:
             "image_sha256": spec.image_sha256,
             "decoding": self.settings.decoding(spec.role),
             "model_tag": self.model_tag,
+            "parse_version": PARSE_VERSION,
+            "fence_stripped": bool(attempts and attempts[-1].get("fence_stripped")),
+            "initial_valid": bool(
+                attempts and attempts[0].get("status") == STATUS_VALID
+            ),
             "repair_prompt_hash": self._repair_hash(),
             "stage": self.stage,
             "status": status,
@@ -473,13 +486,68 @@ def model_tag(name: str, digest: str | None) -> str:
     return f"{safe}@{(digest or 'nodigest')[:SHORT_DIGEST_CHARS]}"
 
 
-def parse_and_validate(raw: str, validator: Validator) -> tuple[Any, list[str]]:
-    """``json.loads`` on the whole content; no fence stripping, no regex."""
+# Response parser version. Part of the cache key and of the record directory,
+# so records parsed under an older version are never reused.
+#   v1: json.loads on the whole stripped content.
+#   v2 (2026-10-09): if the whole content is exactly one fenced block
+#       (```json ... ``` or ``` ... ```), the fence markers are removed and the
+#       ENTIRE inner text goes to json.loads. Anything else (text around the
+#       fence, two fences, another language tag) is parsed as in v1 and fails.
+#       Reason: qwen3.5:9b fenced 737/759 first-attempt checklist replies,
+#       pushing nearly every checklist record through the repair path.
+PARSE_VERSION = "parse-v2"
+FENCE = "```"
+FENCE_LANGUAGE = "json"
+FENCES_IN_ONE_BLOCK = 2
+
+
+@dataclass(frozen=True)
+class ParseResult:
+    parsed: Any
+    errors: list[str]
+    fence_stripped: bool
+
+
+def strip_single_fence(raw: str) -> tuple[str, bool]:
+    """Unwrap content that is exactly one fenced block; otherwise unchanged."""
+    text = raw.strip()
+    single_block = (
+        text.startswith(FENCE)
+        and text.endswith(FENCE)
+        and len(text) >= FENCES_IN_ONE_BLOCK * len(FENCE)
+        and text.count(FENCE) == FENCES_IN_ONE_BLOCK
+    )
+    if not single_block:
+        return raw, False
+    inner = text[len(FENCE) : -len(FENCE)]
+    head, newline, rest = inner.partition("\n")
+    head = head.strip()
+    if head.lower().startswith(FENCE_LANGUAGE):
+        head = head[len(FENCE_LANGUAGE) :]
+    elif head and head[0] not in "{[":
+        return raw, False  # some other language tag: not our JSON block
+    return head + newline + rest, True
+
+
+def parse_response(raw: str, validator: Validator) -> ParseResult:
+    """``json.loads`` on the whole (single-fence-unwrapped) content; no regex."""
+    text, fence_stripped = strip_single_fence(raw)
     try:
-        obj = json.loads(raw)
+        obj = json.loads(text)
     except json.JSONDecodeError as exc:
-        return None, [f"invalid JSON: {exc.msg}"]
-    return validator(obj)
+        return ParseResult(None, [f"invalid JSON: {exc.msg}"], fence_stripped)
+    parsed, errors = validator(obj)
+    return ParseResult(parsed, errors, fence_stripped)
+
+
+def parse_and_validate(raw: str, validator: Validator) -> tuple[Any, list[str]]:
+    result = parse_response(raw, validator)
+    return result.parsed, result.errors
+
+
+def record_tag(name: str, digest: str | None) -> str:
+    """Record sub-directory: model tag plus parser version."""
+    return f"{model_tag(name, digest)}/{PARSE_VERSION}"
 
 
 def request_hash(payload: Mapping[str, Any]) -> str:

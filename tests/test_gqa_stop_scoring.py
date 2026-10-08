@@ -16,7 +16,7 @@ from gqa_stop_helpers import (
 )
 
 from milestone1.gqa_stop import stages_model
-from milestone1.gqa_stop.client import model_tag
+from milestone1.gqa_stop.client import record_tag
 from milestone1.gqa_stop.inference import (
     CacheMissError,
     aggregate,
@@ -130,7 +130,7 @@ def test_planner_failure_is_kept_and_forces_level_20(world) -> None:
     assert (table["checklist_min"] == 0).all() and (table["checklist_mean"] == 0).all()
     decision = replay_stop(table["checklist_min"].tolist(), 0.01)
     assert decision.level == 20 and decision.never_met
-    tag = model_tag(ctx.settings.name, ctx.settings.digest)
+    tag = record_tag(ctx.settings.name, ctx.settings.digest)
     plan_record = ctx.paths.out(f"plans/{tag}/{qid}.json")
     assert plan_record.exists()
 

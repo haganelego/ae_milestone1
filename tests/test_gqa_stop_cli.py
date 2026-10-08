@@ -235,6 +235,16 @@ def test_guards_after_freeze(pipeline) -> None:
         stages_model.freeze(ctx)
 
 
+def test_fenced_checklist_valid_on_first_attempt(pipeline) -> None:
+    ctx, _, _ = pipeline
+    summary = json.loads(ctx.paths.out("pilot_summary.json").read_text())
+    assert summary["valid_rate_initial"]["checklist"] == 1.0
+    assert summary["repair_rate"]["checklist"] == 0.0
+    assert summary["parse_version"] == "parse-v2"
+    checks = list(ctx.paths.out("checks").rglob("*.json"))
+    assert checks and all(json.loads(p.read_text())["fence_stripped"] for p in checks)
+
+
 def test_resume_makes_no_new_calls(pipeline) -> None:
     ctx, transport, _ = pipeline
     before = sum(transport.calls.values())

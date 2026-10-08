@@ -35,6 +35,8 @@ class PlanOutcome:
     question_id: str
     status: str
     items: list[dict[str, Any]] = field(default_factory=list)
+    initial_valid: bool = False  # valid on the first attempt (no repair)
+    attempts: int = 0
 
     @property
     def failed(self) -> bool:
@@ -46,6 +48,9 @@ class PlanOutcome:
 
 
 def plan_from_record(question_id: str, record: Mapping[str, Any]) -> PlanOutcome:
+    initial = bool(record.get("initial_valid"))
+    attempts = int(record.get("attempt", 0))
     if record.get("status") != STATUS_VALID or record.get("parsed") is None:
-        return PlanOutcome(question_id, PLANNER_FAILURE, [])
-    return PlanOutcome(question_id, STATUS_VALID, list(record["parsed"]["items"]))
+        return PlanOutcome(question_id, PLANNER_FAILURE, [], initial, attempts)
+    items = list(record["parsed"]["items"])
+    return PlanOutcome(question_id, STATUS_VALID, items, initial, attempts)

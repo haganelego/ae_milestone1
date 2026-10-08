@@ -13,6 +13,7 @@ import requests
 from gqa_stop_helpers import CONFIG_PATH, PROMPTS_DIR, raw_question
 
 from milestone1.gqa_stop.client import (
+    PARSE_VERSION,
     FailureMonitor,
     OllamaTransport,
     PauseRequired,
@@ -193,7 +194,7 @@ def test_record_fields(tmp_path: Path) -> None:
         "cache_key",
     ):
         assert key in record
-    path = tmp_path / "reader" / "qwen3.5-9b@abc" / "q1" / "03.json"
+    path = tmp_path / "reader" / "qwen3.5-9b@abc" / PARSE_VERSION / "q1" / "03.json"
     assert eng.record_path(reader_spec()) == path
     assert json.loads(path.read_text())["cache_key"] == record["cache_key"]
     rows = (tmp_path / "requests.jsonl").read_text().splitlines()

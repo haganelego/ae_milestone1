@@ -151,6 +151,11 @@ def level_row(
         "direct_confidence": direct_parsed.get("confidence"),
         "direct_status": _status(direct),
         "direct_score": float(direct_parsed.get("confidence", FAILED_SCORE)),
+        **attempt_columns("reader", reader),
+        **attempt_columns("direct", direct),
+        **attempt_columns("check", checks),
+        "planner_initial_valid": plan.initial_valid,
+        "planner_attempts": plan.attempts,
         "planner_status": plan.status,
         "n_items": len(plan.items),
         "check_status": _check_status(plan, checks),
@@ -158,6 +163,16 @@ def level_row(
         "unresolved_items": unresolved,
         "checklist_min": c_min,
         "checklist_mean": c_mean,
+    }
+
+
+def attempt_columns(prefix: str, record: Mapping[str, Any] | None) -> dict[str, Any]:
+    """First-attempt validity and attempt count (repair path made visible)."""
+    if record is None:
+        return {f"{prefix}_initial_valid": None, f"{prefix}_attempts": 0}
+    return {
+        f"{prefix}_initial_valid": bool(record.get("initial_valid")),
+        f"{prefix}_attempts": int(record.get("attempt", 0)),
     }
 
 

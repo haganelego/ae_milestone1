@@ -26,6 +26,7 @@ from PIL import Image
 
 from milestone1.gqa_stop import report, stages_data, stages_model
 from milestone1.gqa_stop.client import (
+    PARSE_VERSION,
     OllamaTransport,
     PromptSet,
     RequestEngine,
@@ -33,6 +34,7 @@ from milestone1.gqa_stop.client import (
     TransportResult,
     load_prompts,
     model_tag,
+    record_tag,
     settings_from_config,
 )
 from milestone1.gqa_stop.common import (
@@ -452,7 +454,12 @@ def write_gate_files(ctx, valid: float, passed: bool) -> None:
         ctx.paths.out(f"pilot/pilot_summary_{tag}.json"),
         {
             "prompt_hashes": ctx.prompts.hashes,
-            "valid_rates": {
+            "parse_version": PARSE_VERSION,
+            # after-repair is perfect: the gate must still use the initial rate
+            "valid_rate_after_repair": dict.fromkeys(
+                ("reader", "direct", "checklist", "planner"), 1.0
+            ),
+            "valid_rate_initial": {
                 "reader": 1.0,
                 "direct": valid,
                 "checklist": 1.0,
@@ -489,7 +496,7 @@ def test_dev_infer_enforces_format_and_calibration_gates(world) -> None:
 # ---- 10. fallback records coexist with primary records -----------------------------------------
 def test_fallback_pilot_does_not_overwrite_primary_records(world) -> None:
     ctx, *_ = screened(world)
-    primary_tag = model_tag(ctx.settings.name, ctx.settings.digest)
+    primary_tag = record_tag(ctx.settings.name, ctx.settings.digest)
     question = ctx.selected("dev")[0]
     primary_path = ctx.paths.out(
         f"reader/{primary_tag}/{question['question_id']}/20.json"
@@ -497,7 +504,7 @@ def test_fallback_pilot_does_not_overwrite_primary_records(world) -> None:
     assert primary_path.exists()
     before = primary_path.read_text()
     stages_model.pilot(ctx, [20], calibration=True, use_fallback=True)
-    fallback_tag = model_tag(ctx.settings.name, ctx.settings.digest)
+    fallback_tag = record_tag(ctx.settings.name, ctx.settings.digest)
     assert fallback_tag != primary_tag
     assert primary_path.read_text() == before
     assert ctx.paths.out(
