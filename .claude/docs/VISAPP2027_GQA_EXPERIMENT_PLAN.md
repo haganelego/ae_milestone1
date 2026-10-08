@@ -518,3 +518,7 @@ python -m milestone1.gqa_stop.cli pilot --split dev ... --calibration        # A
 probe v1（§16 A3、reader のみ 198 問 × L1/5/10/20）の結果：全体正答率 0.37/0.41/0.51/0.58、L20 正答集合のうち L1 正答は 52%（color 32〜35%、material 50/64%、shape 64/73%）。どのセルも L1 ≥ 0.9 に該当せず、層化比率は据え置き（改訂枠は未使用）。
 L20 不一致 83 件のうち、rectangle/rectangular、triangle/triangular、circle/round、grey/gray、bricks/brick の語形違いが系統的に出た。§7.1 の完全一致評価では Level 間の語形の揺れが偽の誤答になるため、§8.1 の reader prompt に回答形式の 1 文（形状は形容詞形、gray の綴り、材質は単数名詞）を追加し v2 とする。
 これは §8 の「promptで短答形式を要求する」の範囲の形式指示であり、停止方式のデータを一切見ていない。§11 Phase B の prompt 改訂枠（planner/checklist の意味的改訂、最大 1 回）は消費しない。v1 は git 27e6993、probe v1 の記録は prompt hash 別に保存されたまま残す。probe は v2 で再実行し、以後の screening/全推論は v2 を用いる。
+
+### A11. checklist prompt v2（2026-10-08、§11 Phase B の dev 改訂 1 回を使用、理由：形式不備）
+
+parser v2 導入後の pilot で checklist observer の初回形式 valid 率が 0.93（修復後 0.98）となり §11 の 0.95 を下回った。失敗 7/96 件の内訳は item の "id" 欠落 3、トップレベルが配列 3、項目省略 1。§8.4 の prompt に出力形式規則（"items" キーを持つオブジェクト、4 キー必須、id を入力どおり複写、全項目を返す、フェンス禁止、2 項目の例）のみを追加し v2 とした。意味的な指示は変更していない。これが §11 の dev prompt 改訂枠（最大 1 回）の使用であり、以後の改訂は不可。改訂後のゲートは §11 に従い初回 valid 率 ≥ 0.90。
