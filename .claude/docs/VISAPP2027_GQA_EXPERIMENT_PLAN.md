@@ -548,3 +548,34 @@ dev 100 問（v1 と同一集合、再選別で同一性を検証）で全 20 Le
 - 新 run `visapp_gqa_v2`（`configs/gqa_stop_v2.json`）、data_root は v1 と共有（画像・split 凍結済み）、output_root は分離。
 - 役割 identify/attr_blind/recompose/planner_v2 と方式 consistency@{θ,k} を追加。既存 v1 役割・記録は変更しない。
 - `devgrid` コマンド：frozen_policy を書かずに dev の格子と分布を出力。test 側コマンドは v2 では凍結前に実行不可。
+
+---
+
+## 18. v3: v1 の改良（2026-10-09 事前登録、dev 先行。freeze/test はユーザー判断後）
+
+### 18.1 評価集合の再定義（画像が必要な質問への限定）
+- 診断（dev 100 問、画像なしで同モデルに質問文だけを答えさせる）：40 問が画像なしで正解。Level 1 正答 56 問のうち 35 問がこれに該当し、固定停止の低 Level 正答率を押し上げていた。事前知識で当たる成功と、事前知識で外れる検出不能な誤答が同じ機構から出ており、「停止時点の正答」評価では前者だけが成功に数えられるという設計上の欠陥。
+- 新段階 `textprobe`：採用済み dev/test 全質問に対し、画像なし・質問文のみ（reader prompt の画像参照を除いた版、temperature 0）で 1 回回答し、正規化後 GT と一致した質問を **prior-answerable** として主評価から除外する。残りを **visual subset** と呼ぶ（dev 60 問、test は実測）。除外は一度だけ、方式の成績を見ずに行う。候補補充は行わない（ユーザー指示、dev 60 問で進める）。
+- v1 の公平化：v1 の凍結済み記録（キャッシュ）を visual subset に限定して θ を再凍結し test を再評価する（推論なし）。v3 の比較基準は Fixed（subset 上の凹包）、Direct-sampled、公平化 v1 Checklist-min。
+
+### 18.2 v3 の変更点（v1 の欠点 2・3・6 に対応。1・4・5・7・8 は据え置き）
+- **項目別・文脈なしの observer**（欠点 2・3）：各項目を独立した呼出しで答えさせる。入力は現在画像と当該項目の質問文のみ。元質問・他項目・他項目の回答は渡さない。出力は {answer, resolved, confidence} の 1 組。依存ゲート（親 unresolved → 子 0）はコード側で従来どおり適用。
+- **planner v3**：各項目をそれ単体で読める完結した質問にする（参照表現を項目内に含める。"it"、"If yes" のような他項目依存の書き方を禁止）。項目数 2〜3、最後の項目は対象の属性を問う、は v1 と同じ。項目 1 は存在確認型のまま（自由回答型は v2 と同一になるため採らない）。
+- **サンプリングによる confidence の連続化**（欠点 6）：各項目を N=5 回、temperature 0.7、seed=20261008+i で呼び、項目スコアを 2 種類事前登録する。
+  - S_mean = N 回の有効 confidence（resolved=false の回は 0）の平均。
+  - S_agree = N 回のうち「resolved=true かつ answer が N 回の多数派と一致」した割合。
+  - 停止スコアは項目スコアの min（mean も記録）。θ 格子 0.01 刻み＋∞、k=1、Level 20 強制停止は v1 と同じ。
+- **Direct-sampled**：Direct にも同じ N 回サンプリングを適用し、S_mean（confidence 平均）と S_agree（多数派一致率）を同じ定義で作る。分解の効果とサンプリングの効果を分離するための必須比較対象。
+- 方式：checklist_v3_min_smean、checklist_v3_min_sagree、direct_sampled_smean、direct_sampled_sagree（+ mean 集約は記録のみ）。
+
+### 18.3 pilot で確認する指標（dev visual subset の先頭 20 問 × Level 1/5/10/15/20）
+- 形式 valid 率（初回）≥ 0.95（§11 の規則をそのまま適用、dev prompt 改訂枠は v3 で新たに 1 回）。
+- 項目 1（存在確認）の resolved 率の Level 推移（v1 実測 L1 0.32 / L5 0.61 / L10 0.85 / L20 0.98 との比較）。欠点 2・3 の修正効果の直接指標。
+- S_mean・S_agree の Level 別分布（離散の崖が埋まったか）、Level 20 での未解決率（欠点 8 の変化）。
+- 否定プローブ（分析専用）：pilot 20 問の画像について、GQA シーングラフに存在しない物体名で項目 1 型の存在確認を Level 1/5/20 で 1 回ずつ行い、yes 率を記録する。主評価には用いない。
+
+### 18.4 判断
+dev 全 20 Level 推論後、devgrid（凍結なし）で 4 方式の格子・停止分布・成分推移を出す。0.95 を満たす設定の平均 Level が公平化 v1（期待 18.5 前後）から有意に下がらなければ中止。凍結と test はユーザー判断後。
+
+### 18.5 コスト
+1 問 1 Level あたり画像付き呼出し ≈ 項目数 × 5 + Direct 5 ≈ 17。dev 60 問で約 21,000 回（3〜5 時間）。
