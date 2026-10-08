@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from typing import Any
@@ -15,18 +16,22 @@ from .common import (
     StageError,
     atomic_write_json,
     read_json,
+    resolve_path,
     sha256_file,
     sha256_json,
     utc_now,
     write_effective_config,
 )
+from .consistency import ConsistencyRunner, planned_consistency_requests
 from .context import Context, require, table_to_csv
+from .devgrid import run_devgrid
 from .evaluate import add_correctness, evaluate
 from .inference import LEVEL_ROLES, READER_ROLE, planned_request_count
-from .policy import freeze_policy
+from .policy import consistency_variants, freeze_policy
 from .stages_data import write_dataset_flow
 
 VALID = "valid"
+CONSISTENCY = "consistency"
 FORMAT_VALID_TARGET = 0.95
 FORMAT_VALID_EXIT = 0.90
 
@@ -72,8 +77,12 @@ def level_table(
     cache_only: bool,
     roles: Sequence[str] = LEVEL_ROLES,
 ) -> pd.DataFrame:
-    runner = ctx.runner(cache_only=cache_only)
-    rows = [row for q in questions for row in runner.run_question(q, levels, roles)]
+    if ctx.family == CONSISTENCY:
+        v2 = ConsistencyRunner(ctx.engine(), ctx.series, cache_only=cache_only)
+        rows = [row for q in questions for row in v2.run_question(q, levels)]
+    else:
+        runner = ctx.runner(cache_only=cache_only)
+        rows = [row for q in questions for row in runner.run_question(q, levels, roles)]
     table = pd.DataFrame(rows)
     return add_correctness(table, ctx.gt([q["question_id"] for q in questions]))
 
@@ -126,12 +135,16 @@ def pilot(
         switch_to_fallback(ctx)
     count = int(ctx.cfg["execution"]["pilot_questions"])
     questions = ctx.selected("dev")[:count]
-    planned = planned_request_count(len(questions), len(levels), LEVEL_ROLES)
+    planned = planned_requests(ctx, len(questions), len(levels))
+    if ctx.family == CONSISTENCY and calibration:
+        ctx.echo(
+            "note: --calibration ignored for the consistency family (no confidence)"
+        )
+        calibration = False
     if ctx.dry_run:
         ctx.echo(
-            f"[dry-run] pilot: {len(questions)} questions x levels {list(levels)} -> "
-            f"{planned} requests (planner + reader/direct/checklist); "
-            f"calibration={calibration}"
+            f"[dry-run] pilot ({ctx.family}): {len(questions)} questions x levels "
+            f"{list(levels)} -> up to {planned} requests; calibration={calibration}"
         )
         return {"planned_requests": planned}
     table = level_table(ctx, questions, levels, cache_only=False)
@@ -140,6 +153,11 @@ def pilot(
     summary = pilot_summary(ctx, table, levels)
     atomic_write_json(ctx.paths.out(f"pilot/pilot_summary_{tag}.json"), summary)
     atomic_write_json(ctx.paths.out("pilot_summary.json"), summary)
+    if ctx.family == CONSISTENCY:
+        examples = pilot_examples(table, levels)
+        atomic_write_json(ctx.paths.out("pilot/pilot_examples.json"), examples)
+        for example in examples:
+            ctx.echo(json.dumps(example, ensure_ascii=False))
     if calibration:
         report = calibration_report(
             table,
@@ -169,7 +187,8 @@ def pilot(
 
 def pilot_summary(ctx: Context, table: pd.DataFrame, levels: Sequence[int]) -> dict:
     per_q = table.groupby("question_id").first()
-    initial, after, repair = format_rates(table, per_q)
+    columns = V2_ROLE_COLUMNS if ctx.family == CONSISTENCY else ROLE_COLUMNS
+    initial, after, repair = format_rates(table, per_q, columns)
     reader_acc = table.groupby("level")["reader_correct"].mean()
     return {
         "model": ctx.settings.name,
@@ -189,19 +208,70 @@ def pilot_summary(ctx: Context, table: pd.DataFrame, levels: Sequence[int]) -> d
         "reader_accuracy_by_level": {
             str(int(k)): float(v) for k, v in reader_acc.items()
         },
-        "n_items_distribution": {
-            str(k): int(v) for k, v in Counter(per_q["n_items"]).items()
-        },
+        "n_items_distribution": (
+            {str(k): int(v) for k, v in Counter(per_q["n_items"]).items()}
+            if "n_items" in per_q
+            else None
+        ),
+        "family": ctx.family,
         "level1_headroom_note": "L1 reader accuracy >= 0.95 means little room to adapt",
     }
 
 
 ROLE_COLUMNS = {"reader": "reader", "direct": "direct", "checklist": "check"}
-NOT_CALLED = frozenset({"not_run", "planner_failure"})
+V2_ROLE_COLUMNS = {
+    "reader": "reader",
+    "identify": "identify",
+    "attr_blind": "attr",
+    "recompose": "recompose",
+}
+NOT_CALLED = frozenset({"not_run", "planner_failure", "skipped"})
+EXAMPLE_COUNT = 5
+
+
+def planned_requests(ctx: Context, n_questions: int, n_levels: int) -> int:
+    if ctx.family == CONSISTENCY:
+        return planned_consistency_requests(n_questions, n_levels)
+    return planned_request_count(n_questions, n_levels, LEVEL_ROLES)
+
+
+def pilot_examples(table: pd.DataFrame, levels: Sequence[int]) -> list[dict[str, Any]]:
+    """First questions' planner_v2 output and identify answers at min/max level."""
+    low, high = min(levels), max(levels)
+    examples = []
+    for qid in list(dict.fromkeys(table["question_id"]))[:EXAMPLE_COUNT]:
+        rows = table[table["question_id"] == qid].set_index("level")
+        first = rows.iloc[0]
+        examples.append(
+            {
+                "question_id": qid,
+                "question": first["question"],
+                "planner_status": first["planner_status"],
+                "target": first["target"],
+                "synonyms": first["synonyms"],
+                "attribute": first["plan_attribute"],
+                "referring_phrase": first["referring_phrase"],
+                "identify_question": first["identify_question"],
+                "attr_question": first["attr_question"],
+                **{
+                    f"L{t}": {
+                        "identify": rows.loc[t, "identify_answer"],
+                        "attr_blind": rows.loc[t, "attr_answer"],
+                        "recompose": rows.loc[t, "recompose_answer"],
+                        "reader": rows.loc[t, "reader_answer"],
+                        "abc": [bool(rows.loc[t, x]) for x in ("a", "b", "c")],
+                    }
+                    for t in (low, high)
+                },
+            }
+        )
+    return examples
 
 
 def format_rates(
-    table: pd.DataFrame, per_question: pd.DataFrame
+    table: pd.DataFrame,
+    per_question: pd.DataFrame,
+    role_columns: Mapping[str, str] = ROLE_COLUMNS,
 ) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
     """Per role over calls actually made: first-attempt valid rate, valid rate
     after the single repair, and the share of calls that needed a repair."""
@@ -210,9 +280,9 @@ def format_rates(
     repair: dict[str, float] = {}
     frames = {
         role: table[~table[f"{col}_status"].isin(NOT_CALLED)]
-        for role, col in ROLE_COLUMNS.items()
+        for role, col in role_columns.items()
     }
-    for role, col in ROLE_COLUMNS.items():
+    for role, col in role_columns.items():
         calls = frames[role]
         if calls.empty:
             continue
@@ -261,7 +331,8 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
     tag = active_tag(ctx)
     summary_path = ctx.paths.out(f"pilot/pilot_summary_{tag}.json")
     calib_path = ctx.paths.out(f"pilot/pilot_calibration_{tag}.json")
-    if not summary_path.exists() or not calib_path.exists():
+    needs_calibration = ctx.family != CONSISTENCY  # §17 uses no confidence
+    if not summary_path.exists() or (needs_calibration and not calib_path.exists()):
         return [f"no pilot with --calibration for the active model {tag}"]
     summary = read_json(summary_path)
     if summary.get("prompt_hashes") != ctx.prompts.hashes:
@@ -281,7 +352,7 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
             f"format-valid rate {rate:.3f} < {FORMAT_VALID_EXIT} after a prompt "
             "revision: §11 exit branch (model/method unsuitable; end with pilot report)"
         )
-    if not read_json(calib_path)["gate_passed"]:
+    if needs_calibration and not read_json(calib_path)["gate_passed"]:
         switch = ctx.state.get("model_switch") or {}
         if not switch.get("active"):
             failures.append(
@@ -324,7 +395,7 @@ def infer(
     if split == "dev":
         enforce_pilot_gates(ctx, force_continue)
     questions = ctx.selected(split)
-    planned = planned_request_count(len(questions), len(levels), LEVEL_ROLES)
+    planned = planned_requests(ctx, len(questions), len(levels))
     if ctx.dry_run:
         ctx.echo(
             f"[dry-run] infer {split}: {len(questions)} questions x {len(levels)} levels "
@@ -377,6 +448,11 @@ def provenance(ctx: Context) -> dict[str, Any]:
 
 def freeze(ctx: Context) -> dict[str, Any]:
     ctx.set_stage("freeze")
+    if ctx.family == CONSISTENCY:
+        raise StageError(
+            "freeze is not available for the consistency family (plan §17: threshold "
+            "freezing and test wait for the user's decision); use `devgrid`"
+        )
     require_screening_match(ctx, "dev")
     require(
         bool((ctx.state.get("infer") or {}).get("dev", {}).get("complete")),
@@ -430,4 +506,36 @@ def run_evaluate(ctx: Context) -> dict[str, Any]:
     ctx.log(
         f"evaluate done: {summary['n_questions']} questions, {summary['n_images']} images"
     )
+    return summary
+
+
+# ---- v2 dev grid (plan §17) ----------------------------------------------------------
+def devgrid(ctx: Context) -> dict[str, Any]:
+    """Dev-only θ x k grid, stop histograms and component rates; never freezes."""
+    ctx.set_stage("devgrid")
+    require(ctx.family == CONSISTENCY, "devgrid is for the consistency family only")
+    require_screening_match(ctx, "dev")
+    require(
+        bool((ctx.state.get("infer") or {}).get("dev", {}).get("complete")),
+        "dev `infer --levels all` must complete before devgrid",
+    )
+    variants = consistency_variants(ctx.cfg["policy"], ctx.n_levels)
+    if ctx.dry_run:
+        ctx.echo(
+            f"[dry-run] devgrid: {[v.label for v in variants]} on dev; no model calls"
+        )
+        return {}
+    table = full_table(ctx, "dev")
+    table_to_csv(table, split_table_path(ctx, "dev"))
+    comparison = ctx.cfg.get("comparison", {}).get("v1_output_root")
+    v1_root = resolve_path(ctx.paths.repo_root, comparison) if comparison else None
+    target = float(ctx.cfg["policy"]["primary_dev_accuracy_target"])
+    summary = run_devgrid(table, variants, target, ctx.paths.output_root, v1_root)
+    ctx.state.set(
+        "devgrid", {"done": True, "time": utc_now(), "abort": summary["abort"]}
+    )
+    ctx.log(
+        f"devgrid: best={summary['best_feasible_variant']} abort={summary['abort']}"
+    )
+    ctx.note_reuse()
     return summary

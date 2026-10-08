@@ -30,6 +30,7 @@ COMMANDS = (
     "freeze",
     "evaluate",
     "report",
+    "devgrid",
 )
 
 
@@ -94,6 +95,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return stages_model.freeze(ctx)
     if command == "evaluate":
         return stages_model.run_evaluate(ctx)
+    if command == "devgrid":
+        return stages_model.devgrid(ctx)
     if ctx.dry_run:
         ctx.echo(f"[dry-run] report -> {ctx.paths.out('report.md')}")
         return None

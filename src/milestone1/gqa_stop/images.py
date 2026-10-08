@@ -88,7 +88,9 @@ class ImageSeries:
         images_root: Path,
         levels_dir: Path,
         manifest_path: Path,
+        read_only: bool = False,
     ) -> None:
+        self.read_only = read_only  # inherited data_root: never write images
         self.n_levels = int(images_cfg["levels"])
         self.scale_min = float(images_cfg["scale_min"])
         self.scale_max = float(images_cfg["scale_max"])
@@ -108,8 +110,15 @@ class ImageSeries:
         """Generate every level if any file is missing; returns manifest rows."""
         wanted = sorted(set(levels))
         if not self._complete(image_id):
-            self._generate(image_id)
+            self._generate_checked(image_id)
         return [self.row(image_id, t) for t in wanted]
+
+    def _generate_checked(self, image_id: str) -> None:
+        if self.read_only:
+            raise RuntimeError(
+                f"image series is read-only; {image_id} needs generation"
+            )
+        self._do_generate(image_id)
 
     def _complete(self, image_id: str) -> bool:
         entry = self._images.get(image_id)
@@ -117,7 +126,7 @@ class ImageSeries:
             return False
         return all(Path(lv["path"]).exists() for lv in entry["levels"])
 
-    def _generate(self, image_id: str) -> None:
+    def _do_generate(self, image_id: str) -> None:
         source = self.source_path(image_id)
         base = make_base(source, self.max_side)
         with Image.open(source) as original:
@@ -166,7 +175,7 @@ class ImageSeries:
         data = self.path(image_id, level).read_bytes()
         if sha256_bytes(data) == self.row(image_id, level)["sha256"]:
             return data
-        self._generate(image_id)
+        self._generate_checked(image_id)
         data = self.path(image_id, level).read_bytes()
         if sha256_bytes(data) != self.row(image_id, level)["sha256"]:
             raise RuntimeError(f"level image hash mismatch: {image_id} L{level}")

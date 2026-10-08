@@ -1,0 +1,219 @@
+{
+  "spec_version": "1.1+\u00a717",
+  "run_id": "visapp_gqa_v2",
+  "seed": 20261008,
+  "paths": {
+    "repo_root": "/home/kanaoka/usr/github/milestone_1",
+    "gqa_questions": "/home/kanaoka/usr/dataset/gqa/val_balanced_questions.json",
+    "gqa_images_root": "/home/kanaoka/usr/dataset/vg/images",
+    "data_root": "data/processed/gqa_stop/visapp_gqa_v1",
+    "output_root": "outputs/gqa_stop/visapp_gqa_v2",
+    "selection_root": "data/processed/gqa_stop/visapp_gqa_v2",
+    "inherit_split_from": "outputs/gqa_stop/visapp_gqa_v1",
+    "reuse_records_from": {
+      "output_root": "outputs/gqa_stop/visapp_gqa_v1",
+      "roles": [
+        "answer_only"
+      ]
+    }
+  },
+  "dataset": {
+    "source": "gqa_validation_balanced",
+    "filter": {
+      "structural": "query",
+      "semantic_type": "attr",
+      "final_operation": "query",
+      "final_argument_in": [
+        "color",
+        "material",
+        "shape"
+      ],
+      "max_relations": 2,
+      "max_operations": 6,
+      "exclude_answer_word_in_question": true,
+      "exclude_negation": true,
+      "require_question_text_attribute_match": true
+    },
+    "stratification": {
+      "cells": "attribute x relate_count{0,1}",
+      "attribute_share": {
+        "color": 0.4,
+        "material": 0.4,
+        "shape": "all_up_to_0.20"
+      },
+      "relate_share_within_attribute": {
+        "0": 0.5,
+        "1": 0.5
+      },
+      "shortfall_order": [
+        "same_attribute_other_relate",
+        "other_attributes_proportional"
+      ]
+    },
+    "max_questions_per_image": 2,
+    "candidate_dev_questions": 300,
+    "candidate_dev_images_scan": null,
+    "candidate_test_questions": 800,
+    "candidate_test_images_scan": null,
+    "target_dev_questions": 100,
+    "target_test_questions": 200,
+    "minimum_dev_questions": 30,
+    "minimum_dev_images": 20,
+    "minimum_test_questions": 100,
+    "minimum_test_images": 60,
+    "reserve_batch_images": 100,
+    "max_reserve_batches_total": 4,
+    "screening_role": "answer_only",
+    "reuse_screening_as_level20_reader": true,
+    "screening_repeat_dev_questions": 20
+  },
+  "probe": {
+    "enabled": true,
+    "questions_per_cell": 33,
+    "levels": [
+      1,
+      5,
+      10,
+      20
+    ],
+    "role": "answer_only",
+    "max_filter_revisions": 1
+  },
+  "images": {
+    "levels": 20,
+    "scale_min": 0.05,
+    "scale_max": 1.0,
+    "scale_schedule": "geometric",
+    "base_max_side": 512,
+    "base_resize": "lanczos",
+    "degradation_resize": "bilinear",
+    "small_dimension_rounding": "floor_min_1",
+    "format": "PNG",
+    "transport_reencode": false
+  },
+  "model": {
+    "provider": "ollama",
+    "endpoint": "http://localhost:11434/api/chat",
+    "name": "qwen3.5:9b",
+    "digest": null,
+    "fallback_name": "qwen3.5:4b",
+    "fallback_digest": null,
+    "temperature": 0.0,
+    "seed": 20261008,
+    "think": false,
+    "format": "json",
+    "num_ctx": 8192,
+    "num_predict": {
+      "answer_only": 128,
+      "direct": 256,
+      "planner": 1024,
+      "checklist": 1024,
+      "planner_v2": 512,
+      "identify": 128,
+      "attr_blind": 128,
+      "recompose": 128
+    },
+    "request_timeout_seconds": 300,
+    "transport_retries": 2,
+    "schema_repair_attempts": 1
+  },
+  "policy": {
+    "family": "consistency",
+    "methods": [
+      "consistency"
+    ],
+    "thetas": [
+      1,
+      2,
+      3
+    ],
+    "consecutive_k_values": [
+      1,
+      2
+    ],
+    "start_level": 1,
+    "consecutive_k": 1,
+    "force_stop_level": 20,
+    "primary_dev_accuracy_target": 0.95,
+    "secondary_dev_accuracy_targets": [
+      0.9,
+      0.97,
+      0.99
+    ],
+    "selection_order": [
+      "min_mean_level",
+      "max_accuracy",
+      "max_threshold",
+      "max_k"
+    ],
+    "abort_if_feasible_mean_level_at_least": 18
+  },
+  "evaluation": {
+    "common_reader": "answer_only",
+    "normalization": [
+      "NFKC",
+      "lowercase",
+      "strip",
+      "collapse_whitespace"
+    ],
+    "match": "exact",
+    "fixed_levels": "1..20",
+    "fixed_representative_levels": [
+      5,
+      10,
+      15,
+      20
+    ],
+    "fixed_reference": "concave_hull",
+    "fixed_reference_secondary": "adjacent_mix",
+    "bootstrap_unit": "image",
+    "bootstrap_repeats": 2000,
+    "bootstrap_seed": 20261008,
+    "confidence_interval": 0.95,
+    "accuracy_noninferiority_margin": 0.05,
+    "compute_cost_is_research_metric": false
+  },
+  "execution": {
+    "pilot_questions": 20,
+    "pilot_levels": [
+      1,
+      5,
+      10,
+      15,
+      20
+    ],
+    "calibration_gate": {
+      "min_spearman": 0.3,
+      "max_level1_mean_confidence": 0.8,
+      "early_overconfidence_threshold": 0.8,
+      "fallback_model_allowed_at_pilot_only": true
+    },
+    "max_dev_prompt_revisions": 1,
+    "no_test_tuning": true,
+    "pause_on_consecutive_technical_errors": 10,
+    "pause_error_window": 100,
+    "pause_error_fraction": 0.05
+  },
+  "prompts": {
+    "roles": [
+      "answer_only",
+      "planner_v2",
+      "identify",
+      "attr_blind",
+      "recompose"
+    ]
+  },
+  "comparison": {
+    "v1_output_root": "outputs/gqa_stop/visapp_gqa_v1",
+    "v1_method": "checklist_min"
+  },
+  "checklist": {
+    "min_items": 2,
+    "max_items": 3,
+    "question_only_planning": true,
+    "fixed_across_levels": true,
+    "all_items_required": true,
+    "unknown_effective_confidence": 0.0,
+    "unresolved_ancestor_effective_confidence": 0.0
+  }
+}

@@ -15,6 +15,7 @@ import pandas as pd
 from . import dataset, sampling
 from .client import (
     PARSE_VERSION,
+    ROLES,
     ModelSettings,
     OllamaTransport,
     PromptSet,
@@ -33,6 +34,7 @@ from .common import (
     atomic_write_text,
     read_json,
     read_jsonl,
+    resolve_path,
     sha256_text,
 )
 from .images import ImageSeries
@@ -123,7 +125,7 @@ class Context:
         return [r for r in rows if split is None or r["split"] == split]
 
     def selected(self, split: str) -> list[dict[str, Any]]:
-        rows = read_jsonl(self.paths.data("selected_manifest.jsonl"))
+        rows = read_jsonl(self.paths.selection("selected_manifest.jsonl"))
         return [r for r in rows if r["split"] == split]
 
     # ---- model ----------------------------------------------------------
@@ -131,9 +133,28 @@ class Context:
     def settings(self) -> ModelSettings:
         return settings_from_config(self.cfg)
 
+    @property
+    def family(self) -> str:
+        """Stop-method family: "confidence" (v1, plan §0-16) or "consistency" (§17)."""
+        return str(self.cfg["policy"].get("family", "confidence"))
+
+    @property
+    def inherit_root(self) -> Path | None:
+        """Output root of the run whose frozen split this run inherits (v2)."""
+        value = self.cfg["paths"].get("inherit_split_from")
+        return resolve_path(self.paths.repo_root, value) if value else None
+
+    @property
+    def split_frozen(self) -> bool:
+        if self.state.get("prepare"):
+            return True
+        inherited = self.inherit_root is not None
+        return inherited and self.paths.data("candidate_manifest.jsonl").exists()
+
     @cached_property
     def prompts(self) -> PromptSet:
-        return load_prompts(self.paths.prompts_dir)
+        roles = self.cfg.get("prompts", {}).get("roles", list(ROLES))
+        return load_prompts(self.paths.prompts_dir, roles)
 
     @cached_property
     def series(self) -> ImageSeries:
@@ -142,6 +163,7 @@ class Context:
             self.paths.images_root,
             self.paths.levels_dir,
             self.paths.data("image_manifest.jsonl"),
+            read_only=self.inherit_root is not None,
         )
 
     def engine(self) -> RequestEngine:
@@ -159,9 +181,17 @@ class Context:
             self.transport_factory(self.settings),
             self.paths.output_root,
             monitor_from_config(self.cfg),
+            *self._reuse_settings(),
         )
         self._engine.stage = self.stage
         return self._engine
+
+    def _reuse_settings(self) -> tuple[Path | None, frozenset[str]]:
+        reuse = self.cfg["paths"].get("reuse_records_from")
+        if not reuse:
+            return None, frozenset()
+        root = resolve_path(self.paths.repo_root, reuse["output_root"])
+        return root, frozenset(reuse["roles"])
 
     def verify_live_digest(self) -> None:
         """The server's current digest for the model must equal the recorded one."""

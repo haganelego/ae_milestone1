@@ -115,6 +115,64 @@ def online_stop(
     return StopDecision(max_level, True, False, max_level)
 
 
+def online_stop_consecutive(
+    score_at: Callable[[int], float],
+    theta: float,
+    k: int,
+    max_level: int,
+    start_level: int = 1,
+) -> StopDecision:
+    """First t where score >= theta held at k consecutive levels ending at t.
+
+    Reads score(t) lazily in increasing t (prefix only); k = 1 equals online_stop.
+    """
+    run = 0
+    for level in range(start_level, max_level + 1):
+        run = run + 1 if score_at(level) >= theta else 0
+        if run >= k:
+            return StopDecision(level, False, level == max_level, max_level)
+    return StopDecision(max_level, True, False, max_level)
+
+
+CONSISTENCY_THETAS = frozenset({1, 2, 3})
+CONSISTENCY_KS = frozenset({1, 2})
+
+
+@dataclass(frozen=True)
+class ConsistencyVariant:
+    theta: int
+    k: int
+
+    @property
+    def label(self) -> str:
+        return f"consistency@theta{self.theta}_k{self.k}"
+
+
+def consistency_variants(
+    policy_cfg: Mapping[str, Any], n_levels: int
+) -> list[ConsistencyVariant]:
+    """θ x k grid of plan §17. Only this family may use k = 2 (v1 stays k = 1)."""
+    start = int(policy_cfg["start_level"])
+    last = int(policy_cfg["force_stop_level"])
+    thetas = [int(t) for t in policy_cfg["thetas"]]
+    ks = [int(k) for k in policy_cfg["consecutive_k_values"]]
+    if start != SUPPORTED_START_LEVEL:
+        raise ValueError(f"start_level must be 1, got {start}")
+    if last != n_levels:
+        raise ValueError(f"force_stop_level ({last}) must equal images.levels")
+    if not set(thetas) <= CONSISTENCY_THETAS or not set(ks) <= CONSISTENCY_KS:
+        raise ValueError(f"thetas {thetas} / k {ks} outside the §17 grid")
+    return [ConsistencyVariant(t, k) for t in thetas for k in ks]
+
+
+def replay_stop_consecutive(
+    scores: Sequence[float], variant: ConsistencyVariant
+) -> StopDecision:
+    return online_stop_consecutive(
+        lambda t: scores[t - 1], variant.theta, variant.k, len(scores)
+    )
+
+
 def replay_stop(
     scores: Sequence[float],
     theta: float,

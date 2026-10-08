@@ -12,6 +12,7 @@ import base64
 import copy
 import hashlib
 import json
+import re
 import shutil
 from collections import Counter
 from pathlib import Path
@@ -41,6 +42,15 @@ INPUT_MARKER = "Input data: "
 FAIL_PLAN_WORD = "kite"  # planner returns broken JSON for these questions
 FAIL_SCREEN_ANSWER = "glass"
 FENCED_TEMPLATE = "```json\n{body}\n```"  # reader always wrong -> screening failure
+# v2 roles share the reader's first sentence, so they are recognised by a
+# distinctive phrase first (checked before ROLE_PREFIX).
+V2_ROLE_MARKERS = (
+    ("without seeing the image", "recompose"),
+    ("object names as single common nouns", "identify"),
+    ("Answer only from what is visible", "attr_blind"),
+    ("You extract referring information", "planner_v2"),
+)
+SCENE_RE = re.compile(r"the (\w+)( on the table)? in scene (\d+)")
 ROLE_PREFIX = {
     "You answer a question": "answer_only",
     "Answer the question about": "direct",
@@ -210,35 +220,111 @@ def solve_level(text: str) -> int:
 class FakeTransport:
     """Pretends to be ollama; records every payload it receives."""
 
-    def __init__(self, paths: RunPaths, answers_by_text: dict[str, str]) -> None:
+    def __init__(
+        self,
+        paths: RunPaths,
+        answers_by_text: dict[str, str],
+        raw_questions: dict[str, dict[str, Any]] | None = None,
+    ) -> None:
         self.paths = paths
         self.answers = answers_by_text
+        self.by_image: dict[str, list[dict[str, Any]]] = {}
+        for raw in (raw_questions or {}).values():
+            ops = [op["operation"].split(" ")[0] for op in raw["semantic"]]
+            self.by_image.setdefault(str(raw["imageId"]), []).append(
+                {
+                    "text": raw["question"],
+                    "attribute": raw["semantic"][-1]["argument"],
+                    "relate": "relate" in ops,
+                    "object": raw["semantic"][0]["argument"].split(" (")[0],
+                }
+            )
         self.payloads: list[dict[str, Any]] = []
         self.calls: Counter[str] = Counter()
         self.broken: set[tuple[str, int]] = set()  # (role, level) -> invalid JSON
 
     def level_of(self, payload: dict[str, Any]) -> int | None:
+        return self.image_level_of(payload)[1]
+
+    def image_level_of(self, payload: dict[str, Any]) -> tuple[str | None, int | None]:
         images = payload["messages"][0].get("images")
         if not images:
-            return None
+            return None, None
         digest = hashlib.sha256(base64.b64decode(images[0])).hexdigest()
         for entry in read_jsonl(self.paths.data("image_manifest.jsonl")):
             for level in entry["levels"]:
                 if level["sha256"] == digest:
-                    return int(level["level"])
+                    return entry["image_id"], int(level["level"])
         raise AssertionError("image bytes not in manifest")
+
+    def role_of(self, content: str) -> str:
+        for marker, role in V2_ROLE_MARKERS:
+            if marker in content:
+                return role
+        return next(r for p, r in ROLE_PREFIX.items() if content.startswith(p))
 
     def send(self, payload: dict[str, Any]) -> TransportResult:
         self.payloads.append(payload)
         content = payload["messages"][0]["content"]
-        role = next(r for p, r in ROLE_PREFIX.items() if content.startswith(p))
+        role = self.role_of(content)
         self.calls[role] += 1
         data = json.loads(content.split(INPUT_MARKER, 1)[1])
-        level = self.level_of(payload)
+        image_id, level = self.image_level_of(payload)
         if (role, level) in self.broken:
             return TransportResult("not json", 1, 0.0)
+        if role in {"planner_v2", "identify", "attr_blind", "recompose"}:
+            return TransportResult(self.reply_v2(role, data, image_id, level), 1, 0.0)
         reply = self.reply(role, data, level)
         return TransportResult(reply, 1, 0.0)
+
+    def original_for(self, image_id: str, sub_question: str) -> dict[str, Any]:
+        """The image's question a sub-question was derived from (fake bookkeeping)."""
+        relate = "on the table" in sub_question
+        attribute = next(
+            (a for a in ("color", "material", "shape") if a in sub_question), None
+        )
+        options = [
+            q
+            for q in self.by_image[image_id]
+            if q["relate"] == relate
+            and (attribute is None or q["attribute"] == attribute)
+        ]
+        return (options or self.by_image[image_id])[0]
+
+    def reply_v2(
+        self, role: str, data: dict[str, Any], image_id: str | None, level: int | None
+    ) -> str:
+        if role == "planner_v2":
+            text = data["question"]
+            match = SCENE_RE.search(text)
+            attribute = next(a for a in ("color", "material", "shape") if a in text)
+            phrase = (
+                f"the object that is on the table in scene {match.group(3)}"
+                if match and match.group(2)
+                else None
+            )
+            target = match.group(1) if match else "object"
+            return json.dumps(
+                {
+                    "target": target,
+                    "synonyms": [],
+                    "attribute": attribute,
+                    "referring_phrase": phrase,
+                }
+            )
+        if role == "recompose":
+            return json.dumps({"answer": data["observations"][1]["answer"]})
+        original = self.original_for(str(image_id), data["question"])
+        solved = level is not None and level >= solve_level(original["text"])
+        if role == "identify":
+            noun = original["object"]
+            listing = data["question"].startswith("List")
+            answer = (f"{noun}s, table" if listing else noun) if solved else "blob"
+            return json.dumps({"answer": answer})
+        gt = self.answers[original["text"]]
+        return json.dumps(
+            {"answer": gt if solved and gt != FAIL_SCREEN_ANSWER else "purple"}
+        )
 
     def reply(self, role: str, data: dict[str, Any], level: int | None) -> str:
         text = data["question"]

@@ -12,7 +12,7 @@ import base64
 import json
 import time
 from collections import Counter, deque
-from collections.abc import Callable, Mapping
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
@@ -31,12 +31,17 @@ from .common import (
 )
 
 ROLES = ("answer_only", "direct", "planner", "checklist")
+V2_ROLES = ("planner_v2", "identify", "attr_blind", "recompose")  # plan §17
 REPAIR_PROMPT = "schema_repair"
 ROLE_DIRS = {
     "answer_only": "reader",
     "direct": "direct",
     "planner": "plans",
     "checklist": "checks",
+    "planner_v2": "plans_v2",
+    "identify": "identify",
+    "attr_blind": "attr_blind",
+    "recompose": "recompose",
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"
@@ -125,8 +130,9 @@ class PromptSet:
         return {k: sha256_text(v) for k, v in self.texts.items()}
 
 
-def load_prompts(prompts_dir: Path) -> PromptSet:
-    names = (*ROLES, REPAIR_PROMPT)
+def load_prompts(prompts_dir: Path, roles: Sequence[str] = ROLES) -> PromptSet:
+    """Prompt texts for ``roles`` plus the schema-repair prompt."""
+    names = (*roles, REPAIR_PROMPT)
     return PromptSet({n: (prompts_dir / f"{n}.txt").read_text("utf-8") for n in names})
 
 
@@ -258,7 +264,14 @@ class RequestEngine:
         transport: Transport,
         output_root: Path,
         monitor: FailureMonitor | None = None,
+        reuse_root: Path | None = None,
+        reuse_roles: frozenset[str] = frozenset(),
     ) -> None:
+        self.reuse_root = (
+            reuse_root  # another run whose identical records may be copied
+        )
+        self.reuse_roles = reuse_roles
+        self.copied = 0
         self.settings = settings
         self.prompts = prompts
         self.transport = transport
@@ -284,6 +297,7 @@ class RequestEngine:
                 "digest": self.settings.digest,
                 "model_tag": self.model_tag,
                 "parse_version": PARSE_VERSION,
+                **self._schema_key(spec.role),
                 "prompt_hash": self.prompts.hashes[spec.role],
                 "repair_prompt_hash": self._repair_hash(),
                 "input_hash": sha256_json(spec.input_data),
@@ -329,6 +343,12 @@ class RequestEngine:
     # ---- cache ----------------------------------------------------------
     def lookup(self, spec: RequestSpec) -> dict[str, Any] | None:
         path = self.record_path(spec)
+        record = self._final_record_at(path, spec)
+        if record is not None:
+            return record
+        return self._copy_from_reuse_root(spec, path)
+
+    def _final_record_at(self, path: Path, spec: RequestSpec) -> dict[str, Any] | None:
         if not path.exists():
             return None
         record = read_json(path)
@@ -338,12 +358,29 @@ class RequestEngine:
             return None
         return record
 
+    def _copy_from_reuse_root(
+        self, spec: RequestSpec, path: Path
+    ) -> dict[str, Any] | None:
+        """Copy an identical-key final record from the reuse run (provenance kept)."""
+        if self.reuse_root is None or spec.role not in self.reuse_roles:
+            return None
+        source = self.reuse_root / path.relative_to(self.output_root)
+        record = self._final_record_at(source, spec)
+        if record is None:
+            return None
+        copied = {**record, "copied_from": str(source)}
+        atomic_write_json(path, copied)
+        self.copied += 1
+        return copied
+
     # ---- execution ------------------------------------------------------
     def run(self, spec: RequestSpec, validator: Validator) -> dict[str, Any]:
         cached = self.lookup(spec)
         if cached is not None:
             self.cache_hits += 1
             origin = str(cached.get("stage", ""))
+            if cached.get("copied_from"):
+                origin = f"reuse_root:{origin}"
             if origin and origin != self.stage:
                 self.reused_from[origin] += 1
             return cached
@@ -395,6 +432,12 @@ class RequestEngine:
                 break
             messages = self._repair_messages(messages, raw, errors)
         return self._final_record(spec, attempts, status, raw, parsed)
+
+    @staticmethod
+    def _schema_key(role: str) -> dict[str, str]:
+        """Only roles with a non-default validator version change their key."""
+        version = SCHEMA_VERSIONS.get(role)
+        return {} if version is None else {"schema_version": version}
 
     def _repair_hash(self) -> str | None:
         if self.settings.schema_repair_attempts <= 0:
@@ -496,6 +539,12 @@ def model_tag(name: str, digest: str | None) -> str:
 #       Reason: qwen3.5:9b fenced 737/759 first-attempt checklist replies,
 #       pushing nearly every checklist record through the repair path.
 PARSE_VERSION = "parse-v2"
+# Validator version per role, part of the cache key so that a validator change
+# never reuses records judged under the old rule (default "1").
+#   planner_v2 "2" (2026-10-09): a referring phrase that names the target noun
+#   (e.g. "the object to the right of the other cup") is accepted and flagged.
+SCHEMA_VERSIONS = {"planner_v2": "2"}
+DEFAULT_SCHEMA_VERSION = "1"
 FENCE = "```"
 FENCE_LANGUAGE = "json"
 FENCES_IN_ONE_BLOCK = 2

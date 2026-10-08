@@ -150,6 +150,7 @@ class RunPaths:
     questions_file: Path
     images_root: Path
     prompts_dir: Path
+    selection_root: Path  # selection_results / selected_manifest (default data_root)
 
     @property
     def levels_dir(self) -> Path:
@@ -160,6 +161,9 @@ class RunPaths:
 
     def data(self, name: str) -> Path:
         return self.data_root / name
+
+    def selection(self, name: str) -> Path:
+        return self.selection_root / name
 
 
 def resolve_path(repo_root: Path, value: str) -> Path:
@@ -178,6 +182,9 @@ def build_paths(cfg: dict[str, Any], repo_root: Path | None = None) -> RunPaths:
         questions_file=resolve_path(root, paths["gqa_questions"]),
         images_root=resolve_path(root, paths["gqa_images_root"]),
         prompts_dir=resolve_path(root, prompts),
+        selection_root=resolve_path(
+            root, paths.get("selection_root", paths["data_root"])
+        ),
     )
 
 

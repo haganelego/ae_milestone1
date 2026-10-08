@@ -335,8 +335,8 @@ def data_section(paths: RunPaths) -> list[str]:
         sorted(mapping["exclusion_counts"].items()), columns=["reason", "count"]
     )
     out.append(md_table(reasons, ["reason", "count"]))
-    results = read_jsonl(paths.data("selection_results.jsonl"))
-    selected = read_jsonl(paths.data("selected_manifest.jsonl"))
+    results = read_jsonl(paths.selection("selection_results.jsonl"))
+    selected = read_jsonl(paths.selection("selected_manifest.jsonl"))
     if not results:
         return [*out, "Screening: " + NOT_RUN]
     frame = pd.DataFrame(results)

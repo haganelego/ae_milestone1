@@ -231,6 +231,11 @@ def prepare(
     """Freeze the candidate split. ``--revise`` re-scans in memory first and
     persists overrides, manifests and the revision count only after success."""
     ctx.set_stage("prepare")
+    if ctx.inherit_root is not None:
+        raise StageError(
+            f"this run inherits the frozen split of {ctx.inherit_root}; `prepare` "
+            "is disabled so the shared data_root is never rewritten"
+        )
     prepared = ctx.state.get("prepare")
     if prepared and not revise:
         raise StageError(
@@ -401,7 +406,11 @@ def merge_split_rows(path: Path, split: str, rows: Sequence[Mapping[str, Any]]) 
 def screen(ctx: Context, split: str) -> dict[str, Any]:
     ctx.set_stage(f"screen_{split}")
     frozen_policy = ctx.paths.out("frozen_policy.json").exists()
-    require(bool(ctx.state.get("prepare")), "run `prepare` before screening")
+    require(ctx.split_frozen, "run `prepare` before screening")
+    require(
+        ctx.inherit_root is None or ctx.paths.selection_root != ctx.paths.data_root,
+        "inherited split: paths.selection_root must differ from the shared data_root",
+    )
     if split == "dev":
         require(not frozen_policy, "dev screening after freeze is forbidden")
     else:
@@ -435,6 +444,9 @@ def screen(ctx: Context, split: str) -> dict[str, Any]:
         batches = int((ctx.state.get("prepare") or {}).get("reserve_batches", 0))
         if sampling.meets_minimum(adopted, min_q, min_img):
             break
+        if ctx.inherit_root is not None:
+            ctx.log(f"{split}: below minimum; inherited split has no reserve batches")
+            break
         if batches >= int(dcfg["max_reserve_batches_total"]):
             ctx.log(f"{split}: below minimum after {batches} reserve batches")
             break
@@ -444,19 +456,53 @@ def screen(ctx: Context, split: str) -> dict[str, Any]:
         add_reserve_batch(ctx, split, batches + 1)
     adopted_ids = {r["question_id"] for r in adopted}
     results = [{**r, "adopted": r["question_id"] in adopted_ids} for r in results]
-    merge_split_rows(ctx.paths.data("selection_results.jsonl"), split, results)
+    merge_split_rows(ctx.paths.selection("selection_results.jsonl"), split, results)
     selected = [{**r, "adoption_rank": i} for i, r in enumerate(adopted)]
-    merge_split_rows(ctx.paths.data("selected_manifest.jsonl"), split, selected)
+    merge_split_rows(ctx.paths.selection("selected_manifest.jsonl"), split, selected)
     atomic_write_json(ctx.paths.out(f"adoption_{split}.json"), allocation.to_dict())
     info = screening_info(ctx, split, results, adopted)
+    mismatch = reference_mismatch(ctx, split, adopted, allocation.to_dict())
+    if ctx.inherit_root is not None:
+        info = {**info, "reference_match": mismatch is None}
     screening = {**(ctx.state.get("screening") or {}), split: info}
     ctx.state.set("screening", screening)
+    if mismatch is not None:
+        ctx.log(f"STOP: {split} adoption differs from the inherited run: {mismatch}")
+        raise StageError(
+            f"adopted {split} set differs from {ctx.inherit_root}: {mismatch}"
+        )
     if split == "dev":
         repeat_diagnostic(ctx, adopted, results)
     write_dataset_flow(ctx)
     ctx.log(f"screen {split}: {info}")
     ctx.note_reuse()
     return info
+
+
+def reference_mismatch(
+    ctx: Context,
+    split: str,
+    adopted: Sequence[Mapping[str, Any]],
+    allocation: Mapping[str, Any],
+) -> str | None:
+    """For an inherited split, the adopted ids and cell targets must equal the
+    original run's (plan §17: same 100 dev questions)."""
+    if ctx.inherit_root is None:
+        return None
+    reference = [
+        r["question_id"]
+        for r in read_jsonl(ctx.paths.data("selected_manifest.jsonl"))
+        if r["split"] == split
+    ]
+    ours = [r["question_id"] for r in adopted]
+    if ours != reference:
+        missing = sorted(set(reference) - set(ours))
+        extra = sorted(set(ours) - set(reference))
+        return f"ids differ (missing {missing[:10]}, extra {extra[:10]}, order equal={set(ours) == set(reference)})"
+    ref_alloc = read_json(ctx.inherit_root / f"adoption_{split}.json")
+    if ref_alloc.get("targets") != allocation.get("targets"):
+        return f"cell targets differ: {ref_alloc.get('targets')} vs {allocation.get('targets')}"
+    return None
 
 
 def screening_info(
@@ -567,7 +613,7 @@ def write_dataset_flow(ctx: Context) -> None:
             add("candidates", split, "all", "quota_rule", "", line)
     for row in Counter((c["split"], c["batch"]) for c in ctx.candidates()).items():
         add("candidates", row[0][0], "all", f"candidates:{row[0][1]}", row[1])
-    results = read_jsonl(ctx.paths.data("selection_results.jsonl"))
+    results = read_jsonl(ctx.paths.selection("selection_results.jsonl"))
     for (split, cell, outcome), n in sorted(
         Counter((r["split"], r["cell"], r["outcome"]) for r in results).items()
     ):
