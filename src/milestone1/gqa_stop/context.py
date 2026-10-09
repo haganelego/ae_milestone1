@@ -124,10 +124,13 @@ class Context:
         rows = read_jsonl(self.paths.data("candidate_manifest.jsonl"))
         return [r for r in rows if split is None or r["split"] == split]
 
-    def selected(self, split: str) -> list[dict[str, Any]]:
-        """Adopted rows of ``split``; restricted to ``paths.subset_file`` if set."""
+    def selected(self, split: str, use_subset: bool = True) -> list[dict[str, Any]]:
+        """Adopted rows of ``split``; restricted to ``paths.subset_file`` if set
+        (``use_subset=False`` returns every adopted row)."""
         rows = read_jsonl(self.paths.selection("selected_manifest.jsonl"))
         rows = [r for r in rows if r["split"] == split]
+        if not use_subset:
+            return rows
         keep = self.subset_ids(split)
         if keep is None:
             return rows

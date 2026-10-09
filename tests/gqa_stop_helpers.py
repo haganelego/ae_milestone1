@@ -288,6 +288,9 @@ class FakeTransport:
                 seed = int(payload["options"]["seed"]) - V3_SEED_BASE
                 reply = self.reply_v3(role, data, image_id, level, seed)
                 solved = self.solved_for(str(image_id), data["question"], level)
+            elif role in {"text_only", "planner_v3"}:
+                reply = self.reply_v3(role, data, image_id, level, 0)
+                solved = True
             else:
                 reply = self.reply(role, data, level)
                 solved = level is not None and level >= solve_level(data["question"])

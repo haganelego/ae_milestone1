@@ -89,14 +89,19 @@ class ModelSettings:
     schema_repair_attempts: int
     backoff_base_s: float = DEFAULT_BACKOFF_BASE_S
     backoff_max_s: float = DEFAULT_BACKOFF_MAX_S
+    # A13 (plan §20): explicit sampler options sent with EVERY request so that no
+    # Modelfile default (e.g. presence_penalty 1.5, top_k 20, top_p 0.95) stays
+    # active. Part of the options -> part of every cache key. Empty = legacy runs.
+    decoding_options: tuple[tuple[str, Any], ...] = ()
 
     def options(self, role: str) -> dict[str, Any]:
-        return {
+        base = {
             "temperature": self.temperature,
             "seed": self.seed,
             "num_ctx": self.num_ctx,
             "num_predict": int(self.num_predict[role]),
         }
+        return {**base, **dict(self.decoding_options)}
 
     def decoding(self, role: str) -> dict[str, Any]:
         """Everything sent besides messages; part of the cache key."""
@@ -125,6 +130,7 @@ def settings_from_config(cfg: Mapping[str, Any]) -> ModelSettings:
         schema_repair_attempts=int(model["schema_repair_attempts"]),
         backoff_base_s=float(model.get("backoff_base_seconds", DEFAULT_BACKOFF_BASE_S)),
         backoff_max_s=float(model.get("backoff_max_seconds", DEFAULT_BACKOFF_MAX_S)),
+        decoding_options=tuple(sorted(model.get("decoding_options", {}).items())),
     )
 
 

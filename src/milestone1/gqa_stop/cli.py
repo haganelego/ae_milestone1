@@ -12,7 +12,16 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from . import fair_subset, stages_data, stages_model, stages_v3, stages_v4, textprobe
+from . import (
+    explore,
+    fair_subset,
+    stages_data,
+    stages_model,
+    stages_v3,
+    stages_v4,
+    stages_v4c,
+    textprobe,
+)
 from . import report as report_mod
 from .client import PauseRequired
 from .common import StageError, load_effective_config
@@ -32,6 +41,10 @@ COMMANDS = (
     "report",
     "devgrid",
     "textprobe",
+    "detgate",
+    "readers",
+    "v1arm",
+    "explore",
 )
 
 
@@ -112,6 +125,17 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return stages_model.run_evaluate(ctx)
     if command == "textprobe":
         return textprobe.textprobe(ctx)
+    if command == "detgate":
+        return stages_v4c.detgate(ctx)
+    if command == "readers":
+        split = require_split(args, ("dev", "test"))
+        return stages_v4c.reader_levels(
+            ctx, split, ctx.parse_levels(args.levels or "all", [])
+        )
+    if command == "v1arm":
+        return stages_v4c.v1arm(ctx)
+    if command == "explore":
+        return explore_stage(ctx)
     if command == "devgrid":
         if ctx.family in stages_v3.V3_FAMILIES:
             return stages_v3.devgrid_v3(ctx)
@@ -122,6 +146,19 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         ctx.echo(f"[dry-run] report -> {ctx.paths.out('report.md')}")
         return None
     return report_mod.build_report(ctx.cfg, ctx.paths)
+
+
+def explore_stage(ctx: Context) -> object:
+    """Exploratory replays on the dev level table (no model calls)."""
+    table = explore.merged_table(
+        ctx.paths.out("level_table_dev.csv"), ctx.paths.out("v1arm/level_table_dev.csv")
+    )
+    if ctx.dry_run:
+        ctx.echo(f"[dry-run] explore: {table['question_id'].nunique()} dev questions")
+        return None
+    summary = explore.run_exploration(table, ctx.cfg["policy"], ctx.paths.output_root)
+    ctx.log(f"exploratory replays ({explore.LABEL}) written")
+    return summary
 
 
 def main(

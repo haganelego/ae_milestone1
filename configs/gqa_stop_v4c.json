@@ -1,0 +1,279 @@
+{
+  "spec_version": "1.1+\u00a719+\u00a720(A13)",
+  "run_id": "visapp_gqa_v4c",
+  "seed": 20261008,
+  "paths": {
+    "repo_root": "/home/kanaoka/usr/github/milestone_1",
+    "gqa_questions": "/home/kanaoka/usr/dataset/gqa/val_balanced_questions.json",
+    "gqa_images_root": "/home/kanaoka/usr/dataset/vg/images",
+    "data_root": "data/processed/gqa_stop/visapp_gqa_v1",
+    "output_root": "outputs/gqa_stop/visapp_gqa_v4c",
+    "selection_root": "data/processed/gqa_stop/visapp_gqa_v4c",
+    "inherit_split_from": "outputs/gqa_stop/visapp_gqa_v1",
+    "subset_file": "outputs/gqa_stop/visapp_gqa_v4c/visual_subset.json",
+    "check_reference_adoption": false
+  },
+  "dataset": {
+    "source": "gqa_validation_balanced",
+    "filter": {
+      "structural": "query",
+      "semantic_type": "attr",
+      "final_operation": "query",
+      "final_argument_in": [
+        "color",
+        "material",
+        "shape"
+      ],
+      "max_relations": 2,
+      "max_operations": 6,
+      "exclude_answer_word_in_question": true,
+      "exclude_negation": true,
+      "require_question_text_attribute_match": true
+    },
+    "stratification": {
+      "cells": "attribute x relate_count{0,1}",
+      "attribute_share": {
+        "color": 0.4,
+        "material": 0.4,
+        "shape": "all_up_to_0.20"
+      },
+      "relate_share_within_attribute": {
+        "0": 0.5,
+        "1": 0.5
+      },
+      "shortfall_order": [
+        "same_attribute_other_relate",
+        "other_attributes_proportional"
+      ]
+    },
+    "max_questions_per_image": 2,
+    "candidate_dev_questions": 300,
+    "candidate_dev_images_scan": null,
+    "candidate_test_questions": 800,
+    "candidate_test_images_scan": null,
+    "target_dev_questions": 100,
+    "target_test_questions": 200,
+    "minimum_dev_questions": 30,
+    "minimum_dev_images": 20,
+    "minimum_test_questions": 100,
+    "minimum_test_images": 60,
+    "reserve_batch_images": 100,
+    "max_reserve_batches_total": 4,
+    "screening_role": "answer_only",
+    "reuse_screening_as_level20_reader": true,
+    "screening_repeat_dev_questions": 20
+  },
+  "probe": {
+    "enabled": true,
+    "questions_per_cell": 33,
+    "levels": [
+      1,
+      5,
+      10,
+      20
+    ],
+    "role": "answer_only",
+    "max_filter_revisions": 1
+  },
+  "images": {
+    "levels": 20,
+    "scale_min": 0.05,
+    "scale_max": 1.0,
+    "scale_schedule": "geometric",
+    "base_max_side": 512,
+    "base_resize": "lanczos",
+    "degradation_resize": "bilinear",
+    "small_dimension_rounding": "floor_min_1",
+    "format": "PNG",
+    "transport_reencode": false
+  },
+  "model": {
+    "provider": "ollama",
+    "endpoint": "http://localhost:11434/api/chat",
+    "name": "qwen3.5:9b",
+    "digest": null,
+    "fallback_name": "qwen3.5:4b",
+    "fallback_digest": null,
+    "temperature": 0.0,
+    "seed": 20261008,
+    "think": false,
+    "format": "json",
+    "num_ctx": 8192,
+    "num_predict": {
+      "answer_only": 128,
+      "direct": 256,
+      "planner": 1024,
+      "checklist": 1024,
+      "text_only": 128,
+      "planner_v3": 1024,
+      "observer_v3": 256,
+      "relevance_v4": 8
+    },
+    "request_timeout_seconds": 300,
+    "transport_retries": 2,
+    "schema_repair_attempts": 1,
+    "decoding_options": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "repeat_penalty": 1.0,
+      "mirostat": 0
+    },
+    "decoding_note": "A13 (plan \u00a720): sent with every request; overrides the qwen3.5:9b Modelfile parameters (temperature 1, top_k 20, top_p 0.95, presence_penalty 1.5). seed, num_ctx, num_predict and think=false as before."
+  },
+  "checklist": {
+    "min_items": 2,
+    "max_items": 3,
+    "question_only_planning": true,
+    "fixed_across_levels": true,
+    "all_items_required": true,
+    "unknown_effective_confidence": 0.0,
+    "unresolved_ancestor_effective_confidence": 0.0
+  },
+  "policy": {
+    "methods": [
+      "checklist_v4_min"
+    ],
+    "start_level": 1,
+    "consecutive_k": 1,
+    "force_stop_level": 20,
+    "threshold_grid": {
+      "start": 0.01,
+      "stop": 1.0,
+      "step": 0.01,
+      "include_never_stop": true
+    },
+    "primary_dev_accuracy_target": 0.95,
+    "secondary_dev_accuracy_targets": [
+      0.9,
+      0.97,
+      0.99
+    ],
+    "selection_order": [
+      "min_mean_level",
+      "max_accuracy",
+      "max_threshold"
+    ],
+    "family": "logprob_item",
+    "logged_methods": [
+      "checklist_v4_mean",
+      "pans_min",
+      "pans_mean",
+      "rel_min",
+      "rel_mean",
+      "direct_v4",
+      "direct_pans",
+      "direct_rel"
+    ],
+    "comparison_methods": [
+      "checklist_v1_min (clean, subset-frozen)",
+      "direct_v1_verbalized (clean)",
+      "subset fixed hull"
+    ],
+    "note": "plan \u00a719: r_j = P_ans x Rel under the v1 gate; min (mean logged); \u03b8 grid, k=1, forced L20"
+  },
+  "evaluation": {
+    "common_reader": "answer_only",
+    "normalization": [
+      "NFKC",
+      "lowercase",
+      "strip",
+      "collapse_whitespace"
+    ],
+    "match": "exact",
+    "fixed_levels": "1..20",
+    "fixed_representative_levels": [
+      5,
+      10,
+      15,
+      20
+    ],
+    "fixed_reference": "concave_hull",
+    "fixed_reference_secondary": "adjacent_mix",
+    "bootstrap_unit": "image",
+    "bootstrap_repeats": 2000,
+    "bootstrap_seed": 20261008,
+    "confidence_interval": 0.95,
+    "accuracy_noninferiority_margin": 0.05,
+    "compute_cost_is_research_metric": false
+  },
+  "execution": {
+    "pilot_questions": 20,
+    "pilot_levels": [
+      1,
+      5,
+      10,
+      15,
+      20
+    ],
+    "calibration_gate": {
+      "min_spearman": 0.3,
+      "max_level1_mean_confidence": 0.8,
+      "early_overconfidence_threshold": 0.8,
+      "fallback_model_allowed_at_pilot_only": true
+    },
+    "max_dev_prompt_revisions": 1,
+    "no_test_tuning": true,
+    "pause_on_consecutive_technical_errors": 10,
+    "pause_error_window": 100,
+    "pause_error_fraction": 0.05
+  },
+  "prompts": {
+    "roles": [
+      "answer_only",
+      "text_only",
+      "planner",
+      "checklist",
+      "direct",
+      "planner_v3",
+      "observer_v3",
+      "relevance_v4"
+    ]
+  },
+  "comparison": {
+    "v1_output_root": "outputs/gqa_stop/visapp_gqa_v4c/v1arm",
+    "v1_method": "checklist_min",
+    "v1_fair_frozen": "outputs/gqa_stop/visapp_gqa_v4c/v1arm/frozen_policy_subset.json",
+    "v3_output_root": "outputs/gqa_stop/visapp_gqa_v3",
+    "merge_tables": [
+      {
+        "path": "outputs/gqa_stop/visapp_gqa_v4c/v1arm/level_table_dev.csv",
+        "columns": {
+          "checklist_min": "checklist_v1_min",
+          "checklist_mean": "checklist_v1_mean"
+        }
+      }
+    ],
+    "extra_methods": {
+      "checklist_v1_min": "checklist_v1_min",
+      "checklist_v1_mean": "checklist_v1_mean"
+    },
+    "note": "v3_output_root is used only for the pilot's observer-text comparison (penalty 1.5 vs clean)"
+  },
+  "logprobs": {
+    "top_logprobs": 10,
+    "namespace": "lp",
+    "note": "plan \u00a719: P_ans = first answer-value token prob; Rel = P(exact 'Yes') in first token top_logprobs"
+  },
+  "screening": {
+    "test_without_freeze": true,
+    "note": "A13: test is re-screened and reader-run before any freeze; no method inference on test"
+  },
+  "determinism": {
+    "argmax_questions": 50,
+    "argmax_levels": [
+      1,
+      20
+    ],
+    "relevance_questions": 10
+  },
+  "v1_arm": {
+    "policy_methods": [
+      "direct",
+      "checklist_min",
+      "checklist_mean"
+    ]
+  }
+}

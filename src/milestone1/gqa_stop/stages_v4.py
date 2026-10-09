@@ -21,6 +21,7 @@ from .stages_model import (
     full_table,
     level_table,
     planned_requests,
+    require_determinism_if_clean,
     require_reader_prompt,
     require_screening_match,
     split_table_path,
@@ -143,6 +144,7 @@ def text_equality(
 def pilot_v4(ctx: Context, levels: Sequence[int]) -> dict[str, Any]:
     ctx.set_stage("pilot")
     require(ctx.family == LOGPROB, "pilot_v4 is for the logprob_item family")
+    require_determinism_if_clean(ctx)
     screening = (ctx.state.get("screening") or {}).get("dev")
     require(bool(screening), "pilot needs `screen --split dev` first")
     require_reader_prompt(ctx, screening)
@@ -266,16 +268,27 @@ def sensitivity(grid: pd.DataFrame) -> dict[str, Any]:
     }
 
 
-def merge_v3(table: pd.DataFrame, v3_root: Path) -> pd.DataFrame:
-    v3 = read_id_csv(v3_root / "level_table_dev.csv")[
-        ["question_id", "level", "checklist_v3_min"]
-    ]
-    merged = table.merge(v3, on=["question_id", "level"], how="left")
-    require(
-        merged["checklist_v3_min"].notna().all(),
-        "v3 table lacks some (question, level)",
+def merge_columns(
+    table: pd.DataFrame, path: Path, columns: Mapping[str, str]
+) -> pd.DataFrame:
+    """Left-join comparator score columns (renamed) on (question_id, level)."""
+    other = read_id_csv(path)[["question_id", "level", *columns]].rename(
+        columns=columns
     )
+    merged = table.merge(other, on=["question_id", "level"], how="left")
+    for column in columns.values():
+        require(merged[column].notna().all(), f"{path} lacks some (question, level)")
     return merged
+
+
+def comparator_merges(ctx: Context) -> list[tuple[Path, dict[str, str]]]:
+    """comparison.merge_tables, or the v3 table (legacy v4 run)."""
+    comparison, root = ctx.cfg["comparison"], ctx.paths.repo_root
+    merges = comparison.get("merge_tables")
+    if merges:
+        return [(resolve_path(root, m["path"]), dict(m["columns"])) for m in merges]
+    v3 = resolve_path(root, comparison["v3_output_root"]) / "level_table_dev.csv"
+    return [(v3, {"checklist_v3_min": "checklist_v3_min"})]
 
 
 def devgrid_v4(ctx: Context) -> dict[str, Any]:
@@ -292,10 +305,12 @@ def devgrid_v4(ctx: Context) -> dict[str, Any]:
         return {}
     comparison = ctx.cfg["comparison"]
     root = ctx.paths.repo_root
-    table = merge_v3(
-        full_table(ctx, "dev"), resolve_path(root, comparison["v3_output_root"])
-    )
+    table = full_table(ctx, "dev")
+    for path, columns in comparator_merges(ctx):
+        table = merge_columns(table, path, columns)
     table_to_csv(table, split_table_path(ctx, "dev"))
+    method_columns = {k: v for k, v in METHOD_COLUMNS.items() if v in table.columns}
+    method_columns.update(comparison.get("extra_methods", {}))
     summary = run_devgrid_v3(
         table,
         ctx.cfg["policy"],
@@ -303,7 +318,7 @@ def devgrid_v4(ctx: Context) -> dict[str, Any]:
         ctx.paths.output_root,
         resolve_path(root, comparison["v1_output_root"]),
         resolve_path(root, comparison["v1_fair_frozen"]),
-        method_columns=METHOD_COLUMNS,
+        method_columns=method_columns,
         components_fn=v4_components,
         abort_methods=[PRIMARY_METHOD],
     )

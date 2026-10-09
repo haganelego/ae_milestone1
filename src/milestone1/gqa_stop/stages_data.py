@@ -411,8 +411,13 @@ def screen(ctx: Context, split: str) -> dict[str, Any]:
         ctx.inherit_root is None or ctx.paths.selection_root != ctx.paths.data_root,
         "inherited split: paths.selection_root must differ from the shared data_root",
     )
+    screening_cfg = ctx.cfg.get("screening", {})
     if split == "dev":
         require(not frozen_policy, "dev screening after freeze is forbidden")
+    elif screening_cfg.get("test_without_freeze"):
+        # A13 (plan §20): the clean-decoding re-run re-screens test before any
+        # freeze; only screening and the reader run on test, never a method.
+        ctx.log("test screening without freeze (plan §20 A13): reader only")
     else:
         require(frozen_policy, "test screening requires `freeze` first (plan §10)")
         ctx.require_frozen_match()
@@ -464,6 +469,13 @@ def screen(ctx: Context, split: str) -> dict[str, Any]:
     mismatch = reference_mismatch(ctx, split, adopted, allocation.to_dict())
     if ctx.inherit_root is not None:
         info = {**info, "reference_match": mismatch is None}
+    enforce = ctx.cfg["paths"].get("check_reference_adoption", True)
+    if not enforce and ctx.inherit_root is not None:
+        diff = reference_diff(ctx, split, adopted, results)
+        atomic_write_json(ctx.paths.out(f"adoption_diff_{split}.json"), diff)
+        info = {**info, "reference_diff": diff["summary"]}
+        ctx.log(f"{split} adoption vs inherited run (not enforced): {diff['summary']}")
+        mismatch = None
     screening = {**(ctx.state.get("screening") or {}), split: info}
     ctx.state.set("screening", screening)
     if mismatch is not None:
@@ -503,6 +515,56 @@ def reference_mismatch(
     if ref_alloc.get("targets") != allocation.get("targets"):
         return f"cell targets differ: {ref_alloc.get('targets')} vs {allocation.get('targets')}"
     return None
+
+
+def reference_diff(
+    ctx: Context,
+    split: str,
+    adopted: Sequence[Mapping[str, Any]],
+    results: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Adoption and screening-outcome changes against the inherited run."""
+    old_adopted = [
+        r["question_id"]
+        for r in read_jsonl(ctx.paths.data("selected_manifest.jsonl"))
+        if r["split"] == split
+    ]
+    old_outcome = {
+        r["question_id"]: r["outcome"]
+        for r in read_jsonl(ctx.paths.data("selection_results.jsonl"))
+        if r["split"] == split
+    }
+    new_ids = [r["question_id"] for r in adopted]
+    changed = [
+        {
+            "question_id": r["question_id"],
+            "old": old_outcome.get(r["question_id"]),
+            "new": r["outcome"],
+        }
+        for r in results
+        if old_outcome.get(r["question_id"]) != r["outcome"]
+    ]
+    old_set, new_set = set(old_adopted), set(new_ids)
+    return {
+        "summary": {
+            "candidates": len(results),
+            "outcome_changed": len(changed),
+            "correct_to_incorrect": sum(
+                1 for c in changed if c["old"] == "correct" and c["new"] == "incorrect"
+            ),
+            "incorrect_to_correct": sum(
+                1 for c in changed if c["old"] == "incorrect" and c["new"] == "correct"
+            ),
+            "adopted_old": len(old_set),
+            "adopted_new": len(new_set),
+            "adopted_kept": len(old_set & new_set),
+            "adopted_dropped": len(old_set - new_set),
+            "adopted_added": len(new_set - old_set),
+        },
+        "outcome_changes": changed,
+        "dropped": sorted(old_set - new_set),
+        "added": sorted(new_set - old_set),
+    }
 
 
 def screening_info(
@@ -627,7 +689,9 @@ def write_dataset_flow(ctx: Context) -> None:
             add("adoption", split, cell, "target_after_reallocation", value)
         for line in allocation["log"]:
             add("adoption", split, "all", "reallocation", "", line)
-        for cell, n in Counter(r["cell"] for r in ctx.selected(split)).items():
+        for cell, n in Counter(
+            r["cell"] for r in ctx.selected(split, use_subset=False)
+        ).items():
             add("adoption", split, cell, "adopted", n)
     eff = ctx.paths.out("effective_config.json")
     for item in read_json(eff).get("history", []) if eff.exists() else []:

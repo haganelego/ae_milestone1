@@ -47,7 +47,11 @@ def text_only_spec(question: Mapping[str, Any]) -> RequestSpec:
 
 
 def reference_adopted(ctx: Context) -> dict[str, list[dict[str, Any]]]:
-    """Adopted rows of the inherited run (shared data_root), in adoption order."""
+    """Adopted rows in adoption order: this run's own adoption when it screened
+    both splits (A13 re-run), otherwise the inherited run's (shared data_root)."""
+    screening = ctx.state.get("screening") or {}
+    if all(split in screening for split in SPLITS):
+        return {split: ctx.selected(split, use_subset=False) for split in SPLITS}
     require(ctx.inherit_root is not None, "textprobe needs paths.inherit_split_from")
     rows = read_jsonl(ctx.paths.data("selected_manifest.jsonl"))
     return {split: [r for r in rows if r["split"] == split] for split in SPLITS}

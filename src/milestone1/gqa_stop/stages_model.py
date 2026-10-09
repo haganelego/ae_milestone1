@@ -434,7 +434,18 @@ def enforce_pilot_gates(ctx: Context, force_continue: bool) -> None:
     ctx.state.set("gate_override", {"time": utc_now(), "failures": failures})
 
 
+def require_determinism_if_clean(ctx: Context) -> None:
+    """A13 runs (explicit decoding options) need the determinism gate to pass."""
+    if not ctx.settings.decoding_options:
+        return
+    require(
+        bool((ctx.state.get("determinism") or {}).get("passed")),
+        "run `detgate` first: the A13 determinism gate has not passed",
+    )
+
+
 def check_infer_preconditions(ctx: Context, split: str) -> None:
+    require_determinism_if_clean(ctx)
     require_screening_match(ctx, split)
     if split == "test":
         ctx.require_frozen_match()
