@@ -212,6 +212,7 @@ These are computed from the same v4c dev records with no new inference (`explore
 | checklist_v4_min | pre-registered | 1 | 0.39 | 0.966 | 14.64 | 0.34 | 2 | +0.057 | 11213386, 11619091 |
 | direct_v4 | comparator | 1 | 0.34 | 0.966 | 14.02 | 0.31 | 2 | +0.068 | 0813387, 11213386 |
 | checklist_v1_min (v1 arm) | comparator (fair v1) | 1 | 1.0 | 0.983 | 19.97 | 0.98 | 1 | -0.016 | 11213386 |
+| pans_mean (§19 logged variant) | logged | 1 | 0.84 | 0.966 | 12.85 | 0.36 | 2 | – | 18486270, 19315625 |
 | soft_existence | exploratory (not pre-registered; logged only) | 1 | 0.39 | 0.966 | 14.49 | 0.34 | 2 | +0.059 | 11213386, 11619091 |
 | checklist_v4_min k=2 | exploratory (not pre-registered; logged only) | 2 | 0.27 | 0.966 | 14.22 | 0.29 | 2 | +0.064 | 11213386, 18486270 |
 | direct_v4 k=2 | exploratory (not pre-registered; logged only) | 2 | 0.3 | 0.966 | 14.22 | 0.32 | 2 | +0.064 | 0813387, 11213386 |
@@ -220,6 +221,34 @@ These are computed from the same v4c dev records with no new inference (`explore
 - **Subset fixed curve (dev, 59 questions).** Fixed-5 0.695, Fixed-10 0.797, Fixed-15 0.881, Fixed-17 0.932, Fixed-19 0.915, Fixed-20 1.000. Fixed-dev is L20.
 - **Recurring error.** Question 11213386 is stopped-and-wrong under every method, including the v1 arm.
 - **Effect of the variants.** soft_existence and k=2 each move the mean level by less than one level (14.64 → 14.03–14.49). They do not change the picture.
+
+
+### Stopped-and-wrong questions (dev; `dev_wrong_stop_details.json`)
+
+Each block gives the method, the question, GT, the stop level and the common-reader answer at that level, followed by the items at that level (answer, resolved, P_ans, Rel, product). The direct row is the logprob Direct call at the same level.
+
+- **checklist_v4_min θ=0.39: 11213386** — "What color is the umbrella on the right?" (GT **yellow**). Stops at L9; reader "red"; checklist_v4_min 0.397, direct_v4 0.427.
+  - item: "Is there an umbrella on the right in the image?" → yes (resolved True), P_ans 0.993, Rel 0.722, product 0.718
+  - item: "What color is the umbrella on the right?" → red and yellow (resolved True), P_ans 0.509, Rel 0.781, product 0.397
+  - direct: "red and yellow", P_ans 0.547, Rel 0.781, product 0.427
+- **checklist_v4_min θ=0.39: 11619091** — "What do you think is the color of this fence?" (GT **black**). Stops at L18; reader "gray"; checklist_v4_min 0.394, direct_v4 0.253.
+  - item: "Is there a fence in the image?" → yes (resolved True), P_ans 0.975, Rel 0.971, product 0.947
+  - item: "What color is the fence?" → gray (resolved True), P_ans 0.607, Rel 0.65, product 0.394
+  - direct: "black", P_ans 0.665, Rel 0.381, product 0.253
+- **direct_v4 θ=0.34: 0813387** — "What color is the sky?" (GT **gray**). Stops at L5; reader "blue"; checklist_v4_min 0.241, direct_v4 0.344.
+  - item: "Is there a sky in the image?" → yes (resolved True), P_ans 0.984, Rel 0.59, product 0.58
+  - item: "What color is the sky?" → blue (resolved True), P_ans 0.6, Rel 0.402, product 0.241
+  - direct: "blue", P_ans 0.857, Rel 0.402, product 0.344
+- **direct_v4 θ=0.34: 11213386** — "What color is the umbrella on the right?" (GT **yellow**). Stops at L9; reader "red"; checklist_v4_min 0.397, direct_v4 0.427.
+  - item: "Is there an umbrella on the right in the image?" → yes (resolved True), P_ans 0.993, Rel 0.722, product 0.718
+  - item: "What color is the umbrella on the right?" → red and yellow (resolved True), P_ans 0.509, Rel 0.781, product 0.397
+  - direct: "red and yellow", P_ans 0.547, Rel 0.781, product 0.427
+
+**Reading.**
+- Both checklist_v4_min errors are borderline: 0.397 and 0.394 against θ=0.39.
+- 11213386 (umbrella) is a mixed-colour target. The observer answers "red and yellow", the reader says "red" and GT is "yellow". It is wrong for every method, including the v1 arm.
+- 11619091 (fence, gray vs black) is a shade confusion at L18. The Direct call says "black" (correct) with Rel 0.38.
+- direct_v4's other error, 0813387 (sky, gray vs blue at L5), looks like a prior-driven answer passing 0.344 against θ=0.34.
 
 **v1-arm planner failure.** In the v1 arm, the v1 planner for question 05827270 stayed a schema failure after one repair (invalid JSON: "Extra data"). That question therefore scores 0 at every level in the v1 arm and stops at L20 under checklist_v1_min. The v4 methods use planner_v3, which is unaffected.
 
