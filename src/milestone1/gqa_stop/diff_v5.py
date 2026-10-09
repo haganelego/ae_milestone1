@@ -292,11 +292,14 @@ def evaluate(ctx: Context, dev: pd.DataFrame, wrong: pd.DataFrame, out: Path) ->
     frame = pd.DataFrame(rows)
     frame.to_csv(out / "diff_targets.csv", index=False)
     pd.DataFrame(curves).to_csv(out / "diff_curves.csv", index=False)
-    figure(pd.DataFrame(curves), out)
+    reference = pd.read_csv(ctx.paths.out("dev_curves.csv"))
+    figure(pd.DataFrame(curves), out, reference[reference["subset"] == "v22"])
     return {"selections": rows}
 
 
-def figure(curves: pd.DataFrame, out: Path) -> None:
+def figure(
+    curves: pd.DataFrame, out: Path, reference: pd.DataFrame | None = None
+) -> None:
     import matplotlib
 
     matplotlib.use("Agg")
@@ -314,6 +317,19 @@ def figure(curves: pd.DataFrame, out: Path) -> None:
     for name, color in colors.items():
         pts = curves[curves["method"] == name].sort_values("mean_level")
         ax.plot(pts["mean_level"], pts["accuracy"], ".-", ms=3, color=color, label=name)
+    if reference is not None:
+        from .boxes_v5 import add_fixed_hull
+
+        fixed = reference[reference["method"] == "fixed"].sort_values("mean_level")
+        ax.plot(
+            fixed["mean_level"],
+            fixed["accuracy"],
+            "o-",
+            ms=3,
+            color="gray",
+            label="fixed level",
+        )
+        add_fixed_hull(ax, reference)
     for t in (0.90, 0.95, 0.97, 0.99):
         ax.axhline(t, color="lightgray", lw=0.6, zorder=0)
     ax.set_xlim(0.5, 20.5)

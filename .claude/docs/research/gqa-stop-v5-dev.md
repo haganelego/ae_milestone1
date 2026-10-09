@@ -42,7 +42,7 @@ The onset is the first level from which the reader stays correct through L20.
 
 The pixel count at onset spans two to three orders of magnitude within each attribute, so a single τ per attribute cannot be sharp. Material needs the most pixels and has the weakest relation.
 
-### Rules on dev 102 and firing on the 99 (`box_rules.csv`, `box_pareto.csv`, `box_curves.png`)
+### Rules on dev 102 and firing on the 99 (`box_rules.csv`, `box_pareto.csv`, `box_curves.png` with the fixed-level curve and its hull)
 
 - **Search.** τ_attr comes from a 40-value grid: 0, 38 geometric values over the observed eff_px range, and ∞. The gated variants add θ from the 0.01 grid, giving 4 parameters, all chosen in-sample.
 - **Bootstrap.** Paired image-cluster bootstrap with 2000 draws, against direct_v4 at its §22 θ for the same target.
@@ -150,6 +150,7 @@ The AND variants require the v4 score ≥ its §22 θ at 0.95: direct_v4 0.30, c
   - At 0.97, diff ∧ direct_v4 k=2 is 15.03 / 0.545 against direct_v4's 14.78 / 0.545.
 - **Matched-mean-level firing (`diff_two_axis.csv`) is misleading without accuracy.** diff-only k=2 reaches firing 0.36 at mean level 13.8, but its answerable accuracy there is 0.80, against 0.95 for direct_v4. The target-based table above is the fair comparison.
 - **Operating points.** diff-only has 28 distinct points over the θ grid; the AND variants have 53–56.
+- **Curves** (`diff_curves.png`, which shows the §22 fixed-level curve and its concave hull). The diff-only curves, k=1 and k=2, lie **below the fixed-level concave hull** across the whole range. They are worse than stopping every question at one fixed level. The AND variants sit on the direct_v4 / checklist_v4_min curves.
 
 ## B. Predicted-box grounding (`ground_v5`)
 

@@ -440,6 +440,7 @@ def figure(pareto: pd.DataFrame, curves_csv: Path, out: Path) -> None:
             lw=1.4,
             label=f"{name} (Pareto, GT box)",
         )
+    add_fixed_hull(ax, curves)
     for t in (0.90, 0.95, 0.97, 0.99):
         ax.axhline(t, color="lightgray", lw=0.6, zorder=0)
     ax.set_xlim(0.5, 20.5)
@@ -450,3 +451,20 @@ def figure(pareto: pd.DataFrame, curves_csv: Path, out: Path) -> None:
     fig.tight_layout()
     fig.savefig(out / "box_curves.png", dpi=150)
     plt.close(fig)
+
+
+def add_fixed_hull(ax: Any, curves: pd.DataFrame) -> None:
+    """Dashed upper concave hull of the fixed-level curve (§22 dev_curves.csv rows)."""
+    from .evaluate import hull_value
+
+    fixed = curves[curves["method"] == "fixed"]
+    curve = dict(zip(fixed["mean_level"], fixed["accuracy"], strict=True))
+    xs = np.linspace(1, 20, 191)
+    ax.plot(
+        xs,
+        [hull_value(curve, x) for x in xs],
+        "--",
+        color="black",
+        lw=0.8,
+        label="fixed concave hull",
+    )
