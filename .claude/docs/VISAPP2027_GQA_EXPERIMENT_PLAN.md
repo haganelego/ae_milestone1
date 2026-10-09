@@ -590,3 +590,32 @@ dev 全 20 Level 推論後、devgrid（凍結なし）で 4 方式の格子・�
 §18.2 の「サンプリングによる confidence の連続化」（N=5、S_mean / S_agree）と Direct-sampled は**取り下げ**。理由：複数回サンプリングは粒度の高い confidence 推定ではなく力任せの手法であり、採るならモデルを変えたアンサンブルの方が筋が通る。logprob によるトークン確率 confidence も今回は導入しない（ollama 0.30.4 で取得可能なことは確認済み、将来の選択肢として記録）。
 v3 の変更点は次の 3 つに限定する：(1) 画像が必要な質問への評価集合の限定（§18.1）、(2) 元質問・他項目を渡さない項目別 observer と完結した項目を作る planner v3（§18.2 前半、1 回の dev 改訂を planner に使用済み）、(3) observer への回答形式指示（A12、形式のみ）。confidence は v1 と同じ 1 回の自己申告（temperature 0）、有効 confidence・min/mean 集約・θ 格子は v1 と同一。欠点 6（離散 confidence）は未対応の限界として記録する。
 方式：checklist_v3_min（mean は記録）。比較対象：公平化 v1 Checklist-min、Direct（v1 のキャッシュ、変更なし）、固定停止の凹包。pilot 指標は §18.3 のうちサンプリング関連を除いたもの。
+
+## 19. v4: トークン確率 × 関連度による項目 confidence（2026-10-09 事前登録、dev 先行。freeze/test はユーザー判断後）
+
+### 19.1 背景
+- v3 dev（§18.6 の最終スコープ）：checklist_v3_min は 0.983 @ 17.78、公平化 v1 18.45 との差 −0.67 [−1.80, +0.53] で中止。主因は欠点 6：自己申告 confidence が {0, 0.85, 1.0} の 3 値に潰れ、θ の選択肢が 2 点しかない。
+- 根拠（`.claude/docs/research/explore-eqa-confidence.md`）：Explore until Confident（Ren et al. 2024）は言語化 confidence を使わず、回答トークンの確率に「この視点で答えられるか」の Yes 確率（Rel）を掛けて停止に用いる。関連度は Kadavath et al. 2022 の P(IK) に相当。
+- 予備確認（dev 1 問、皿の形）：回答トークン確率は L5 0.56 → L20 0.94 と連続に変化し、言語化 confidence は 0.95 で不動。関連度 P(Yes) は L1 0.15 → L20 0.88 と単調。L1 の誤答（rectangular 0.82）は積では 0.12 に沈む。ollama 0.30.4 で画像入力・JSON 形式・think 無効のまま `logprobs` / `top_logprobs` が取得できることを確認。
+
+### 19.2 設計（v3 からの差分のみ。planner_v3・observer_v3・reader・評価集合・採点は不変）
+- **回答確率 P_ans**：observer_v3 の呼出しを `logprobs: true, top_logprobs: 10` 付きで行い、JSON の `"answer":` の値の**最初の生成トークン**の確率（exp(logprob)、語彙全体での確率）を P_ans とする。表記ゆれ（大文字小文字、トークン分割の違い）の合算は**行わない**（ユーザー判断：キリがない）。
+- **関連度 Rel**：項目ごとに別呼出し。プロンプト `prompts/gqa_stop/relevance_v4.txt`：`Consider the question: '<item question>'. Are you confident about answering the question with the current view? Answer with Yes or No.`（画像付き、JSON 形式なし、temperature 0）。Rel は最初の生成トークンの top_logprobs に含まれる `Yes`（完全一致）の確率。含まれなければ 0。
+- **項目の有効 confidence**：r_j = P_ans × Rel（resolved=false、または祖先が unresolved なら 0。v1 と同じ規則）。停止スコアは min（mean は記録）。θ 格子 0.01 刻み＋∞、k=1、Level 20 強制停止は不変。
+- **Direct v4**：direct prompt（v1）を logprobs 付きで呼び、元質問に対する P_ans と、元質問の Rel（同じ relevance プロンプト）の積を confidence とする。分解の効果を分離するための主比較対象。
+- **分離用の記録（判定には使わない）**：P_ans のみ、Rel のみ、の各 min / mean と Direct 版。
+- 方式：checklist_v4_min（主）、direct_v4。比較対象：公平化 v1 Checklist-min、Direct（v1 の言語化 confidence）、checklist_v3_min、固定停止の凹包。
+- 記録：全呼出しで top_logprobs=10 を生トークン列ごと保存し、再解析可能にする。キャッシュキーに logprobs フラグを含め、v3 の記録とは別名前空間にする。
+- conformal prediction は採用しない（θ は従来どおり dev で格子探索）。将来の選択肢として記録。
+
+### 19.3 pilot（dev visual subset の先頭 20 問 × Level 1/5/10/15/20）
+- logprobs 取得率（回答トークンを特定できた率、Rel の top_logprobs に Yes または No が含まれた率）≥ 0.95。
+- observer_v3 の出力テキストが v3 キャッシュと一致する率（logprobs 付与で出力が変わらないことの確認）。
+- P_ans・Rel・積の Level 別分布（異なる値の個数、平均の推移）。Rel が Level に対して単調増加か。
+- §18.3 の項目 1 解決率は v3 と同一のはずなので再掲のみ。
+
+### 19.4 判断
+dev 全 20 Level 推論後、devgrid（凍結なし）。0.95 を満たす設定の平均 Level が公平化 v1（18.45）から有意に下がらなければ中止。ユーザーの目標は「0.95 以上で平均停止 17 以下」。凍結と test はユーザー判断後。
+
+### 19.5 コスト
+observer 2,660 + 関連度 2,660 + Direct 1,200 + Direct 関連度 1,200 ≈ 7,700 回（1〜1.5 時間）。
