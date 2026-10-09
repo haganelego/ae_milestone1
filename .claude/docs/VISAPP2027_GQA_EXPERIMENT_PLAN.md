@@ -525,6 +525,12 @@ parser v2 導入後の pilot で checklist observer の初回形式 valid 率が
 
 ---
 
+### A12. observer_v3 の回答形式指示（2026-10-09、形式のみ。v3 の dev 改訂枠は消費しない）
+
+A10（reader v2）の先例に従い、observer_v3 に reader v2 と同じ回答形式文を追加する：「Use a single common word where possible: for shapes use adjective forms such as round, square, rectangular, or triangular; spell the color as "gray"; use singular nouns for materials such as brick or wood; for yes/no items answer exactly "yes" or "no".」
+- 理由：L20 での observer 回答に表記ゆれがあった（gray/grey、round/circular、複数語の色表現）。これは確信度ではなく語の違いを測ってしまう。
+- 意味の変更ではないため、§18.3 の v3 用 dev 改訂（planner_v3 に使用済み）とは別に扱う。direct の prompt は v1 と同一のまま。observer と direct で形式指示が非対称になる点は報告に明記する。
+
 ## 17. v2: Consistency-stop（2026-10-09 事前登録、dev のみ先行。freeze/test はユーザー判断後）
 
 ### 背景

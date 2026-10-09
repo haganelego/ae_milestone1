@@ -32,6 +32,7 @@ from .common import (
 
 ROLES = ("answer_only", "direct", "planner", "checklist")
 V2_ROLES = ("planner_v2", "identify", "attr_blind", "recompose")  # plan §17
+V3_ROLES = ("text_only", "planner_v3", "observer_v3")  # plan §18
 REPAIR_PROMPT = "schema_repair"
 ROLE_DIRS = {
     "answer_only": "reader",
@@ -42,6 +43,9 @@ ROLE_DIRS = {
     "identify": "identify",
     "attr_blind": "attr_blind",
     "recompose": "recompose",
+    "text_only": "text_only",
+    "planner_v3": "plans_v3",
+    "observer_v3": "observer_v3",
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"
@@ -151,6 +155,11 @@ class RequestSpec:
     input_data: dict[str, Any]
     image_bytes: bytes | None = None
     namespace: str = ""
+    # Sampling support (plan §18): per-request decoding override (e.g.
+    # temperature/seed of sample i) and a record-file suffix (item id, sample).
+    # Both are part of the cache key only when non-empty, so older keys hold.
+    options_override: tuple[tuple[str, Any], ...] = ()
+    suffix: str = ""
 
     @property
     def image_sha256(self) -> str | None:
@@ -302,9 +311,17 @@ class RequestEngine:
                 "repair_prompt_hash": self._repair_hash(),
                 "input_hash": sha256_json(spec.input_data),
                 "image_sha256": spec.image_sha256,
-                "decoding": self.settings.decoding(spec.role),
+                "decoding": self.decoding(spec),
+                **({"suffix": spec.suffix} if spec.suffix else {}),
             }
         )
+
+    def decoding(self, spec: RequestSpec) -> dict[str, Any]:
+        """Role decoding with the request's options override applied."""
+        base = self.settings.decoding(spec.role)
+        if not spec.options_override:
+            return base
+        return {**base, "options": {**base["options"], **dict(spec.options_override)}}
 
     def record_path(self, spec: RequestSpec) -> Path:
         role_dir = ROLE_DIRS[spec.role] + (
@@ -316,8 +333,8 @@ class RequestEngine:
             / record_tag(self.settings.name, self.settings.digest)
         )
         if spec.level is None:
-            return base / f"{spec.question_id}.json"
-        return base / spec.question_id / f"{spec.level:02d}.json"
+            return base / f"{spec.question_id}{spec.suffix}.json"
+        return base / spec.question_id / f"{spec.level:02d}{spec.suffix}.json"
 
     def build_messages(self, spec: RequestSpec) -> list[dict[str, Any]]:
         message: dict[str, Any] = {
@@ -334,7 +351,7 @@ class RequestEngine:
         payload: dict[str, Any] = {
             "model": self.settings.name,
             "messages": messages,
-            **self.settings.decoding(spec.role),
+            **self.decoding(spec),
         }
         if payload["format"] is None:
             payload.pop("format")
@@ -502,7 +519,8 @@ class RequestEngine:
             "input_hash": sha256_json(spec.input_data),
             "input_data": spec.input_data,
             "image_sha256": spec.image_sha256,
-            "decoding": self.settings.decoding(spec.role),
+            "decoding": self.decoding(spec),
+            "suffix": spec.suffix,
             "model_tag": self.model_tag,
             "parse_version": PARSE_VERSION,
             "fence_stripped": bool(attempts and attempts[-1].get("fence_stripped")),

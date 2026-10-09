@@ -328,9 +328,10 @@ def freeze_policy(
     max_level: int,
     output_dir: Path,
     provenance: Mapping[str, Any],
+    frozen_name: str = "frozen_policy.json",
 ) -> dict[str, Any]:
-    """Write dev_threshold_grid.csv and frozen_policy.json (refuses to re-freeze)."""
-    frozen_path = output_dir / "frozen_policy.json"
+    """Write dev_threshold_grid.csv and the frozen policy (refuses to re-freeze)."""
+    frozen_path = output_dir / frozen_name
     grid, selected = select_thresholds(
         table, DEV_SPLIT, policy_cfg, max_level, frozen_path
     )

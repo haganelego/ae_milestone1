@@ -20,6 +20,7 @@ from typing import Any
 
 from PIL import Image, ImageDraw
 
+from milestone1.gqa_stop import stages_data, stages_model
 from milestone1.gqa_stop.client import TransportResult
 from milestone1.gqa_stop.common import (
     RunPaths,
@@ -41,10 +42,15 @@ OBJECTS = ("cup", "box", "sign", "chair", "plate", "bag")
 INPUT_MARKER = "Input data: "
 FAIL_PLAN_WORD = "kite"  # planner returns broken JSON for these questions
 FAIL_SCREEN_ANSWER = "glass"
-FENCED_TEMPLATE = "```json\n{body}\n```"  # reader always wrong -> screening failure
+FENCED_TEMPLATE = "```json\n{body}\n```"
+V3_SEED_BASE = 20261008
+PRIOR_SOLVE_LEVEL = 3  # fake text_only "knows" questions solved by L3  # reader always wrong -> screening failure
 # v2 roles share the reader's first sentence, so they are recognised by a
 # distinctive phrase first (checked before ROLE_PREFIX).
 V2_ROLE_MARKERS = (
+    ("without any image", "text_only"),
+    ("Is there a ... in the image?", "planner_v3"),
+    ('three keys "answer"', "observer_v3"),
     ("without seeing the image", "recompose"),
     ("object names as single common nouns", "identify"),
     ("Answer only from what is visible", "attr_blind"),
@@ -274,6 +280,11 @@ class FakeTransport:
             return TransportResult("not json", 1, 0.0)
         if role in {"planner_v2", "identify", "attr_blind", "recompose"}:
             return TransportResult(self.reply_v2(role, data, image_id, level), 1, 0.0)
+        if role in {"text_only", "planner_v3", "observer_v3"}:
+            seed = int(payload["options"]["seed"]) - V3_SEED_BASE
+            return TransportResult(
+                self.reply_v3(role, data, image_id, level, seed), 1, 0.0
+            )
         reply = self.reply(role, data, level)
         return TransportResult(reply, 1, 0.0)
 
@@ -325,6 +336,53 @@ class FakeTransport:
         return json.dumps(
             {"answer": gt if solved and gt != FAIL_SCREEN_ANSWER else "purple"}
         )
+
+    def reply_v3(
+        self,
+        role: str,
+        data: dict[str, Any],
+        image_id: str | None,
+        level: int | None,
+        sample: int,
+    ) -> str:
+        if role == "text_only":
+            text = data["question"]
+            prior = solve_level(text) <= PRIOR_SOLVE_LEVEL
+            return json.dumps({"answer": self.answers[text] if prior else "purple"})
+        if role == "planner_v3":
+            text = data["question"]
+            match = SCENE_RE.search(text)
+            obj, scene = (match.group(1), match.group(3)) if match else ("object", "0")
+            attribute = next(a for a in ("color", "material", "shape") if a in text)
+            return json.dumps(
+                {
+                    "items": [
+                        {
+                            "id": "c1",
+                            "question": f"Is there a {obj} in scene {scene} in the image?",
+                            "depends_on": [],
+                        },
+                        {
+                            "id": "c2",
+                            "question": f"What {attribute} is the {obj} in scene {scene}?",
+                            "depends_on": ["c1"],
+                        },
+                    ]
+                }
+            )
+        question = data["question"]
+        original = self.original_for(str(image_id), question)
+        solved = level is not None and level >= solve_level(original["text"])
+        existence = question.startswith("Is there")
+        truth = "yes" if existence else self.answers[original["text"]]
+        if "scene" not in question and existence:  # negative probe noun
+            truth = "no"
+        if solved:
+            return json.dumps({"answer": truth, "resolved": True, "confidence": 0.9})
+        if sample % 2 == 0:  # samples 0, 2, 4 guess; 1, 3 abstain
+            guess = "yes" if existence else "purple"
+            return json.dumps({"answer": guess, "resolved": True, "confidence": 0.6})
+        return json.dumps({"answer": "unknown", "resolved": False, "confidence": 0.0})
 
     def reply(self, role: str, data: dict[str, Any], level: int | None) -> str:
         text = data["question"]
@@ -414,3 +472,20 @@ def answers_by_text(questions: dict[str, dict[str, Any]]) -> dict[str, str]:
 
 def paths_for(cfg: dict[str, Any]) -> RunPaths:
     return build_paths(cfg)
+
+
+def run_v1_pipeline(tmp: Path) -> tuple[Path, dict[str, Any], dict[str, Any], Context]:
+    """Synthetic v1 run through test inference (used by the v3 tests)."""
+    config_path, cfg, questions = make_world(tmp)
+    transport = FakeTransport(None, answers_by_text(questions), questions)
+    ctx = make_context(config_path, cfg, transport)
+    transport.paths = ctx.paths
+    stages_model.preflight(ctx, get=fake_tags_get)
+    stages_data.prepare(ctx)
+    stages_data.screen(ctx, "dev")
+    stages_model.pilot(ctx, [1, 5, 10, 15, 20], calibration=True, use_fallback=False)
+    stages_model.infer(ctx, "dev", list(range(1, 21)))
+    stages_model.freeze(ctx)
+    stages_data.screen(ctx, "test")
+    stages_model.infer(ctx, "test", list(range(1, 21)))
+    return config_path, cfg, questions, ctx

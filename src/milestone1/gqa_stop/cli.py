@@ -12,8 +12,8 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from . import fair_subset, stages_data, stages_model, stages_v3, textprobe
 from . import report as report_mod
-from . import stages_data, stages_model
 from .client import PauseRequired
 from .common import StageError, load_effective_config
 from .context import Context, TransportFactory, default_transport
@@ -31,6 +31,7 @@ COMMANDS = (
     "evaluate",
     "report",
     "devgrid",
+    "textprobe",
 )
 
 
@@ -48,6 +49,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="dev infer only: proceed past a failed pilot gate (documented exit "
         "branch); logged as GATE OVERRIDE and results become exploratory",
+    )
+    parser.add_argument(
+        "--subset",
+        type=Path,
+        default=None,
+        help="freeze/evaluate only: visual_subset.json (fair-v1 re-analysis, §18.1)",
     )
     parser.add_argument("--revise", action="store_true")
     parser.add_argument("--revision-file", type=Path, default=None)
@@ -84,6 +91,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
     if command == "pilot":
         require_split(args, ("dev",))
         levels = ctx.parse_levels(args.levels, ctx.cfg["execution"]["pilot_levels"])
+        if ctx.family in stages_v3.V3_FAMILIES:
+            return stages_v3.pilot_v3(ctx, levels)
         return stages_model.pilot(
             ctx, levels, args.calibration, args.use_fallback_model
         )
@@ -92,10 +101,18 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         levels = ctx.parse_levels(args.levels or "all", [])
         return stages_model.infer(ctx, split, levels, args.force_continue)
     if command == "freeze":
+        if args.subset is not None:
+            return fair_subset.freeze_on_subset(ctx, args.subset)
         return stages_model.freeze(ctx)
     if command == "evaluate":
+        if args.subset is not None:
+            return fair_subset.evaluate_on_subset(ctx, args.subset)
         return stages_model.run_evaluate(ctx)
+    if command == "textprobe":
+        return textprobe.textprobe(ctx)
     if command == "devgrid":
+        if ctx.family in stages_v3.V3_FAMILIES:
+            return stages_v3.devgrid_v3(ctx)
         return stages_model.devgrid(ctx)
     if ctx.dry_run:
         ctx.echo(f"[dry-run] report -> {ctx.paths.out('report.md')}")

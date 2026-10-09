@@ -27,11 +27,15 @@ from .context import Context, require, table_to_csv
 from .devgrid import run_devgrid
 from .evaluate import add_correctness, evaluate
 from .inference import LEVEL_ROLES, READER_ROLE, planned_request_count
+from .item_checklist import ItemChecklistRunner, planned_item_requests
 from .policy import consistency_variants, freeze_policy
+from .sampled import SampledRunner, planned_sampled_requests, sampling_from_config
 from .stages_data import write_dataset_flow
 
 VALID = "valid"
 CONSISTENCY = "consistency"
+SAMPLED = "sampled_checklist"
+ITEM = "item_checklist"  # v3 final (plan §18.6): N = 1 standalone items
 FORMAT_VALID_TARGET = 0.95
 FORMAT_VALID_EXIT = 0.90
 
@@ -80,6 +84,27 @@ def level_table(
     if ctx.family == CONSISTENCY:
         v2 = ConsistencyRunner(ctx.engine(), ctx.series, cache_only=cache_only)
         rows = [row for q in questions for row in v2.run_question(q, levels)]
+    elif ctx.family == ITEM:
+        checklist = ctx.cfg["checklist"]
+        v3n1 = ItemChecklistRunner(
+            ctx.engine(),
+            ctx.series,
+            int(checklist["min_items"]),
+            int(checklist["max_items"]),
+            cache_only=cache_only,
+        )
+        rows = [row for q in questions for row in v3n1.run_question(q, levels)]
+    elif ctx.family == SAMPLED:
+        checklist = ctx.cfg["checklist"]
+        v3 = SampledRunner(
+            ctx.engine(),
+            ctx.series,
+            sampling_from_config(ctx.cfg),
+            int(checklist["min_items"]),
+            int(checklist["max_items"]),
+            cache_only=cache_only,
+        )
+        rows = [row for q in questions for row in v3.run_question(q, levels)]
     else:
         runner = ctx.runner(cache_only=cache_only)
         rows = [row for q in questions for row in runner.run_question(q, levels, roles)]
@@ -230,6 +255,13 @@ EXAMPLE_COUNT = 5
 
 
 def planned_requests(ctx: Context, n_questions: int, n_levels: int) -> int:
+    if ctx.family == ITEM:
+        items = int(ctx.cfg["checklist"]["max_items"])
+        return planned_item_requests(n_questions, n_levels, items)
+    if ctx.family == SAMPLED:
+        sampling = sampling_from_config(ctx.cfg)
+        items = int(ctx.cfg["checklist"]["max_items"])
+        return planned_sampled_requests(n_questions, n_levels, sampling.n, items)
     if ctx.family == CONSISTENCY:
         return planned_consistency_requests(n_questions, n_levels)
     return planned_request_count(n_questions, n_levels, LEVEL_ROLES)
@@ -331,7 +363,11 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
     tag = active_tag(ctx)
     summary_path = ctx.paths.out(f"pilot/pilot_summary_{tag}.json")
     calib_path = ctx.paths.out(f"pilot/pilot_calibration_{tag}.json")
-    needs_calibration = ctx.family != CONSISTENCY  # §17 uses no confidence
+    needs_calibration = ctx.family not in {
+        CONSISTENCY,
+        SAMPLED,
+        ITEM,
+    }  # §17/§18: no A4 gate
     if not summary_path.exists() or (needs_calibration and not calib_path.exists()):
         return [f"no pilot with --calibration for the active model {tag}"]
     summary = read_json(summary_path)
@@ -412,6 +448,7 @@ def infer(
         table_to_csv(table, split_table_path(ctx, split))
     info = {
         "started": True,
+        "family": ctx.family,
         "complete": complete,
         "questions": len(questions),
         "levels": list(levels),
@@ -448,9 +485,9 @@ def provenance(ctx: Context) -> dict[str, Any]:
 
 def freeze(ctx: Context) -> dict[str, Any]:
     ctx.set_stage("freeze")
-    if ctx.family == CONSISTENCY:
+    if ctx.family in {CONSISTENCY, SAMPLED, ITEM}:
         raise StageError(
-            "freeze is not available for the consistency family (plan §17: threshold "
+            f"freeze is not available for the {ctx.family} family (plan §17/§18: threshold "
             "freezing and test wait for the user's decision); use `devgrid`"
         )
     require_screening_match(ctx, "dev")

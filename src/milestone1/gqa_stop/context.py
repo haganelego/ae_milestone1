@@ -125,8 +125,22 @@ class Context:
         return [r for r in rows if split is None or r["split"] == split]
 
     def selected(self, split: str) -> list[dict[str, Any]]:
+        """Adopted rows of ``split``; restricted to ``paths.subset_file`` if set."""
         rows = read_jsonl(self.paths.selection("selected_manifest.jsonl"))
-        return [r for r in rows if r["split"] == split]
+        rows = [r for r in rows if r["split"] == split]
+        keep = self.subset_ids(split)
+        if keep is None:
+            return rows
+        return [r for r in rows if r["question_id"] in keep]
+
+    def subset_ids(self, split: str) -> set[str] | None:
+        value = self.cfg["paths"].get("subset_file")
+        if not value:
+            return None
+        path = resolve_path(self.paths.repo_root, value)
+        if not path.exists():
+            raise StageError(f"evaluation subset {path} missing: run `textprobe` first")
+        return set(read_json(path)[split])
 
     # ---- model ----------------------------------------------------------
     @cached_property
@@ -223,9 +237,9 @@ class Context:
             raise StageError("no frozen policy: run `freeze` first")
         return read_json(path)
 
-    def require_frozen_match(self) -> None:
+    def require_frozen_match(self, frozen: dict[str, Any] | None = None) -> None:
         """Test-side stages must use the frozen model digest and prompts."""
-        frozen = self.frozen_policy()
+        frozen = self.frozen_policy() if frozen is None else frozen
         if frozen.get("digest") != self.settings.digest:
             raise StageError(
                 f"active digest {self.settings.digest} != frozen {frozen.get('digest')}"
