@@ -49,6 +49,7 @@ ROLE_DIRS = {
     "planner_v3": "plans_v3",
     "observer_v3": "observer_v3",
     "relevance_v4": "relevance_v4",
+    "reader_informed": "reader_informed",  # exploratory probe
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"

@@ -15,11 +15,13 @@ from pathlib import Path
 from . import (
     explore,
     fair_subset,
+    informed_reader,
     stages_data,
     stages_model,
     stages_v3,
     stages_v4,
     stages_v4c,
+    stages_v4c_test,
     textprobe,
 )
 from . import report as report_mod
@@ -45,6 +47,8 @@ COMMANDS = (
     "readers",
     "v1arm",
     "explore",
+    "extension",
+    "informed-reader",
 )
 
 
@@ -118,10 +122,14 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
     if command == "freeze":
         if args.subset is not None:
             return fair_subset.freeze_on_subset(ctx, args.subset)
+        if ctx.family == stages_model.LOGPROB:
+            return stages_v4c_test.freeze_v4c(ctx)
         return stages_model.freeze(ctx)
     if command == "evaluate":
         if args.subset is not None:
             return fair_subset.evaluate_on_subset(ctx, args.subset)
+        if ctx.family == stages_model.LOGPROB:
+            return stages_v4c_test.evaluate_v4c(ctx)
         return stages_model.run_evaluate(ctx)
     if command == "textprobe":
         return textprobe.textprobe(ctx)
@@ -133,7 +141,13 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
             ctx, split, ctx.parse_levels(args.levels or "all", [])
         )
     if command == "v1arm":
+        if args.split == "test":
+            return stages_v4c_test.v1arm_test(ctx)
         return stages_v4c.v1arm(ctx)
+    if command == "informed-reader":
+        return informed_reader.run_probe(ctx)
+    if command == "extension":
+        return stages_v4c_test.extension(ctx)
     if command == "explore":
         return explore_stage(ctx)
     if command == "devgrid":

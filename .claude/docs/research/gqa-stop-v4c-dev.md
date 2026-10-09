@@ -257,3 +257,65 @@ Each block gives the method, the question, GT, the stop level and the common-rea
 - **Unchanged.** Prompts are the same as in v1–v4 and no revision counter moved. P_ans, Rel and the gate follow §19 exactly.
 - **New stages.** `detgate`, `screen --split test` before freeze (A13 flag), `readers` (reader on every level for dev and test; no method on test), `textprobe` on this run's own adoption, and `v1arm`. `devgrid` merges the v1-arm checklist columns.
 - **Reproducibility.** Every record of this run was produced under the same explicit decoding block. A replay from cache needs no model calls.
+
+## Exploratory: informed reader (orchestrator request, 2026-10-09; NOT pre-registered; dev in-sample)
+
+Question: does a reader that also sees the same-level checklist observations answer correctly at lower levels than the plain reader?
+
+- **Setup.** The prompt `prompts/gqa_stop/reader_informed.txt` is the reader prompt v2 (same answer-format sentence and JSON) plus an "auxiliary_observations" block. It has one line per checklist item at the same level: `Q: <item question> | A: <observer answer> | resolved: <true/false> | answerability: <Rel, 2 decimals>`. The prompt says the observations come from an automatic observer on the same image, may be wrong, and are only hints.
+- **Inputs.** The probe uses the v4c dev records (plans_v3, observer_v3_lp, relevance_v4) for the 59 dev visual questions × 20 levels. It never includes GT or the direct answer. Decoding is the A13 block with logprobs (first answer token P_ans stored).
+- **Calls.** 1,180 reader calls, 0 invalid. Records are in `reader_informed/` and the table is `reader_informed_levels_dev.csv`, with a summary in `reader_informed_summary.json`. Code is `src/milestone1/gqa_stop/informed_reader.py` (CLI `informed-reader`).
+
+### Verdict
+
+The informed reader is **worse at every level**. It mostly copies the observer's answer, and the observer is less accurate than the plain reader. It does not lower the level at which the answer becomes correct; it delays it.
+
+### Accuracy by level (59 dev questions; plain = reader prompt v2)
+
+| level | 1 | 2 | 3 | 4 | 5 | 6 | 8 | 10 | 12 | 14 | 16 | 17 | 18 | 19 | 20 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| plain | 0.356 | 0.441 | 0.576 | 0.644 | 0.695 | 0.712 | 0.746 | 0.797 | 0.847 | 0.898 | 0.915 | 0.932 | 0.898 | 0.915 | 1.000 |
+| informed | 0.220 | 0.305 | 0.373 | 0.492 | 0.542 | 0.593 | 0.644 | 0.746 | 0.780 | 0.847 | 0.814 | 0.831 | 0.831 | 0.814 | 0.864 |
+
+The plain reader is 1.000 at L20 by construction, because the dev set keeps only L20-correct questions.
+
+### Stable-correct onset
+
+The onset is the first level from which the answer stays correct through L20. It is set to 21 when the answer is wrong at L20.
+
+| | mean | median |
+|---|---|---|
+| plain | 6.17 | 3 |
+| informed | 9.41 | 8 |
+
+- **Difference.** Informed minus plain is **+3.24 [+1.77, +4.89]** (paired image-cluster bootstrap, 2000 draws, seed 20261008).
+- **Per question.** The onset is earlier for 1 question, later for 28, and the same for 30.
+
+### L20 correctness
+
+8 of 59 questions are wrong at L20 with the informed reader, so they would drop out of the main set.
+
+| question | plain | informed | observer (last item) |
+|---|---|---|---|
+| 05609323 | gray | black | black |
+| 05827270 | concrete | gray | unknown (planner schema failure, §5) |
+| 05831816 | plastic | metal | metal |
+| 0778325 | white | white and green | white and green |
+| 11213386 | yellow | yellow and red | yellow and red |
+| 11213423 | red | red and yellow | red and yellow |
+| 1390846 | brick | stone | stone |
+| 18486270 | metal | wood | wood |
+
+### Stop-time scoring
+
+- **Frozen θ.** checklist_v4_min uses the frozen dev θ of 0.39, so the stops are unchanged at mean level 14.64. Scored by the plain reader, accuracy is 0.966. Scored by the informed reader, it is **0.881**.
+- **Wrong at the stop.** The informed reader is wrong at the stop on 11213386, 11213423 and 11619091. The other wrong answers come from questions forced to L20 where the informed reader is wrong.
+- **In-sample θ reselection.** Re-selecting θ for accuracy ≥ 0.95 with the informed reader is **infeasible**. Its L20 accuracy is 0.864, so no θ and no fixed level reaches 0.95. Fixed-dev is 20 for plain and none for informed.
+
+### Mechanism
+
+- **Copying.** The informed answer differs from the plain answer in 236 of 1,180 (question, level) cells. In 205 of those 236 it equals the observer's last-item answer.
+- **Lost correct answers.** In 125 cells the plain reader was right and the informed reader wrong; the reverse happened in 4. In 104 of the 125 the informed answer is the observer's answer.
+- **Agreement with the observer.** It rises from 0.575 for the plain reader to 0.749 for the informed reader.
+- **Format drift.** Two-colour answers such as "yellow and red" enter only through the observer. There are 23 of them for the informed reader and 0 for the plain reader.
+- **Cause.** The 9b reader treats the observation lines as evidence, not as hints, even though the prompt says they may be wrong.
