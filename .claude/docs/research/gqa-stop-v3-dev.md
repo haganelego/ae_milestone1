@@ -121,14 +121,88 @@ Best feasible θ per method at dev accuracy ≥ 0.95:
 - Cause (a) examples, existence item answered "no": utensils in the box, the car on the left, the plate to the right of the cabinet, the shelter, the coffee table, the mailbox, the sidewalk.
 - These targets are visible to the reader at L20; the reader is right on all of them by construction of the screening. The existence item is therefore stricter than the reader. It sometimes fails on stuff-like or partly visible targets and on relational existence ("Is there a plate to the right of the cabinet?").
 
-## F. Superseded N=5 sampling run (plan §18.2, withdrawn by §18.6)
+### L20 per question (dev, 60 visual questions; `dev_l20_per_question.csv`)
+
+At L20 the existence item answered "no" for 20 of 60 GQA targets: 12 of them unresolved and 8 resolved as "no". The reader is correct on all 60 by construction. The causes of a zero stop score at L20 are 15 (a), 5 other and 1 (c), as summarised above.
+
+| qid | question | existence item → answer (resolved) | min r | reader correct | cause |
+|---|---|---|---|---|---|
+| 00271801 | What is the plate to the right of the cabinet made of? | Is there a plate to the right of the cabinet in the image? → no (no) | 0.00 | True | a |
+| 00434791 | What's the fence made of? | Is there a fence in the image? → no (no) | 0.00 | True | a |
+| 01316734 | Which shape is the plate to the left of the vase? | Is there a plate to the left of the vase in the image? → no (no) | 0.00 | True | a |
+| 01601414 | What is the shape of the sink that is in the bathroom? | Is there a sink in the image? → no (no) | 0.00 | True | a |
+| 05827270 | What is the floor made of? | Is there a floor in the image? → yes (yes) | 0.00 | True | other |
+| 05831816 | What material makes up the utensil to the right of the food? | Is there a utensil to the right of the food in the image? → no (no) | 0.00 | True | a |
+| 06572517 | What is the ceiling made of? | Is there a ceiling in the image? → yes (yes) | 0.00 | True | other |
+| 07785408 | What is the chair to the right of the monitor made of? | Is there a chair in the image? → yes (yes) | 0.00 | True | other |
+| 07949045 | What is the shelf made of? | Is there a shelf in the image? → yes (yes) | 0.00 | True | other |
+| 08254993 | What material is the mailbox made of? | Is there a mailbox in the image? → no (no) | 0.00 | True | a |
+| 09488485 | What makes up the utensils in the box? | Is there a box with utensils in the image? → no (yes) | 0.00 | True | a |
+| 10979790 | What is the sidewalk made of? | Is there a sidewalk in the image? → no (no) | 0.00 | True | a |
+| 12411054 | The car on the left has what color? | Is there a car on the left in the image? → no (no) | 0.00 | True | a |
+| 13127787 | Which material is the cup to the right of the other cup made of? | Is there a cup in the image? → yes (yes) | 0.00 | True | other |
+| 1390846 | What is the shelter made of? | Is there a shelter in the image? → no (no) | 0.00 | True | a |
+| 13985783 | What material was used to make the bag that is to the right of the bowl? | Is there a bag to the right of the bowl in the image? → no (no) | 0.00 | True | a |
+| 15172866 | What is the color of the train car that is to the left of the other train car? | Is there a train in the image? → yes (yes) | 0.00 | True | c |
+| 15174086 | What material is the container to the right of the man? | Is there a container to the right of the man in the image? → no (yes) | 0.00 | True | a |
+| 17184616 | What is the coffee table made of? | Is there a coffee table in the image? → no (no) | 0.00 | True | a |
+| 17888876 | What shape is the plate? | Is there a plate in the image? → no (no) | 0.00 | True | a |
+| 19452749 | What is the bench to the left of the van made out of? | Is there a bench to the left of the van in the image? → no (yes) | 0.00 | True | a |
+| 00943538 | What is the color of the clear sky? | Is there a clear sky in the image? → no (yes) | 0.85 | True |  |
+| 06572516 | What material is the ceiling? | Is there a ceiling in the image? → yes (yes) | 0.85 | True |  |
+| 06726789 | What is the color of the mask the catcher is wearing? | Is there a mask worn by a catcher in the image? → yes (yes) | 0.85 | True |  |
+| 07512969 | What is the house to the left of the air conditioner made of? | Is there a house in the image? → no (yes) | 0.85 | True |  |
+| 13808031 | What's the ground made of? | Is there a ground in the image? → yes (yes) | 0.85 | True |  |
+| 14848534 | What color is the bicycle? | Is there a bicycle in the image? → yes (yes) | 0.85 | True |  |
+| 16756887 | What color does the large pot have? | Is there a large pot in the image? → no (yes) | 0.85 | True |  |
+| 16820186 | The brown table is which shape? | Is there a brown table in the image? → yes (yes) | 0.85 | True |  |
+| 18486270 | What material is the fence near the sheep made of? | Is there a fence near the sheep in the image? → yes (yes) | 0.85 | True |  |
+| 18752666 | Which material is the shelf to the left of the tools made of? | Is there a shelf to the left of the tools in the image? → no (yes) | 0.85 | True |  |
+| 00947257 | What color is the bear that is to the right of the other bear? | Is there a bear in the image? → yes (yes) | 1.00 | True |  |
+| 011012564 | What shape does the food which is on the plate have? | Is there a food on the plate in the image? → yes (yes) | 1.00 | True |  |
+| 01420620 | Which color is the car? | Is there a car in the image? → yes (yes) | 1.00 | True |  |
+| 03189870 | The mirror is of which shape? | Is there a mirror in the image? → yes (yes) | 1.00 | True |  |
+| 03774985 | What is the shape of the dessert the toy car is on? | Is there a dessert in the image? → yes (yes) | 1.00 | True |  |
+| 03954206 | Which color is the curtain to the left of the lamp? | Is there a curtain in the image? → yes (yes) | 1.00 | True |  |
+| 06614339 | Which color are the pants? | Is there a pair of pants in the image? → yes (yes) | 1.00 | True |  |
+| 07111669 | What is the color of the coat that the girl is wearing? | Is there a girl in the image? → yes (yes) | 1.00 | True |  |
+| 0778325 | Which color is the plane that is flying in the sky? | Is there a plane flying in the sky in the image? → yes (yes) | 1.00 | True |  |
+| 07833741 | The sky is of what color? | Is there a sky in the image? → yes (yes) | 1.00 | True |  |
+| 08924895 | What shape do you think the chair is? | Is there a chair in the image? → yes (yes) | 1.00 | True |  |
+| 09149294 | What is the shape of the flags that are on the rope? | Is there a flag on a rope in the image? → yes (yes) | 1.00 | True |  |
+| 09672864 | What shape is the table? | Is there a table in the image? → yes (yes) | 1.00 | True |  |
+| 09887053 | Which shape is the mirror the street sign is reflected in? | Is there a mirror reflecting a street sign in the image? → no (yes) | 1.00 | True |  |
+| 10780377 | What color is the chair next to the other chair? | Is there a chair in the image? → yes (yes) | 1.00 | True |  |
+| 11213386 | What color is the umbrella on the right? | Is there an umbrella on the right in the image? → yes (yes) | 1.00 | True |  |
+| 11213423 | What color is the umbrella in the middle? | Is there an umbrella in the image? → yes (yes) | 1.00 | True |  |
+| 11619091 | What do you think is the color of this fence? | Is there a fence in the image? → yes (yes) | 1.00 | True |  |
+| 11844870 | The container that is sitting on the dresser has what color? | Is there a container sitting on the dresser in the image? → yes (yes) | 1.00 | True |  |
+| 121044380 | Which color is the shirt? | Is there a shirt in the image? → yes (yes) | 1.00 | True |  |
+| 12416576 | What material is the sidewalk near the car? | Is there a sidewalk near the car in the image? → yes (yes) | 1.00 | True |  |
+| 12454186 | What color do the shorts have? | Is there a pair of shorts in the image? → yes (yes) | 1.00 | True |  |
+| 141013932 | What color is the shirt? | Is there a shirt in the image? → yes (yes) | 1.00 | True |  |
+| 14276984 | What is the color of the tiles that are behind the toilet? | Is there a tile wall behind the toilet in the image? → yes (yes) | 1.00 | True |  |
+| 15172776 | What color is the train to the left of the car? | Is there a train in the image? → yes (yes) | 1.00 | True |  |
+| 17108363 | What color is the cup that is to the right of the other cup? | Is there a cup in the image? → yes (yes) | 1.00 | True |  |
+| 17891388 | What is the color of the candles on the table? | Is there a candle on the table in the image? → yes (yes) | 1.00 | True |  |
+| 18660252 | What is the shape of the tiles that look white? | Is there a tile in the image? → yes (yes) | 1.00 | True |  |
+| 19315625 | What shape is the window? | Is there a window in the image? → yes (yes) | 1.00 | True |  |
+
+## Appendix: Exploratory (withdrawn design §18.6), the N=5 sampling run
 
 - **Status.** The N=5 pilot, dev inference (~19.5k calls) and devgrid had completed before the stop instruction arrived, so nothing was stopped mid-run.
 - **Outputs.** They are in `outputs/gqa_stop/visapp_gqa_v3/superseded_n5/`, together with the rev-0 plans.
-- **Records.** The `*_s{i}` observer and direct records stay on disk under their own keys and are not used by any v3-final table.
-- **Do not cite.** Its numbers were reported earlier; they are not results of v3.
+- **Records.** The `*_s{i}` records (13,800 observer, 6,000 direct-sampled, 60 negative-probe) were moved to their own namespace, `superseded_n5/records/`, on 2026-10-09. They never mix with the N=1 records.
+- **Planner revision 0.** It was used only by this run. Its plans had 7 of 60 with no attribute item and 20 of 60 flagged `item_not_standalone`. Revision 1, used by v3 final, has 0 and 0; the count-item rate is 0.05. This is a known issue for the user.
+- **Exploratory numbers.** These come from the withdrawn design, so they are not v3 results. The best dev θ at accuracy ≥ 0.95, as mean L with the difference to fair v1 and its CI:
+  - checklist min S_agree θ0.6: 16.05, −2.40 [−4.02, −0.85].
+  - checklist min S_mean θ0.75: 16.87, −1.58 [−3.03, −0.13].
+  - Direct-sampled S_mean θ1.0: 14.87, −3.58 [−4.95, −2.25].
+  - Direct-sampled S_agree: θ=∞.
 
 ## Deviations and notes
+
+- **Dependency gate.** v3 uses v1's `effective_confidences`, so a child scores 0 unless every ancestor is resolved and its answer is not "unknown". The orchestrator's later wording, "parent resolved and r_parent > 0", changes no row on dev, and it cannot change checklist_v3_min: the min includes the parent itself, so r_parent = 0 already makes the min 0.
 
 - The planner revision also forbids counting items. That was not in the instruction, but a "How many umbrellas…" item appeared in the N=5 pilot. One count item remains (count item rate 0.05).
 - **Rules I fixed in code (§18 did not specify them):**

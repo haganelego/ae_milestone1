@@ -264,6 +264,22 @@ def test_item_devgrid(item_run) -> None:
     assert set(frame["method"]) == {"checklist_v3_min", "checklist_v3_mean", "direct"}
     assert grid["abort_methods"] == ["checklist_v3_min"]
     assert v3.paths.out("dev_l20_zero_causes.json").exists()
+    per_q = pd.read_csv(
+        v3.paths.out("dev_l20_per_question.csv"),
+        dtype={"question_id": str},
+        keep_default_na=False,
+    )
+    assert len(per_q) == len(v3.selected("dev"))
+    assert {
+        "existence_answer",
+        "existence_resolved",
+        "checklist_v3_min",
+        "zero_cause",
+    } <= set(per_q.columns)
+    zero = per_q[per_q["checklist_v3_min"] <= 0]
+    assert (zero["zero_cause"] != "").all() and (
+        per_q[per_q["checklist_v3_min"] > 0]["zero_cause"] == ""
+    ).all()
     comparison = pd.read_csv(v3.paths.out("dev_comparison.csv"))
     assert comparison["method"].str.startswith("fair v1 checklist_min").any()
     assert not v3.paths.out("frozen_policy.json").exists()

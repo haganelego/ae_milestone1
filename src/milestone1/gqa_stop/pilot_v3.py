@@ -136,6 +136,31 @@ def l20_zero_causes(table: pd.DataFrame, last_level: int = 20) -> dict[str, Any]
     }
 
 
+def l20_per_question(table: pd.DataFrame, last_level: int = 20) -> pd.DataFrame:
+    """One row per question at the last level: existence item, min score, cause."""
+    causes = l20_zero_causes(table, last_level)["primary_question_ids"]
+    cause_of = {q: c for c, qids in causes.items() for q in qids}
+    rows = table[table["level"] == last_level].sort_values("question_id")
+    out = pd.DataFrame(
+        {
+            "question_id": rows["question_id"],
+            "question": rows["question"],
+            "attribute": rows["attribute"],
+            "relate_count": rows["relate_count"],
+            "existence_item": rows["item1_question"],
+            "existence_answer": rows["item1_answer"],
+            "existence_resolved": rows["item1_resolved"],
+            "existence_confidence": rows["item1_confidence"],
+            "last_item_has_attribute": rows["last_item_has_attribute"],
+            "checklist_v3_min": rows["checklist_v3_min"],
+            "reader_answer": rows["reader_answer"],
+            "reader_correct": rows["reader_correct"],
+        }
+    )
+    out["zero_cause"] = out["question_id"].map(cause_of).fillna("")
+    return out
+
+
 def item_metrics(table: pd.DataFrame) -> dict[str, Any]:
     plans = table.groupby("question_id").first()
     by_level: dict[str, Any] = {}

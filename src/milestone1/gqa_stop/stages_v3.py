@@ -21,6 +21,7 @@ from .item_checklist import METHOD_COLUMNS as ITEM_METHOD_COLUMNS
 from .item_checklist import PRIMARY_METHOD as ITEM_PRIMARY
 from .pilot_v3 import (
     item_metrics,
+    l20_per_question,
     l20_zero_causes,
     negative_probe,
     negative_summary,
@@ -228,6 +229,9 @@ def devgrid_v3(ctx: Context) -> dict[str, Any]:
         )
         causes = l20_zero_causes(table, ctx.n_levels)
         atomic_write_json(ctx.paths.out("dev_l20_zero_causes.json"), causes)
+        l20_per_question(table, ctx.n_levels).to_csv(
+            ctx.paths.out("dev_l20_per_question.csv"), index=False
+        )
         summary = {**summary, "l20_zero_causes": causes}
     else:
         summary = run_devgrid_v3(
