@@ -680,3 +680,29 @@ dev の拡大と推論 → devgrid（曲線）→ 報告 → ユーザー判断�
 - 指標：発火率（低いほど「答えられない状況で止まらない」）、発火した Level の分布、発火時の reader 正誤（参考。GQA 注釈のゆれで途中正解があり得る）。方式間は paired bootstrap。
 - 解釈：主評価（答えられる質問での正答率と平均停止）と合わせ、「答えられるときは早く止まり、答えられないときは止まらない」を 2 軸で示す。
 - 順序：dev 99 問で先に実施し結果を報告 → test 233 問は §22 の test と同時に 1 回だけ。
+
+## 24. v5：対象の実効解像度（box）と Level 差分による停止信号、v2/v3 の clean 再実行（2026-10-10 事前登録、dev のみ）
+共通：dev 102（§22 visual subset）＋ reader 誤答 99（§23 ext_dev_wrong）。A13 クリーンデコード＋think:false を全リクエストに付与。棄権出力は導入しない。test 推論・凍結・コミットはしない。θ・τ はすべて dev 上で選ぶ（in-sample）。比較対象は §22 の direct_v4 / checklist_v4_min（目標 0.90 / 0.95 / 0.97 / 0.99）、§23 の発火率。
+
+### 24.1 A：GT box による前提検証（VLM 呼び出しなし）
+- 対象物体：最終 `query` の依存ステップを filter をたどって遡り、引数の object id（relate 問は relate ステップの id）。GQA val scene graph から bbox を取り、面積比 a = w·h/(W·H)。複数 id は bbox 面積の和（上限 1）。scene graph に無い id は「対象なし」として別集計し、box 規則では発火しない。
+- 実効画素 eff_px(ℓ) = a × Level ℓ の劣化画像の画素数（image manifest の degraded_size。base 長辺 512、scale = 0.05·20^((ℓ−1)/19)、floor）。
+- 指標：安定正答 onset（その Level から L20 まで reader が正答し続ける最初の Level）との Spearman（全体・属性別）、onset 時点の eff_px 分布（属性別）。
+- Oracle-box 規則：属性別しきい値 τ_attr（3 パラメータ）、eff_px ≥ τ_attr となる最初の Level で停止。gated 変種：eff_px ≥ τ_attr かつ v4 スコア ≥ θ（direct_v4 と checklist_v4_min、4 パラメータ）。選択規則は §22 と同じ（正答率 ≥ 目標で平均停止 Level 最小）。99 問の発火率は同じ τ・θ で数える。
+- **ゲート（B に進む条件）**：目標 0.95 で、box-only か gated のいずれかが direct_v4 に対し (i) 平均停止 Level の差の 95% CI 上限 < 0、または (ii) 99 問の発火率の差の 95% CI 上限 < 0、で、もう一方の軸の差の CI 下限が 0 を超えて悪化しないこと。満たさなければ Idea 1 は終了し B は実施しない。パラメータ数が多い分 in-sample 楽観が大きいことを併記する。
+
+### 24.2 D：clean decoding での v2/v3 再現
+- v3 型の言語化 checklist_min を、キャッシュ済み observer_v3 記録の `confidence` から v1 ゲートで再構成し、dev 102 で §22 と同じ格子評価。旧 v3（dev 60 で 0.983 @ 17.78）と比較し、量子化が penalty 由来だったかを判定。
+- v2 の盲目的同定（`identify` ロール、プロンプト不変）を dev 102 × 20 Level で clean 再実行。a 率（Level 別）と、対象名詞またはその同義語が出現する割合を、旧値（ほぼ 0.30 で平坦）と比較。attr_blind / recompose は再実行しない。
+
+### 24.3 C：Level 差分による飽和信号（新ロール `diff_v5`）
+- 1 メッセージに Level ℓ−1 と ℓ の 2 画像（ℓ = 2..20）。質問を与え「2 枚目は 1 枚目に無かった、質問への回答に関係する新しい細部を示しているか。Yes か No で答えよ」。信号 = 最初のトークンの top_logprobs における厳密 "No" の確率（無ければ 0）。L1 の信号は 0。
+- 規則：P(No) ≥ θ が k 回連続（k ∈ {1, 2}）の最初の Level で停止。diff-only と diff∧v4（direct_v4 / checklist_v4_min が §22 の 0.95 θ 以上）の両方を記録。
+- パイロット 20 問 × 5 Level（2 画像受理・"Yes"/"No" 出現率 ≥ 0.95）を先に通す。報告は §22 / §23 と同じ（目標別、曲線、direct_v4 との paired bootstrap、発火率）。
+
+### 24.4 B：予測 box による実装（A がゲートを通過した場合のみ）
+- 新ロール `ground_v5`：各 Level で planner_v3 の存在項目（item 1）の対象句の bbox を qwen3.5:9b に求める。出力形式は事前に ollama で確認し、座標を検証する。予測 box から eff_px、τ_attr は予測 box 上で選び直す。属性種別は当面 GQA メタデータを使う（制約として明記）。
+- 変種：box-only、box-gated v4 min、box-gated direct。報告は同じ。発火率では、対象なしや grounding 失敗は発火なしとする。
+
+### 24.5 順序
+A → D → 中間報告 → C → B（A のゲート通過時のみ）。結果は `.claude/docs/research/gqa-stop-v5-dev.md`。

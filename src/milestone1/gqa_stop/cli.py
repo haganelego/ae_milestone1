@@ -13,11 +13,13 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import (
+    boxes_v5,
     devgrid_v22,
     explore,
     fair_subset,
     firing_v23,
     informed_reader,
+    replays_v5,
     stages_data,
     stages_model,
     stages_v3,
@@ -53,6 +55,8 @@ COMMANDS = (
     "informed-reader",
     "curves",
     "firing",
+    "v5-box",
+    "v5-replays",
 )
 
 
@@ -148,6 +152,10 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         if args.split == "test":
             return stages_v4c_test.v1arm_test(ctx)
         return stages_v4c.v1arm(ctx)
+    if command == "v5-replays":
+        return replays_v5.run_replays(ctx)
+    if command == "v5-box":
+        return boxes_v5.run_box_precheck(ctx)
     if command == "firing":
         return firing_v23.firing(ctx, args.split or "dev")
     if command == "curves":
