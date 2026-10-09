@@ -50,6 +50,7 @@ ROLE_DIRS = {
     "observer_v3": "observer_v3",
     "relevance_v4": "relevance_v4",
     "reader_informed": "reader_informed",  # exploratory probe
+    "diff_v5": "diff_v5",  # plan §24 C (two images per request)
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"
@@ -175,6 +176,9 @@ class RequestSpec:
     # enter the cache key; defaults leave older keys unchanged.
     logprobs: int = 0
     raw_text: bool = False
+    # v5 (plan §24 C): further images sent after ``image_bytes`` in the same
+    # message; part of the cache key only when non-empty.
+    extra_image_bytes: tuple[bytes, ...] = ()
 
     @property
     def image_sha256(self) -> str | None:
@@ -334,6 +338,15 @@ class RequestEngine:
                 **({"suffix": spec.suffix} if spec.suffix else {}),
                 **({"logprobs": spec.logprobs} if spec.logprobs else {}),
                 **({"raw_text": True} if spec.raw_text else {}),
+                **(
+                    {
+                        "extra_image_sha256": [
+                            sha256_bytes(b) for b in spec.extra_image_bytes
+                        ]
+                    }
+                    if spec.extra_image_bytes
+                    else {}
+                ),
             }
         )
 
@@ -369,7 +382,10 @@ class RequestEngine:
             content = render_prompt(template, spec.input_data)
         message: dict[str, Any] = {"role": "user", "content": content}
         if spec.image_bytes is not None:
-            message["images"] = [base64.b64encode(spec.image_bytes).decode("ascii")]
+            message["images"] = [
+                base64.b64encode(b).decode("ascii")
+                for b in (spec.image_bytes, *spec.extra_image_bytes)
+            ]
         return [message]
 
     def build_payload(

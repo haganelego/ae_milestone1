@@ -15,6 +15,7 @@ from pathlib import Path
 from . import (
     boxes_v5,
     devgrid_v22,
+    diff_v5,
     explore,
     fair_subset,
     firing_v23,
@@ -57,6 +58,8 @@ COMMANDS = (
     "firing",
     "v5-box",
     "v5-replays",
+    "v5-diff-pilot",
+    "v5-diff",
 )
 
 
@@ -152,6 +155,10 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         if args.split == "test":
             return stages_v4c_test.v1arm_test(ctx)
         return stages_v4c.v1arm(ctx)
+    if command == "v5-diff-pilot":
+        return diff_v5.pilot(ctx)
+    if command == "v5-diff":
+        return diff_v5.run_diff(ctx)
     if command == "v5-replays":
         return replays_v5.run_replays(ctx)
     if command == "v5-box":

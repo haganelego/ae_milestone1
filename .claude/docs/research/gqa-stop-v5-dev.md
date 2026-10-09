@@ -4,6 +4,16 @@ Date: 2026-10-10. Run: `configs/gqa_stop_v22.json` (A13 clean decoding, think=fa
 Scope: dev only, 102 visual questions plus the 99 reader-wrong questions from §23. θ and τ are chosen in-sample. There was no test inference and no commit.
 Terminology follows plan A14.
 
+## Verdict
+
+- **C, level-difference signal: no gain.** Asked whether level ℓ adds relevant detail over ℓ−1, the model says "No" almost always.
+  - Mean P(No) is 0.91 at L2 and falls to 0.76 at L20, on both sets: the opposite direction to a saturation signal, and not discriminative.
+  - Diff-only at 0.95 stops at 18.2 (+4.4 vs direct_v4); its low firing (0.05) comes from hardly stopping at all.
+  - diff ∧ direct_v4 at 0.95 is identical to direct_v4 (13.84, firing 0.677).
+  - The k=2 AND variants trade levels for firing along the same line as raising direct_v4's own θ, for example 14.76 / 0.545 vs direct_v4 θ0.36 at 14.78 / 0.545.
+- **B is not run**, because the A gate failed.
+- **Overall.** None of the four v5 directions beats direct_v4 on dev: GT-box effective resolution, verbalised v3 under clean decoding, v2 identification, and the level-difference question.
+
 ## Verdict so far (A + D)
 
 - **A, GT-box precheck: the gate fails, so B is skipped.** Even with ground-truth boxes, no box rule beats direct_v4 at 0.95 on either axis. The best variant gates direct_v4 on box size: −0.96 levels [−2.14, +0.19], firing +0.03 [−0.09, +0.15]. Box size is only weakly related to when the reader becomes stably correct (Spearman −0.29).
@@ -93,3 +103,61 @@ The pixel count at onset spans two to three orders of magnitude within each attr
   - Clean decoding doubles a. The old 0.30 was depressed by presence_penalty 1.5, which penalises repeating prompt tokens, and the target noun is in the prompt.
   - a is still flat in level and does not separate correct from wrong reader answers. It mostly measures whether the model echoes the noun in the identify question ("What is the bag on the left...?" → "bag"). The rest are plausible paraphrases: "helmet" for hat, "bread box" for container.
   - The v2 conclusion stands: a carries no resolution signal. Only its level, not its flatness, was an artifact.
+
+## C. Level-difference saturation signal (`diff_v5`; §24.3)
+
+- **Setup.**
+  - The prompt is `prompts/gqa_stop/diff_v5.txt`, an inline template: "The two images show the same scene; the second image is a higher-quality version of the first image. Consider the question: '{question}'. Does the second image reveal any new detail relevant to answering the question that the first image did not? Answer with Yes or No."
+  - Each request carries two images in one user message: level ℓ−1, then level ℓ, for ℓ = 2..20.
+  - The client gained an `extra_image_bytes` field. It enters the cache key only when non-empty, so all old keys are unchanged.
+  - Decoding is plain text with top_logprobs 10, num_predict 8 and the A13 block. The signal is P(exact "No") in the first token's top_logprobs; L1 = 0.
+- **Pilot** (20 dev questions × L2/5/10/15/20, `diff_pilot_summary.json`): valid rate 1.0, and "Yes"/"No" present in the top-10 1.0, so the gates pass. The first token was "No" 99/100 times.
+- **Two-image control.** It confirms the model reads both images. An identical L20/L20 pair gives mean P(No) 0.87; an L1→L20 pair gives 0.26.
+- **Full run.** 102 dev + 99 reader-wrong questions × 19 levels gave 3,819 calls, all valid. Records are in `v5/diff_v5/` and `ext_dev_wrong/diff_v5/`.
+
+### P(No) by level (mean)
+
+| level | 2 | 5 | 8 | 10 | 12 | 15 | 17 | 19 | 20 |
+|---|---|---|---|---|---|---|---|---|---|
+| dev 102 | 0.91 | 0.91 | 0.87 | 0.84 | 0.82 | 0.81 | 0.82 | 0.83 | 0.76 |
+| reader-wrong 99 | 0.90 | 0.87 | 0.85 | 0.82 | 0.81 | 0.79 | 0.81 | 0.83 | 0.74 |
+
+Adjacent levels look alike to the model at every scale. The "new detail" judgement grows slightly with level rather than vanishing at saturation.
+
+### Rules (`diff_targets.csv`, `diff_curves.{csv,png}`; θ in-sample; Δ vs direct_v4 at its §22 θ, paired image-cluster bootstrap 2000)
+
+The AND variants require the v4 score ≥ its §22 θ at 0.95: direct_v4 0.30, checklist_v4_min 0.28.
+
+| target | method | θ | acc | mean L | stop20 | firing (99) | Δ mean L [CI] | Δ firing [CI] |
+|---|---|---|---|---|---|---|---|---|
+| 0.95 | direct_v4 (ref) | 0.30 | 0.951 | 13.83 | 0.25 | 0.677 | – | – |
+| 0.95 | diff-only | 0.99 | 0.971 | 18.23 | 0.87 | 0.051 | +4.39 [+2.86, +5.80] | −0.63 [−0.73, −0.52] |
+| 0.95 | diff-only k=2 | 0.98 | 0.971 | 17.90 | 0.83 | 0.091 | +4.07 [+2.58, +5.46] | −0.59 [−0.70, −0.47] |
+| 0.95 | diff ∧ direct_v4 | 0.21 | 0.951 | 13.84 | 0.25 | 0.677 | +0.01 [0.00, +0.03] | 0.00 |
+| 0.95 | diff ∧ direct_v4 k=2 | 0.21 | 0.961 | 14.76 | 0.30 | 0.545 | +0.92 [+0.77, +1.08] | −0.13 [−0.20, −0.07] |
+| 0.95 | diff ∧ checklist_v4_min | 0.09 | 0.951 | 14.16 | 0.29 | 0.646 | +0.32 [−0.17, +0.84] | −0.03 [−0.09, +0.03] |
+| 0.95 | diff ∧ checklist_v4_min k=2 | 0.09 | 0.961 | 15.07 | 0.33 | 0.586 | +1.24 [+0.74, +1.76] | −0.09 [−0.17, −0.01] |
+| 0.97 | diff ∧ direct_v4 | 0.85 | 0.971 | 15.43 | 0.41 | 0.535 | +0.66 [+0.05, +1.32] | −0.01 [−0.10, +0.07] |
+| 0.97 | diff ∧ direct_v4 k=2 | 0.52 | 0.971 | 15.03 | 0.32 | 0.545 | +0.26 [−0.07, +0.62] | 0.00 [−0.05, +0.05] |
+| 0.99 | diff ∧ checklist_v4_min | 0.89 | 0.990 | 16.50 | 0.56 | 0.455 | +1.04 [+0.16, +1.84] | −0.08 [−0.17, +0.01] |
+| 0.99 | diff ∧ checklist_v4_min k=2 | 0.77 | 0.990 | 16.15 | 0.48 | 0.475 | +0.69 [0.00, +1.39] | −0.06 [−0.15, +0.03] |
+
+- **At 0.90.** The AND variants are bound by the fixed 0.95 v4 gate, so they stop 1.6–2.8 levels later than direct_v4. All rows are in `diff_targets.csv`.
+- **No variant lowers both axes.** Every reduction in firing is paid for in mean level.
+- **The trade is not new.** It is the same trade direct_v4 makes on its own θ curve:
+  - direct_v4 at θ 0.36 gives 0.971 @ 14.78 with firing 0.545.
+  - diff ∧ direct_v4 k=2 at 0.95 gives 0.961 @ 14.76 with firing 0.545.
+  - At 0.97, diff ∧ direct_v4 k=2 is 15.03 / 0.545 against direct_v4's 14.78 / 0.545.
+- **Matched-mean-level firing (`diff_two_axis.csv`) is misleading without accuracy.** diff-only k=2 reaches firing 0.36 at mean level 13.8, but its answerable accuracy there is 0.80, against 0.95 for direct_v4. The target-based table above is the fair comparison.
+- **Operating points.** diff-only has 28 distinct points over the θ grid; the AND variants have 53–56.
+
+## B. Predicted-box grounding (`ground_v5`)
+
+Not run. The §24.1 gate failed (section A), so per the pre-registration Idea 1 ends.
+
+## Files
+
+- **Code.** `src/milestone1/gqa_stop/boxes_v5.py` (CLI `v5-box`), `replays_v5.py` (`v5-replays`), `diff_v5.py` (`v5-diff-pilot`, `v5-diff`). The client change is the `extra_image_bytes` field.
+- **Tests.** `tests/test_gqa_stop_v5.py`.
+- **Prompt.** `prompts/gqa_stop/diff_v5.txt`.
+- **Data.** Scene graphs are in `data/processed/gqa_stop/scenegraphs_v5/`: untracked, about 44 MB, do not commit.
