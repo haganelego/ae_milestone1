@@ -619,3 +619,20 @@ dev 全 20 Level 推論後、devgrid（凍結なし）。0.95 を満たす設定
 
 ### 19.5 コスト
 observer 2,660 + 関連度 2,660 + Direct 1,200 + Direct 関連度 1,200 ≈ 7,700 回（1〜1.5 時間）。
+
+## 20. A13: デコード設定の是正と再実行（2026-10-09、ユーザー判断）
+
+### 背景
+- ollama の `qwen3.5:9b` は Modelfile に `presence_penalty 1.5`（および top_k 20、top_p 0.95、temperature 1）を持つ。v1〜v4 の全呼び出しは temperature / seed / num_ctx / num_predict しか上書きしておらず、presence_penalty 1.5 が有効のまま走っていた。
+- presence_penalty はプロンプト中のトークンを罰する。observer / checklist の出力例（`"answer":"yes","resolved":true,"confidence":0.9`）に含まれる yes / true / 0 / 9 が罰せられ、observer 2,600 件のうち 3,500 トークンで出力が logprob の最大候補と異なっていた（yes→no 377、true→false 621、yes→unknown 93、confidence の桁の置換）。L20 の存在項目 60 件を presence_penalty=0 で再実行すると「ない」は 20 → 9 件、未解決は 12 → 0 件。
+- したがって v1〜v4 の自己申告 confidence の量子化、resolved フラグ、原因 2 の大半、および reader の採点はデコード設定の副作用を含む。logprobs 自体はペナルティ適用前の値で、v4 の P_ans / Rel は影響を受けていない。
+
+### 設定（全役割・全段階で共通、config に明示し effective_config に記録）
+- temperature 0、seed 固定、top_k 1、top_p 1.0、presence_penalty 0、frequency_penalty 0、repeat_penalty 1.0、mirostat 0、num_ctx / num_predict は従来値、think false。
+- preflight に決定性ゲートを追加：同一リクエストを 2 回送って出力が完全一致すること、および logprobs 付きサンプル（≥100 呼び出し）で出力トークンが各位置の logprob 最大候補と一致する率 = 1.0。いずれか不成立なら停止して報告。
+
+### 再実行の範囲
+- 採用集合（screening は reader の L20 正誤で決まる）から全部やり直す：candidate screening（dev / test）→ adoption → reader 全 Level → textprobe → visual subset → v1 方式（checklist v1 prompt、公平化比較用）→ v4 pilot → v4 dev → devgrid。test の推論は方式については行わない（screening と reader のみ）。
+- 旧記録（penalty 1.5）は `outputs/gqa_stop/visapp_gqa_v{1..4}/` にそのまま残し、新規実行は `visapp_gqa_v4c`（clean）を run_id とする。旧結果の数値は報告書に「superseded (A13)」と注記する。
+- プロンプトは不変（planner_v3 / observer_v3 / relevance_v4 / reader v2 / direct / checklist v2）。改訂枠は消費しない。
+- 手法・θ 格子・凍結規則・評価は §19 と同一。
