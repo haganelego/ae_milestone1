@@ -199,6 +199,30 @@ At L20 the existence item answers "no" for 4 of 59 questions and is unresolved f
 | 05579796 | Which color do you think the umbrella is? | yes (y) | 1.00 | 1.00 | white (y) | 0.98 | 0.99 | 0.97 | 0.89 |
 | 01420620 | Which color is the car? | yes (y) | 1.00 | 1.00 | white (y) | 1.00 | 0.99 | 0.99 | 0.96 |
 
+## 7. Exploratory replays (orchestrator request; NOT pre-registered; logged only)
+
+These are computed from the same v4c dev records with no new inference (`explore` command; outputs `dev_exploratory.{csv,json}`).
+- **soft_existence.** The stop score is P_ans × Rel of the last (attribute) item only, gated only by that item's own `resolved` flag. The existence item is excluded from the min and from the ancestor gate.
+- **k=2.** A stop needs score ≥ θ at 2 consecutive levels. The forced stop at L20 is unchanged.
+- **Selection.** The best θ is the minimum mean level with accuracy ≥ 0.95 (ties: higher accuracy, larger θ). It is chosen in-sample on the 59 dev questions.
+- **Consistency check.** The checklist_v4_min, direct_v4 and checklist_v1_min rows match the devgrid exactly.
+
+| method | role | k | θ | acc | mean L | stop20 | stopped & wrong | acc − hull | stopped-and-wrong question ids |
+|---|---|---|---|---|---|---|---|---|---|
+| checklist_v4_min | pre-registered | 1 | 0.39 | 0.966 | 14.64 | 0.34 | 2 | +0.057 | 11213386, 11619091 |
+| direct_v4 | comparator | 1 | 0.34 | 0.966 | 14.02 | 0.31 | 2 | +0.068 | 0813387, 11213386 |
+| checklist_v1_min (v1 arm) | comparator (fair v1) | 1 | 1.0 | 0.983 | 19.97 | 0.98 | 1 | -0.016 | 11213386 |
+| soft_existence | exploratory (not pre-registered; logged only) | 1 | 0.39 | 0.966 | 14.49 | 0.34 | 2 | +0.059 | 11213386, 11619091 |
+| checklist_v4_min k=2 | exploratory (not pre-registered; logged only) | 2 | 0.27 | 0.966 | 14.22 | 0.29 | 2 | +0.064 | 11213386, 18486270 |
+| direct_v4 k=2 | exploratory (not pre-registered; logged only) | 2 | 0.3 | 0.966 | 14.22 | 0.32 | 2 | +0.064 | 0813387, 11213386 |
+| soft_existence k=2 | exploratory (not pre-registered; logged only) | 2 | 0.27 | 0.966 | 14.03 | 0.29 | 2 | +0.067 | 11213386, 18486270 |
+
+- **Subset fixed curve (dev, 59 questions).** Fixed-5 0.695, Fixed-10 0.797, Fixed-15 0.881, Fixed-17 0.932, Fixed-19 0.915, Fixed-20 1.000. Fixed-dev is L20.
+- **Recurring error.** Question 11213386 is stopped-and-wrong under every method, including the v1 arm.
+- **Effect of the variants.** soft_existence and k=2 each move the mean level by less than one level (14.64 → 14.03–14.49). They do not change the picture.
+
+**v1-arm planner failure.** In the v1 arm, the v1 planner for question 05827270 stayed a schema failure after one repair (invalid JSON: "Extra data"). That question therefore scores 0 at every level in the v1 arm and stops at L20 under checklist_v1_min. The v4 methods use planner_v3, which is unaffected.
+
 ## Notes
 
 - **Unchanged.** Prompts are the same as in v1–v4 and no revision counter moved. P_ans, Rel and the gate follow §19 exactly.
