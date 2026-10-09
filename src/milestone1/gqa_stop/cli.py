@@ -13,6 +13,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import (
+    devgrid_v22,
     explore,
     fair_subset,
     informed_reader,
@@ -49,6 +50,7 @@ COMMANDS = (
     "explore",
     "extension",
     "informed-reader",
+    "curves",
 )
 
 
@@ -144,6 +146,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         if args.split == "test":
             return stages_v4c_test.v1arm_test(ctx)
         return stages_v4c.v1arm(ctx)
+    if command == "curves":
+        return devgrid_v22.devgrid_v22(ctx)
     if command == "informed-reader":
         return informed_reader.run_probe(ctx)
     if command == "extension":
