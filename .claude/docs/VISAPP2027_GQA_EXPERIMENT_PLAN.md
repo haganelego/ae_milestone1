@@ -636,3 +636,17 @@ observer 2,660 + 関連度 2,660 + Direct 1,200 + Direct 関連度 1,200 ≈ 7,7
 - 旧記録（penalty 1.5）は `outputs/gqa_stop/visapp_gqa_v{1..4}/` にそのまま残し、新規実行は `visapp_gqa_v4c`（clean）を run_id とする。旧結果の数値は報告書に「superseded (A13)」と注記する。
 - プロンプトは不変（planner_v3 / observer_v3 / relevance_v4 / reader v2 / direct / checklist v2）。改訂枠は消費しない。
 - 手法・θ 格子・凍結規則・評価は §19 と同一。
+
+## 21. v4c の凍結と test（2026-10-09、ユーザー判断）＋ 回答不能質問への拡張評価
+
+### 21.1 凍結と test（§19 / §20 のとおり）
+- dev visual subset（59 問）で checklist_v4_min と direct_v4 の θ を正答率目標 0.95（副 0.90 / 0.97 / 0.99）で凍結。公平化 v1（checklist_v1_min、v1 arm）と Direct 言語化版も同様に凍結。記録用変種（pans_mean 等、soft_existence、k=2）は θ を凍結して記録するが主張には使わない。
+- test visual subset（125 問）で 1 回だけ評価。指標・bootstrap・凹包は §6〜§8 と同じ。
+
+### 21.2 拡張評価（探索、事前登録：reader が L20 で誤答する質問での停止挙動）
+- 動機：主評価は reader が L20 で正解する質問に限るため「VLM 単体で解ける問題」だけを見ている。分解の価値は「解けない問題で止まらない（自信を持たない）」側に出る可能性がある。
+- 集合：test の candidate のうち screening で L20 不正解だった質問（233 問）。textprobe による除外は行わない（正解できない質問なので prior-answerable の概念が適用できない）。
+- 手順：凍結済み θ のまま、各方式を 20 Level で走らせる（reader は screening 済みの L20 のみ既知。各 Level の reader も走らせ、stop 時点の正誤を記録する）。
+- 指標：(a) false-stop 率 = L20 より前に停止した割合（本来は止まるべきでない質問での早期停止）、(b) 停止時の reader 正答率（L20 で誤答でも途中で正解する場合があるため記録）、(c) 平均停止 Level。方式間は paired bootstrap。
+- 解釈：false-stop 率が低い方式ほど「答えられない状況を検出できる」。主評価の効率と合わせて 2 軸で報告する。この集合では正答率目標は適用しない。
+- コスト：233 問 × 20 Level × （observer 項目数 + 関連度 + direct 2 + reader）≈ 30,000 回（3〜4 時間）。
