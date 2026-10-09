@@ -12,6 +12,7 @@ import base64
 import copy
 import hashlib
 import json
+import math
 import re
 import shutil
 from collections import Counter
@@ -44,6 +45,8 @@ FAIL_PLAN_WORD = "kite"  # planner returns broken JSON for these questions
 FAIL_SCREEN_ANSWER = "glass"
 FENCED_TEMPLATE = "```json\n{body}\n```"
 V3_SEED_BASE = 20261008
+RELEVANCE_PREFIX = "Consider the question:"
+HALF = 0.5
 PRIOR_SOLVE_LEVEL = 3  # fake text_only "knows" questions solved by L3  # reader always wrong -> screening failure
 # v2 roles share the reader's first sentence, so they are recognised by a
 # distinctive phrase first (checked before ROLE_PREFIX).
@@ -272,12 +275,23 @@ class FakeTransport:
     def send(self, payload: dict[str, Any]) -> TransportResult:
         self.payloads.append(payload)
         content = payload["messages"][0]["content"]
+        if content.startswith(RELEVANCE_PREFIX):
+            return self.reply_relevance(payload, content)
         role = self.role_of(content)
         self.calls[role] += 1
         data = json.loads(content.split(INPUT_MARKER, 1)[1])
         image_id, level = self.image_level_of(payload)
         if (role, level) in self.broken:
             return TransportResult("not json", 1, 0.0)
+        if payload.get("logprobs"):
+            if role == "observer_v3":
+                seed = int(payload["options"]["seed"]) - V3_SEED_BASE
+                reply = self.reply_v3(role, data, image_id, level, seed)
+                solved = self.solved_for(str(image_id), data["question"], level)
+            else:
+                reply = self.reply(role, data, level)
+                solved = level is not None and level >= solve_level(data["question"])
+            return TransportResult(reply, 1, 0.0, logprobs=fake_logprobs(reply, solved))
         if role in {"planner_v2", "identify", "attr_blind", "recompose"}:
             return TransportResult(self.reply_v2(role, data, image_id, level), 1, 0.0)
         if role in {"text_only", "planner_v3", "observer_v3"}:
@@ -287,6 +301,34 @@ class FakeTransport:
             )
         reply = self.reply(role, data, level)
         return TransportResult(reply, 1, 0.0)
+
+    def solved_for(self, image_id: str, text: str, level: int | None) -> bool:
+        original = self.original_for(image_id, text)
+        return level is not None and level >= solve_level(original["text"])
+
+    def reply_relevance(self, payload: dict[str, Any], content: str) -> TransportResult:
+        """relevance_v4: plain 'Yes'/'No' with first-token top_logprobs."""
+        self.calls["relevance_v4"] += 1
+        text = content.split("'", 1)[1].rsplit("'.", 1)[0]
+        image_id, level = self.image_level_of(payload)
+        if text in self.answers:  # Direct relevance asks the original question
+            solved = level is not None and level >= solve_level(text)
+        else:
+            solved = self.solved_for(str(image_id), text, level)
+        p_yes = 0.9 if solved else 0.2
+        answer = "Yes" if p_yes > HALF else "No"
+        chosen = p_yes if answer == "Yes" else 1 - p_yes
+        logprobs = [
+            {
+                "token": answer,
+                "logprob": math.log(chosen),
+                "top_logprobs": [
+                    {"token": "Yes", "logprob": math.log(p_yes)},
+                    {"token": "No", "logprob": math.log(1 - p_yes)},
+                ],
+            }
+        ]
+        return TransportResult(answer, 1, 0.0, logprobs=logprobs)
 
     def original_for(self, image_id: str, sub_question: str) -> dict[str, Any]:
         """The image's question a sub-question was derived from (fake bookkeeping)."""
@@ -489,3 +531,27 @@ def run_v1_pipeline(tmp: Path) -> tuple[Path, dict[str, Any], dict[str, Any], Co
     stages_data.screen(ctx, "test")
     stages_model.infer(ctx, "test", list(range(1, 21)))
     return config_path, cfg, questions, ctx
+
+
+TOKEN_RE = re.compile(r"\w+|\s+|[^\w\s]+")
+
+
+def fake_logprobs(reply: str, solved: bool) -> list[dict[str, Any]]:
+    """Token list for a JSON reply; the answer value's first token gets p 0.9 / 0.3."""
+    tokens = TOKEN_RE.findall(reply)
+    marker = reply.find('"answer"')
+    value_start = (
+        reply.find('"', reply.find(":", marker) + 1) + 1 if marker >= 0 else -1
+    )
+    out, position = [], 0
+    for token in tokens:
+        p = (0.9 if solved else 0.3) if position == value_start else 1.0
+        out.append(
+            {
+                "token": token,
+                "logprob": math.log(p),
+                "top_logprobs": [{"token": token, "logprob": math.log(p)}],
+            }
+        )
+        position += len(token)
+    return out

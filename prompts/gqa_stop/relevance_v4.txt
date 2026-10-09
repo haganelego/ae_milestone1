@@ -1,0 +1,1 @@
+Consider the question: '{question}'. Are you confident about answering the question with the current view? Answer with Yes or No.

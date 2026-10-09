@@ -28,6 +28,7 @@ from .devgrid import run_devgrid
 from .evaluate import add_correctness, evaluate
 from .inference import LEVEL_ROLES, READER_ROLE, planned_request_count
 from .item_checklist import ItemChecklistRunner, planned_item_requests
+from .logprob_v4 import LogprobRunner, planned_v4_requests
 from .policy import consistency_variants, freeze_policy
 from .sampled import SampledRunner, planned_sampled_requests, sampling_from_config
 from .stages_data import write_dataset_flow
@@ -35,6 +36,7 @@ from .stages_data import write_dataset_flow
 VALID = "valid"
 CONSISTENCY = "consistency"
 SAMPLED = "sampled_checklist"
+LOGPROB = "logprob_item"  # v4 (plan §19): P_ans x Rel item confidence
 ITEM = "item_checklist"  # v3 final (plan §18.6): N = 1 standalone items
 FORMAT_VALID_TARGET = 0.95
 FORMAT_VALID_EXIT = 0.90
@@ -84,6 +86,16 @@ def level_table(
     if ctx.family == CONSISTENCY:
         v2 = ConsistencyRunner(ctx.engine(), ctx.series, cache_only=cache_only)
         rows = [row for q in questions for row in v2.run_question(q, levels)]
+    elif ctx.family == LOGPROB:
+        checklist = ctx.cfg["checklist"]
+        v4 = LogprobRunner(
+            ctx.engine(),
+            ctx.series,
+            int(checklist["min_items"]),
+            int(checklist["max_items"]),
+            cache_only=cache_only,
+        )
+        rows = [row for q in questions for row in v4.run_question(q, levels)]
     elif ctx.family == ITEM:
         checklist = ctx.cfg["checklist"]
         v3n1 = ItemChecklistRunner(
@@ -255,6 +267,10 @@ EXAMPLE_COUNT = 5
 
 
 def planned_requests(ctx: Context, n_questions: int, n_levels: int) -> int:
+    if ctx.family == LOGPROB:
+        return planned_v4_requests(
+            n_questions, n_levels, int(ctx.cfg["checklist"]["max_items"])
+        )
     if ctx.family == ITEM:
         items = int(ctx.cfg["checklist"]["max_items"])
         return planned_item_requests(n_questions, n_levels, items)
@@ -363,11 +379,8 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
     tag = active_tag(ctx)
     summary_path = ctx.paths.out(f"pilot/pilot_summary_{tag}.json")
     calib_path = ctx.paths.out(f"pilot/pilot_calibration_{tag}.json")
-    needs_calibration = ctx.family not in {
-        CONSISTENCY,
-        SAMPLED,
-        ITEM,
-    }  # §17/§18: no A4 gate
+    # §17/§18/§19 families use no verbalised-confidence A4 gate
+    needs_calibration = ctx.family not in {CONSISTENCY, SAMPLED, ITEM, LOGPROB}
     if not summary_path.exists() or (needs_calibration and not calib_path.exists()):
         return [f"no pilot with --calibration for the active model {tag}"]
     summary = read_json(summary_path)
@@ -376,6 +389,10 @@ def pilot_gate_failures(ctx: Context) -> list[str]:
     if summary.get("parse_version") != PARSE_VERSION:
         return ["parser changed since the pilot: re-run `pilot --calibration`"]
     failures: list[str] = []
+    if ctx.family == LOGPROB and not summary.get("gates_pass", False):
+        failures.append(
+            "§19.3 logprob gates failed (answer token located / Rel Yes-or-No < 0.95)"
+        )
     rate = min(summary["valid_rate_initial"].values())  # §11 gate: first attempt
     revisions = int(read_json(ctx.paths.out("prompt_hashes.json")).get("revisions", 0))
     if rate < FORMAT_VALID_TARGET and revisions == 0:
@@ -485,7 +502,7 @@ def provenance(ctx: Context) -> dict[str, Any]:
 
 def freeze(ctx: Context) -> dict[str, Any]:
     ctx.set_stage("freeze")
-    if ctx.family in {CONSISTENCY, SAMPLED, ITEM}:
+    if ctx.family in {CONSISTENCY, SAMPLED, ITEM, LOGPROB}:
         raise StageError(
             f"freeze is not available for the {ctx.family} family (plan §17/§18: threshold "
             "freezing and test wait for the user's decision); use `devgrid`"

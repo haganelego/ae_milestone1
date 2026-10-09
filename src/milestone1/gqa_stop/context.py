@@ -200,12 +200,20 @@ class Context:
         self._engine.stage = self.stage
         return self._engine
 
-    def _reuse_settings(self) -> tuple[Path | None, frozenset[str]]:
+    def _reuse_settings(self) -> tuple[Path | None, frozenset[str], list]:
+        """paths.reuse_records_from: one {output_root, roles} or a list of them."""
         reuse = self.cfg["paths"].get("reuse_records_from")
         if not reuse:
-            return None, frozenset()
-        root = resolve_path(self.paths.repo_root, reuse["output_root"])
-        return root, frozenset(reuse["roles"])
+            return None, frozenset(), []
+        entries = reuse if isinstance(reuse, list) else [reuse]
+        sources = [
+            (
+                resolve_path(self.paths.repo_root, e["output_root"]),
+                frozenset(e["roles"]),
+            )
+            for e in entries
+        ]
+        return None, frozenset(), sources
 
     def verify_live_digest(self) -> None:
         """The server's current digest for the model must equal the recorded one."""

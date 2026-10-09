@@ -33,6 +33,8 @@ from .common import (
 ROLES = ("answer_only", "direct", "planner", "checklist")
 V2_ROLES = ("planner_v2", "identify", "attr_blind", "recompose")  # plan §17
 V3_ROLES = ("text_only", "planner_v3", "observer_v3")  # plan §18
+V4_ROLES = ("relevance_v4",)  # plan §19
+INLINE_PLACEHOLDER = "{question}"
 REPAIR_PROMPT = "schema_repair"
 ROLE_DIRS = {
     "answer_only": "reader",
@@ -46,6 +48,7 @@ ROLE_DIRS = {
     "text_only": "text_only",
     "planner_v3": "plans_v3",
     "observer_v3": "observer_v3",
+    "relevance_v4": "relevance_v4",
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"
@@ -160,6 +163,11 @@ class RequestSpec:
     # Both are part of the cache key only when non-empty, so older keys hold.
     options_override: tuple[tuple[str, Any], ...] = ()
     suffix: str = ""
+    # v4 (plan §19): request token log-probabilities (top-N alternatives) and/or a
+    # plain-text reply (no JSON format, no schema parsing). Non-default values
+    # enter the cache key; defaults leave older keys unchanged.
+    logprobs: int = 0
+    raw_text: bool = False
 
     @property
     def image_sha256(self) -> str | None:
@@ -172,6 +180,7 @@ class TransportResult:
     http_attempts: int
     elapsed_s: float
     usage: dict[str, Any] = field(default_factory=dict)
+    logprobs: list[dict[str, Any]] | None = None
 
 
 class Transport(Protocol):
@@ -213,11 +222,13 @@ class OllamaTransport:
                 last_error = f"{type(exc).__name__}: {exc}"
             else:
                 if status == HTTP_OK and isinstance(body, dict):
+                    message = body.get("message", {})
                     return TransportResult(
-                        content=str(body.get("message", {}).get("content", "")),
+                        content=str(message.get("content", "")),
                         http_attempts=attempt + 1,
                         elapsed_s=time.monotonic() - started,
                         usage={k: body[k] for k in USAGE_KEYS if k in body},
+                        logprobs=body.get("logprobs") or message.get("logprobs"),
                     )
                 retryable = (
                     status == HTTP_OK
@@ -275,11 +286,12 @@ class RequestEngine:
         monitor: FailureMonitor | None = None,
         reuse_root: Path | None = None,
         reuse_roles: frozenset[str] = frozenset(),
+        reuse_sources: Sequence[tuple[Path, frozenset[str]]] = (),
     ) -> None:
-        self.reuse_root = (
-            reuse_root  # another run whose identical records may be copied
+        # other runs whose identical-key records may be copied (first match wins)
+        self.reuse_sources = list(reuse_sources) + (
+            [(reuse_root, reuse_roles)] if reuse_root is not None else []
         )
-        self.reuse_roles = reuse_roles
         self.copied = 0
         self.settings = settings
         self.prompts = prompts
@@ -313,12 +325,16 @@ class RequestEngine:
                 "image_sha256": spec.image_sha256,
                 "decoding": self.decoding(spec),
                 **({"suffix": spec.suffix} if spec.suffix else {}),
+                **({"logprobs": spec.logprobs} if spec.logprobs else {}),
+                **({"raw_text": True} if spec.raw_text else {}),
             }
         )
 
     def decoding(self, spec: RequestSpec) -> dict[str, Any]:
         """Role decoding with the request's options override applied."""
         base = self.settings.decoding(spec.role)
+        if spec.raw_text:
+            base = {**base, "format": None}
         if not spec.options_override:
             return base
         return {**base, "options": {**base["options"], **dict(spec.options_override)}}
@@ -337,10 +353,14 @@ class RequestEngine:
         return base / spec.question_id / f"{spec.level:02d}{spec.suffix}.json"
 
     def build_messages(self, spec: RequestSpec) -> list[dict[str, Any]]:
-        message: dict[str, Any] = {
-            "role": "user",
-            "content": render_prompt(self.prompts.texts[spec.role], spec.input_data),
-        }
+        template = self.prompts.texts[spec.role]
+        if INLINE_PLACEHOLDER in template:
+            # inline template (relevance_v4): the question is substituted verbatim
+            question = str(spec.input_data["question"])
+            content = template.strip().replace(INLINE_PLACEHOLDER, question)
+        else:
+            content = render_prompt(template, spec.input_data)
+        message: dict[str, Any] = {"role": "user", "content": content}
         if spec.image_bytes is not None:
             message["images"] = [base64.b64encode(spec.image_bytes).decode("ascii")]
         return [message]
@@ -355,6 +375,9 @@ class RequestEngine:
         }
         if payload["format"] is None:
             payload.pop("format")
+        if spec.logprobs:
+            payload["logprobs"] = True
+            payload["top_logprobs"] = spec.logprobs
         return payload
 
     # ---- cache ----------------------------------------------------------
@@ -379,16 +402,18 @@ class RequestEngine:
         self, spec: RequestSpec, path: Path
     ) -> dict[str, Any] | None:
         """Copy an identical-key final record from the reuse run (provenance kept)."""
-        if self.reuse_root is None or spec.role not in self.reuse_roles:
-            return None
-        source = self.reuse_root / path.relative_to(self.output_root)
-        record = self._final_record_at(source, spec)
-        if record is None:
-            return None
-        copied = {**record, "copied_from": str(source)}
-        atomic_write_json(path, copied)
-        self.copied += 1
-        return copied
+        for root, roles in self.reuse_sources:
+            if spec.role not in roles:
+                continue
+            source = root / path.relative_to(self.output_root)
+            record = self._final_record_at(source, spec)
+            if record is None:
+                continue
+            copied = {**record, "copied_from": str(source)}
+            atomic_write_json(path, copied)
+            self.copied += 1
+            return copied
+        return None
 
     # ---- execution ------------------------------------------------------
     def run(self, spec: RequestSpec, validator: Validator) -> dict[str, Any]:
@@ -415,6 +440,7 @@ class RequestEngine:
         status = STATUS_TRANSPORT_FAILURE
         parsed: Any = None
         raw: str | None = None
+        logprobs: list[dict[str, Any]] | None = None
         max_attempts = 1 + self.settings.schema_repair_attempts
         for attempt in range(1, max_attempts + 1):
             payload = self.build_payload(spec, messages)
@@ -429,9 +455,17 @@ class RequestEngine:
                 break
             self.calls += 1
             raw = result.content
-            result_parse = parse_response(raw, validator)
-            parsed, errors = result_parse.parsed, result_parse.errors
-            fence_stripped = result_parse.fence_stripped
+            logprobs = result.logprobs
+            if spec.raw_text:  # plain-text reply: no JSON parsing, no repair
+                text = raw.strip()
+                parsed, errors = (
+                    ({"text": text}, []) if text else (None, ["empty reply"])
+                )
+                fence_stripped = False
+            else:
+                result_parse = parse_response(raw, validator)
+                parsed, errors = result_parse.parsed, result_parse.errors
+                fence_stripped = result_parse.fence_stripped
             status = STATUS_SCHEMA_FAILURE if errors else STATUS_VALID
             row = {
                 **row,
@@ -445,10 +479,13 @@ class RequestEngine:
             }
             attempts.append(row)
             self._log_request(row)
-            if not errors:
+            if not errors or spec.raw_text:
                 break
             messages = self._repair_messages(messages, raw, errors)
-        return self._final_record(spec, attempts, status, raw, parsed)
+        record = self._final_record(spec, attempts, status, raw, parsed)
+        if spec.logprobs:
+            record["logprobs"] = logprobs  # raw token list of the final attempt
+        return record
 
     @staticmethod
     def _schema_key(role: str) -> dict[str, str]:

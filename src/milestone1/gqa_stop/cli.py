@@ -12,7 +12,7 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
-from . import fair_subset, stages_data, stages_model, stages_v3, textprobe
+from . import fair_subset, stages_data, stages_model, stages_v3, stages_v4, textprobe
 from . import report as report_mod
 from .client import PauseRequired
 from .common import StageError, load_effective_config
@@ -93,6 +93,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         levels = ctx.parse_levels(args.levels, ctx.cfg["execution"]["pilot_levels"])
         if ctx.family in stages_v3.V3_FAMILIES:
             return stages_v3.pilot_v3(ctx, levels)
+        if ctx.family == stages_model.LOGPROB:
+            return stages_v4.pilot_v4(ctx, levels)
         return stages_model.pilot(
             ctx, levels, args.calibration, args.use_fallback_model
         )
@@ -113,6 +115,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
     if command == "devgrid":
         if ctx.family in stages_v3.V3_FAMILIES:
             return stages_v3.devgrid_v3(ctx)
+        if ctx.family == stages_model.LOGPROB:
+            return stages_v4.devgrid_v4(ctx)
         return stages_model.devgrid(ctx)
     if ctx.dry_run:
         ctx.echo(f"[dry-run] report -> {ctx.paths.out('report.md')}")
