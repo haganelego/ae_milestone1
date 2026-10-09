@@ -209,6 +209,36 @@ Many of these questions are not "unanswerable from the image". They are GQA labe
 
 The firing rate therefore over-states the false-stop rate. That bias is the same for all methods, so the paired comparison is unaffected.
 
+### Breakdown at 0.95 (`firing_breakdown.csv`)
+
+Firing rates by attribute (color 56, material 30, shape 13) and relate (relate 0: 55, relate 1: 44):
+
+| method | color | material | shape | relate 0 | relate 1 |
+|---|---|---|---|---|---|
+| checklist_v4_min | 0.732 | 0.467 | 0.692 | 0.655 | 0.636 |
+| direct_v4 | 0.804 | 0.500 | 0.538 | 0.655 | 0.705 |
+| checklist_v1_min | 0.929 | 0.333 | 0.692 | 0.709 | 0.727 |
+
+Firing is highest on colour questions, where label ambiguity is also most common, and lowest on material.
+
+### Reader correct at the firing level (0.95)
+
+The reader is wrong at L20 on all 99 questions, but a few questions were answered correctly at the level where the method fired:
+- **checklist_v4_min.** 07833741 at L14, 091042275 at L7, 13226809 at L7.
+- **direct_v4.** 07833741 at L9.
+- **checklist_v1_min.** 00943538 at L3, 01475283 at L16, 07833741 at L9, 091042275 at L4, 17108177 at L3.
+
+07833741 is correct at the firing level for both v4 methods at every target. The reader's answer is correct mid-range and wrong at L20, the mirror image of 11213386 in §3.
+
+### direct_v4 vs v1 arm (added to `firing_paired.csv`)
+
+| target | direct_v4 − checklist_v1_min [95% CI] |
+|---|---|
+| 0.90 | +0.061 [−0.030, +0.146] |
+| 0.95 | −0.040 [−0.141, +0.059] |
+| 0.97 | +0.545 [+0.446, +0.643] |
+| 0.99 | +0.535 [+0.435, +0.633] |
+
 The v1 planner had a schema failure on 1 of the 99 questions, 02292567. Its checklist_v1 score is 0, so it never fires under the v1 arm. Every v4 call parsed.
 
 Code: `src/milestone1/gqa_stop/firing_v23.py` (CLI `firing`), tested in `tests/test_gqa_stop_firing_v23.py`. The test-side 233 questions were not touched.
