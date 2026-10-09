@@ -142,3 +142,73 @@ The θ-grid curves of checklist_v4_min and direct_v4 overlap from mean level abo
 - **Files.**
   - Code: `src/milestone1/gqa_stop/devgrid_v22.py` (CLI `curves`), tested in `tests/test_gqa_stop_devgrid_v22.py`.
   - Supplementary zero-wrong rows: `dev_targets_zero_wrong.csv`, `dev_paired_zero_wrong.csv`.
+
+## 6. §23 firing rate on reader-wrong dev questions (pre-registered; dev only)
+
+- **Set.** The 99 dev candidates whose L20 screening reader answer was incorrect (85 images), with no textprobe exclusion.
+- **Runs.** reader, planner_v3, observer_v3 with logprobs, relevance_v4, direct_lp and the v1 arm, all over L1–L20. Records are in `outputs/gqa_stop/visapp_gqa_v22/ext_dev_wrong/`; only the L20 screening reader records were copied from the v22 root.
+- **θ.** Taken from the §22 enlarged-dev grid (`dev_targets.csv`, subset v22) without re-tuning.
+- **Firing.** A question fires when the stop rule is met at some level 1–20: score ≥ θ, with k consecutive levels for k=2. The forced L20 stop is not a firing.
+- **Reader accuracy on this set.** About 0.05–0.13 at L1–L19 and 0 at L20, by construction.
+
+### Verdict
+
+- **Firing rate.** At 0.95 the main methods fire on about **two thirds** of the questions the reader gets wrong at L20: checklist_v4_min 0.646, direct_v4 0.677. The difference is −0.030 [−0.095, +0.030].
+- **No difference between them.** checklist_v4_min and direct_v4 do not differ at any target. Neither signal detects "cannot be answered with this image".
+- **Low firing comes with never stopping.** Direct verbalised fires on only 0.091, and the v1 arm at 0.97/0.99 fires on 0. Both pay for it by stopping at about L20 on answerable questions too (§2).
+- **Matched answerable cost.** Across the θ grid, the answer-probability variant pans_min (logged) fires least. With answerable mean level ≤ 15 it reaches 0.31, against 0.57 for checklist_v4_min and 0.55 for direct_v4. This is in-sample and logged-only.
+
+### Firing rate per target (`firing_summary.csv`; n = 99)
+
+Each cell gives the firing rate, the median firing level, and the number of fired questions where the reader was correct at the firing level.
+
+| method | 0.90 | 0.95 | 0.97 | 0.99 |
+|---|---|---|---|---|
+| checklist_v4_min | 0.788 / L11 / 4 | **0.646** / L12.5 / 3 | 0.556 / L14 / 1 | 0.495 / L14 / 1 |
+| direct_v4 | 0.778 / L12 / 6 | **0.677** / L13 / 1 | 0.545 / L13.5 / 1 | 0.535 / L14 / 1 |
+| checklist_v1_min | 0.717 / L14 / 5 | 0.717 / L14 / 5 | 0.000 | 0.000 |
+| direct verbalised | 0.091 / L19 / 0 | 0.091 / L19 / 0 | 0.091 / L19 / 0 | 0.000 |
+| pans_min (logged) | 0.758 / L8 / 4 | 0.697 / L8 / 4 | 0.384 / L8.5 / 2 | 0.283 / L9 / 0 |
+| direct_pans (logged) | 0.556 / L4 / 4 | 0.465 / L4.5 / 4 | 0.424 / L5 / 4 | 0.303 / L5 / 3 |
+| soft_existence (exploratory) | 0.798 | 0.667 | 0.566 | 0.495 |
+| checklist_v4_min k=2 (exploratory) | 0.828 | 0.667 | 0.525 | 0.455 |
+
+The other logged variants are in `firing_summary.csv`. At 0.95 they fire on between 0.566 (direct_v4 k=2) and 0.717 (checklist_v1_mean).
+
+### Paired image-cluster bootstrap of firing rate (`firing_paired.csv`; 2000 draws, seed 20261008)
+
+| target | checklist_v4_min − direct_v4 [95% CI] (only-a / only-b) | − checklist_v1_min | − direct verbalised |
+|---|---|---|---|
+| 0.90 | +0.010 [−0.053, +0.080] (6 / 5) | +0.071 [−0.011, +0.154] | +0.697 [+0.596, +0.794] |
+| 0.95 | −0.030 [−0.095, +0.030] (4 / 7) | −0.071 [−0.170, +0.030] | +0.556 [+0.438, +0.673] |
+| 0.97 | +0.010 [−0.069, +0.082] (8 / 7) | +0.556 [+0.453, +0.653] | +0.465 [+0.347, +0.581] |
+| 0.99 | −0.040 [−0.109, +0.022] (4 / 8) | +0.495 [+0.392, +0.594] | +0.495 [+0.392, +0.594] |
+
+### Firing-level histogram at 0.95 (`firing_level_hist.csv`)
+
+Firing levels spread over the whole range. checklist_v4_min fires 21 of its 64 times at L ≤ 9; direct_v4 fires 18 of its 67 times there. The firing levels do not concentrate at L20: checklist_v4_min fires at L20 6 times and direct_v4 9 times.
+
+### Two-axis view (`ext_dev_wrong/two_axis_curve.{csv,png}`; θ grid, in-sample)
+
+Each cell gives the lowest firing rate on the reader-wrong set among θ values whose answerable mean level (102 questions) is at most the bound.
+
+| answerable mean L ≤ | checklist_v4_min | direct_v4 | pans_min (logged) |
+|---|---|---|---|
+| 12 | 0.788 | 0.788 | 0.687 |
+| 14 | 0.687 | 0.677 | 0.485 |
+| 15 | 0.566 | 0.545 | 0.313 |
+| 16 | 0.434 | 0.475 | 0.253 |
+| 18 | 0.182 | 0.293 | 0.121 |
+
+### What the reader-wrong set contains (caveat for interpretation)
+
+Many of these questions are not "unanswerable from the image". They are GQA label or referent ambiguity, so a confident stop is not necessarily a false stop:
+- **Label granularity.** 00945894 has GT brown, and the reader and direct both say "wood". 01210580 has GT silver and the reader says gray. 01672446 has GT "dark" and the reader says gray.
+- **Referent ambiguity.** In 00940841, 01584227 and 02206413 the reader names the colour of a different shirt, and direct agrees.
+- **Material.** 01179300/01179301 have GT glass while the reader and direct say wood: a glass-fronted wooden cabinet.
+
+The firing rate therefore over-states the false-stop rate. That bias is the same for all methods, so the paired comparison is unaffected.
+
+The v1 planner had a schema failure on 1 of the 99 questions, 02292567. Its checklist_v1 score is 0, so it never fires under the v1 arm. Every v4 call parsed.
+
+Code: `src/milestone1/gqa_stop/firing_v23.py` (CLI `firing`), tested in `tests/test_gqa_stop_firing_v23.py`. The test-side 233 questions were not touched.
