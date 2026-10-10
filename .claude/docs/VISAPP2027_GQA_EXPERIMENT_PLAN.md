@@ -798,3 +798,61 @@ test 側の基礎記録（§22 の test 追加分、§23 の test 233 問の rea
 
 ### 25.10 順序
 pilot V6-A → pilot V6-B → 中間報告 → V6-A dev（gemma3、次に qwen3.5:4b）→ V6-B dev → 評価 → `.claude/docs/research/gqa-stop-v6-dev.md` → ユーザー判断（凍結・test、§25.9 の実施可否）。
+
+### 25.11 V6-C：回答に条件づけた Yes/No 検証（Rel の置換）（2026-10-10 事前登録案、dev 先行。freeze/test はユーザー判断後）
+§25 の共通条件（dev 102 ＋ 99、A13 クリーンデコード、棄権出力なし、主 reader と採点は不変）に従う。モデルは qwen3.5:9b（主 reader・direct_lp・observer_v3・relevance_v4 と同じ）。
+
+- **動機（cache-only、`.claude/docs/research/gqa-stop-relfree-dev.md`）。**
+  - Rel は P(IK) 型（Kadavath et al., 2022）の問い（"Are you confident about answering the question with the current view?"）であり、視点にしか反応していない。Level 別の平均 Rel は 102 と 99 でほぼ同じである（L1 / L10 / L20：102 は 0.04 / 0.30 / 0.67、99 は 0.04 / 0.26 / 0.59）。
+  - P_ans も 2 つの集合を分けない。L1 の平均は 99 の方が高い（0.53 対 0.49）。
+  - Rel を外した direct_pans は、out-of-fold 0.95 で 0.947 @ 13.57、発火 0.459 である（direct_v4 は 0.646）。ただし 102 の L20 強制が 0.44 に増え、99 での発火は L1〜5 に集中する（46 件中 26 件）。
+  - そこで（ユーザー提案）Yes/No 質問を回答や対象に条件づけ、その上昇が解像度ではなく回答可能性で決まるようにする。
+- **(a) 新ロール verify_v6（P(True) 型、Kadavath et al., 2022）。** プロンプト `prompts/gqa_stop/verify_v6.txt`：
+  `Consider the question: '<q>'. A proposed answer is '<a>'. Looking at this view, is that answer correct? Answer with Yes or No.`
+  - <a> は同じ Level の既存記録の回答で、パイプライン正規化（NFKC・小文字化・strip・空白圧縮）後の文字列を入れる。Direct では direct_lp の回答、Checklist では observer_v3 の項目回答を使う。回答のための新たな呼出しはない。
+  - Direct は、direct_lp が有効な回答を返した全ての（質問, Level）で呼ぶ（キャッシュ上は全件有効）。
+  - Checklist は、observer_v3 が有効で resolved = true かつ回答 ≠ unknown の項目だけで呼ぶ。それ以外の項目は v1 ゲートで 0 になるので呼ばず、P(True) = 0 として記録する。
+- **(b) 新ロール visible_v6（対象の見え）。** プロンプト `prompts/gqa_stop/visible_v6.txt`：
+  `Consider the question: '<q>'. Can you see the object the question refers to clearly enough in this view to tell its <attribute>? Answer with Yes or No.`
+  - <attribute> は質問メタデータの attribute（color / material / shape）である。
+  - Direct だけで使う。項目質問（存在・関係）は属性を問わないため。
+  - ユーザー提案の文面に、対象を特定するための質問文の前置きを relevance_v4 と同じ形で加えた。
+- **共通の呼出し設定。** 入力は画像とテキストで、各 Level で別呼出しにする。JSON 形式なし、top_logprobs 10、num_predict 8、think false で、relevance_v4 と同じである。
+- **枠組み（§25.2）。** 両プロンプトは視点と見えだけで表現し、縮小・拡大・解像度・画質・ぼけに触れない。"clearly enough in this view" は対象の見えを問うユーザー指定の文面であり、画質語として扱わない。
+- **信号。** P(True) と P(Vis) は、それぞれ verify_v6 / visible_v6 の最初の生成トークンの top_logprobs における正確な "Yes" の確率とする。無ければ 0 で、relevance_v4 の Rel と同じ抽出である。大文字小文字や分割違いの合算はしない。P("No") も記録する。
+- **スコア。**
+  - 主 (a)：direct_v6t = P_ans（direct_lp、既存）× P(True)。
+  - 主 (b)：direct_v6v = P_ans × P(Vis)。
+  - 副：P(True) のみ（direct）。checklist_v6t_min は、項目ごとに P_ans_j × P(True)_j を v1 ゲート（unresolved・祖先 unresolved は 0）に通し、min をとる。
+  - 記録用：P(True) × Rel（direct / min）、P(Vis) のみ、P(True) のみの min と mean、checklist_v6t_mean。
+- **pilot（§25.5 と同じ部分集合：dev 102 の先頭 20 問 ＋ 99 の先頭 20 問、question_id 順 × Level 1/5/10/15/20）。** 正答率・発火率は見ない。どれかが不成立なら、その形式を停止して報告する。
+  - **形式。** 生成テキストが Yes か No で始まる率 ≥ 0.95。最初のトークンの top-10 に正確な Yes または No が含まれる率 ≥ 0.95（relevance_v4 の rel_has_yes_no に相当）。verify_v6 と visible_v6 それぞれで判定する。
+  - **P(True) の識別ゲート（(a) のみ）。** L20 の direct 提案回答 40 件を GT と正規化完全一致で採点する（キャッシュ上は正答 19・誤答 21）。P(True) による正誤の AUROC ≥ 0.65 を要求し、満たさなければ (a) を中止する。参考として、102 内・99 内の AUROC、5 Level をまとめた AUROC、画像クラスタ bootstrap の CI を報告する（判定には使わない）。
+  - **Level に対する上昇。** 102 側の平均 P(True)・P(Vis) が L20 で L1 を上回ること。平坦や逆転なら、その形式を中止する。
+  - **Rel の言い換えでないこと。** 形式ごとに Rel との Spearman < 0.95。0.95 以上なら Rel の言い換えにすぎないと判断し、その形式を中止する。
+  - **記述（判定に使わない）。** Level 別の平均 P(True)・P(Vis) を 102 と 99 で並べる（研究ノート §8 の Rel 表と同じ形）。
+  - 選択肢順の入れ替え対照は行わない。Yes/No 形式は relevance_v4 と同じで、既存の Rel にも対照はない。
+- **評価。** §25.6 と同じ定義（in-sample の目標別表、frontier、画像単位 5 分割 × 10 seed の out-of-fold、画像クラスタ paired bootstrap 2000 回）を使う。比較対象は direct_v4 と direct_pans で、Checklist 系は checklist_v4_min と pans_min とする。direct_pans は「早いか L20 か」に二極化するので、102 の L20 強制率と、99 の発火 Level の分布（L1–5 / 6–10 / 11–15 / 16–19 / 20）も報告する（判定には使わない）。
+- **合否（目標 0.95、out-of-fold。§25.7 と同じ規則）。** 主方式が direct_v4 と direct_pans の**両方**に対し、次の 3 条件をすべて満たせば合格とする。
+  - (i) 発火率の差の CI 上限 < 0。
+  - (ii) out-of-fold 正答率 ≥ 0.93。
+  - (iii) out-of-fold 平均停止 Level ≤ direct_pans の out-of-fold 平均 Level + 0.5。
+  - **多重性。** 主方式は (a) と (b) の 2 つなので、族単位の誤り率を保つため、(i) の CI は Bonferroni 補正で 97.5%（両側）とする。2 つの比較対象の両方を要求する部分は intersection-union なので補正しない。副と記録用の変種は合否に使わず、主張にも使わない。
+  - **合格後と不合格時。** 不合格の形式はそこで終了し、test は行わない。合格した場合の凍結と test は §25.7 と同じ手順で行う（ユーザー判断後、frozen ファイルを新設）。
+- **コスト（約 180 呼出し/分。qwen3.5:9b のみなので V6-B の直後に続けて走らせ、モデルの再ロードを避ける）。**
+
+| 項目 | 呼出し数 | 時間目安 |
+|---|---|---|
+| pilot verify_v6：direct（40 × 5） | 200 | 1 分 |
+| pilot verify_v6：項目（resolved かつ回答 ≠ unknown、キャッシュ集計 135 ＋ 140） | 275 | 2 分 |
+| pilot visible_v6：direct（40 × 5） | 200 | 1 分 |
+| V6-C dev：verify_v6 direct（201 × 20） | 4,020 | 22 分 |
+| V6-C dev：verify_v6 項目（102 側 2,913 ＋ 99 側 2,855、キャッシュ集計） | 5,768 | 32 分 |
+| V6-C dev：visible_v6 direct（201 × 20） | 4,020 | 22 分 |
+| **dev 合計（pilot 込み）** | **約 14,500** | **約 80 分** |
+| test（合格形式のみ、484 問 × 20）：direct | 9,680 | 54 分 |
+| test：verify_v6 項目（(a) の checklist を記録する場合、dev 比 1.43 倍で推定） | 約 13,900 | 77 分 |
+
+test 側の基礎記録（direct_lp・observer_v3・relevance_v4）は §25.8 と同じく別途必要で、上表に含まない。
+
+- **順序。** pilot (a)・(b) → 中間報告 → V6-C dev（V6-B dev の直後）→ 評価 → `.claude/docs/research/gqa-stop-v6-dev.md` に V6-C 節を追加 → ユーザー判断（凍結・test）。

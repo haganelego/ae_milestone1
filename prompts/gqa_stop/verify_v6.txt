@@ -1,0 +1,1 @@
+Consider the question: '{question}'. A proposed answer is '{answer}'. Looking at this view, is that answer correct? Answer with Yes or No.
