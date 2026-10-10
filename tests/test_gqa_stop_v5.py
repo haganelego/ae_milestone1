@@ -101,3 +101,21 @@ def test_diff_spec_sends_two_images_in_order() -> None:
     )
     assert spec.image_bytes == b"prev" and spec.extra_image_bytes == (b"cur",)
     assert spec.raw_text and spec.logprobs > 0 and d.ROLE in ROLE_DIRS
+
+
+def test_per_attribute_theta_is_box_search_on_scores() -> None:
+    score = np.array([[0.1, 0.5, 0.9]] * 4)
+    correct = np.array(
+        [
+            [False, True, True],
+            [False, True, True],
+            [False, False, True],
+            [False, False, True],
+        ]
+    )
+    attr = np.array(["color", "color", "material", "material"])
+    grid = np.array([0.0, 0.5, 0.9, np.inf])
+    best, _ = b.search(score, correct, attr, grid, None, [0.0], [0.99])
+    tau = best["0.99"]["tau"]
+    assert tau["color"] == 0.5 and tau["material"] == 0.9
+    assert best["0.99"]["mean_level"] == (2 + 2 + 3 + 3) / 4

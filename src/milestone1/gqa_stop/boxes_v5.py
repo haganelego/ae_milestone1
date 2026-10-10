@@ -468,3 +468,83 @@ def add_fixed_hull(ax: Any, curves: pd.DataFrame) -> None:
         lw=0.8,
         label="fixed concave hull",
     )
+
+
+# ---- control: per-attribute θ without boxes (team-lead request, 2026-10-10) -------------------
+CONTROL_SCORES = ("direct_v4", "checklist_v4_min")
+
+
+def attr_theta_control(ctx: Context) -> dict[str, Any]:
+    """Grid a per-attribute θ (3 params, in-sample) for the v4 scores; compare with
+    single-θ direct_v4 (§22) and the box ∧ direct_v4 rows of ``box_rules.csv``."""
+    ctx.set_stage("v5_attrtheta")
+    from .stages_v4c_test import targets
+
+    root = ctx.paths.output_root
+    out = root / OUT_DIR
+    require((out / "box_rules.csv").exists(), "run v5-box first")
+    if ctx.dry_run:
+        ctx.echo("[dry-run] per-attribute θ control (no model calls)")
+        return {}
+    dev = read_id_csv(root / "level_table_dev_merged.csv")
+    wrong = read_id_csv(root / "ext_dev_wrong" / "level_table.csv")
+    grid = np.array(threshold_grid(ctx.cfg["policy"]), dtype=float)
+    ev = ctx.cfg["evaluation"]
+    reps, seed = int(ev["bootstrap_repeats"]), int(ev["bootstrap_seed"])
+    qids, correct = matrices(dev, "reader_correct")
+    correct = correct.astype(bool)
+    attr = dev.groupby("question_id")["attribute"].first().loc[qids].to_numpy()
+    wq, _ = matrices(wrong, "reader_correct")
+    w_attr = wrong.groupby("question_id")["attribute"].first().loc[wq].to_numpy()
+    groups = (
+        dev.groupby("question_id")["group_id"].first().astype(str).loc[qids].tolist()
+    )
+    w_groups = (
+        wrong.groupby("question_id")["group_id"].first().astype(str).loc[wq].tolist()
+    )
+    idx_dev = cluster_bootstrap_indices(groups, reps, seed)
+    idx_wrong = cluster_bootstrap_indices(w_groups, reps, seed)
+    sel22 = pd.read_csv(root / "dev_targets.csv", dtype={"target": str})
+    sel22 = sel22[(sel22["subset"] == "v22") & (sel22["method"] == "direct_v4")]
+    theta22 = {r.target: float(r.theta) for r in sel22.itertuples()}
+    d_score, w_d_score = matrices(dev, "direct_v4")[1], matrices(wrong, "direct_v4")[1]
+    rows, pareto_frames = [], []
+    for column in CONTROL_SCORES:
+        score, w_score = matrices(dev, column)[1], matrices(wrong, column)[1]
+        best, pareto = search(
+            score, correct, attr, grid, None, [0.0], targets(ctx.cfg["policy"])
+        )
+        pareto_frames.append(pareto.assign(method=f"{column}_attr_theta"))
+        for target, entry in best.items():
+            stop, _ = rule_stops(score, attr, entry["tau"], None, 0.0)
+            _, fired = rule_stops(w_score, w_attr, entry["tau"], None, 0.0)
+            d_stop, _ = score_stops(d_score, theta22[target])
+            _, d_fired = score_stops(w_d_score, theta22[target])
+            hit = correct[np.arange(len(qids)), stop - 1]
+            dl, df = stop - d_stop, fired.astype(float) - d_fired.astype(float)
+            rows.append(
+                {
+                    "method": f"{column}_attr_theta",
+                    "target": target,
+                    **{f"theta_{a}": entry["tau"][a] for a in ATTRIBUTES},
+                    "accuracy": float(hit.mean()),
+                    "mean_level": float(stop.mean()),
+                    "stop20_rate": float((stop == 20).mean()),
+                    "firing_rate_99": float(fired.mean()),
+                    "mean_level_diff": float(dl.mean()),
+                    "mean_level_ci": [
+                        float(np.percentile([dl[i].mean() for i in idx_dev], p))
+                        for p in PERCENTILES
+                    ],
+                    "firing_diff": float(df.mean()),
+                    "firing_ci": [
+                        float(np.percentile([df[i].mean() for i in idx_wrong], p))
+                        for p in PERCENTILES
+                    ],
+                }
+            )
+    frame = pd.DataFrame(rows)
+    frame.to_csv(out / "box_attrtheta_targets.csv", index=False)
+    pd.concat(pareto_frames).to_csv(out / "box_attrtheta_pareto.csv", index=False)
+    ctx.log("§24 A control: per-attribute θ written")
+    return {"rows": json.loads(frame.to_json(orient="records"))}

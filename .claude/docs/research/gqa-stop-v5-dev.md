@@ -67,6 +67,34 @@ The pixel count at onset spans two to three orders of magnitude within each attr
 - **Curve.** On the accuracy–mean-level plane, the box-only Pareto frontier lies below direct_v4 and checklist_v4_min from about mean level 7 upward. It beats fixed stopping, but it is not better than the VLM's own answer probability × self-assessed confidence.
 - **Consequence.** Idea 1 ends here and B (`ground_v5`) is not run.
 
+### A control: per-attribute θ without boxes (`box_attrtheta_targets.csv`, `box_attrtheta_pareto.csv`)
+
+This control was requested by team-lead. The box ∧ direct_v4 optimum at 0.95 used τ_material ≈ 82k, which effectively means "never stop material early", so it may just act as an attribute-specific threshold.
+
+- **Setup.** θ_color, θ_material and θ_shape are each taken from the 0.01 grid plus ∞, giving 3 parameters chosen in-sample. The attribute comes from the GQA metadata, as in the box rule. There are no boxes and no new calls.
+- **Comparison.** Δ is against single-θ direct_v4 at its §22 θ, with a paired image-cluster bootstrap of 2000 draws. Firing on the 99 uses the same θs.
+
+| target | method | θ color / material / shape | acc | mean L | firing (99) | Δ mean L [CI] | Δ firing [CI] |
+|---|---|---|---|---|---|---|---|
+| 0.90 | direct_v4, per-attr θ | 0.08 / 0.12 / 0.22 | 0.902 | 10.02 | 0.899 | −2.24 [−2.70, −1.77] | +0.12 [+0.06, +0.19] |
+| 0.90 | checklist_v4_min, per-attr θ | 0.05 / 0.01 / 0.30 | 0.902 | 10.41 | 0.828 | −1.84 [−2.55, −1.11] | +0.05 [−0.02, +0.12] |
+| 0.90 | box ∧ direct_v4 (θ 0.12) | τ 0 / 0 / 222 | 0.902 | 10.48 | 0.899 | −1.78 [−2.21, −1.33] | +0.12 [+0.06, +0.19] |
+| **0.95** | **direct_v4, per-attr θ** | 0.08 / 0.39 / 0.26 | 0.951 | **12.11** | 0.737 | **−1.73 [−2.50, −0.98]** | +0.06 [−0.01, +0.13] |
+| 0.95 | checklist_v4_min, per-attr θ | 0.28 / 0.01 / 0.30 | 0.951 | 12.34 | 0.747 | −1.49 [−2.31, −0.61] | +0.07 [0.00, +0.15] |
+| 0.95 | box ∧ direct_v4 (θ 0.06) | τ 31 / 82382 / 308 | 0.951 | 12.87 | 0.707 | −0.96 [−2.13, +0.19] | +0.03 [−0.09, +0.14] |
+| 0.97 | direct_v4, per-attr θ | 0.29 / 0.39 / 0.26 | 0.971 | 14.20 | 0.667 | −0.58 [−0.90, −0.26] | +0.12 [+0.06, +0.18] |
+| 0.97 | checklist_v4_min, per-attr θ | 0.48 / 0.01 / 0.30 | 0.971 | 13.52 | 0.606 | −1.26 [−2.26, −0.25] | +0.06 [−0.05, +0.17] |
+| 0.97 | box ∧ direct_v4 (θ 0.34) | τ 160 / 0 / 0 | 0.971 | 14.72 | 0.576 | −0.06 [−0.27, +0.18] | +0.03 [0.00, +0.07] |
+| 0.99 | direct_v4, per-attr θ | 0.37 / 0.39 / 0.26 | 0.990 | 14.86 | 0.596 | −0.60 [−0.89, −0.36] | +0.06 [+0.01, +0.11] |
+| 0.99 | checklist_v4_min, per-attr θ | 0.48 / 0.39 / 0.17 | 0.990 | 15.45 | 0.495 | −0.01 [−0.73, +0.62] | −0.04 [−0.14, +0.06] |
+| 0.99 | box ∧ direct_v4 (θ 0.39) | τ 0 / 0 / 0 | 0.990 | 15.46 | 0.535 | 0 | 0 |
+
+- **The box adds nothing beyond the attribute.** Per-attribute θ on direct_v4 alone matches or beats box ∧ direct_v4 at every target: 12.11 vs 12.87 at 0.95, and 10.02 vs 10.48 at 0.90. Box ∧ direct_v4 was mostly acting as an attribute-specific threshold. This confirms the gate verdict for Idea 1.
+- **What attribute-specific θ does.** It lowers the mean level on dev, because color questions can stop much earlier than material questions. At 0.95 it picks θ 0.08 for color and 0.39 for material.
+  - The cost is a higher firing rate on the 99, about +0.06 to +0.12, which is significant at 0.90, 0.97 and 0.99.
+  - checklist_v4_min shows the same pattern; its θ_material = 0.01 means material stops as soon as the gate opens.
+- **Caveat.** These are in-sample optima of 3 parameters against 1 for direct_v4, on 41 / 46 / 15 questions per attribute. Part of the gain is selection optimism. A cross-validated estimate, for example image-grouped k-fold over the 102 with θ_attr refit per fold, is needed before treating per-attribute θ as a method.
+
 ## D1. v3-style verbalised checklist_min under clean decoding (`v3verb_*`)
 
 - **Construction.** The score is rebuilt from the cached observer_v3 records' verbalised `confidence` under the v1 gate (unresolved or ancestor-unresolved items count as 0, then min). There are no new calls.

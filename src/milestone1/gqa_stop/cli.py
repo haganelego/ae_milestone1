@@ -60,6 +60,7 @@ COMMANDS = (
     "v5-replays",
     "v5-diff-pilot",
     "v5-diff",
+    "v5-attrtheta",
 )
 
 
@@ -161,6 +162,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return diff_v5.run_diff(ctx)
     if command == "v5-replays":
         return replays_v5.run_replays(ctx)
+    if command == "v5-attrtheta":
+        return boxes_v5.attr_theta_control(ctx)
     if command == "v5-box":
         return boxes_v5.run_box_precheck(ctx)
     if command == "firing":
