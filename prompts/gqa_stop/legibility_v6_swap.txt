@@ -1,0 +1,1 @@
+Consider the question: '{question}'. The camera may be far from the object the question refers to. Would you need to get closer, or is that object close enough and large enough in this view to answer the question reliably? Answer with Closer or Enough.

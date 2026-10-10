@@ -706,3 +706,95 @@ dev の拡大と推論 → devgrid（曲線）→ 報告 → ユーザー判断�
 
 ### 24.5 順序
 A → D → 中間報告 → C → B（A のゲート通過時のみ）。結果は `.claude/docs/research/gqa-stop-v5-dev.md`。
+
+## 25. v6：回答不能質問で止まらないためのゲート（2026-10-10 事前登録案、dev 先行。freeze/test はユーザー判断後）
+共通：dev 102（§22 visual subset）＋ reader 誤答 99（§23 ext_dev_wrong）。A13 クリーンデコード（temperature 0、seed 固定、top_k 1、top_p 1.0、各 penalty 0、mirostat 0）を全モデル・全リクエストに明示し、effective_config に記録する。棄権出力は導入しない。主 reader（qwen3.5:9b、answer_only）と採点は不変。test 推論・凍結・コミットは本節の範囲外。
+
+### 25.1 動機（cache-only probe、d876011、`.claude/docs/research/gqa-stop-unanswerable-probes.md`）
+- 0.95 の θ で checklist_v4_min / direct_v4 は 99 問の 0.646 / 0.677 で発火する。
+- **Rel を外すと発火が下がる。** direct_pans（P_ans のみ）は out-of-fold で 0.947 @ 13.57、発火 0.459。direct_v4 は 0.945 @ 13.98、発火 0.646。Rel が自信を持った誤停止を作っている。
+- **既存のキャッシュ信号では足りない。** top-k の分布形状（margin・エントロピー・上位確率の合計）は P_ans を超えない。同一モデル内の reader == direct 一致ゲートは等コストで 0〜−0.09。発火 Level での 102 対 99 の識別は out-of-fold AUROC 0.61 / 0.51 にとどまる。
+- **「L1 から回答が変わった」ゲートは使わない。** 発火を下げるが、visual subset の構成（prior-answerable の除外）に依存し、配備時のコストが測れない。
+- 以上から、v6 は新しい情報源を 2 つ試す。(A) 系統の異なるモデルの回答（誤りの独立性）と、(B) 自信ではなく見かけの距離・大きさを問う質問である。
+
+### 25.2 枠組みの制約（ユーザー判断）
+- 想定は「ロボットが対象に**近づく**ことで解像度が上がる」設定への一般化である。v6 の新プロンプトは縮小・拡大・圧縮・画質・解像度に一切触れず、視点・距離・見かけの大きさだけで表現する（"the camera may be far from the object"、"would you need to get closer"）。
+- **既存 Rel の位置づけ。** relevance_v4（"Are you confident about answering the question with the current view?"）はすでに視点の枠組みで書かれており、Explore until Confident の文言そのものである。V6-B はこれを見かけの距離・大きさの判断に置き換える。
+- v6 で再利用する既存プロンプト（answer_only、relevance_v4、observer_v3、direct）はこの制約を満たす。diff_v5 は "higher-quality version" を含むため v6 では使わない。
+
+### 25.3 V6-A：異系統モデルとの回答一致ゲート
+- **第 2 reader。** 主は gemma3:latest（別系統、画像入力対応）、同系統対照は qwen3.5:4b。主 reader と同じ answer_only プロンプト（v2、不変）、同じクリーンデコード、JSON 形式で、dev 102 + 99 の全 20 Level を走らせる。記録は `reader/<model_tag>/` に model_tag 別で保存する（キャッシュキーにモデル digest を含む）。
+- **think の扱い。** gemma3 は think 機能を持たない。`think:false` を送り、拒否された場合に限りそのモデルだけ field を省き、effective_config に記録する。
+- **gemma3 の既定値。** Modelfile の既定（temperature 1、top_k 64、top_p 0.95）は A13 の明示値で上書きする。
+- **一致の定義。** agree_m(ℓ) = 主 reader の回答と第 2 reader m の回答が、パイプラインの正規化（NFKC・小文字化・strip・空白圧縮）後に完全一致すること。同義語や表記ゆれの合算は行わない（§19.2 の方針）。正誤は従来どおり主 reader の回答で採点する。
+- **ゲート付き方策。** 基礎スコア s ∈ {direct_v4, checklist_v4_min, direct_pans, pans_min} ごとに、k=1 は s(ℓ) ≥ θ かつ agree(ℓ) となる最初の Level で停止する。k=2 は s ≥ θ が 2 Level 連続し、両 Level で agree のときに停止する（主）。どちらか一方の Level で agree の版は記録用とする。Level 20 強制停止は不変。
+- **主比較（事前指定）。** direct_pans ∧ agree_gemma3（k=1）を direct_pans（ゲートなし）と比べる。direct_v4 との比較も報告する。他の組合せと qwen3.5:4b 版は記録用。
+- **事前登録する測定と仮説。**
+  - 各第 2 reader について、Level 別の一致率を 102 と 99 で報告する。要約は質問ごとの L1〜L20 平均一致率で、差（102 − 99）を画像クラスタ bootstrap で示す。
+  - H-A1：gemma3 では 99 の一致率が 102 より低い（差の CI が 0 を含まない）。
+  - H-A2：差（102 − 99）は gemma3 の方が qwen3.5:4b より大きい。同系統モデルは prior を共有し、同じ誤りに一致しやすいためである。質問対の bootstrap で差の差を示す。
+  - 参考：第 2 reader の Level 別正答率（GT 照合）。99 のうち両 reader が同じ誤答で一致する問題は、§23 の注釈ゆれ（ラベル粒度・参照物の曖昧さ）の候補として別集計する。
+
+### 25.4 V6-B：近づく必要があるかを問う判定（Rel の置換）
+- **新ロール legibility_v6。** 各 Level で別呼出しにする。入力は画像と元質問（Direct 用）、または項目質問（Checklist 用）。JSON 形式なし、top_logprobs 10、num_predict 8（relevance_v4 と同じ）。プロンプト `prompts/gqa_stop/legibility_v6.txt`：
+  `Consider the question: '<q>'. The camera may be far from the object the question refers to. Is that object close enough and large enough in this view to answer the question reliably, or would you need to get closer? Answer with Enough or Closer.`
+- **選択肢の語。** 頭文字が異なる語（Enough / Closer）を使う。"Close / Closer" は前者が後者の接頭辞になる。そのため最初のトークンの確率 P("Close") に "Closer" の確率が混入しうる。
+- **信号 Leg。** 最初の生成トークンの top_logprobs における、"Enough" の正準先頭トークン（完全一致）の確率。無ければ 0。正準先頭トークンは pilot で実際に "Enough" と答えた出力の argmax トークンから決め、dev 本走の前に effective_config に固定する（期待値は `Enough`）。大文字小文字や分割違いの合算はしない。
+- **パース判定。** has_option は、最初のトークンの top-10 に Enough または Closer の正準先頭トークンが含まれることとする（relevance_v4 の rel_has_yes_no に相当）。P(Closer) も記録する。
+- **スコア。**
+  - 主：direct_v6 = P_ans（direct_lp、既存）× Leg（元質問）。
+  - 副：checklist_v6_min = 項目ごとに P_ans_j × Leg_j を v1 ゲート（unresolved・祖先 unresolved は 0）に通し、min をとる。
+  - 記録用：Leg のみ（direct / min）、P_ans × Leg × Rel（direct / min）。
+- **合格の条件。** P_ans のみ（direct_pans）は dev で direct_v4 より発火が低かった（d876011）。そのため V6-B は、等しい正答率–平均停止のもとで発火の軸において direct_v4 と direct_pans の**両方**を上回らなければ合格としない。
+- **位置バイアス対照（pilot のみ）。** `prompts/gqa_stop/legibility_v6_swap.txt` は選択肢の順を入れ替えたもので、信号は同じく P(Enough) とする。
+
+### 25.5 pilot（dev 102 の先頭 20 問 ＋ 99 の先頭 20 問、question_id 順 × Level 1/5/10/15/20）
+pilot では正答率・発火率を見ない（仕組みの確認のみ）。どれかが不成立なら停止して報告する。
+- **V6-A（第 2 reader ごと）。**
+  - 決定性：同一リクエスト 20 件を 2 回送り、出力が完全一致すること。
+  - JSON の有効率（repair 1 回後）≥ 0.95。
+  - think 指定が受理されること（受理されない場合は §25.3 の扱いで省いたうえで記録）。
+  - 不一致のうち表記ゆれと思われるもの（例：wooden / wood、grey / gray）の割合を 30 件の目視で記録する（判定には使わない）。
+- **V6-B。**
+  - 生成テキストが Enough か Closer で始まる率 ≥ 0.95、has_option 率 ≥ 0.95。
+  - 正準先頭トークンを固定する。
+  - 102 側の平均 Leg が L20 で L1 を上回ること（平坦や逆転なら停止）。
+  - 順序入れ替えとの Spearman ≥ 0.8、かつ平均絶対差 ≤ 0.15。
+  - Rel との Spearman < 0.95。0.95 以上なら Rel の言い換えにすぎないと判断し、V6-B を中止する。
+
+### 25.6 評価（dev。§22 / §23 と同じ定義）
+- **集合と指標。** 102 で正答率と平均停止 Level、99 で発火率（Level 1〜20 のどこかで停止条件を満たせば発火。強制停止は数えない）を測る。
+- **in-sample。** θ 格子（0.01 刻み＋∞）に対し、目標 0.95（主）と 0.90 / 0.97 / 0.99（副）で、§22 の選択規則（正答率 ≥ 目標で平均 Level 最小、同点は高正答率・大きい θ）を用いる。曲線と、発火の frontier（正答率 ≥ 目標かつ平均 Level ≤ b での最小発火）を示す。
+- **out-of-fold。** 102 ∪ 99 の画像を合わせ、画像単位で 5 分割 × 10 seed（seed 0〜9）に分ける。θ は訓練 fold の 102 だけで選び、保留 fold の 102 と、同じ保留画像に属する 99 に適用する。99 は選択に一切使わない。out-of-fold の正答率・平均 Level・発火率を seed 平均で報告する。
+- **差の CI。** 質問ごとの seed 平均（停止 Level、正誤、発火）の対比較差について、画像クラスタ paired bootstrap（2000 回、seed 20261008）で求める。対象は direct_v4 と direct_pans（Checklist 系は checklist_v4_min と pans_min）。in-sample の目標別表でも同じ bootstrap を併記する（θ 固定、選択誤差は含まない）。
+- **多重性。** 主比較は V6-A・V6-B で各 1 つ（§25.3、§25.4）に限る。V6-B は 2 比較の両方を満たす必要がある（intersection-union のため補正不要）。それ以外の変種は記録用で、主張には使わない。
+
+### 25.7 合否（目標 0.95、out-of-fold）
+主方式が比較対象に対し、次の 3 条件をすべて満たせば合格とする。
+- (i) 発火率の差の 95% CI 上限 < 0。
+- (ii) out-of-fold 正答率 ≥ 0.93（目標 − 0.02）。
+- (iii) out-of-fold 平均停止 Level ≤ direct_pans の out-of-fold 平均 Level + 0.5。
+
+比較対象は、V6-A では direct_pans、V6-B では direct_pans と direct_v4 の両方である。不合格の arm はそこで終了し、test は行わない。合格した場合、ユーザー判断のうえで dev 102 全体で θ を新たに凍結する（frozen ファイルを新設し、既存の凍結は変更しない）。そのうえで test visual 251 ＋ test reader 誤答 233 で 1 回だけ評価する。
+
+### 25.8 コスト（約 180 呼出し/分。モデル切替のロードを避けるため、モデルごとにまとめて実行する）
+| 項目 | 呼出し数 | 時間目安 |
+|---|---|---|
+| pilot V6-A（2 モデル × 40 問 × 5 Level ＋ 決定性 2 × 20 × 2） | 約 480 | 3 分 |
+| pilot V6-B（40 問 × 5 Level ×（direct 1 ＋ 項目 約 2.03）× 2 順序） | 約 1,210 | 7 分 |
+| V6-A dev：gemma3（201 × 20） | 4,020 | 22 分 |
+| V6-A dev：qwen3.5:4b 対照（201 × 20） | 4,020 | 22 分 |
+| V6-B dev：direct（201 × 20）＋ 項目（102 側 4,140 ＋ 99 側 4,040） | 12,200 | 68 分 |
+| **dev 合計** | **約 21,900** | **約 2 時間** |
+| test（合格 arm のみ、484 問 × 20）：第 2 reader 1 モデル | 9,680 | 54 分 |
+| test：V6-B（direct 9,680 ＋ 項目 約 19,650） | 約 29,300 | 2.7 時間 |
+
+test 側の基礎記録（§22 の test 追加分、§23 の test 233 問の reader / direct_lp / relevance_v4 / observer_v3）は別途必要で、上表に含まない。
+
+### 25.9 任意（ユーザー判断）：prior-answerable 問題でのゲートのコスト
+- dev の prior-answerable 64 問（L20 正解、text-only でも正解）には、L1〜L19 の記録がない。
+- ゲートが答えられる問題の停止を遅らせるコストを配備に近い母集団で見るには、次を 20 Level で走らせる：主 reader、direct_lp、relevance_v4、legibility_v6（direct）、gemma3 reader。
+- 64 × 20 × 5 = 6,400 回、約 36 分（Direct 系のみ）。
+
+### 25.10 順序
+pilot V6-A → pilot V6-B → 中間報告 → V6-A dev（gemma3、次に qwen3.5:4b）→ V6-B dev → 評価 → `.claude/docs/research/gqa-stop-v6-dev.md` → ユーザー判断（凍結・test、§25.9 の実施可否）。
