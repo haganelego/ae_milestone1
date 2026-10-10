@@ -95,6 +95,42 @@ This control was requested by team-lead. The box ∧ direct_v4 optimum at 0.95 u
   - checklist_v4_min shows the same pattern; its θ_material = 0.01 means material stops as soon as the gate opens.
 - **Caveat.** These are in-sample optima of 3 parameters against 1 for direct_v4, on 41 / 46 / 15 questions per attribute. Part of the gain is selection optimism. A cross-validated estimate, for example image-grouped k-fold over the 102 with θ_attr refit per fold, is needed before treating per-attribute θ as a method.
 
+#### Cross-validation of per-attribute θ (`box_attrtheta_cv.csv`, per-seed `box_attrtheta_cv_seeds.csv`)
+
+- **Setup.** 5-fold cross-validation on dev 102, grouped by image (89 groups), repeated over 10 seeds. Each fold chooses the single θ and the per-attribute θ on the training folds, at each target, with the in-sample selection rule. These θs are then applied to the held-out fold.
+- **Metrics.** Out-of-fold (OOF) accuracy and mean level are pooled over the 5 folds. Firing on the 99 is the mean over the 5 folds' θs.
+- **Values.** Mean ± sd over seeds. "Meets" is the number of seeds whose OOF accuracy reaches the target.
+- **Check.** The fold selectors applied to the full data reproduce the in-sample values: direct_v4 θ 0.30 at 13.83, per-attribute 0.08 / 0.39 / 0.26 at 12.11.
+
+| score | target | scheme | OOF acc | meets | OOF mean L | firing (99) |
+|---|---|---|---|---|---|---|
+| direct_v4 | 0.90 | single | 0.892 ± 0.014 | 4/10 | 11.85 ± 0.29 | 0.796 |
+| direct_v4 | 0.90 | per-attr | 0.852 ± 0.012 | 0/10 | 9.66 ± 0.13 | 0.889 |
+| direct_v4 | 0.95 | single | 0.934 ± 0.012 | 1/10 | 13.87 ± 0.15 | 0.656 |
+| direct_v4 | 0.95 | per-attr | 0.896 ± 0.019 | 0/10 | 11.95 ± 0.41 | 0.748 |
+| direct_v4 | 0.97 | single | 0.967 ± 0.005 | 6/10 | 14.85 ± 0.06 | 0.549 |
+| direct_v4 | 0.97 | per-attr | 0.910 ± 0.019 | 0/10 | 13.58 ± 0.32 | 0.670 |
+| direct_v4 | 0.99 | single | 0.989 ± 0.003 | 9/10 | 17.84 ± 0.14 | 0.277 |
+| direct_v4 | 0.99 | per-attr | 0.964 ± 0.011 | 0/10 | 15.98 ± 0.26 | 0.414 |
+| checklist_v4_min | 0.90 | single | 0.887 ± 0.012 | 1/10 | 11.52 ± 0.18 | 0.796 |
+| checklist_v4_min | 0.90 | per-attr | 0.874 ± 0.013 | 0/10 | 10.33 ± 0.09 | 0.841 |
+| checklist_v4_min | 0.95 | single | 0.938 ± 0.015 | 3/10 | 13.99 ± 0.23 | 0.661 |
+| checklist_v4_min | 0.95 | per-attr | 0.899 ± 0.010 | 0/10 | 12.02 ± 0.24 | 0.775 |
+| checklist_v4_min | 0.97 | single | 0.954 ± 0.008 | 0/10 | 15.03 ± 0.08 | 0.559 |
+| checklist_v4_min | 0.97 | per-attr | 0.931 ± 0.021 | 0/10 | 13.19 ± 0.17 | 0.660 |
+| checklist_v4_min | 0.99 | single | 0.986 ± 0.007 | 7/10 | 16.04 ± 0.05 | 0.392 |
+| checklist_v4_min | 0.99 | per-attr | 0.955 ± 0.012 | 0/10 | 14.96 ± 0.19 | 0.521 |
+
+- **Paired per seed, per-attr − single.**
+  - Mean level is lower by 1.1 to 2.2 at every target, in every seed. For direct_v4 at 0.95 it is −1.92, ranging from −2.76 to −1.14 across seeds.
+  - The price is OOF accuracy −0.02 to −0.06, and firing on the 99 +0.05 to +0.14.
+- **The level gain is bought with accuracy.** Per-attribute θ never meets its target out of fold, in 0 of 10 seeds for any score or target. At 0.95 it gives about 0.90, not 0.95, while single θ gives 0.93 to 0.94.
+- **At matched OOF accuracy, single θ is as fast or faster.**
+  - direct_v4: per-attribute at the 0.99 target gives 0.964 @ 15.98; single at the 0.97 target gives 0.967 @ 14.85.
+  - direct_v4: per-attribute at the 0.97 target gives 0.910 @ 13.58, while the single-θ points bracket it at 0.892 @ 11.85 and 0.934 @ 13.87.
+  - checklist_v4_min: per-attribute at 0.99 gives 0.955 @ 14.96; single at 0.97 gives 0.954 @ 15.03, a tie.
+- **Conclusion.** The in-sample per-attribute gain is selection optimism; it does not survive cross-validation. Single θ also loses about 0.01 to 0.02 accuracy out of fold (0.934 at the 0.95 target), so the in-sample targets on 102 questions are themselves slightly optimistic.
+
 ## D1. v3-style verbalised checklist_min under clean decoding (`v3verb_*`)
 
 - **Construction.** The score is rebuilt from the cached observer_v3 records' verbalised `confidence` under the v1 gate (unresolved or ancestor-unresolved items count as 0, then min). There are no new calls.

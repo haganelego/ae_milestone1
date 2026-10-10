@@ -119,3 +119,27 @@ def test_per_attribute_theta_is_box_search_on_scores() -> None:
     tau = best["0.99"]["tau"]
     assert tau["color"] == 0.5 and tau["material"] == 0.9
     assert best["0.99"]["mean_level"] == (2 + 2 + 3 + 3) / 4
+
+
+def test_grouped_folds_keep_images_together() -> None:
+    groups = ["a", "a", "b", "c", "c", "d", "e"]
+    folds = b.grouped_folds(groups, 3, seed=1)
+    assert folds[0] == folds[1] and folds[3] == folds[4]
+    assert set(folds) <= {0, 1, 2}
+
+
+def test_pick_single_and_per_attr_choose_cheapest_feasible() -> None:
+    level = np.array([[1, 2, 20], [1, 2, 20], [1, 3, 20], [1, 3, 20]])
+    hit = np.array(
+        [
+            [False, True, True],
+            [False, True, True],
+            [False, False, True],
+            [True, True, True],
+        ]
+    )
+    grid = np.array([0.1, 0.5, np.inf])
+    assert b.pick_single(level, hit, grid, 0.74) == 1
+    attr = np.array(["color", "color", "material", "material"])
+    picks = b.pick_per_attr(level, hit, attr, 0.99)
+    assert picks["color"] == 1 and picks["material"] == 2  # material needs θ = ∞

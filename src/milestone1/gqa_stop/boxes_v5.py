@@ -548,3 +548,159 @@ def attr_theta_control(ctx: Context) -> dict[str, Any]:
     pd.concat(pareto_frames).to_csv(out / "box_attrtheta_pareto.csv", index=False)
     ctx.log("§24 A control: per-attribute θ written")
     return {"rows": json.loads(frame.to_json(orient="records"))}
+
+
+# ---- control CV: image-grouped k-fold for single vs per-attribute θ ---------------------------
+CV_FOLDS = 5
+CV_SEEDS = tuple(range(10))
+
+
+def stop_tables(score: np.ndarray, grid: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    """[question, θ] stop level and whether the rule fired (met before forced stop)."""
+    levels = np.empty((score.shape[0], len(grid)), dtype=int)
+    fired = np.empty_like(levels, dtype=bool)
+    for j, theta in enumerate(grid):
+        levels[:, j], fired[:, j] = first_level(score >= theta)
+    return levels, fired
+
+
+def pick_single(
+    level: np.ndarray, hit: np.ndarray, grid: np.ndarray, target: float
+) -> int:
+    acc, mean = hit.mean(axis=0), level.mean(axis=0)
+    ok = np.flatnonzero(acc >= target - ACCURACY_TOLERANCE)
+    if ok.size == 0:
+        return len(grid) - 1  # never stop (θ = ∞)
+    return int(min(ok, key=lambda j: (mean[j], -acc[j], -grid[j])))
+
+
+def pick_per_attr(
+    level: np.ndarray, hit: np.ndarray, attr: np.ndarray, target: float
+) -> dict[str, int]:
+    stats = {
+        a: (
+            hit[attr == a].sum(axis=0).astype(float),
+            level[attr == a].sum(axis=0).astype(float),
+        )
+        for a in ATTRIBUTES
+    }
+    total_c, total_s = combine(stats)
+    n = len(attr)
+    ok = total_c / n >= target - ACCURACY_TOLERANCE
+    if not ok.any():
+        last = level.shape[1] - 1
+        return dict.fromkeys(ATTRIBUTES, last)
+    key = np.where(ok, total_s * (n + 1) - total_c, np.inf)
+    idx = np.unravel_index(int(np.argmin(key)), total_c.shape)
+    return {a: int(i) for a, i in zip(ATTRIBUTES, idx, strict=True)}
+
+
+def grouped_folds(groups: Sequence[str], k: int, seed: int) -> np.ndarray:
+    unique = sorted(set(groups))
+    order = np.random.default_rng(seed).permutation(len(unique))
+    fold_of = {unique[g]: i % k for i, g in enumerate(order)}
+    return np.array([fold_of[g] for g in groups])
+
+
+def attr_theta_cv(ctx: Context) -> dict[str, Any]:
+    """Out-of-fold accuracy / mean level on dev 102 and firing on the 99 (cache only)."""
+    ctx.set_stage("v5_attrtheta_cv")
+    from .stages_v4c_test import targets
+
+    root = ctx.paths.output_root
+    if ctx.dry_run:
+        ctx.echo("[dry-run] per-attribute θ CV (no model calls)")
+        return {}
+    dev = read_id_csv(root / "level_table_dev_merged.csv")
+    wrong = read_id_csv(root / "ext_dev_wrong" / "level_table.csv")
+    grid = np.array(threshold_grid(ctx.cfg["policy"]), dtype=float)
+    qids, correct = matrices(dev, "reader_correct")
+    correct = correct.astype(bool)
+    attr = dev.groupby("question_id")["attribute"].first().loc[qids].to_numpy()
+    groups = (
+        dev.groupby("question_id")["group_id"].first().astype(str).loc[qids].tolist()
+    )
+    wq, _ = matrices(wrong, "reader_correct")
+    w_attr = wrong.groupby("question_id")["attribute"].first().loc[wq].to_numpy()
+    rows = []
+    for column in CONTROL_SCORES:
+        level, _ = stop_tables(matrices(dev, column)[1], grid)
+        hit = correct[np.arange(len(qids))[:, None], level - 1]
+        _, w_fired = stop_tables(matrices(wrong, column)[1], grid)
+        for target in targets(ctx.cfg["policy"]):
+            for seed in CV_SEEDS:
+                folds = grouped_folds(groups, CV_FOLDS, seed)
+                oof = {
+                    "single": np.zeros(len(qids), dtype=int),
+                    "per_attr": np.zeros(len(qids), dtype=int),
+                }
+                fire = {"single": [], "per_attr": []}
+                for f in range(CV_FOLDS):
+                    train, test = folds != f, folds == f
+                    j = pick_single(level[train], hit[train], grid, target)
+                    oof["single"][test] = level[test, j]
+                    fire["single"].append(w_fired[:, j].mean())
+                    picks = pick_per_attr(level[train], hit[train], attr[train], target)
+                    cols = np.array([picks[a] for a in attr])
+                    oof["per_attr"][test] = level[np.flatnonzero(test), cols[test]]
+                    w_cols = np.array([picks[a] for a in w_attr])
+                    fire["per_attr"].append(w_fired[np.arange(len(wq)), w_cols].mean())
+                for scheme, stop in oof.items():
+                    rows.append(
+                        {
+                            "score": column,
+                            "scheme": scheme,
+                            "target": f"{target:.2f}",
+                            "seed": seed,
+                            "oof_accuracy": float(
+                                correct[np.arange(len(qids)), stop - 1].mean()
+                            ),
+                            "oof_mean_level": float(stop.mean()),
+                            "firing_99": float(np.mean(fire[scheme])),
+                        }
+                    )
+    frame = pd.DataFrame(rows)
+    frame.to_csv(root / OUT_DIR / "box_attrtheta_cv_seeds.csv", index=False)
+    summary = (
+        frame.groupby(["score", "target", "scheme"])
+        .agg(
+            oof_accuracy_mean=("oof_accuracy", "mean"),
+            oof_accuracy_sd=("oof_accuracy", "std"),
+            oof_mean_level_mean=("oof_mean_level", "mean"),
+            oof_mean_level_sd=("oof_mean_level", "std"),
+            firing_99_mean=("firing_99", "mean"),
+            firing_99_sd=("firing_99", "std"),
+            seeds_meeting_target=("oof_accuracy", "size"),
+        )
+        .reset_index()
+    )
+    meets = frame.assign(
+        ok=frame["oof_accuracy"] >= frame["target"].astype(float) - ACCURACY_TOLERANCE
+    )
+    summary["seeds_meeting_target"] = (
+        meets.groupby(["score", "target", "scheme"])["ok"].sum().to_numpy()
+    )
+    paired = frame.pivot_table(
+        index=["score", "target", "seed"],
+        columns="scheme",
+        values=["oof_mean_level", "oof_accuracy", "firing_99"],
+    )
+    diff = (
+        pd.DataFrame(
+            {
+                "level_diff": paired[("oof_mean_level", "per_attr")]
+                - paired[("oof_mean_level", "single")],
+                "acc_diff": paired[("oof_accuracy", "per_attr")]
+                - paired[("oof_accuracy", "single")],
+                "fire_diff": paired[("firing_99", "per_attr")]
+                - paired[("firing_99", "single")],
+            }
+        )
+        .groupby(level=["score", "target"])
+        .agg(["mean", "std", "min", "max"])
+    )
+    diff.columns = ["_".join(c) for c in diff.columns]
+    summary = summary.merge(diff.reset_index(), on=["score", "target"], how="left")
+    summary.to_csv(root / OUT_DIR / "box_attrtheta_cv.csv", index=False)
+    ctx.log("§24 A control: per-attribute θ CV written")
+    return {"rows": json.loads(summary.to_json(orient="records"))}
