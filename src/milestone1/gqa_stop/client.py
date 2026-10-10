@@ -51,6 +51,12 @@ ROLE_DIRS = {
     "relevance_v4": "relevance_v4",
     "reader_informed": "reader_informed",  # exploratory probe
     "diff_v5": "diff_v5",  # plan §24 C (two images per request)
+    "legibility_v6": "legibility_v6",  # plan §25.4 V6-B
+    "legibility_v6_swap": "legibility_v6_swap",  # plan §25.5 order control
+    "verify_v6": "verify_v6",  # plan §25.11 V6-C (a)
+    "visible_v6": "visible_v6",  # plan §25.11 V6-C (b)
+    "verify_v6_swap": "verify_v6_swap",  # Yes/No order control (team-lead)
+    "visible_v6_swap": "visible_v6_swap",
 }
 STATUS_VALID = "valid"
 STATUS_SCHEMA_FAILURE = "schema_failure"

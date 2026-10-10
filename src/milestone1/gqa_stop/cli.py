@@ -29,6 +29,8 @@ from . import (
     stages_v4c_test,
     stages_v22_test,
     textprobe,
+    v6_agree,
+    v6_legibility,
 )
 from . import report as report_mod
 from .client import PauseRequired
@@ -66,6 +68,12 @@ COMMANDS = (
     "freeze-v22",
     "evaluate-v22",
     "firing-test",
+    "v6-agree-pilot",
+    "v6-agree",
+    "v6-agree-eval",
+    "v6-leg-pilot",
+    "v6-leg",
+    "v6-leg-eval",
 )
 
 
@@ -161,6 +169,18 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         if args.split == "test":
             return stages_v4c_test.v1arm_test(ctx)
         return stages_v4c.v1arm(ctx)
+    if command == "v6-agree-pilot":
+        return v6_agree.pilot(ctx)
+    if command == "v6-leg-pilot":
+        return v6_legibility.pilot(ctx)
+    if command == "v6-leg":
+        return v6_legibility.run_leg(ctx)
+    if command == "v6-leg-eval":
+        return v6_legibility.evaluate_leg(ctx)
+    if command == "v6-agree-eval":
+        return v6_agree.evaluate_agree(ctx)
+    if command == "v6-agree":
+        return v6_agree.run_agree(ctx)
     if command == "v5-diff-pilot":
         return diff_v5.pilot(ctx)
     if command == "v5-diff":
