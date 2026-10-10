@@ -27,6 +27,7 @@ from . import (
     stages_v4,
     stages_v4c,
     stages_v4c_test,
+    stages_v22_test,
     textprobe,
 )
 from . import report as report_mod
@@ -62,6 +63,9 @@ COMMANDS = (
     "v5-diff",
     "v5-attrtheta",
     "v5-attrtheta-cv",
+    "freeze-v22",
+    "evaluate-v22",
+    "firing-test",
 )
 
 
@@ -163,6 +167,12 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return diff_v5.run_diff(ctx)
     if command == "v5-replays":
         return replays_v5.run_replays(ctx)
+    if command == "freeze-v22":
+        return stages_v22_test.freeze_v22(ctx)
+    if command == "evaluate-v22":
+        return stages_v22_test.evaluate_v22(ctx)
+    if command == "firing-test":
+        return stages_v22_test.firing_test(ctx)
     if command == "v5-attrtheta-cv":
         return boxes_v5.attr_theta_cv(ctx)
     if command == "v5-attrtheta":

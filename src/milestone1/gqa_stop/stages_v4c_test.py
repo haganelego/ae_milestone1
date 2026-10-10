@@ -9,7 +9,7 @@ dev only. Logged variants are frozen too but never used for a claim.
 from __future__ import annotations
 
 import math
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -284,7 +284,12 @@ def summarize(
 
 
 def bootstrap(
-    stops: pd.DataFrame, table: pd.DataFrame, target: str, repeats: int, seed: int
+    stops: pd.DataFrame,
+    table: pd.DataFrame,
+    target: str,
+    repeats: int,
+    seed: int,
+    pairs: Sequence[tuple[str, str]] = COMPARISONS,
 ) -> dict[str, Any]:
     """Paired image-cluster bootstrap at one target (hull recomputed per draw)."""
     qids = sorted(table["question_id"].unique())
@@ -306,7 +311,7 @@ def bootstrap(
             acc = float(c[np.arange(len(s)), s - 1].mean())
             out[f"{m}.accuracy"], out[f"{m}.mean_level"] = acc, float(s.mean())
             out[f"{m}.hull_gap"] = acc - hull_value(curve, float(s.mean()))
-        for a, b in COMPARISONS:
+        for a, b in pairs:
             if a in arrays and b in arrays:
                 out[f"{a}-{b}.accuracy_diff"] = (
                     out[f"{a}.accuracy"] - out[f"{b}.accuracy"]
@@ -332,11 +337,14 @@ def bootstrap(
 
 
 def attribute_breakdown(
-    stops: pd.DataFrame, table: pd.DataFrame, target: str
+    stops: pd.DataFrame,
+    table: pd.DataFrame,
+    target: str,
+    methods: Sequence[str] = MAIN,
 ) -> pd.DataFrame:
     meta = table.groupby("question_id")[["attribute", "relate_count"]].first()
     sub = stops[
-        (stops["target"] == target) & stops["method"].isin([*MAIN, "fixed_dev"])
+        (stops["target"] == target) & stops["method"].isin([*methods, "fixed_dev"])
     ]
     sub = sub.join(meta, on="question_id")
     rows = []

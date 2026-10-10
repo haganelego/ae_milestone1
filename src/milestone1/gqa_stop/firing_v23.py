@@ -10,7 +10,7 @@ the forced L20 stop is not a firing. Records live in their own directory.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -187,7 +187,11 @@ def summarize(fires: pd.DataFrame) -> pd.DataFrame:
 
 
 def paired(
-    fires: pd.DataFrame, groups: Mapping[str, str], repeats: int, seed: int
+    fires: pd.DataFrame,
+    groups: Mapping[str, str],
+    repeats: int,
+    seed: int,
+    pairs: Sequence[tuple[str, str]] = PAIRS,
 ) -> pd.DataFrame:
     qids = sorted(groups)
     indices = cluster_bootstrap_indices([groups[q] for q in qids], repeats, seed)
@@ -197,7 +201,7 @@ def paired(
             m: g.set_index("question_id").loc[qids, "fired"].to_numpy(dtype=float)
             for m, g in sub.groupby("method")
         }
-        for a, b in PAIRS:
+        for a, b in pairs:
             if a not in flags or b not in flags:
                 continue
             diff = flags[a] - flags[b]
