@@ -1,0 +1,1 @@
+Consider the question: '{question}'. Can you see the object the question refers to clearly enough in this view to tell its {attribute}? Answer with No or Yes.

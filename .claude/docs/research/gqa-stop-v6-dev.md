@@ -1,7 +1,7 @@
-# gqa_stop v6 (plan §25): cross-model agreement gate and approach-framed legibility signal (dev)
+# gqa_stop v6 (plan §25, §25.11): cross-model agreement gate, legibility signal, answer-conditioned Yes/No (dev)
 
 Date: 2026-10-10. Run: `configs/gqa_stop_v22.json` (A13 clean decoding, think=false). Outputs: `outputs/gqa_stop/visapp_gqa_v22/v6/` (102) and `ext_dev_wrong/v6/` (99).
-Scope: dev only. The sets are the 102 visual questions (§22) and the 99 reader-wrong questions (§23). No test inference, no freeze, no commit. `frozen_policy.json`, `effective_config.json` and the quarantined test records were not touched.
+Scope: dev only (V6-A, V6-B, V6-C). The sets are the 102 visual questions (§22) and the 99 reader-wrong questions (§23). No test inference, no freeze, no commit. `frozen_policy.json`, `effective_config.json` and the quarantined test records were not touched.
 Terminology follows A14. "Firing" means the stop rule is met at some level 1–20; the forced L20 stop is not a firing.
 
 ## Verdict
@@ -17,10 +17,14 @@ Terminology follows A14. "Firing" means the stop rule is met at some level 1–2
   - The same-family qwen3.5:4b separates the sets slightly better (+0.076 [+0.005, +0.150]), which is the opposite of H-A2.
   - gemma3 is a weak reader on these questions: GT accuracy on the 102 is 0.22 at L1 and 0.55 at L20.
 - **Many of the 99 look like label problems, not invisibility.** Both readers give the same wrong answer at L20 for 51/99 (gemma3) and 61/99 (qwen4b). 37 of the 39 gemma3-gated fires at 0.95 stop with both models on the same wrong answer. No agreement gate can catch these.
-- **V6-B, the legibility signal, stopped at the pilot (§25.5).** It failed the option-order gate: the mean absolute difference between orders is 0.224, above the 0.15 limit.
-  - Ranks are stable (Spearman 0.944). The failure is a recency bias: listing "Enough" last raises P(Enough) by about +0.22 at every level.
-  - The dev legibility run, the policy evaluation and the V6-B pass test were not run.
-- **Overall.** Neither v6 arm beats direct_pans on dev, so no test run follows from §25. direct_pans (P_ans alone) remains the best direct signal for not firing on the 99 at a given cost.
+- **V6-B: stopped at pilot, order-sensitivity gate failed.** The mean |diff| between option orders is 0.224 > 0.15. This is a recency bias toward the last-listed option.
+  - Ranks are stable (Spearman 0.944), and every other gate passed.
+  - The 1,230 pilot calls stay cached. The dev legibility calls were not run, and the gate was neither amended nor averaged over orders: either change needs a new pre-registration.
+- **V6-C: both forms stopped at the pilot (§25.11).** Neither (a) nor (b) reached dev.
+  - **(a) verify_v6 (P(True)) fails the discrimination gate.** L20 AUROC on the 40 direct proposals (19 correct, 21 wrong) is **0.391** [0.187, 0.598], against the 0.65 required. It is below chance: wrong proposals get *higher* P(True), mean 0.82 vs 0.78.
+  - **(b) visible_v6 (P(Vis)) is a paraphrase of Rel.** Its Spearman with Rel is **0.974**, at or above the 0.95 cut-off.
+  - All other gates passed for both forms. That includes the Yes/No-swap gate the team lead added: mean |diff| 0.141 for verify and 0.031 for visible.
+- **Overall.** No v6 arm beats direct_pans on dev, so no test run follows from §25. direct_pans (P_ans alone) remains the best direct signal for not firing on the 99 at a given cost.
 
 ## Environment and controls (task 0)
 
@@ -175,7 +179,50 @@ The gate's effect is mostly on colour: firing falls by 0.13 and the mean level r
   - 26% of calls flip their argmax option.
   - First tokens are Enough 348 vs 487 and Clo 246 vs 123 between the two orders.
 - **Descriptive only (no firing measured).** Mean direct Leg is nearly the same on the 102 and the 99 at every pilot level in both orders (0.404 vs 0.405 in the original order), and the curves overlap in `leg_pilot_order.png`. This hints that Leg would not separate the sets either, but it is a pilot observation, not a test.
-- **The rule says stop, so V6-B was stopped.** Possible amendments would each need a new pre-registration and a user decision. One is to average both orders. The other is to accept a level-independent offset, since θ is re-selected and ranks are stable.
+- **Outcome: stopped at pilot, order-sensitivity gate failed** (mean |diff| 0.224 > 0.15, recency bias toward the last-listed option).
+  - The team lead accepted the stop. The 1,230 pilot calls stay cached, and the dev legibility calls were not run.
+  - The gate was not amended and the two orders were not averaged. Both would need a new pre-registration, which is the user's decision.
+
+## V6-C pilot (§25.11; `v6/verify_pilot_summary.json`, `verify_pilot.csv`)
+
+- **Model and subset.** qwen3.5:9b; the §25.5 pilot subset (20 + 20 questions × L1/5/10/15/20).
+- **Inputs.**
+  - verify_v6 receives the question and the same level's proposed answer, after pipeline normalisation. Direct proposals come from direct_lp (200 calls). Item proposals come from observer_v3, only for valid, resolved, non-"unknown" items (275 calls; §25.11 estimated 135 + 140 from cache).
+  - visible_v6 receives the question and its attribute word (200 calls).
+- **Order control (team lead's addition).** §25.11 says no option-order control is needed. The team lead asked for one because V6-B failed on option order. So `verify_v6_swap.txt` and `visible_v6_swap.txt` were sent too: identical prompts ending "Answer with No or Yes." Each form gets the 0.15 mean |diff| gate.
+- **Calls.** 1,350 in total, all valid. Records are in `verify_v6*/` and `visible_v6*/` under both roots.
+
+| gate | verify_v6 (a) | visible_v6 (b) |
+|---|---|---|
+| reply starts with Yes/No ≥ 0.95 (swap) | 1.00 (1.00) | 1.00 (1.00) |
+| exact Yes or No in first-token top-10 ≥ 0.95 | 1.00 | 1.00 |
+| 102 direct mean, L20 > L1 | 0.304 → 0.811, pass | 0.051 → 0.639, pass |
+| Spearman with Rel < 0.95 | 0.786 (direct 0.745), pass | **0.974, fail** |
+| L20 AUROC, direct proposal correct vs wrong ≥ 0.65 (a only) | **0.391 [0.187, 0.598], fail** | — |
+| Yes/No swap mean \|diff\| ≤ 0.15 (team lead) | 0.141, pass (swap − orig −0.141; Spearman 0.978) | 0.031, pass |
+
+**(a) P(True) ranks wrong proposals above correct ones.**
+
+| set at L20 | correct proposals: n / mean P(True) | wrong proposals: n / mean P(True) | AUROC |
+|---|---|---|---|
+| 102 | 16 / 0.79 | 4 / 0.88 | 0.28 |
+| 99 | 3 / 0.73 | 17 / 0.80 | 0.31 |
+| pooled | 19 | 21 | 0.391 |
+
+- **Over all five pilot levels the AUROC is 0.552.** The mean P(True) for correct and wrong proposals rises together: 0.31 / 0.40 at L1 and 0.78 / 0.82 at L20.
+- **The model endorses its own wrong answers with near certainty.** The highest-P(True) wrong proposals at L20 are red, triangle, circular, maroon, wood, white and "light wood", all with P(True) ≥ 0.98.
+- **Two of the 102's four "wrong" proposals are format variants.** They are "triangle" and "circular", where the label is triangular or round.
+- **Many 99 proposals match the shared-wrong-answer pattern of V6-A.** P(True) behaves like a same-model self-consistency check. This is the v2 lesson again: a signal derived from the VLM's own outputs cannot catch confident prior-driven or label-mismatched answers.
+
+**(b) P(Vis) tracks Rel, not answerability.** Mean P(Vis) by level is nearly the same on both sets:
+
+| set | L1 | L5 | L10 | L15 | L20 |
+|---|---|---|---|---|---|
+| 102 | 0.051 | 0.098 | 0.275 | 0.523 | 0.639 |
+| 99 | 0.057 | 0.160 | 0.343 | 0.533 | 0.671 |
+
+- **Outcome: both V6-C forms stopped at pilot.** No dev calls were made for verify_v6 or visible_v6, and the V6-C policies were not evaluated.
+- **Ready but unused.** The dev and evaluation code exists: `v6-verify` and `v6-verify-eval`, with the 97.5% Bonferroni CI for rule (i) and stop20 and firing-level bands in every table. Both commands refuse to run because no form passed.
 
 ## Caveats
 
@@ -193,6 +240,8 @@ timeout 585 uv run python -m milestone1.gqa_stop.cli v6-agree --config configs/g
 uv run python -m milestone1.gqa_stop.cli v6-agree-eval --config configs/gqa_stop_v22.json          # cache-only
 uv run python -m milestone1.gqa_stop.cli v6-leg-pilot --config configs/gqa_stop_v22.json
 # v6-leg / v6-leg-eval exist but refuse to run: the V6-B pilot gates failed
+uv run python -m milestone1.gqa_stop.cli v6-verify-pilot --config configs/gqa_stop_v22.json
+# v6-verify / v6-verify-eval exist but refuse to run: no V6-C form passed its pilot
 ```
 
-Code: `src/milestone1/gqa_stop/v6_common.py` (sets, v6 config, model isolation), `v6_agree.py`, `v6_eval.py` (gated stop rules, selection, out-of-fold, paired bootstrap, frontier, pass rule) and `v6_legibility.py`. Tests: `tests/test_gqa_stop_v6.py` (16). The full `tests/test_gqa_stop*.py` suite passes (341).
+Code: `src/milestone1/gqa_stop/v6_common.py` (sets, v6 config, model isolation), `v6_agree.py`, `v6_eval.py` (gated stop rules, selection, out-of-fold, paired bootstrap including the 97.5% CI, stop20 and firing bands, frontier, pass rule), `v6_legibility.py` and `v6_verify.py`. Swap prompts: `prompts/gqa_stop/verify_v6_swap.txt` and `visible_v6_swap.txt` (team-lead order control). Tests: `tests/test_gqa_stop_v6.py` (21). The full `tests/test_gqa_stop*.py` suite passes (see the final report).

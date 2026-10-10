@@ -325,3 +325,174 @@ def test_add_v6_scores_products_and_v4_recompute() -> None:
     assert math.isclose(out["checklist_v6_min"], min(0.5 * 0.9, 0.4 * 0.5))
     assert math.isclose(out["leg_min"], 0.5)
     assert math.isclose(out["checklist_v4_min_recomputed"], min(0.25, 0.2))
+
+
+# ---- V6-C ---------------------------------------------------------------------------------
+from milestone1.gqa_stop import v6_verify as vv  # noqa: E402
+
+
+def v6c_engine(tmp_path: Path, role: str) -> RequestEngine:
+    from milestone1.gqa_stop.client import ModelSettings
+
+    settings = ModelSettings(
+        "http://x/api/chat",
+        "qwen3.5:9b",
+        "d" * 64,
+        0.0,
+        1,
+        False,
+        True,
+        8192,
+        {role: 8},
+        1,
+        0,
+        1,
+    )
+    template = (PROMPTS / f"{role}.txt").read_text("utf-8")
+    return vv.TemplateEngine(
+        settings, PromptSet({role: template, "schema_repair": "x"}), None, tmp_path
+    )  # type: ignore[arg-type]
+
+
+def test_template_engine_fills_question_answer_and_attribute(tmp_path: Path) -> None:
+    engine = v6c_engine(tmp_path, vv.VERIFY)
+    spec = vv.yesno_spec(
+        vv.VERIFY,
+        "q1",
+        4,
+        b"img",
+        {"question": "What color is the cup?", "answer": "red"},
+        "direct",
+    )
+    content = engine.build_messages(spec)[0]["content"]
+    assert (
+        "'What color is the cup?'" in content
+        and "'red'" in content
+        and "{" not in content
+    )
+    assert engine.record_path(spec).relative_to(tmp_path).parts[0] == "verify_v6"
+    vis = v6c_engine(tmp_path, vv.VISIBLE)
+    spec = vv.yesno_spec(
+        vv.VISIBLE,
+        "q1",
+        4,
+        b"img",
+        {"question": "Q?", "attribute": "material"},
+        "direct",
+    )
+    assert "tell its material?" in vis.build_messages(spec)[0]["content"]
+    swap = (PROMPTS / "verify_v6_swap.txt").read_text("utf-8")
+    assert swap.endswith("Answer with No or Yes.") or swap.strip().endswith(
+        "Answer with No or Yes."
+    )
+
+
+def test_level_targets_only_resolved_known_items() -> None:
+    p = plan(("i1", []), ("i2", ["i1"]), ("i3", []))
+    row = {
+        "question_id": "q1",
+        "question": "What color is the cup?",
+        "direct_lp_answer": " Red ",
+        "item1_valid": True,
+        "item1_resolved": True,
+        "item1_answer": "yes",
+        "item1_question": "item i1?",
+        "item2_valid": True,
+        "item2_resolved": True,
+        "item2_answer": "Unknown",
+        "item2_question": "item i2?",
+        "item3_valid": True,
+        "item3_resolved": False,
+        "item3_answer": "blue",
+        "item3_question": "item i3?",
+    }
+    targets = vv.level_targets(row, p, vv.VERIFY, "color")
+    assert [(t, d["answer"]) for t, d in targets] == [("direct", "red"), ("i1", "yes")]
+    vis = vv.level_targets(row, p, vv.VISIBLE, "color")
+    assert vis == [
+        ("direct", {"question": "What color is the cup?", "attribute": "color"})
+    ]
+
+
+def test_auroc_ranks_and_ties() -> None:
+    labels = np.array([True, True, False, False])
+    assert vv.auroc(np.array([0.9, 0.8, 0.1, 0.2]), labels) == 1.0
+    assert vv.auroc(np.array([0.1, 0.2, 0.9, 0.8]), labels) == 0.0
+    assert vv.auroc(np.array([0.5, 0.5, 0.5, 0.5]), labels) == 0.5
+    assert np.isnan(vv.auroc(np.array([0.5]), np.array([True])))
+
+
+def test_add_v6c_scores_uncalled_targets_are_zero() -> None:
+    p = plan(("i1", []), ("i2", ["i1"]))
+    table = pd.DataFrame(
+        [
+            {
+                "question_id": "q1",
+                "level": 2,
+                "direct_pans": 0.5,
+                "direct_rel": 0.4,
+                "item1_valid": True,
+                "item1_resolved": True,
+                "item1_answer": "yes",
+                "item1_pans": 0.8,
+                "item1_rel": 0.5,
+                "item2_valid": True,
+                "item2_resolved": True,
+                "item2_answer": "red",
+                "item2_pans": 0.6,
+                "item2_rel": 0.5,
+            }
+        ]
+    )
+    verify = pd.DataFrame(
+        [
+            {"question_id": "q1", "level": 2, "target": "direct", "p_yes": 0.9},
+            {"question_id": "q1", "level": 2, "target": "i1", "p_yes": 0.5},
+        ]
+    )
+    out = vv.add_v6c_scores(table, verify, None, {"q1": p}).iloc[0]
+    assert math.isclose(out["direct_v6t"], 0.45) and out["direct_v6v"] == 0.0
+    assert math.isclose(out["ptrue_rel_direct"], 0.36)
+    assert out["checklist_v6t_min"] == 0.0  # i2 was not verified -> P(True) = 0
+    assert math.isclose(out["checklist_v6t_mean"], 0.2)
+
+
+def test_band_rates_and_bonferroni_ci_key() -> None:
+    fired = np.array([True, True, True, False])
+    level = np.array([3, 8, 20, 20])
+    bands = ev.band_rates(fired, level)
+    assert bands["fire_L1_5"] == 0.25 and bands["fire_L6_10"] == 0.25
+    assert bands["fire_L6_9"] == 0.25 and bands["fire_L20_20"] == 0.25
+    oof = pd.DataFrame(
+        [
+            {
+                "method": "m",
+                "target": 0.95,
+                "oof_accuracy": 0.95,
+                "oof_mean_level": 13.0,
+                "oof_firing_99": 0.3,
+            },
+            {
+                "method": "direct_pans",
+                "target": 0.95,
+                "oof_accuracy": 0.95,
+                "oof_mean_level": 13.0,
+                "oof_firing_99": 0.4,
+            },
+        ]
+    )
+    pairs = pd.DataFrame(
+        [
+            {
+                "method": "m",
+                "vs": "direct_pans",
+                "target": 0.95,
+                "d_firing_ci": [-0.2, -0.01],
+                "d_firing_ci975": [-0.22, 0.01],
+            }
+        ]
+    )
+    assert ev.pass_rule(oof, pairs, "m", ["direct_pans"])["passed"]
+    assert not ev.pass_rule(oof, pairs, "m", ["direct_pans"], ci_key="d_firing_ci975")[
+        "passed"
+    ]

@@ -31,6 +31,7 @@ from . import (
     textprobe,
     v6_agree,
     v6_legibility,
+    v6_verify,
 )
 from . import report as report_mod
 from .client import PauseRequired
@@ -74,6 +75,9 @@ COMMANDS = (
     "v6-leg-pilot",
     "v6-leg",
     "v6-leg-eval",
+    "v6-verify-pilot",
+    "v6-verify",
+    "v6-verify-eval",
 )
 
 
@@ -171,6 +175,12 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return stages_v4c.v1arm(ctx)
     if command == "v6-agree-pilot":
         return v6_agree.pilot(ctx)
+    if command == "v6-verify-pilot":
+        return v6_verify.pilot(ctx)
+    if command == "v6-verify":
+        return v6_verify.run_verify(ctx)
+    if command == "v6-verify-eval":
+        return v6_verify.evaluate_verify(ctx)
     if command == "v6-leg-pilot":
         return v6_legibility.pilot(ctx)
     if command == "v6-leg":
