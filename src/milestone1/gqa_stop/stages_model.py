@@ -39,6 +39,10 @@ SAMPLED = "sampled_checklist"
 LOGPROB = "logprob_item"  # v4 (plan §19): P_ans x Rel item confidence
 ITEM = "item_checklist"  # v3 final (plan §18.6): N = 1 standalone items
 FORMAT_VALID_TARGET = 0.95
+V1ARM_SKIP_NOTE = (
+    "v1 arm skipped by user decision 2026-10-11 (checklist_v1 and verbalised "
+    "Direct not run; their columns are NaN)"
+)
 FORMAT_VALID_EXIT = 0.90
 
 
@@ -94,6 +98,7 @@ def level_table(
             int(checklist["min_items"]),
             int(checklist["max_items"]),
             cache_only=cache_only,
+            skip_verbalized=ctx.skip_v1arm,
         )
         rows = [row for q in questions for row in v4.run_question(q, levels)]
     elif ctx.family == ITEM:
@@ -481,6 +486,7 @@ def infer(
         "questions": len(questions),
         "levels": list(levels),
         "time": utc_now(),
+        **({"skip_v1arm": V1ARM_SKIP_NOTE} if ctx.skip_v1arm else {}),
     }
     ctx.state.set("infer", {**(ctx.state.get("infer") or {}), split: info})
     ctx.log(f"infer {split}: {len(questions)} questions, levels {list(levels)}")

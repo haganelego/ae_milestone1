@@ -59,6 +59,8 @@ class Context:
     echo: Callable[[str], None] = print
     tags_get: Callable[..., Any] | None = None  # GET for /api/tags (tests inject)
     stage: str = ""
+    # v1-arm opt-out (CLI --skip-v1arm; user decision 2026-10-11)
+    skip_v1arm: bool = False
     _engine: RequestEngine | None = field(default=None, init=False, repr=False)
 
     def set_stage(self, name: str) -> None:

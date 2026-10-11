@@ -180,12 +180,16 @@ class LogprobRunner:
         min_items: int,
         max_items: int,
         cache_only: bool = False,
+        skip_verbalized: bool = False,
     ) -> None:
         self.engine = engine
         self.series = series
         self.min_items = min_items
         self.max_items = max_items
         self.cache_only = cache_only
+        # v1-arm opt-out (user decision 2026-10-11): the verbalised Direct call
+        # (role "direct", v1 prompt) is not made; direct_score becomes NaN.
+        self.skip_verbalized = skip_verbalized
 
     def _run(self, spec: RequestSpec, validator: Callable[[Any], Any]) -> dict:
         if not self.cache_only:
@@ -222,8 +226,12 @@ class LogprobRunner:
         reader = self._run(
             build_level_spec(READER_ROLE, question, level, image), validate_reader
         )
-        direct_v1 = self._run(
-            build_level_spec(DIRECT_ROLE, question, level, image), validate_direct
+        direct_v1 = (
+            None
+            if self.skip_verbalized
+            else self._run(
+                build_level_spec(DIRECT_ROLE, question, level, image), validate_direct
+            )
         )
         direct_lp = self._run(direct_lp_spec(question, level, image), validate_direct)
         direct_rel = self._run(
@@ -244,7 +252,7 @@ class LogprobRunner:
             tally.add("observer", obs)
             tally.add("relevance", rel)
             items[item["id"]] = item_signals(obs, rel)
-        return v4_row(
+        row = v4_row(
             question,
             level,
             plan,
@@ -255,6 +263,9 @@ class LogprobRunner:
             items,
             tally,
         )
+        if self.skip_verbalized:
+            return {**row, "direct_score": float("nan")}
+        return row
 
 
 def item_signals(obs: Mapping[str, Any] | None, rel: Mapping[str, Any] | None) -> dict:

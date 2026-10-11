@@ -22,6 +22,7 @@ from .common import atomic_write_json, read_id_csv, read_jsonl, utc_now
 from .context import Context, require, table_to_csv
 from .devgrid_v22 import ALL_METHODS
 from .evaluate import add_correctness, cluster_bootstrap_indices
+from .explore import add_soft_existence
 from .inference import InferenceRunner
 from .logprob_v4 import LogprobRunner
 from .policy import (
@@ -82,7 +83,7 @@ def frozen_thetas(path: Path) -> dict[str, dict[str, dict[str, Any]]]:
     return out
 
 
-def engine_for(ctx: Context, out: Path) -> RequestEngine:
+def engine_for(ctx: Context, out: Path, stage: str = EXT_DIR) -> RequestEngine:
     ctx.verify_live_digest()
     sources = [(ctx.paths.output_root, frozenset(REUSE_ROLES))]
     engine = RequestEngine(
@@ -93,29 +94,47 @@ def engine_for(ctx: Context, out: Path) -> RequestEngine:
         monitor_from_config(ctx.cfg),
         reuse_sources=sources,
     )
-    engine.stage = "ext_dev_wrong"
+    engine.stage = stage
     return engine
 
 
+def without_v1_columns(table: pd.DataFrame) -> pd.DataFrame:
+    """v1 arm skipped (user decision 2026-10-11): v1 score columns are NaN."""
+    return add_soft_existence(table).assign(
+        checklist_v1_min=np.nan, checklist_v1_mean=np.nan, direct_score=np.nan
+    )
+
+
 def run_tables(
-    ctx: Context, questions: list[dict[str, Any]], out: Path
+    ctx: Context,
+    questions: list[dict[str, Any]],
+    out: Path,
+    skip_v1: bool = False,
+    cache_only: bool = False,
+    stage: str = EXT_DIR,
 ) -> pd.DataFrame:
-    engine = engine_for(ctx, out)
+    """Level tables over L1..L20; ``cache_only`` replays without model calls."""
+    engine = engine_for(ctx, out, stage)
     checklist = ctx.cfg["checklist"]
     lo, hi = int(checklist["min_items"]), int(checklist["max_items"])
     levels = list(range(1, ctx.n_levels + 1))
-    v4, v1 = (
-        LogprobRunner(engine, ctx.series, lo, hi),
-        InferenceRunner(engine, ctx.series, lo, hi),
+    v4 = LogprobRunner(
+        engine, ctx.series, lo, hi, cache_only=cache_only, skip_verbalized=skip_v1
     )
+    v1 = None if skip_v1 else InferenceRunner(engine, ctx.series, lo, hi, cache_only)
     v4_rows: list[dict] = []
     v1_rows: list[dict] = []
     for q in questions:
         v4_rows += v4.run_question(q, levels)
-        v1_rows += v1.run_question(q, levels)
+        if v1 is not None:
+            v1_rows += v1.run_question(q, levels)
     gt = ctx.gt([q["question_id"] for q in questions])
-    table_to_csv(add_correctness(pd.DataFrame(v1_rows), gt), out / "v1_level_table.csv")
     table = add_correctness(pd.DataFrame(v4_rows), gt)
+    if v1 is None:
+        table = without_v1_columns(table)
+        table_to_csv(table, out / "level_table.csv")
+        return table
+    table_to_csv(add_correctness(pd.DataFrame(v1_rows), gt), out / "v1_level_table.csv")
     v1 = read_id_csv(out / "v1_level_table.csv")
     table = with_v1(table, out / "v1_level_table.csv")
     table = table.merge(

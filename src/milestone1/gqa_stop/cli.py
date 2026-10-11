@@ -13,6 +13,7 @@ from collections.abc import Sequence
 from pathlib import Path
 
 from . import (
+    audit_v22,
     boxes_v5,
     devgrid_v22,
     diff_v5,
@@ -28,6 +29,7 @@ from . import (
     stages_v4c,
     stages_v4c_test,
     stages_v22_test,
+    sweep_v22,
     textprobe,
     v6_agree,
     v6_legibility,
@@ -69,6 +71,9 @@ COMMANDS = (
     "freeze-v22",
     "evaluate-v22",
     "firing-test",
+    "infer-test-wrong",
+    "sweep-v22",
+    "audit-test",
     "v6-agree-pilot",
     "v6-agree",
     "v6-agree-eval",
@@ -102,6 +107,12 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         help="freeze/evaluate only: visual_subset.json (fair-v1 re-analysis, §18.1)",
     )
+    parser.add_argument(
+        "--skip-v1arm",
+        action="store_true",
+        help="test infer/evaluate-v22/firing-test/sweep-v22: v1 arm skipped by user "
+        "decision 2026-10-11 (checklist_v1 and verbalised Direct not run; NaN)",
+    )
     parser.add_argument("--revise", action="store_true")
     parser.add_argument("--revision-file", type=Path, default=None)
     parser.add_argument("--reason", default=None)
@@ -115,7 +126,9 @@ def make_context(
     args: argparse.Namespace, transport_factory: TransportFactory = default_transport
 ) -> Context:
     cfg, paths = load_effective_config(args.config, args.repo_root)
-    return Context(args.config, cfg, paths, args.dry_run, transport_factory)
+    ctx = Context(args.config, cfg, paths, args.dry_run, transport_factory)
+    ctx.skip_v1arm = bool(getattr(args, "skip_v1arm", False))
+    return ctx
 
 
 def require_split(args: argparse.Namespace, allowed: Sequence[str]) -> str:
@@ -203,6 +216,12 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return stages_v22_test.evaluate_v22(ctx)
     if command == "firing-test":
         return stages_v22_test.firing_test(ctx)
+    if command == "infer-test-wrong":
+        return stages_v22_test.infer_test_wrong(ctx)
+    if command == "audit-test":
+        return audit_v22.audit(ctx)
+    if command == "sweep-v22":
+        return sweep_v22.sweep_v22(ctx)
     if command == "v5-attrtheta-cv":
         return boxes_v5.attr_theta_cv(ctx)
     if command == "v5-attrtheta":

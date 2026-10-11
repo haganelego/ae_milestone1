@@ -66,9 +66,14 @@ def stops_for(table: pd.DataFrame, column: str, theta: float, k: int) -> dict[st
     }
 
 
-def curves(table: pd.DataFrame, grid: Sequence[float], subset: str) -> pd.DataFrame:
+def curves(
+    table: pd.DataFrame,
+    grid: Sequence[float],
+    subset: str,
+    methods: Sequence[tuple[str, str, int, str]] = ALL_METHODS,
+) -> pd.DataFrame:
     rows = []
-    for name, column, k, role in ALL_METHODS:
+    for name, column, k, role in methods:
         for theta in grid:
             r = replay(table, column, theta, k)
             rows.append(
@@ -281,6 +286,8 @@ def figure(curve_frame: pd.DataFrame, counts: Mapping[str, str], out: Path) -> N
         )
         for name in CURVE_METHODS:
             pts = frame[frame["method"] == name].sort_values("mean_level")
+            if pts.empty:
+                continue
             lw, alpha = (1.6, 1.0) if name in CURVE_METHODS[:2] else (1.0, 0.6)
             ax.plot(
                 pts["mean_level"],
