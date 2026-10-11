@@ -101,6 +101,9 @@ class ModelSettings:
     # Modelfile default (e.g. presence_penalty 1.5, top_k 20, top_p 0.95) stays
     # active. Part of the options -> part of every cache key. Empty = legacy runs.
     decoding_options: tuple[tuple[str, Any], ...] = ()
+    # Plan §26 (model-swap run only): roles whose replies may end with "."
+    # after the JSON (see strip_trailing_periods). Empty = strict parser.
+    trailing_period_roles: frozenset[str] = frozenset()
 
     def options(self, role: str) -> dict[str, Any]:
         base = {
@@ -139,6 +142,9 @@ def settings_from_config(cfg: Mapping[str, Any]) -> ModelSettings:
         backoff_base_s=float(model.get("backoff_base_seconds", DEFAULT_BACKOFF_BASE_S)),
         backoff_max_s=float(model.get("backoff_max_seconds", DEFAULT_BACKOFF_MAX_S)),
         decoding_options=tuple(sorted(model.get("decoding_options", {}).items())),
+        trailing_period_roles=frozenset(
+            (cfg.get("model_swap") or {}).get("trailing_period_roles", [])
+        ),
     )
 
 
@@ -336,6 +342,7 @@ class RequestEngine:
                 "model_tag": self.model_tag,
                 "parse_version": PARSE_VERSION,
                 **self._schema_key(spec.role),
+                **self._tolerance_key(spec.role),
                 "prompt_hash": self.prompts.hashes[spec.role],
                 "repair_prompt_hash": self._repair_hash(),
                 "input_hash": sha256_json(spec.input_data),
@@ -490,11 +497,14 @@ class RequestEngine:
                 parsed, errors = (
                     ({"text": text}, []) if text else (None, ["empty reply"])
                 )
-                fence_stripped = False
+                fence_stripped = period_stripped = False
             else:
-                result_parse = parse_response(raw, validator)
+                result_parse = parse_response(
+                    raw, validator, spec.role in self.settings.trailing_period_roles
+                )
                 parsed, errors = result_parse.parsed, result_parse.errors
                 fence_stripped = result_parse.fence_stripped
+                period_stripped = result_parse.trailing_period_stripped
             status = STATUS_SCHEMA_FAILURE if errors else STATUS_VALID
             row = {
                 **row,
@@ -502,6 +512,7 @@ class RequestEngine:
                 "errors": errors,
                 "raw": raw,
                 "fence_stripped": fence_stripped,
+                **({"trailing_period_stripped": True} if period_stripped else {}),
                 "http_attempts": result.http_attempts,
                 "elapsed_s": round(result.elapsed_s, 3),
                 "usage": result.usage,
@@ -515,6 +526,12 @@ class RequestEngine:
         if spec.logprobs:
             record["logprobs"] = logprobs  # raw token list of the final attempt
         return record
+
+    def _tolerance_key(self, role: str) -> dict[str, str]:
+        """Plan §26 trailing-period tolerance: part of the key of listed roles only."""
+        if role not in self.settings.trailing_period_roles:
+            return {}
+        return {"parse_tolerance": TRAILING_PERIOD_RULE}
 
     @staticmethod
     def _schema_key(role: str) -> dict[str, str]:
@@ -590,6 +607,11 @@ class RequestEngine:
             "model_tag": self.model_tag,
             "parse_version": PARSE_VERSION,
             "fence_stripped": bool(attempts and attempts[-1].get("fence_stripped")),
+            **(
+                {"trailing_period_stripped": True}
+                if attempts and attempts[-1].get("trailing_period_stripped")
+                else {}
+            ),
             "initial_valid": bool(
                 attempts and attempts[0].get("status") == STATUS_VALID
             ),
@@ -629,6 +651,13 @@ PARSE_VERSION = "parse-v2"
 #   (e.g. "the object to the right of the other cup") is accepted and flagged.
 SCHEMA_VERSIONS = {"planner_v2": "2"}
 DEFAULT_SCHEMA_VERSION = "1"
+# Plan §26 (model-swap run, config model_swap.trailing_period_roles only):
+# qwen3.5:4b ends planner_v3 replies with "." after a complete JSON object even
+# with format=json, and the schema repair repeats it. For the listed roles,
+# trailing "." characters (and whitespace) after a final "}" are removed before
+# json.loads; nothing else changes. The rule name enters those roles' cache key.
+TRAILING_PERIOD_RULE = "trailing-period-v1"
+TRAILING_PERIOD_CHARS = ". \t\r\n"
 FENCE = "```"
 FENCE_LANGUAGE = "json"
 FENCES_IN_ONE_BLOCK = 2
@@ -639,6 +668,7 @@ class ParseResult:
     parsed: Any
     errors: list[str]
     fence_stripped: bool
+    trailing_period_stripped: bool = False
 
 
 def strip_single_fence(raw: str) -> tuple[str, bool]:
@@ -662,15 +692,31 @@ def strip_single_fence(raw: str) -> tuple[str, bool]:
     return head + newline + rest, True
 
 
-def parse_response(raw: str, validator: Validator) -> ParseResult:
-    """``json.loads`` on the whole (single-fence-unwrapped) content; no regex."""
+def strip_trailing_periods(text: str) -> tuple[str, bool]:
+    """Remove "." / whitespace after a final "}" (plan §26); otherwise unchanged."""
+    core = text.rstrip(TRAILING_PERIOD_CHARS)
+    if not core.endswith("}") or "." not in text[len(core) :]:
+        return text, False
+    return core, True
+
+
+def parse_response(
+    raw: str, validator: Validator, trailing_period: bool = False
+) -> ParseResult:
+    """``json.loads`` on the whole (single-fence-unwrapped) content; no regex.
+
+    ``trailing_period`` (plan §26, listed roles only) first removes trailing "."
+    characters after the closing brace."""
     text, fence_stripped = strip_single_fence(raw)
+    stripped = False
+    if trailing_period:
+        text, stripped = strip_trailing_periods(text)
     try:
         obj = json.loads(text)
     except json.JSONDecodeError as exc:
-        return ParseResult(None, [f"invalid JSON: {exc.msg}"], fence_stripped)
+        return ParseResult(None, [f"invalid JSON: {exc.msg}"], fence_stripped, stripped)
     parsed, errors = validator(obj)
-    return ParseResult(parsed, errors, fence_stripped)
+    return ParseResult(parsed, errors, fence_stripped, stripped)
 
 
 def parse_and_validate(raw: str, validator: Validator) -> tuple[Any, list[str]]:

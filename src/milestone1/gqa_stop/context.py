@@ -153,6 +153,13 @@ class Context:
         return settings_from_config(self.cfg)
 
     @property
+    def model_swap(self) -> dict[str, Any] | None:
+        """Plan §26 model-swap block: the question sets, images and prompts of a
+        reference run are reused with another model (None for ordinary runs)."""
+        value = self.cfg.get("model_swap")
+        return dict(value) if value else None
+
+    @property
     def family(self) -> str:
         """Stop-method family: "confidence" (v1, plan §0-16) or "consistency" (§17)."""
         return str(self.cfg["policy"].get("family", "confidence"))

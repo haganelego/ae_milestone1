@@ -856,3 +856,26 @@ pilot V6-A → pilot V6-B → 中間報告 → V6-A dev（gemma3、次に qwen3.
 test 側の基礎記録（direct_lp・observer_v3・relevance_v4）は §25.8 と同じく別途必要で、上表に含まない。
 
 - **順序。** pilot (a)・(b) → 中間報告 → V6-C dev（V6-B dev の直後）→ 評価 → `.claude/docs/research/gqa-stop-v6-dev.md` に V6-C 節を追加 → ユーザー判断（凍結・test）。
+
+## 26. モデル差し替え再現：qwen3.5:4b による v22 test 集合での θ sweep（2026-10-11 事前登録、sweep のみ）
+ユーザー指示（2026-10-11）：「test を qwen:4b で回してみて欲しい。データセット設定とかは同じで OK。単純にモデルを差し替えるだけ」。出力は θ = 0.50〜1.00（0.05 刻み）の sweep。本節は 4b の推論を 1 件も行う前に記す。
+
+- **固定するもの（9b の v22 test と同一）。**
+  - 質問集合：test visual subset 251 問（`visapp_gqa_v22/visual_subset.json` の test）と reader 誤答 test 233 問（`selection_results.jsonl` で L20 の screening reader が不正解）。どちらも **9b reader が定義した集合**であり、4b で再 screening はしない。
+  - 画像と Level（`visapp_gqa_v1` の image manifest、20 Level、同じ劣化系列）。
+  - プロンプト（全ロールのハッシュ同一）、A13 クリーンデコード（temperature 0・top_k 1・top_p 1・penalty 中立・mirostat 0、seed 20261008）、think:false、num_ctx 8192、num_predict、top_logprobs 10、採点（NFKC・小文字化・strip・空白圧縮の完全一致）。
+  - 呼ぶロール：reader（全 20 Level）、direct_lp、relevance_v4（direct ＋ 項目）、planner_v3、observer_v3_lp。v1 arm と言語化 Direct は呼ばない（9b test と同じ `--skip-v1arm`）。
+- **変えるもの。** モデルのみ：qwen3.5:9b → qwen3.5:4b（digest 2a654d98…）。出力ルート `outputs/gqa_stop/visapp_gqa_v22_4b/`。fallback も qwen3.5:4b 自身とし、9b に切り替わる経路は使わない。
+- **ゲート。** 推論前に他モデルをすべてアンロードし 4b 単独でロード、ollama ログで "CLIP using CUDA0" を確認、A13 決定性ゲート（120 呼出し、回答値トークンの argmax 一致、反復対のバイト一致）を 4b で通す。推論後に `audit-test`（非生成時間 > 5 s、argmax 違反）を全 4b test 記録に適用し、該当があれば隔離（移動のみ）して再生成する。
+- **報告（記述のみ）。**
+  - 4 方式（direct_v4、checklist_v4_min、direct_pans、pans_min）、k = 1、強制 L20 は発火に数えない。各 θ で 251 上の正答率・平均停止 Level・Q1・中央値・Q3・stop20 率、233 上の発火率。
+  - 4b reader の固定 Level 正答率曲線（251、L1〜L20）と L20 正答率（4b の正答率上限）。
+  - 同じ θ での 9b の sweep（`visapp_gqa_v22/sweep_v22/test_sweep.csv`）を並記し、図は軸ごとに 9b と 4b を重ねる。
+- **しないこと。** 4b の dev 推論、θ の選択・凍結、凍結 θ による評価（evaluate-v22 / firing-test）は行わない（ユーザー判断）。sweep から θ を読み取って結果とはしない。sweep は記述であり、仮説検定・主張の根拠にしない。
+- **注意。** 251 は 9b reader が L20 で正答した質問なので、4b の正答率は 4b の L20 正答率で上から抑えられる。4b 自身の reader 誤答はこの集合では定義し直さない。
+- **コスト見込み（9b test の実績 69,357 記録から）。** 251 で約 36,000 呼出し、233 で約 33,000 呼出し。4b の速度は最初のチャンクで実測して報告する。
+
+### 26.1 逸脱：planner_v3 / observer_v3 の末尾ピリオド許容（2026-10-11T09:08:21Z、項目呼出しの前に記録）
+- **経緯。** 4b の planner_v3 は format=json でも完全な JSON の後に "." を付ける。251 問中 244 問、233 問中 219 問がこの理由だけで "invalid JSON: Extra data" となり、schema repair も同じ応答を返した（残り 7 問と 14 問は閉じ括弧の欠落などで、本当に不正）。厳密な parser のままでは全問 planner failure となり、checklist_v4_min と pans_min は全 Level で 0（発火しない）になる。reader・direct_lp・relevance_v4 は全件有効。
+- **変更（4b の run のみ、config の model_swap.trailing_period_roles で有効化）。** planner_v3 と observer_v3（logprob 版を含む）について、最後の "}" の後に続く "." と空白だけを除いてから json.loads する。それ以外の不正（括弧欠落、他の文字列）は従来どおり失敗とする。規則名 trailing-period-v1 はこの 2 ロールのキャッシュキーにだけ入るので、9b の記録と 4b の reader・direct_lp・relevance_v4 の記録はそのまま有効である。observer_v3 はまだ 1 件も呼んでいないが、同じ挙動の可能性があるため事前に含める。除去が実際に起きた記録数をロール別に報告する。
+- **扱い。** 厳密 parser での結果（checklist 系は planner failure 100%）も併記する。team-lead への判断依頼（A：厳密のまま、B：本変更）に返答がないまま推論が終わったため、依頼範囲の 4 方式を出せる B で進め、逸脱として報告する。

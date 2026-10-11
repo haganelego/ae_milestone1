@@ -451,6 +451,11 @@ def require_determinism_if_clean(ctx: Context) -> None:
 
 def check_infer_preconditions(ctx: Context, split: str) -> None:
     require_determinism_if_clean(ctx)
+    if ctx.model_swap is not None:
+        # plan §26: the sets were screened by the reference model (not re-screened
+        # with the swapped model) and nothing is frozen (descriptive sweep only)
+        require(split == "test", "model-swap runs (plan §26) infer the test sets only")
+        return
     require_screening_match(ctx, split)
     if split == "test":
         ctx.require_frozen_match()

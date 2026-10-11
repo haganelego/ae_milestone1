@@ -335,7 +335,8 @@ def frozen_firing_thetas(
 def infer_test_wrong(ctx: Context) -> dict[str, Any]:
     """Model calls for the reader-wrong test set (L1..L20); no evaluation."""
     ctx.set_stage("infer_test_wrong")
-    frozen_checked(ctx)
+    if ctx.model_swap is None:  # plan §26 model-swap runs have no frozen policy
+        frozen_checked(ctx)
     require(
         bool((ctx.state.get("determinism") or {}).get("passed")),
         "run `detgate` first: the A13 determinism gate has not passed",

@@ -29,6 +29,7 @@ from . import (
     stages_v4c,
     stages_v4c_test,
     stages_v22_test,
+    sweep_swap,
     sweep_v22,
     textprobe,
     v6_agree,
@@ -74,6 +75,8 @@ COMMANDS = (
     "infer-test-wrong",
     "sweep-v22",
     "audit-test",
+    "swap-provenance",
+    "sweep-swap",
     "v6-agree-pilot",
     "v6-agree",
     "v6-agree-eval",
@@ -220,6 +223,10 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         return stages_v22_test.infer_test_wrong(ctx)
     if command == "audit-test":
         return audit_v22.audit(ctx)
+    if command == "swap-provenance":
+        return sweep_swap.swap_provenance(ctx)
+    if command == "sweep-swap":
+        return sweep_swap.sweep_swap(ctx)
     if command == "sweep-v22":
         return sweep_v22.sweep_v22(ctx)
     if command == "v5-attrtheta-cv":
