@@ -878,4 +878,16 @@ test 側の基礎記録（direct_lp・observer_v3・relevance_v4）は §25.8 �
 ### 26.1 逸脱：planner_v3 / observer_v3 の末尾ピリオド許容（2026-10-11T09:08:21Z、項目呼出しの前に記録）
 - **経緯。** 4b の planner_v3 は format=json でも完全な JSON の後に "." を付ける。251 問中 244 問、233 問中 219 問がこの理由だけで "invalid JSON: Extra data" となり、schema repair も同じ応答を返した（残り 7 問と 14 問は閉じ括弧の欠落などで、本当に不正）。厳密な parser のままでは全問 planner failure となり、checklist_v4_min と pans_min は全 Level で 0（発火しない）になる。reader・direct_lp・relevance_v4 は全件有効。
 - **変更（4b の run のみ、config の model_swap.trailing_period_roles で有効化）。** planner_v3 と observer_v3（logprob 版を含む）について、最後の "}" の後に続く "." と空白だけを除いてから json.loads する。それ以外の不正（括弧欠落、他の文字列）は従来どおり失敗とする。規則名 trailing-period-v1 はこの 2 ロールのキャッシュキーにだけ入るので、9b の記録と 4b の reader・direct_lp・relevance_v4 の記録はそのまま有効である。observer_v3 はまだ 1 件も呼んでいないが、同じ挙動の可能性があるため事前に含める。除去が実際に起きた記録数をロール別に報告する。
-- **扱い。** 厳密 parser での結果（checklist 系は planner failure 100%）も併記する。team-lead への判断依頼（A：厳密のまま、B：本変更）に返答がないまま推論が終わったため、依頼範囲の 4 方式を出せる B で進め、逸脱として報告する。
+- **扱い。** 厳密 parser での結果（checklist 系は planner failure 100%）も併記する。team-lead への判断依頼（A：厳密のまま、B：本変更）に返答がないまま推論が終わったため、依頼範囲の 4 方式を出せる B で進め、逸脱として報告する。team-lead の B の指示は後から届き、事後に確認された。
+- **許容する形と拒否する形。** 完全な JSON object の後に "." が 1 個以上と空白だけが続く場合に限り受け付ける（`{...}.`、`{...} .\n`、`{...}..`）。`{...}x`、`{...}{...}`、閉じ括弧の欠落は従来どおり失敗とする。中身の切り詰めや修復はしない。生の応答は記録にそのまま残し、除去した記録には印を付ける。
+- **ロール別の件数。**
+
+| 集合 | ロール | 除去を要した数 / 有効数 |
+|---|---|---|
+| 251 | planner_v3 | 244 / 244 |
+| 233 | planner_v3 | 219 / 219 |
+| 251 | observer_v3_lp | 0 / 10,320 |
+| 233 | observer_v3_lp | 0 / 9,180 |
+
+- **残った planner failure。** 251 で 7 件、233 で 14 件。
+- **追加報告（team-lead 依頼）。** 主格子 θ 0.50〜1.00 に加え、補助として θ 0.05〜1.00（0.05 刻み）の全格子を別 CSV・別図で出す。4b の direct_v4 の最大は 0.66、direct_pans の最大は 0.83 で、主格子ではほぼ発火しないため。記述のみで、主張には使わない。

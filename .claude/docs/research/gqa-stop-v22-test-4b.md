@@ -3,7 +3,8 @@
 Status: **inference complete and audited, 2026-10-11.** User request: "run test with qwen:4b; same dataset settings; simply swap the model". The deliverable is the descriptive θ sweep 0.50–1.00 (step 0.05) for direct_v4, checklist_v4_min, direct_pans and pans_min, with the 9b sweep beside it.
 - **Not done (user decision).** No 4b dev run, no θ selection, no freeze, no frozen-θ evaluation (`evaluate-v22` / `firing-test`). Nothing here is a hypothesis test.
 - **Pre-registration.** Plan §26 was appended at 2026-10-11T05:20Z (HEAD 9cd6829), before any 4b call.
-- **One deviation (plan §26.1).** 4b's planner_v3 appends "." after a complete JSON plan. A config-gated parse tolerance was added for planner_v3 and observer_v3 before any item call. See "Deviation" below. The strict-parser variant is also reported.
+- **One deviation (plan §26.1).** 4b's planner_v3 appends "." after a complete JSON plan. A config-gated parse tolerance was added for planner_v3 and observer_v3 before any item call. The team lead chose this option (B). See "Deviation" below. The strict-parser variant is also reported.
+- **Supplementary full grid (team-lead request).** θ 0.05–1.00 is reported separately, because 4b's scores rarely reach the main grid.
 
 ## Setup
 
@@ -85,7 +86,19 @@ Plan sizes:
   - The rule name `trailing-period-v1` enters only those roles' cache keys, so 9b keys are unchanged. This was verified on 13 cached 9b plans.
   - The 4b reader, direct_lp and relevance records stayed valid and were not re-called.
   - Observer was included before any observer call, and needed it 0 times.
-- **Process.** The team lead was asked to choose between strict (A) and this change (B) after the first chunk, and did not reply within about 2.5 h. B was chosen so that all four requested methods exist, and it was logged in the plan and worklog before any item call.
+- **Accepted and rejected forms.** A complete JSON object followed by one or more "." characters and whitespace, in any order, is accepted, for example `{...}.`, `{...} .\n` or `{...}..`. Everything else after the closing brace is rejected, for example `{...}x` or `{...}{...}`. A reply with a missing closing brace also stays a failure. The parsed content is exactly what `json.loads` returns for the object: there is no truncation and no repair of the inner JSON. Raw replies are kept unchanged in the records, and stripped records carry `trailing_period_stripped: true`.
+- **Per-role counts** (`sweep_swap/sweep_meta.json` → `parse_tolerance`):
+
+| set / role | records | valid | needed the strip |
+|---|---|---|---|
+| 251 / planner_v3 | 251 | 244 | 244 |
+| 233 / planner_v3 | 233 | 219 | 219 |
+| 251 / observer_v3_lp | 10,320 | 10,320 | 0 |
+| 233 / observer_v3_lp | 9,180 | 9,180 | 0 |
+
+- **Strict failures that remain.** 7 plans on the 251 and 14 on the 233 are planner_failure; their checklist scores are 0.
+- **Observer scope.** The team lead's rule was to cover observer_v3 only if it showed the same pattern. It was added to the list up front, before any observer call, to avoid re-running it. It needed the strip 0 times, so its parsed content equals the strict parse; only its cache-key namespace differs.
+- **Process.** The question went to the team lead after the first chunk. Their replies (option B) arrived only after the run had finished. Meanwhile B had been applied on my own judgement, after about 2.5 h without a reply, and logged in the plan and worklog before any item call.
 - **Strict variant (A).** Its level tables and planner records are kept in `strict_parse/`. Under A, direct_v4 and direct_pans are identical to B (they do not use the plan). checklist_v4_min and pans_min never stop before L20: accuracy 0.888, mean L 20, firing 0 at every θ.
 
 ## 4b reader: ceiling and fixed-level curve
@@ -176,6 +189,51 @@ Reader accuracy per level on both sets (`sweep_swap/fixed_curve.csv`, `figures/s
 - **Consequence.** direct_v4 never fires at θ ≥ 0.70, and direct_pans never fires at θ ≥ 0.90. In this range 4b's direct_v4 and checklist_v4_min are close to "always L20": accuracy 0.888 = ceiling, mean L ≥ 19.1.
 - **Where they would operate.** The 9b frozen θ for the products were 0.14–0.42, below the requested range. 4b's product signals would operate there too. That range is not part of this sweep.
 
+## Supplementary full grid θ 0.05–1.00 (SUPPLEMENTARY, descriptive)
+This grid was requested by the team lead because 4b's direct_v4 peaks at 0.66 and direct_pans at 0.83. It has the same columns and the same rules as the main grid.
+- **Files.** `sweep_swap/supplementary_full_grid/test_sweep_full_vs_reference.csv` (both models, all 20 θ). Figures are `supp_*.png` in the `figures/` subdirectory.
+- **9b values are recomputed** from the 9b level tables. On the shared θ they reproduce the 9b main sweep exactly; `sweep-swap` checks this.
+- **Rows shown.** Only θ 0.05–0.45 are listed below; θ ≥ 0.50 are identical to the main table.
+
+| method | θ | 4b acc | 4b mean L | 4b Q1 | 4b median | 4b Q3 | 4b stop20 | 4b firing | 9b acc | 9b mean L | 9b Q1 | 9b median | 9b Q3 | 9b stop20 | 9b firing |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| direct_v4 | 0.05 | 0.777 | 10.67 | 8 | 10 | 13 | 0.09 | 0.914 | 0.737 | 7.55 | 4 | 7 | 10 | 0.04 | 0.957 |
+| direct_v4 | 0.10 | 0.829 | 13.70 | 10 | 13 | 18 | 0.23 | 0.738 | 0.825 | 9.51 | 6 | 9 | 13 | 0.08 | 0.901 |
+| direct_v4 | 0.15 | 0.876 | 15.60 | 12 | 16 | 20 | 0.37 | 0.562 | 0.876 | 10.95 | 7 | 11 | 15 | 0.12 | 0.837 |
+| direct_v4 | 0.20 | 0.888 | 17.10 | 15 | 20 | 20 | 0.52 | 0.352 | 0.900 | 12.01 | 8 | 12 | 16 | 0.14 | 0.764 |
+| direct_v4 | 0.25 | 0.888 | 18.09 | 17 | 20 | 20 | 0.68 | 0.245 | 0.916 | 12.97 | 9 | 13 | 18 | 0.21 | 0.717 |
+| direct_v4 | 0.30 | 0.884 | 18.69 | 20 | 20 | 20 | 0.78 | 0.193 | 0.924 | 13.98 | 10 | 15 | 20 | 0.26 | 0.644 |
+| direct_v4 | 0.35 | 0.888 | 19.13 | 20 | 20 | 20 | 0.85 | 0.129 | 0.948 | 14.76 | 11 | 16 | 20 | 0.32 | 0.562 |
+| direct_v4 | 0.40 | 0.888 | 19.38 | 20 | 20 | 20 | 0.90 | 0.069 | 0.964 | 15.50 | 12 | 17 | 20 | 0.38 | 0.506 |
+| direct_v4 | 0.45 | 0.888 | 19.55 | 20 | 20 | 20 | 0.93 | 0.039 | 0.964 | 16.12 | 13 | 19 | 20 | 0.45 | 0.455 |
+| checklist_v4_min | 0.05 | 0.821 | 12.00 | 8 | 11 | 16.5 | 0.20 | 0.708 | 0.813 | 9.87 | 5 | 9 | 14 | 0.12 | 0.841 |
+| checklist_v4_min | 0.10 | 0.845 | 13.47 | 10 | 13 | 19 | 0.24 | 0.682 | 0.865 | 10.81 | 6 | 10 | 15 | 0.14 | 0.824 |
+| checklist_v4_min | 0.15 | 0.861 | 14.72 | 11 | 14 | 20 | 0.33 | 0.622 | 0.884 | 11.76 | 7 | 12 | 16 | 0.17 | 0.773 |
+| checklist_v4_min | 0.20 | 0.876 | 15.78 | 13 | 17 | 20 | 0.41 | 0.541 | 0.916 | 12.49 | 8 | 13 | 17.5 | 0.20 | 0.725 |
+| checklist_v4_min | 0.25 | 0.880 | 16.71 | 13 | 19 | 20 | 0.49 | 0.451 | 0.924 | 13.23 | 9 | 14 | 19 | 0.24 | 0.674 |
+| checklist_v4_min | 0.30 | 0.880 | 17.31 | 15 | 20 | 20 | 0.55 | 0.361 | 0.952 | 14.10 | 10 | 15 | 20 | 0.29 | 0.627 |
+| checklist_v4_min | 0.35 | 0.884 | 17.81 | 16 | 20 | 20 | 0.60 | 0.275 | 0.964 | 14.79 | 11 | 16 | 20 | 0.35 | 0.549 |
+| checklist_v4_min | 0.40 | 0.888 | 18.37 | 18 | 20 | 20 | 0.69 | 0.240 | 0.968 | 15.38 | 12 | 17 | 20 | 0.41 | 0.519 |
+| checklist_v4_min | 0.45 | 0.888 | 18.74 | 20 | 20 | 20 | 0.76 | 0.227 | 0.976 | 15.79 | 12 | 18 | 20 | 0.44 | 0.455 |
+| direct_pans | 0.05 | 0.323 | 1.00 | 1 | 1 | 1 | 0.00 | 1.000 | 0.303 | 1.00 | 1 | 1 | 1 | 0.00 | 1.000 |
+| direct_pans | 0.10 | 0.323 | 1.01 | 1 | 1 | 1 | 0.00 | 1.000 | 0.303 | 1.00 | 1 | 1 | 1 | 0.00 | 1.000 |
+| direct_pans | 0.15 | 0.331 | 1.10 | 1 | 1 | 1 | 0.00 | 1.000 | 0.303 | 1.02 | 1 | 1 | 1 | 0.00 | 1.000 |
+| direct_pans | 0.20 | 0.375 | 1.53 | 1 | 1 | 1 | 0.00 | 0.996 | 0.331 | 1.18 | 1 | 1 | 1 | 0.00 | 0.996 |
+| direct_pans | 0.25 | 0.375 | 2.20 | 1 | 1 | 2 | 0.01 | 0.987 | 0.363 | 1.47 | 1 | 1 | 1 | 0.00 | 0.996 |
+| direct_pans | 0.30 | 0.454 | 3.55 | 1 | 1 | 5 | 0.02 | 0.953 | 0.382 | 1.94 | 1 | 1 | 1 | 0.00 | 0.991 |
+| direct_pans | 0.35 | 0.530 | 5.19 | 1 | 2 | 7 | 0.06 | 0.901 | 0.414 | 2.42 | 1 | 1 | 2 | 0.00 | 0.983 |
+| direct_pans | 0.40 | 0.637 | 7.54 | 1 | 5 | 12 | 0.15 | 0.811 | 0.462 | 2.93 | 1 | 1 | 3 | 0.01 | 0.979 |
+| direct_pans | 0.45 | 0.685 | 9.09 | 2 | 7 | 17 | 0.22 | 0.674 | 0.502 | 3.72 | 1 | 1 | 5 | 0.02 | 0.974 |
+| pans_min | 0.05 | 0.777 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.725 | 0.789 | 9.39 | 4.5 | 8 | 13.5 | 0.12 | 0.845 |
+| pans_min | 0.10 | 0.777 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.725 | 0.789 | 9.39 | 4.5 | 8 | 13.5 | 0.12 | 0.845 |
+| pans_min | 0.15 | 0.777 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.725 | 0.789 | 9.39 | 4.5 | 8 | 13.5 | 0.12 | 0.845 |
+| pans_min | 0.20 | 0.777 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.725 | 0.789 | 9.39 | 4.5 | 8 | 13.5 | 0.12 | 0.841 |
+| pans_min | 0.25 | 0.777 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.721 | 0.789 | 9.39 | 4.5 | 8 | 13.5 | 0.12 | 0.841 |
+| pans_min | 0.30 | 0.781 | 10.33 | 5.5 | 10 | 15 | 0.18 | 0.717 | 0.789 | 9.41 | 4.5 | 9 | 13.5 | 0.12 | 0.837 |
+| pans_min | 0.35 | 0.797 | 10.45 | 5.5 | 10 | 15 | 0.18 | 0.708 | 0.801 | 9.52 | 5 | 9 | 14 | 0.12 | 0.820 |
+| pans_min | 0.40 | 0.809 | 10.69 | 6 | 10 | 16 | 0.19 | 0.691 | 0.813 | 9.75 | 5 | 9 | 14 | 0.13 | 0.807 |
+| pans_min | 0.45 | 0.825 | 11.06 | 6 | 10 | 16 | 0.20 | 0.665 | 0.853 | 10.19 | 5 | 9 | 15 | 0.14 | 0.773 |
+
 ## Observations (descriptive)
 1. **Does 4b need more resolution or just fail more? It fails more.**
    - The fixed curves agree within 0.06 up to L12.
@@ -215,14 +273,23 @@ Reader accuracy per level on both sets (`sweep_swap/fixed_curve.csv`, `figures/s
 | 9b | direct_pans | 0.90 | 15.58 | 0.215 |
 | 9b | pans_min | 0.85 | 15.83 | 0.296 |
 
-   - **Products.** 4b's direct_v4 and checklist_v4_min have 0 wrong early stops in the whole range. They fire on 0.026 and 0.185 of the 233 at θ 0.50, but stop at mean L 19.76 and 19.10. For comparison, 9b at θ 0.50 fires on 0.391 and 0.403 at mean L 16.67 and 16.39. This is a different operating point, not a better trade-off.
+   - **Products, main grid.** 4b's direct_v4 and checklist_v4_min have 0 wrong early stops in the whole range. They fire on 0.026 and 0.185 of the 233 at θ 0.50, but stop at mean L 19.76 and 19.10. For comparison, 9b at θ 0.50 fires on 0.391 and 0.403 at mean L 16.67 and 16.39. This is a different operating point, not a better trade-off.
+   - **Products, supplementary full grid, at equal mean stop level.** 4b fires a little more and makes more wrong early stops, as the P_ans-only methods do. pans_min at L12–14 is the one exception, where the two models are equal.
+
+| method | mean L | 4b firing | 9b firing | 4b s&w | 9b s&w |
+|---|---|---|---|---|---|
+| direct_v4 | 16 | 0.506 | 0.465 | 13.6 | 9.0 |
+| direct_v4 | 17 | 0.366 | 0.341 | 7.6 | 2.5 |
+| checklist_v4_min | 16 | 0.520 | 0.437 | 10.3 | 5.7 |
+| checklist_v4_min | 17 | 0.407 | 0.338 | 7.0 | 2.9 |
+| pans_min | 14 | 0.441 | 0.438 | 12.5 | 12.0 |
    - **Restricting to the 191 questions 4b also gets wrong at L20.** 4b firing changes little. For example, direct_pans at θ 0.70 is 0.168 on the 191 vs 0.159 on all 233, and pans_min at θ 0.75 is 0.372 vs 0.335.
 
 ## Caveats
 - **Sets are defined by the 9b reader.** The 251 are 9b's L20-correct, non-prior-answerable questions, so 4b accuracy is bounded by its own L20 accuracy (0.888). The 233 are 9b's L20-wrong questions; 18% of them are 4b-correct at L20. Accuracy and firing are not comparable to 9b on the same footing: 9b is at its ceiling by construction and 4b is not.
 - **Descriptive only.** No θ was selected, frozen or tested. No CI is attached to the sweep. The matched comparisons above are interpolations along the test sweep, made after seeing it.
 - **Parse deviation.** The checklist methods depend on plan §26.1. Without it (strict variant), they never fire.
-- **θ range.** The requested range 0.50–1.00 lies above where 4b's product signals operate, so the product rows are close to the trivial L20 policy.
+- **θ range.** The requested range 0.50–1.00 lies above where 4b's product signals operate, so the product rows there are close to the trivial L20 policy. The supplementary grid covers the lower θ.
 - **Reader-wrong set contents.** As in the 9b report, this set includes GQA label and referent ambiguity.
 
 ## Reproduction
@@ -248,9 +315,9 @@ The strict variant was produced by the same infer commands before `model_swap.tr
   - `level_table_test.csv`, `level_table_test_merged.csv`, `ext_test_wrong/level_table.csv`;
   - `logs/audit_test.json` and `logs/audit_test_flagged.txt` (empty);
   - `strict_parse/` (strict-parser tables and planner records).
-- **Sweep** `sweep_swap/`: `test_sweep.csv`, `test_sweep_vs_reference.csv`, `fixed_curve.csv`, `sweep_meta.json`, `figures/`.
+- **Sweep** `sweep_swap/`: `test_sweep.csv`, `test_sweep_vs_reference.csv`, `fixed_curve.csv`, `sweep_meta.json` (incl. parse-tolerance counts), `figures/`, `supplementary_full_grid/`.
 - **Code.**
-  - `src/milestone1/gqa_stop/sweep_swap.py` (new): provenance and the descriptive sweep.
+  - `src/milestone1/gqa_stop/sweep_swap.py` (new): provenance, the descriptive sweep, the supplementary full grid and the tolerance counts.
   - `context.py`: `model_swap` property.
   - `stages_model.py`: the test infer precondition skips screening and frozen checks for model-swap runs.
   - `stages_v22_test.py`: `infer_test_wrong` skips the frozen check for model-swap runs.
