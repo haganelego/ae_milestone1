@@ -16,6 +16,7 @@ from gqa_stop_helpers import PROMPTS_DIR, fake_tags_get, make_context
 from test_gqa_stop_v4c import v4c_run  # noqa: F401  (module-scoped fixture)
 
 from milestone1.gqa_stop import stages_model, stages_v4c, sweep_swap, sweep_v22
+from milestone1.gqa_stop.cli import build_parser
 from milestone1.gqa_stop.client import (
     RequestEngine,
     load_prompts,
@@ -29,6 +30,13 @@ from milestone1.gqa_stop.sampled import planner_v3_spec
 from milestone1.gqa_stop.stages_v22_test import infer_test_wrong
 
 LEVELS = list(range(1, 21))
+# reference frozen θ for the transfer rows; on the main grid so they can be checked
+REF_FROZEN = {
+    "direct_v4": 0.5,
+    "checklist_v4_min": 0.55,
+    "direct_pans": 0.6,
+    "pans_min": 0.65,
+}
 SWAP_MODEL, REF_MODEL = "qwen3.5:4b", "qwen3.5:9b"
 
 
@@ -140,6 +148,10 @@ def write_reference(ctx, root: Path) -> pd.DataFrame:
         ctx.n_levels,
     )
     frame.to_csv(root / "sweep_v22/test_sweep.csv", index=False)
+    selections = {
+        "0.95": {m: {"theta": t} for m, t in REF_FROZEN.items()},
+    }
+    (root / "frozen_policy.json").write_text(json.dumps({"selections": selections}))
     return frame
 
 
@@ -168,8 +180,22 @@ def swap_run(v4c_run):  # noqa: F811
     with pytest.raises(StageError, match="skip-v1arm"):
         sweep_swap.sweep_swap(ctx)
     ctx.skip_v1arm = True
+    main = sweep_swap.sweep_swap(ctx)
+    main_files = sorted(p.name for p in ctx.paths.out(sweep_swap.OUT_DIR).iterdir())
+    ctx.theta_grid = "nope"
+    with pytest.raises(StageError, match="theta-grid"):
+        sweep_swap.sweep_swap(ctx)
+    ctx.theta_grid = "full"
     meta = sweep_swap.sweep_swap(ctx)
-    return dict(ctx=ctx, provenance=provenance, reference=reference, meta=meta)
+    ctx.theta_grid = "main"
+    return dict(
+        ctx=ctx,
+        provenance=provenance,
+        reference=reference,
+        meta=meta,
+        main=main,
+        main_files=main_files,
+    )
 
 
 def test_swap_run_uses_the_swapped_model_only(swap_run) -> None:
@@ -295,16 +321,69 @@ def test_tolerance_leaves_the_parsed_content_unchanged() -> None:
     assert tolerant.parsed == strict.parsed and not strict.errors
 
 
+def test_theta_grid_option_defaults_to_main() -> None:
+    parser = build_parser()
+    base = ["sweep-swap", "--config", "x.json"]
+    assert parser.parse_args(base).theta_grid == "main"
+    assert parser.parse_args([*base, "--theta-grid", "full"]).theta_grid == "full"
+    with pytest.raises(SystemExit):
+        parser.parse_args([*base, "--theta-grid", "other"])
+
+
+def test_main_grid_run_writes_no_full_grid(swap_run) -> None:
+    assert swap_run["main"]["theta_grid"] == "main"
+    assert "full_grid_meta" not in swap_run["main"]
+    assert sweep_swap.FULL_CSV not in swap_run["main_files"]
+    assert sweep_swap.TRANSFER_CSV not in swap_run["main_files"]
+
+
+def test_best_accuracy_by_hand() -> None:
+    frame = pd.DataFrame(
+        {
+            "model": ["4b"] * 3 + ["9b"] * 2,
+            "method": ["direct_v4"] * 5,
+            "theta": [0.1, 0.2, 0.3, 0.1, 0.2],
+            "accuracy": [0.80, 0.88, 0.88, 0.95, 0.90],
+            "mean_level": [10.0, 15.0, 17.0, 12.0, 14.0],
+        }
+    )
+    best = sweep_swap.best_accuracy(frame).set_index("model")
+    assert best.loc["4b", "theta"] == 0.2 and best.loc["4b", "mean_level"] == 15.0
+    assert best.loc["9b", "theta"] == 0.1 and best.loc["9b", "accuracy"] == 0.95
+
+
 def test_supplementary_full_grid_is_written(swap_run) -> None:
     ctx, meta = swap_run["ctx"], swap_run["meta"]
-    supp = meta["supplementary"]
+    out = ctx.paths.out(sweep_swap.OUT_DIR)
+    supp = read_json(out / meta["full_grid_meta"])
+    assert supp["label"].startswith("SUPPLEMENTARY")
     assert supp["thetas"][0] == 0.05 and supp["thetas"][-1] == 1.0
     assert len(supp["thetas"]) == 20
-    frame = pd.read_csv(ctx.paths.out(sweep_swap.OUT_DIR) / supp["csv"])
+    frame = pd.read_csv(out / sweep_swap.FULL_CSV)
     assert len(frame) == 2 * len(sweep_v22.SWEEP_METHODS) * 20
     assert set(frame["model"]) == {SWAP_MODEL, REF_MODEL}
-    figs = ctx.paths.out(sweep_swap.OUT_DIR) / sweep_swap.SUPP_DIR / "figures"
-    assert all((figs / name).exists() for name in supp["figures"])
+    for column in ("accuracy", "mean_level", "q1_level", "median_level", "q3_level"):
+        assert column in frame
+    assert all((out / "figures" / name).exists() for name in supp["figures"])
+    best = pd.read_csv(out / sweep_swap.BEST_CSV)
+    assert len(best) == 2 * len(sweep_v22.SWEEP_METHODS)
+
+
+def test_theta_transfer_rows_match_the_main_sweep(swap_run) -> None:
+    ctx = swap_run["ctx"]
+    out = ctx.paths.out(sweep_swap.OUT_DIR)
+    transfer = pd.read_csv(out / sweep_swap.TRANSFER_CSV)
+    assert set(transfer["model"]) == {SWAP_MODEL, REF_MODEL}
+    main = pd.read_csv(out / "test_sweep.csv").set_index(["method", "theta"])
+    for row in transfer.itertuples():
+        assert REF_FROZEN[row.method] == pytest.approx(row.theta)
+        ref = main.loc[(row.method, round(row.theta, 2))]
+        assert row.accuracy == pytest.approx(ref["accuracy"])
+        assert row.firing_rate == pytest.approx(ref["firing_rate"])
+
+
+def test_parse_tolerance_counts_cover_both_sets(swap_run) -> None:
+    meta = swap_run["meta"]
     counts = meta["parse_tolerance"]["counts"]
     assert set(counts) == {
         f"{s}/{r}"

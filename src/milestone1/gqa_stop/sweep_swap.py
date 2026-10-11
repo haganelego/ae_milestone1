@@ -54,11 +54,18 @@ AXES = (
     ("firing_rate", "firing rate (reader-wrong set)"),
 )
 SWAP_STYLE, REFERENCE_STYLE = ("-", "o"), ("--", "x")
-# Supplementary full grid (team-lead request 2026-10-11): 4b scores rarely reach
-# the main grid (direct_v4 max 0.66), so θ 0.05..1.00 is emitted separately.
+# Supplementary full grid (team-lead request 2026-10-11, `--theta-grid full`):
+# 4b scores rarely reach the main grid (direct_v4 max 0.66), so θ 0.05..1.00 is
+# emitted separately. The default `main` is the user's grid 0.50..1.00 only.
+THETA_GRIDS = ("main", "full")
 FULL_START, FULL_STEP, FULL_COUNT = 0.05, 0.05, 20
 FULL_THETAS = tuple(round(FULL_START + FULL_STEP * i, 2) for i in range(FULL_COUNT))
-SUPP_DIR = "supplementary_full_grid"
+FULL_CSV = "test_sweep_full.csv"
+FULL_META = "test_sweep_full_meta.json"
+BEST_CSV = "test_sweep_full_best_accuracy.csv"
+TRANSFER_CSV = "test_theta_transfer.csv"
+TRANSFER_TARGET = "0.95"  # the reference run's frozen primary target
+FROZEN_FILE = "frozen_policy.json"
 SUPP_LABEL = (
     "SUPPLEMENTARY full θ grid 0.05..1.00 (descriptive; the user's main grid is "
     "0.50..1.00)"
@@ -274,28 +281,100 @@ def fixed_figure(
 
 
 # ---- supplementary grid / tolerance counts --------------------------------------------
-def supplementary(
+def full_frames(
     swap_tables: tuple[pd.DataFrame, pd.DataFrame],
     ref_tables: tuple[pd.DataFrame, pd.DataFrame],
     ref_sweep: pd.DataFrame,
     n_levels: int,
-) -> pd.DataFrame:
-    """Full-grid sweeps of both models (model = "swap" / "reference"); the
-    reference is recomputed from its tables and must reproduce its main sweep."""
-    frames = {
-        name: sweep_frame(a, w, "test", n_levels, thetas=FULL_THETAS)
-        for name, (a, w) in (("swap", swap_tables), ("reference", ref_tables))
-    }
-    check = frames["reference"].assign(theta=frames["reference"]["theta"].round(2))
+) -> tuple[pd.DataFrame, pd.DataFrame]:
+    """Full-grid sweeps of the swapped and the reference model; the reference is
+    recomputed from its tables and must reproduce its main sweep."""
+    swap, ref_full = (
+        sweep_frame(a, w, "test", n_levels, thetas=FULL_THETAS)
+        for a, w in (swap_tables, ref_tables)
+    )
+    check = ref_full.assign(theta=ref_full["theta"].round(2))
     ref = ref_sweep.assign(theta=ref_sweep["theta"].round(2))
     merged = ref.merge(check, on=["method", "theta"], suffixes=("", "_re"))
     require(len(merged) == len(ref), "reference main grid not inside the full grid")
     for column in CHECK_COLUMNS:
         same = (merged[column] - merged[f"{column}_re"]).abs().max() < 1e-9
         require(bool(same), f"recomputed reference sweep differs: {column}")
-    return pd.concat(
-        [f.assign(model=name) for name, f in frames.items()], ignore_index=True
+    return swap, ref_full
+
+
+def best_accuracy(frame: pd.DataFrame) -> pd.DataFrame:
+    """Per model and method: the highest accuracy on the grid and, among the θ
+    reaching it, the one with the lowest mean level (then the lowest θ)."""
+    rows = []
+    for _key, g in frame.groupby(["model", "method"], sort=False):
+        top = g[g["accuracy"] == g["accuracy"].max()]
+        rows.append(top.sort_values(["mean_level", "theta"]).iloc[0])
+    return pd.DataFrame(rows).reset_index(drop=True)
+
+
+def reference_frozen_thetas(
+    root: Path, methods: Sequence[str] = SWEEP_METHODS, target: str = TRANSFER_TARGET
+) -> dict[str, float]:
+    """θ of the reference run's frozen policy at ``target`` (read only)."""
+    path = root / FROZEN_FILE
+    require(path.exists(), f"reference frozen policy {path} missing")
+    chosen = read_json(path)["selections"][target]
+    return {m: float(chosen[m]["theta"]) for m in methods}
+
+
+def transfer_frame(
+    tables: Mapping[str, tuple[pd.DataFrame, pd.DataFrame]],
+    thetas: Mapping[str, float],
+    n_levels: int,
+) -> pd.DataFrame:
+    """Each model's sweep row at the reference model's frozen θ ("θ transfer")."""
+    rows = [
+        sweep_frame(a, w, "test", n_levels, methods=(m,), thetas=(theta,)).assign(
+            model=model
+        )
+        for model, (a, w) in tables.items()
+        for m, theta in thetas.items()
+    ]
+    return pd.concat(rows, ignore_index=True)
+
+
+def full_grid(
+    ctx: Context,
+    tables: Mapping[str, tuple[pd.DataFrame, pd.DataFrame]],
+    ref_sweep: pd.DataFrame,
+    ref_root: Path,
+    out: Path,
+) -> dict[str, Any]:
+    """``--theta-grid full``: supplementary grid, best-accuracy rows, θ transfer."""
+    model, ref_model = tables
+    swap, ref_full = full_frames(
+        tables[model], tables[ref_model], ref_sweep, ctx.n_levels
     )
+    frame = side_by_side(swap, ref_full, model, ref_model)
+    frame.to_csv(out / FULL_CSV, index=False)
+    best = best_accuracy(frame)
+    best.to_csv(out / BEST_CSV, index=False)
+    thetas = reference_frozen_thetas(ref_root)
+    transfer_frame(tables, thetas, ctx.n_levels).to_csv(out / TRANSFER_CSV, index=False)
+    paths = figures(
+        frame, None, (model, ref_model), out / "figures", "full", SUPP_TITLE
+    )
+    meta = {
+        "label": SUPP_LABEL,
+        "time": utc_now(),
+        "thetas": list(FULL_THETAS),
+        "csv": FULL_CSV,
+        "best_accuracy_csv": BEST_CSV,
+        "best_accuracy_rule": "max accuracy over the full grid; ties -> lowest "
+        "mean level, then lowest θ",
+        "transfer_csv": TRANSFER_CSV,
+        "transfer_thetas": thetas,
+        "transfer_source": f"{ref_root.name}/{FROZEN_FILE} selections[{TRANSFER_TARGET}]",
+        "figures": [p.name for p in paths],
+    }
+    atomic_write_json(out / FULL_META, meta)
+    return meta
 
 
 def tolerance_counts(output_root: Path) -> dict[str, dict[str, int]]:
@@ -338,6 +417,7 @@ def sweep_swap(ctx: Context) -> dict[str, Any]:
     require(swap is not None, "config has no `model_swap` block (plan §26)")
     assert swap is not None
     require(ctx.skip_v1arm, "pass --skip-v1arm: the model-swap run has no v1 arm")
+    require(ctx.theta_grid in THETA_GRIDS, f"--theta-grid must be one of {THETA_GRIDS}")
     require(
         bool(((ctx.state.get("infer") or {}).get("test") or {}).get("complete")),
         "test inference must be complete",
@@ -379,21 +459,11 @@ def sweep_swap(ctx: Context) -> dict[str, Any]:
     )
     fixed.to_csv(out / "fixed_curve.csv", index=False)
     figure_paths = figures(combined, fixed, (model, ref_model), out / "figures")
-    supp = supplementary(
-        (answerable, wrong), (ref_answerable, ref_wrong), ref_sweep, ctx.n_levels
-    )
-    supp_out = out / SUPP_DIR
-    supp_out.mkdir(parents=True, exist_ok=True)
-    supp_frame = side_by_side(
-        supp[supp["model"] == "swap"].drop(columns="model"),
-        supp[supp["model"] == "reference"].drop(columns="model"),
-        model,
-        ref_model,
-    )
-    supp_frame.to_csv(supp_out / "test_sweep_full_vs_reference.csv", index=False)
-    supp_paths = figures(
-        supp_frame, None, (model, ref_model), supp_out / "figures", "supp", SUPP_TITLE
-    )
+    full = None
+    if ctx.theta_grid == "full":
+        ref_root = resolve_path(ctx.paths.repo_root, str(swap["reference_output_root"]))
+        tables = {model: (answerable, wrong), ref_model: (ref_answerable, ref_wrong)}
+        full = full_grid(ctx, tables, ref_sweep, ref_root, out)
     ceiling = fixed[(fixed["model"] == model) & (fixed["level"] == ctx.n_levels)]
     meta = {
         "label": LABEL,
@@ -417,12 +487,8 @@ def sweep_swap(ctx: Context) -> dict[str, Any]:
         ),
         "provenance_time": provenance["time"],
         "figures": [p.name for p in figure_paths],
-        "supplementary": {
-            "label": SUPP_LABEL,
-            "thetas": list(FULL_THETAS),
-            "csv": f"{SUPP_DIR}/test_sweep_full_vs_reference.csv",
-            "figures": [p.name for p in supp_paths],
-        },
+        "theta_grid": ctx.theta_grid,
+        **({"full_grid_meta": FULL_META} if full is not None else {}),
         "parse_tolerance": {
             "roles": sorted(ctx.settings.trailing_period_roles),
             "counts": tolerance_counts(ctx.paths.output_root),

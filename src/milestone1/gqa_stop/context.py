@@ -61,6 +61,8 @@ class Context:
     stage: str = ""
     # v1-arm opt-out (CLI --skip-v1arm; user decision 2026-10-11)
     skip_v1arm: bool = False
+    # sweep-swap θ grid (plan §26): "main" = 0.50..1.00, "full" adds 0.05..1.00
+    theta_grid: str = "main"
     _engine: RequestEngine | None = field(default=None, init=False, repr=False)
 
     def set_stage(self, name: str) -> None:

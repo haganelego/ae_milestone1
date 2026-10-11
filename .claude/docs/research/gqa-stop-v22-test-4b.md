@@ -4,7 +4,7 @@ Status: **inference complete and audited, 2026-10-11.** User request: "run test 
 - **Not done (user decision).** No 4b dev run, no θ selection, no freeze, no frozen-θ evaluation (`evaluate-v22` / `firing-test`). Nothing here is a hypothesis test.
 - **Pre-registration.** Plan §26 was appended at 2026-10-11T05:20Z (HEAD 9cd6829), before any 4b call.
 - **One deviation (plan §26.1).** 4b's planner_v3 appends "." after a complete JSON plan. A config-gated parse tolerance was added for planner_v3 and observer_v3 before any item call. The team lead chose this option (B). See "Deviation" below. The strict-parser variant is also reported.
-- **Supplementary full grid (team-lead request).** θ 0.05–1.00 is reported separately, because 4b's scores rarely reach the main grid.
+- **Supplementary full grid (team-lead request).** θ 0.05–1.00 is reported separately (`--theta-grid full`), because 4b's scores rarely reach the main grid. It comes with the best-accuracy θ per method and a θ-transfer row (the 9b frozen θ applied to 4b).
 
 ## Setup
 
@@ -189,11 +189,12 @@ Reader accuracy per level on both sets (`sweep_swap/fixed_curve.csv`, `figures/s
 - **Consequence.** direct_v4 never fires at θ ≥ 0.70, and direct_pans never fires at θ ≥ 0.90. In this range 4b's direct_v4 and checklist_v4_min are close to "always L20": accuracy 0.888 = ceiling, mean L ≥ 19.1.
 - **Where they would operate.** The 9b frozen θ for the products were 0.14–0.42, below the requested range. 4b's product signals would operate there too. That range is not part of this sweep.
 
-## Supplementary full grid θ 0.05–1.00 (SUPPLEMENTARY, descriptive)
-This grid was requested by the team lead because 4b's direct_v4 peaks at 0.66 and direct_pans at 0.83. It has the same columns and the same rules as the main grid.
-- **Files.** `sweep_swap/supplementary_full_grid/test_sweep_full_vs_reference.csv` (both models, all 20 θ). Figures are `supp_*.png` in the `figures/` subdirectory.
+## Supplementary: full θ grid (SUPPLEMENTARY, descriptive)
+This grid was requested by the team lead because 4b's direct_v4 peaks at 0.66 and direct_pans at 0.83, so the main grid shows mostly non-firing rows.
+- **Command.** It is written by `sweep-swap --theta-grid full`; the default `--theta-grid main` writes only the user's grid 0.50–1.00. The grid is θ 0.05–1.00 in steps of 0.05, with the same columns and rules as the main grid.
+- **Files.** `sweep_swap/test_sweep_full.csv` holds both models side by side. Figures are `figures/full_*.png`; the metadata is `test_sweep_full_meta.json`.
 - **9b values are recomputed** from the 9b level tables. On the shared θ they reproduce the 9b main sweep exactly; `sweep-swap` checks this.
-- **Rows shown.** Only θ 0.05–0.45 are listed below; θ ≥ 0.50 are identical to the main table.
+- **Rows shown.** Only θ 0.05–0.45 are listed below, where the Rel products operate. Rows for θ ≥ 0.50 are identical to the main table.
 
 | method | θ | 4b acc | 4b mean L | 4b Q1 | 4b median | 4b Q3 | 4b stop20 | 4b firing | 9b acc | 9b mean L | 9b Q1 | 9b median | 9b Q3 | 9b stop20 | 9b firing |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -233,6 +234,43 @@ This grid was requested by the team lead because 4b's direct_v4 peaks at 0.66 an
 | pans_min | 0.35 | 0.797 | 10.45 | 5.5 | 10 | 15 | 0.18 | 0.708 | 0.801 | 9.52 | 5 | 9 | 14 | 0.12 | 0.820 |
 | pans_min | 0.40 | 0.809 | 10.69 | 6 | 10 | 16 | 0.19 | 0.691 | 0.813 | 9.75 | 5 | 9 | 14 | 0.13 | 0.807 |
 | pans_min | 0.45 | 0.825 | 11.06 | 6 | 10 | 16 | 0.20 | 0.665 | 0.853 | 10.19 | 5 | 9 | 15 | 0.14 | 0.773 |
+
+### Best accuracy per method (full grid)
+- **Rule.** Take the highest accuracy on the full grid. Among the θ that reach it, take the one with the lowest mean level, then the lowest θ. A question's stop level can only rise with θ, so this is the smallest θ that reaches the best accuracy; this was checked on all 8 rows. File: `test_sweep_full_best_accuracy.csv`.
+- **4b's best is its L20 ceiling (0.888) for every method.** The lowest mean level at that accuracy is L17.10 for direct_v4 (θ 0.20). It is L18.18–19.08 for the other three methods.
+- **direct_v4 at θ 0.20** reaches 0.888 even though it has 7 wrong early stops. Its early stops also correct 7 questions that 4b answers wrongly at L20.
+- **9b reaches 1.000.** For direct_pans this happens only at θ 1.00, which is always L20.
+
+| model | method | θ | acc | mean L | Q1 | median | Q3 | stop20 | firing | s&w |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 4b | direct_v4 | 0.20 | 0.888 | 17.10 | 15 | 20 | 20 | 0.52 | 0.352 | 7 |
+| 4b | checklist_v4_min | 0.40 | 0.888 | 18.37 | 18 | 20 | 20 | 0.69 | 0.240 | 2 |
+| 4b | direct_pans | 0.75 | 0.888 | 19.08 | 20 | 20 | 20 | 0.93 | 0.073 | 0 |
+| 4b | pans_min | 0.90 | 0.888 | 18.18 | 20 | 20 | 20 | 0.79 | 0.172 | 1 |
+| 9b | direct_v4 | 0.75 | 1.000 | 18.69 | 20 | 20 | 20 | 0.80 | 0.124 | 0 |
+| 9b | checklist_v4_min | 0.70 | 1.000 | 18.06 | 17.5 | 20 | 20 | 0.72 | 0.180 | 0 |
+| 9b | direct_pans | 1.00 | 1.000 | 20.00 | 20 | 20 | 20 | 1.00 | 0.000 | 0 |
+| 9b | pans_min | 0.95 | 1.000 | 17.80 | 20 | 20 | 20 | 0.78 | 0.099 | 0 |
+
+### θ transfer: the 9b frozen θ at the 0.95 target, applied to 4b
+- **Source.** The θ are read from `visapp_gqa_v22/frozen_policy.json`, read only: direct_v4 0.30, checklist_v4_min 0.28, direct_pans 0.83, pans_min 0.58. File: `test_theta_transfer.csv`.
+- **Check.** The 9b rows reproduce the frozen-θ test results in `gqa-stop-v22-test.md` exactly.
+- **This is descriptive only.** 4b was never frozen.
+
+| model | method | θ | acc | mean L | Q1 | median | Q3 | stop20 | firing | s&w |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 4b | direct_v4 | 0.30 | 0.884 | 18.69 | 20 | 20 | 20 | 0.78 | 0.193 | 1 |
+| 4b | checklist_v4_min | 0.28 | 0.880 | 17.03 | 14 | 20 | 20 | 0.53 | 0.391 | 6 |
+| 4b | direct_pans | 0.83 | 0.888 | 19.93 | 20 | 20 | 20 | 1.00 | 0.026 | 0 |
+| 4b | pans_min | 0.58 | 0.853 | 12.94 | 7.5 | 13 | 20 | 0.32 | 0.506 | 20 |
+| 9b | direct_v4 | 0.30 | 0.924 | 13.98 | 10 | 15 | 20 | 0.26 | 0.644 | 19 |
+| 9b | checklist_v4_min | 0.28 | 0.940 | 13.71 | 9 | 14 | 20 | 0.27 | 0.652 | 15 |
+| 9b | direct_pans | 0.83 | 0.904 | 12.79 | 5 | 15 | 20 | 0.45 | 0.412 | 24 |
+| 9b | pans_min | 0.58 | 0.896 | 11.52 | 6 | 11 | 17.5 | 0.22 | 0.652 | 26 |
+
+- **direct_v4 and direct_pans transfer as almost always-L20.** At the 9b θ they reach 0.884 and 0.888, at mean L 18.69 and 19.93.
+- **checklist_v4_min transfers best.** It reaches 0.880 at mean L 17.03 with firing 0.391, against 9b's 0.940 at 13.71 with firing 0.652.
+- **pans_min transfers worst.** At θ 0.58 it stops early (mean 12.94) with 20 wrong stops, reaching 0.853 at firing 0.506.
 
 ## Observations (descriptive)
 1. **Does 4b need more resolution or just fail more? It fails more.**
@@ -305,6 +343,8 @@ timeout 585 uv run python -m milestone1.gqa_stop.cli infer --split test --skip-v
 timeout 585 uv run python -m milestone1.gqa_stop.cli infer-test-wrong --skip-v1arm --config configs/gqa_stop_v22_4b.json
 uv run python -m milestone1.gqa_stop.cli audit-test --config configs/gqa_stop_v22_4b.json
 uv run python -m milestone1.gqa_stop.cli sweep-swap --skip-v1arm --config configs/gqa_stop_v22_4b.json
+# supplementary full grid, best-accuracy rows and θ transfer (cache only)
+uv run python -m milestone1.gqa_stop.cli sweep-swap --skip-v1arm --theta-grid full --config configs/gqa_stop_v22_4b.json
 ```
 
 The strict variant was produced by the same infer commands before `model_swap.trailing_period_roles` was added to the config. Its tables are in `strict_parse/`.
@@ -315,12 +355,12 @@ The strict variant was produced by the same infer commands before `model_swap.tr
   - `level_table_test.csv`, `level_table_test_merged.csv`, `ext_test_wrong/level_table.csv`;
   - `logs/audit_test.json` and `logs/audit_test_flagged.txt` (empty);
   - `strict_parse/` (strict-parser tables and planner records).
-- **Sweep** `sweep_swap/`: `test_sweep.csv`, `test_sweep_vs_reference.csv`, `fixed_curve.csv`, `sweep_meta.json` (incl. parse-tolerance counts), `figures/`, `supplementary_full_grid/`.
+- **Sweep** `sweep_swap/`: `test_sweep.csv`, `test_sweep_vs_reference.csv`, `fixed_curve.csv`, `sweep_meta.json` (incl. parse-tolerance counts), `figures/`. With `--theta-grid full` it adds `test_sweep_full.csv`, `test_sweep_full_meta.json`, `test_sweep_full_best_accuracy.csv`, `test_theta_transfer.csv` and `figures/full_*.png`.
 - **Code.**
   - `src/milestone1/gqa_stop/sweep_swap.py` (new): provenance, the descriptive sweep, the supplementary full grid and the tolerance counts.
   - `context.py`: `model_swap` property.
   - `stages_model.py`: the test infer precondition skips screening and frozen checks for model-swap runs.
   - `stages_v22_test.py`: `infer_test_wrong` skips the frozen check for model-swap runs.
   - `client.py`: config-gated trailing-period tolerance.
-  - `cli.py`: `swap-provenance` and `sweep-swap`.
+  - `cli.py`: `swap-provenance`, `sweep-swap` and `--theta-grid {main,full}`.
   - Tests: `tests/test_gqa_stop_v22_swap.py`.

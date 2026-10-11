@@ -116,6 +116,13 @@ def build_parser() -> argparse.ArgumentParser:
         help="test infer/evaluate-v22/firing-test/sweep-v22: v1 arm skipped by user "
         "decision 2026-10-11 (checklist_v1 and verbalised Direct not run; NaN)",
     )
+    parser.add_argument(
+        "--theta-grid",
+        choices=("main", "full"),
+        default="main",
+        help="sweep-swap only: main = the user's θ 0.50..1.00; full also writes the "
+        "supplementary grid 0.05..1.00, best-accuracy rows and the θ transfer rows",
+    )
     parser.add_argument("--revise", action="store_true")
     parser.add_argument("--revision-file", type=Path, default=None)
     parser.add_argument("--reason", default=None)
@@ -131,6 +138,7 @@ def make_context(
     cfg, paths = load_effective_config(args.config, args.repo_root)
     ctx = Context(args.config, cfg, paths, args.dry_run, transport_factory)
     ctx.skip_v1arm = bool(getattr(args, "skip_v1arm", False))
+    ctx.theta_grid = str(getattr(args, "theta_grid", "main"))
     return ctx
 
 
