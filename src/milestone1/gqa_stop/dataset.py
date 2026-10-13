@@ -48,6 +48,9 @@ REASONS = (
     "answer_word_in_question",
 )
 ELIGIBLE = "eligible"
+# Plan §27 (v27): only structural == query, semantic == attr and a final
+# argument in {color, material, shape}; every later exclusion is skipped.
+MINIMAL_FILTER_MODE = "minimal"
 
 
 def normalize_text(text: str) -> str:
@@ -98,11 +101,16 @@ def classify(raw: Mapping[str, Any], filter_cfg: Mapping[str, Any]) -> str:
         return "not_structural_query"
     if types.get("semantic") != filter_cfg["semantic_type"]:
         return "not_semantic_attr"
-    if not semantic or semantic[-1].get("operation") != filter_cfg["final_operation"]:
+    final_operation = filter_cfg.get("final_operation")
+    if not semantic or (
+        final_operation is not None and semantic[-1].get("operation") != final_operation
+    ):
         return "final_operation_not_query"
     attribute = semantic[-1].get("argument")
     if attribute not in filter_cfg["final_argument_in"]:
         return "final_argument_not_target_attribute"
+    if filter_cfg.get("mode") == MINIMAL_FILTER_MODE:
+        return ELIGIBLE  # plan §27: no further exclusion of any kind
     heads = [operation_head(op.get("operation", "")) for op in semantic]
     if any(h in FORBIDDEN_OPERATION_HEADS for h in heads):
         return "forbidden_operation"

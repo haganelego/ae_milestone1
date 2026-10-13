@@ -35,6 +35,9 @@ from . import (
     v6_agree,
     v6_legibility,
     v6_verify,
+    v27_data,
+    v27_eval,
+    v27_infer,
 )
 from . import report as report_mod
 from .client import PauseRequired
@@ -86,6 +89,16 @@ COMMANDS = (
     "v6-verify-pilot",
     "v6-verify",
     "v6-verify-eval",
+    "v27-extract",
+    "v27-envcheck",
+    "v27-detgate",
+    "v27-identity",
+    "v27-screen",
+    "v27-infer",
+    "v27-table",
+    "v27-audit",
+    "v27-quarantine",
+    "v27-evaluate",
 )
 
 
@@ -123,6 +136,17 @@ def build_parser() -> argparse.ArgumentParser:
         help="sweep-swap only: main = the user's θ 0.50..1.00; full also writes the "
         "supplementary grid 0.05..1.00, best-accuracy rows and the θ transfer rows",
     )
+    parser.add_argument(
+        "--max-seconds",
+        type=float,
+        default=None,
+        help="v27-infer only: stop cleanly after this many seconds (resumable)",
+    )
+    parser.add_argument(
+        "--confirm-test-eval",
+        action="store_true",
+        help="v27-evaluate --split test only: the team-lead go for test evaluation",
+    )
     parser.add_argument("--revise", action="store_true")
     parser.add_argument("--revision-file", type=Path, default=None)
     parser.add_argument("--reason", default=None)
@@ -150,6 +174,8 @@ def require_split(args: argparse.Namespace, allowed: Sequence[str]) -> str:
 
 def dispatch(ctx: Context, args: argparse.Namespace) -> object:
     command = args.command
+    if command.startswith("v27-"):
+        return dispatch_v27(ctx, args)
     if command == "preflight":
         return stages_model.preflight(ctx)
     if command == "probe":
@@ -263,6 +289,31 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
         ctx.echo(f"[dry-run] report -> {ctx.paths.out('report.md')}")
         return None
     return report_mod.build_report(ctx.cfg, ctx.paths)
+
+
+def dispatch_v27(ctx: Context, args: argparse.Namespace) -> object:
+    """Plan §27 (v27) commands."""
+    command = args.command
+    if command == "v27-extract":
+        return v27_data.extract(ctx)
+    if command == "v27-envcheck":
+        return v27_infer.envcheck(ctx)
+    if command == "v27-detgate":
+        return v27_infer.detgate(ctx)
+    if command == "v27-identity":
+        return v27_infer.identity(ctx)
+    split = require_split(args, ("dev", "test"))
+    if command == "v27-screen":
+        return v27_infer.screen(ctx, split)
+    if command == "v27-infer":
+        return v27_infer.infer(ctx, split, args.max_seconds)
+    if command == "v27-table":
+        return v27_infer.build_table(ctx, split)
+    if command == "v27-audit":
+        return v27_infer.audit(ctx, split)
+    if command == "v27-quarantine":
+        return v27_infer.quarantine(ctx, split)
+    return v27_eval.evaluate(ctx, split, bool(args.confirm_test_eval))
 
 
 def explore_stage(ctx: Context) -> object:

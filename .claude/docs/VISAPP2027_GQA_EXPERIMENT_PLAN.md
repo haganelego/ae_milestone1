@@ -891,3 +891,110 @@ test 側の基礎記録（direct_lp・observer_v3・relevance_v4）は §25.8 �
 
 - **残った planner failure。** 251 で 7 件、233 で 14 件。
 - **追加報告（team-lead 依頼）。** 主格子 θ 0.50〜1.00 に加え、補助として θ 0.05〜1.00（0.05 刻み）の全格子を別 CSV・別図で出す。4b の direct_v4 の最大は 0.66、direct_pans の最大は 0.83 で、主格子ではほぼ発火しないため。記述のみで、主張には使わない。
+
+## 27. v27：答えられる問題と答えられない問題を混ぜた停止評価（ロボットの接近、2026-10-13 事前登録、dev 先行。test は推論まで、評価は team-lead 判断後）
+ユーザー判断（2026-10-13、固定。再検討しない）に基づく。本節は v27 の推論を 1 件も行う前に記す。出力ルート `outputs/gqa_stop/visapp_gqa_v27/`、config `configs/gqa_stop_v27.json`。
+
+### 27.1 動機
+- **想定。** ロボットが対象に近づくと、見かけの解像度が上がる。Level 1〜20 はこの接近の段階の代わりである。各段階で「もう答えてよいか」を判断し、答えてよければそこで止まって答える。
+- **止まらないことの意味。** L20（最も近い段階）まで止まらないことは「この問題には答えられない」という出力に当たる。§23 までは「強制 L20 停止」を答えたものとして扱い、答えられない問題での停止（発火）を別の集合で数えていた。v27 では両者を 1 つの母集団・1 つの採点にまとめる。
+- **混合母集団。** 実際の配備では、答えられる問題と答えられない問題が区別されずに来る。そのため評価集合から何も除かず、screening は内部ラベルを付けるだけにする。
+- **これまでの結果との関係。** §22〜§26 では、答えられる問題で早く止まる方式ほど、答えられない問題でも止まった（§23 の発火率は約 2/3）。P_ans だけの信号は発火が少なかったが、test では正答率を落とした（§22 test の H_pans）。v27 は「止まる / 止まらない」の両方を 1 つの指標（balanced accuracy）で測り、分解（P）がこの両立に効くかを直接問う。
+
+### 27.2 データセット
+- **dev。** GQA val_balanced（132,062 問）。
+- **test。** GQA testdev_balanced（`/home/kanaoka/usr/dataset/gqa/testdev_balanced_questions.json`、12,578 問、398 画像）。
+- **画像。** 両 split とも `/home/kanaoka/usr/dataset/gqa/images/<imageId>.jpg`（フラット）。val の画像は VG の複製とバイト一致を確認済み。Level 画像は新しい data_root（`data/processed/gqa_stop/visapp_gqa_v27/levels/`）に、従来と同じ劣化系列（base 長辺 512、Lanczos、bilinear、scale = 0.05·20^((ℓ−1)/19)、PNG）で生成する。
+- **フィルタ（これだけ）。** types.structural == "query"、types.semantic == "attr"、最終 semantic 操作の argument ∈ {color, material, shape}（config `dataset.filter.mode = "minimal"`）。適格数は dev 9,290 問 / 5,512 画像、test 886 問 / 327 画像。
+- **外した除外とその理由。**
+  - **textprobe（画像なしで答えられる問題の除外）を外す。** §18 で visual subset を作るために導入したが、配備時には画像なしで答えられるかどうかは分からない。除外すると評価が現実の母集団から離れる。また prior で答えられる問題では、早い Level で止まって正答するのが正しい振る舞いである。
+  - **否定・回答語を含む質問・質問文と属性語の一致・relation 数 / 操作数の上限・禁止操作・回答の形（yes/no、数値、空）を外す。** これらは §3.1 で質問を「きれい」にするための小さな除外で、v27 の問い（停止判断）には関係しない。どれも構造化された属性質問の一部であり、配備時にも来る。
+  - **層化（属性 × relate）を外す。** 混合母集団の自然な構成を見るため、比率は課さない。属性別の内訳は報告する。
+- **dev の取り出し。** これまでと同じ固定ハッシュ順を使う。画像グループ（バイト一致の重複を統合）を SHA256(seed|group_id) 順に、グループ内の質問を SHA256(seed|question_id) 順に並べる。その順で、画像あたり最大 2 問として先頭 300 問をとる（seed 20261008）。
+- **test の取り出し。** 適格な testdev_balanced の全問題（886 問 / 327 画像）。画像あたりの上限は置かない（最大 10 問 / 画像）。相関は画像クラスタ bootstrap で扱う。
+- **dev と test の画像。** test の画像 ID は "n" で始まり、val と重ならない（抽出時に共通部分が空であることを検査する）。
+- **内訳（dry-run の実測。抽出時に `dataset_v27.json` へ記録する）。**
+
+| split | 問題 | 画像 | color | material | shape | relate 0 | relate 1 |
+|---|---|---|---|---|---|---|---|
+| dev | 300 | 222 | 250 | 44 | 6 | 202 | 98 |
+| test | 886 | 327 | 578 | 234 | 74 | 623 | 263 |
+
+- **GT の扱い。** 質問マニフェスト（`questions_<split>.jsonl`）には GT を入れない。GT は `gt_<split>.json` に分け、screening と評価だけが読む。
+
+### 27.3 内部ラベル（screening）
+- **reader_lp を L20 で全問題に 1 回ずつ呼ぶ。** 正規化（NFKC・小文字化・strip・空白圧縮）後の完全一致で GT と照合する。
+- **answerable。** L20 で正答した問題。
+- **unanswerable。** L20 で誤答した問題。応答が無効だった場合もこちらに入れ、件数を報告する。
+- **除外はしない。** ラベルは採点にだけ使い、方式には渡さない。
+
+### 27.4 採点
+- **停止規則（全方式共通）。** Level 1〜20 で、スコアが θ 以上になる最初の Level で止まる（L20 を含む）。どこでも θ に届かなければ「止まらない」とする。
+- **strict（主）。**
+  - answerable の問題は、方式がどこかで止まり、その Level で reader が正答していれば正しい。止まらない場合（L20 に強制で到達）は**誤り**とする。
+  - unanswerable の問題は、方式が一度も止まらなければ正しい（L20 でも θ 未満）。どこかで止まれば誤りとする。
+- **unified（感度分析、副）。** 止まった場合は、その Level で reader が正答していれば正しいとする。止まらない場合は unanswerable のときだけ正しいとする。strict との違いは、unanswerable の問題が途中の Level で偶然正答した停止を正しいと数える点だけである。
+- **θ = 0.00 の行。** 全問題が L1 で止まる退化した設定である。参照のために格子に含める。
+
+### 27.5 方式（これだけ）
+共通：モデル qwen3.5:9b のみ。A13 クリーンデコード（temperature 0、top_k 1、top_p 1、penalty 中立、mirostat 0、seed 20261008）、think:false、num_ctx 8192、format=json、top_logprobs 10。プロンプトは answer_only.txt、planner_v3.txt、observer_v3.txt を**変更せずに**使い、新しいプロンプト文は作らない。これらの文面は縮小・画質・解像度に触れない（§25.2 の枠組みを満たす）。P_ans はこれまでと同じく、JSON の answer 値の最初の生成トークンの確率（全語彙、合算なし、§19.2）とする。
+
+- **B1（ベースライン）。** reader の回答確率 P_ans である。
+  - 新ロール reader_lp は、answer_only のプロンプトに top_logprobs を付けたもので、デコードは同じにする。
+  - P_ans ≥ θ となる最初の Level で止まる。
+  - **同一性の確認。** dev の 120 呼出し（先頭 40 問 × L1 / L10 / L20）で、reader_lp の応答テキストが通常の reader（logprobs なし）とバイト一致することを確かめる。logprobs が greedy 出力を変えないことの確認である。
+  - 一致すれば、reader_lp を全方式共通の採点者かつ B1 として 1 回の呼出しで兼ねる。一致しなければ、通常の reader を採点者として別に残し、その旨を報告する。
+- **P（提案）。** planner_v3（質問ごとにテキストのみで 1 回）と、項目ごと・Level ごとの observer_v3_lp である。
+  - 項目スコアは、observer の resolved が true、回答が unknown 以外、かつ depends_on の項目がすべて同じ条件を満たすときに、その回答トークンの P_ans とする。それ以外は 0 とする。
+  - 停止スコアは項目の最小値（pans_min）とする。平均（pans_mean）も P の一部として併記する。
+  - planner が失敗した問題は全 Level で 0 とし、止まらない。
+- **A1（分解なし）。** 新ロール direct_resolved で、observer_v3 のプロンプトを**元の質問**にそのまま適用する（Level ごとに 1 回）。スコアは、resolved かつ回答 ≠ unknown のとき P_ans、それ以外は 0 とする。
+- **A2（ゲートなし）。** 項目の生の observer P_ans の最小値である（resolved・unknown・依存を見ない）。P の記録から計算し、追加の呼出しはない。
+- **A3（しきい値なし）。** すべての項目が resolved（回答 ≠ unknown）になった最初の Level で止まる。P の記録から計算する。θ を持たないので 1 行だけ報告する。
+- **呼ばないもの。** 自信度（Rel、relevance_v4）、direct.txt（言語化 Direct・direct_lp）、v1 arm、qwen3.5:4b は使わない。
+
+### 27.6 指標（θ 格子 0.00, 0.05, …, 1.00、21 点）
+方式と θ ごとに、strict と unified の両方で次を求める。
+- **主な率。** answerable 正答率（strict）、unanswerable 正答率（止まらない率）、全問題での pooled 正答率（answerable / unanswerable の構成比を併記）。
+- **balanced accuracy。** 上の 2 つの率の平均である。
+- **停止の位置。** 平均停止 Level（止まらない場合は 20 と数える。全体・answerable・unanswerable 別）、各側の止まらない率、停止 Level の四分位（answerable と全体）。
+- **unanswerable 側の発火 Level 帯。** L1–5 / 6–10 / 11–15 / 16–19 / 20、および止まらない件数。
+- **属性別。** color / material / shape の同じ表。dev の shape は 6 問なので、記述にとどめる。
+- **画像クラスタ paired bootstrap。** 2000 回、seed 20261008 で、P(pans_min) − B1 と P(pans_min) − A1 を全 θ で求める。差の対象は balanced accuracy（strict・unified）、answerable 正答率、unanswerable 正答率、pooled 正答率、平均停止 Level（全体・answerable）である。各方式の θ* における単独の CI も併記する。
+- **図。** balanced accuracy 対 θ、answerable 正答率 対 answerable の平均停止 Level、unanswerable 正答率 対 θ。
+
+### 27.7 確認的規則（事前登録）
+- 各方式で θ* = dev の balanced accuracy（strict）を最大にする θ とする（同点なら小さい θ）。θ* は dev 評価のときに `eval/dev/theta_star.json` に書き、test 評価の前に固定する。
+- test で「結果」として報告するのは、各方式の θ* における test の balanced accuracy（strict）である。主比較は P(pans_min) と B1、P(pans_min) と A1 である。
+- test の θ 曲線全体は記述であり、そこから θ を読み直さない。
+
+### 27.8 手順とゲート
+1. **環境の確認。** nvidia-smi と ollama ps を記録する。isolate_model で他のモデルをすべて降ろし、qwen3.5:9b を単独で温める。ollama ログに "CLIP using CUDA0" があり、ollama ps が 100% GPU で、常駐モデルが 9b だけであることを確かめる。
+2. **決定性ゲート（記録を作らない）。** planner_v3（テキスト）と reader_lp L20 をそれぞれ 2 回送り、内容と logprobs のバイト一致を確かめる。さらに reader_lp を 50 問 × L1 / L20、direct_resolved を 10 問 × L1 / L20 で呼び、全位置で argmax 違反 0 を確かめる（計 124 呼出し）。
+3. **reader_lp の同一性確認**（§27.5、120 組）。
+4. **screening。** dev 300 問の reader_lp L20。
+5. **全推論。** reader_lp を L1〜L19、planner_v3、observer_v3_lp（全項目 × 20 Level）、direct_resolved（20 Level）で呼ぶ。項目は依存先の結果に関係なく全 Level で呼ぶ（A2 のため）。
+6. **監査。** 非生成時間 > 5 s と argmax 違反を調べる。該当記録は quarantine/ に移動し（削除しない）、再生成する。
+7. **dev 評価と報告書。** `.claude/docs/research/gqa-stop-v27-dev.md` を書く。
+8. **test。** 同じ環境確認・決定性ゲートのあと、screening（L20）と全推論、監査を行う。**ここで止め、test の評価（evaluate・sweep）は team-lead の指示があるまで行わない**（CLI でも `--confirm-test-eval` がなければ拒否する）。
+- **実行の形。** 前景のチャンク（≤ 585 s、`--max-seconds 560`）で回し、キャッシュから再開する。バックグラウンドの連鎖実行はしない。プロセスを止めるときは PID 指定に限る。
+
+### 27.9 推論量（0.47 s/呼出し、v22 test の実績で見積もる）
+| 段階 | 呼出し数 | 時間目安 |
+|---|---|---|
+| 決定性ゲート | 124 | 1 分 |
+| 同一性確認（通常 reader 120 ＋ reader_lp 80、L20 の 40 は screening と共有） | 200 | 2 分 |
+| dev screening（300 × L20） | 300 | 3 分 |
+| dev 全推論（300 ×（19 ＋ 1 ＋ 20 ×（1 ＋ 約 2.05 項目））） | 約 24,000 | 約 3.2 時間 |
+| test screening（886 × L20） | 886 | 7 分 |
+| test 全推論（886 × 約 80） | 約 71,000 | 約 9.3 時間 |
+
+### 27.10 主張しないこと
+- **正答率の目標値は置かない。** 0.95 などの目標値は使わない。θ は balanced accuracy の最大化だけで選ぶ。
+- **GQA testdev の標準指標とは比べられない。** 対象は単一対象の属性質問（color / material / shape）だけで、劣化画像を使い、採点は独自（完全一致、停止を含む）である。
+- **対象は単一対象の属性質問だけである。** verify・比較・論理・数・関係を答える質問は含まない。
+- **answerable の定義は L20 での reader の正誤であり、次の注意がある。**
+  - **ラベルのゆれ。** §25 で、2 つのモデルが L20 で同じ誤答をする問題が 99 問中 51〜61 あった。GQA の注釈のゆれ（ラベル粒度、参照物の曖昧さ）が unanswerable 側に混ざる。
+  - **reader が単調でない。** L20 で誤答でも途中の Level で正答することがある（逆もある）。strict はこれを数えない。unified は途中の正答停止を正しいと数える。
+  - **同じ reader が定義と採点を兼ねる。** ラベル（L20 の正誤）と停止時の採点は同じ reader_lp による。B1 は同じ呼出しの P_ans を使うため、L20 での自己一貫性について有利になりうる。そのため A1 との比較を主比較に含める。
+- **v22 以前の数値とは直接比べられない。** 集合（textprobe なし、混合）、採点（強制 L20 は誤り）、方式（Rel なし）が違う。
