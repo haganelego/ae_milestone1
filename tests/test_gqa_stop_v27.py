@@ -211,6 +211,15 @@ def test_theta_grid_and_theta_star_ties_to_smaller() -> None:
     assert math.isnan(stars["A3"])
 
 
+def test_paired_bootstrap_at_own_thetas_by_hand() -> None:
+    arrays = hand_arrays()
+    thetas = {"P_min": 0.8, "B1": 0.5}
+    boot = v27_eval.paired_bootstrap_at(arrays, [("P_min", "B1")], thetas, 30, 1)
+    balanced = boot[boot["quantity"] == "balanced_strict"].iloc[0]
+    assert balanced["estimate"] == pytest.approx(0.75 - 0.0)
+    assert balanced["theta_a"] == 0.8 and balanced["theta_b"] == 0.5
+
+
 def test_paired_bootstrap_identical_methods_give_zero_difference() -> None:
     arrays = hand_arrays()
     boot = v27_eval.paired_bootstrap(arrays, [("P_min", "B1")], [0.5, 0.8], 50, 1)
@@ -319,6 +328,10 @@ def test_infer_is_resumable_and_completes(v27_run) -> None:
     assert v27_run["partial"]["questions_done"] == 0
     assert v27_run["full"]["complete"]
     ctx = v27_run["ctx"]
+    assert len(v27_infer.load_done(ctx, "dev")) == DEV_QUESTIONS
+    again = v27_infer.infer(ctx, "dev", max_seconds=None)  # all skipped
+    assert again["complete"] and again["new_calls"] == 0 and again["cache_hits"] == 0
+    ctx = v27_run["ctx"]
     payloads = v27_run["transport"].payloads
     contents = [p["messages"][0]["content"] for p in payloads]
     assert not any("confident" in c for c in contents)  # no Rel / relevance calls
@@ -364,6 +377,9 @@ def test_evaluation_outputs_and_theta_star(v27_run) -> None:
     boot = pd.read_csv(ctx.paths.out("eval/dev/paired_bootstrap.csv"))
     assert set(boot["pair"]) == {"P_min - B1", "P_min - A1"}
     assert len(boot) == 2 * 21 * len(v27_eval.DIFF_KEYS)
+    at_star = pd.read_csv(ctx.paths.out("eval/dev/paired_bootstrap_at_theta_star.csv"))
+    assert len(at_star) == 2 * len(v27_eval.DIFF_KEYS)
+    assert (at_star["theta_a"] == stars["P_min"]).all()
     assert all(math.isfinite(stars[m]) for m in stars if m != "A3")
     assert math.isnan(stars["A3"])
     test_stars = v27_run["test_eval"]["theta_star"]

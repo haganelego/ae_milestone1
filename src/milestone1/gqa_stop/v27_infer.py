@@ -586,9 +586,13 @@ def infer(ctx: Context, split: str, max_seconds: float | None) -> dict[str, Any]
     runner = V27Runner(ctx)
     engine = runner.engine
     start, calls0, hits0 = time.monotonic(), engine.calls, engine.cache_hits
+    finished = load_done(ctx, split)
     done = 0
     stopped = False
     for q in questions:
+        if q["question_id"] in finished:  # every call already cached
+            done += 1
+            continue
         plan, _ = runner.plan(q)
         for level in levels:
             if max_seconds is not None and time.monotonic() - start > max_seconds:
@@ -598,6 +602,8 @@ def infer(ctx: Context, split: str, max_seconds: float | None) -> dict[str, Any]
         if stopped:
             break
         done += 1
+        finished.add(q["question_id"])
+    save_done(ctx, split, finished)
     elapsed = time.monotonic() - start
     new_calls = engine.calls - calls0
     per_call = elapsed / new_calls if new_calls else 0.0
@@ -619,6 +625,21 @@ def infer(ctx: Context, split: str, max_seconds: float | None) -> dict[str, Any]
     append_progress(ctx, split, progress)
     ctx.log(f"v27 infer {split} chunk: {progress}")
     return progress
+
+
+def done_path(ctx: Context, split: str) -> Path:
+    return ctx.paths.out(f"logs/infer_done_{split}.json")
+
+
+def load_done(ctx: Context, split: str) -> set[str]:
+    """Questions whose calls are all cached (skipped on resume; a speed-up only:
+    ``build_table`` replays every record from the cache regardless)."""
+    path = done_path(ctx, split)
+    return set(read_json(path)) if path.exists() else set()
+
+
+def save_done(ctx: Context, split: str, finished: set[str]) -> None:
+    atomic_write_json(done_path(ctx, split), sorted(finished))
 
 
 def append_progress(ctx: Context, split: str, progress: Mapping[str, Any]) -> None:
@@ -737,6 +758,8 @@ def quarantine(ctx: Context, split: str) -> dict[str, Any]:
     if not ctx.dry_run:
         ctx.log(f"v27 quarantine {split}: moved {len(moved)} records to {target_root}")
         state = ctx.state.get("v27_infer") or {}
+        if moved:
+            done_path(ctx, split).unlink(missing_ok=True)  # re-walk via the cache
         if moved and split in state:
             ctx.state.set(
                 "v27_infer", {**state, split: {**state[split], "complete": False}}

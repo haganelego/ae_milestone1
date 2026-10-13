@@ -246,6 +246,43 @@ def _indexed(out: Mapping[str, np.ndarray], idx: np.ndarray) -> dict[str, np.nda
     return {k: v[idx] for k, v in out.items()}
 
 
+def _pair_rows(
+    arrays: EvalArrays,
+    a: str,
+    b: str,
+    theta_a: float,
+    theta_b: float,
+    indices: Sequence[np.ndarray],
+) -> list[dict[str, Any]]:
+    """(A − B) point estimate and percentile CI for every DIFF_KEYS quantity."""
+    out_a = outcomes(arrays, a, theta_for(a, theta_a))
+    out_b = outcomes(arrays, b, theta_for(b, theta_b))
+    point_a = _stats(out_a, arrays.answerable)
+    point_b = _stats(out_b, arrays.answerable)
+    draws: dict[str, list[float]] = {k: [] for k in DIFF_KEYS}
+    for idx in indices:
+        ans = arrays.answerable[idx]
+        sa = _stats(_indexed(out_a, idx), ans)
+        sb = _stats(_indexed(out_b, idx), ans)
+        for k in DIFF_KEYS:
+            draws[k].append(sa[k] - sb[k])
+    rows = []
+    for k in DIFF_KEYS:
+        low, high = ci(draws[k])
+        rows.append(
+            {
+                "pair": f"{a} - {b}",
+                "theta_a": theta_a,
+                "theta_b": theta_b,
+                "quantity": k,
+                "estimate": point_a[k] - point_b[k],
+                "ci_low": low,
+                "ci_high": high,
+            }
+        )
+    return rows
+
+
 def paired_bootstrap(
     arrays: EvalArrays,
     pairs: Sequence[tuple[str, str]],
@@ -255,32 +292,29 @@ def paired_bootstrap(
 ) -> pd.DataFrame:
     """Image-cluster paired bootstrap of (A − B) at every θ (same θ for both)."""
     indices = cluster_bootstrap_indices(arrays.group_ids, repeats, seed)
-    rows = []
-    for a, b in pairs:
-        for theta in grid:
-            out_a = outcomes(arrays, a, theta_for(a, theta))
-            out_b = outcomes(arrays, b, theta_for(b, theta))
-            point_a = _stats(out_a, arrays.answerable)
-            point_b = _stats(out_b, arrays.answerable)
-            draws: dict[str, list[float]] = {k: [] for k in DIFF_KEYS}
-            for idx in indices:
-                ans = arrays.answerable[idx]
-                sa = _stats(_indexed(out_a, idx), ans)
-                sb = _stats(_indexed(out_b, idx), ans)
-                for k in DIFF_KEYS:
-                    draws[k].append(sa[k] - sb[k])
-            for k in DIFF_KEYS:
-                low, high = ci(draws[k])
-                rows.append(
-                    {
-                        "pair": f"{a} - {b}",
-                        "theta": theta,
-                        "quantity": k,
-                        "estimate": point_a[k] - point_b[k],
-                        "ci_low": low,
-                        "ci_high": high,
-                    }
-                )
+    rows = [
+        {"theta": theta, **row}
+        for a, b in pairs
+        for theta in grid
+        for row in _pair_rows(arrays, a, b, theta, theta, indices)
+    ]
+    return pd.DataFrame(rows)
+
+
+def paired_bootstrap_at(
+    arrays: EvalArrays,
+    pairs: Sequence[tuple[str, str]],
+    thetas: Mapping[str, float],
+    repeats: int,
+    seed: int,
+) -> pd.DataFrame:
+    """Paired bootstrap of (A − B) with each method at its own θ (e.g. θ*)."""
+    indices = cluster_bootstrap_indices(arrays.group_ids, repeats, seed)
+    rows = [
+        row
+        for a, b in pairs
+        for row in _pair_rows(arrays, a, b, thetas[a], thetas[b], indices)
+    ]
     return pd.DataFrame(rows)
 
 
@@ -413,6 +447,9 @@ def evaluate(ctx: Context, split: str, confirm_test: bool = False) -> dict[str, 
     pairs = [tuple(p) for p in v27["bootstrap_pairs"]]
     boot = paired_bootstrap(arrays, pairs, grid, reps, seed)  # type: ignore[arg-type]
     boot.to_csv(out_dir / "paired_bootstrap.csv", index=False)
+    paired_bootstrap_at(arrays, pairs, stars, reps, seed).to_csv(  # type: ignore[arg-type]
+        out_dir / "paired_bootstrap_at_theta_star.csv", index=False
+    )
     ci = method_ci(arrays, stars, reps, seed)
     ci.to_csv(out_dir / "method_ci_at_theta_star.csv", index=False)
     at_star = pd.DataFrame(
