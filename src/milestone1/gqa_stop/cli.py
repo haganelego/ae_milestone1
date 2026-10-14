@@ -147,6 +147,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="v27-evaluate --split test only: the team-lead go for test evaluation",
     )
+    parser.add_argument(
+        "--posthoc",
+        action="store_true",
+        help="v27-evaluate only: post-hoc nine-method evaluation (adds P'_min, "
+        "P'_mean, A1' with the observer's answer) into eval_posthoc/<split>/",
+    )
     parser.add_argument("--revise", action="store_true")
     parser.add_argument("--revision-file", type=Path, default=None)
     parser.add_argument("--reason", default=None)
@@ -294,6 +300,8 @@ def dispatch(ctx: Context, args: argparse.Namespace) -> object:
 def dispatch_v27(ctx: Context, args: argparse.Namespace) -> object:
     """Plan §27 (v27) commands."""
     command = args.command
+    if getattr(args, "posthoc", False) and command != "v27-evaluate":
+        raise StageError("--posthoc applies to v27-evaluate only")
     if command == "v27-extract":
         return v27_data.extract(ctx)
     if command == "v27-envcheck":
@@ -313,6 +321,8 @@ def dispatch_v27(ctx: Context, args: argparse.Namespace) -> object:
         return v27_infer.audit(ctx, split)
     if command == "v27-quarantine":
         return v27_infer.quarantine(ctx, split)
+    if args.posthoc:
+        return v27_eval.evaluate_posthoc(ctx, split, bool(args.confirm_test_eval))
     return v27_eval.evaluate(ctx, split, bool(args.confirm_test_eval))
 
 

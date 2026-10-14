@@ -400,3 +400,161 @@ def test_audit_counts_records_and_quarantine_moves_nothing_when_clean(v27_run) -
     audit = v27_run["audit"]
     assert audit["records"] > 0 and audit["flagged"] == []
     assert v27_infer.quarantine(v27_run["ctx"], "test") == {"moved": []}
+
+
+# ---- post-hoc observer-answer methods (plan §27.12) -------------------------------------------
+def posthoc_arrays() -> v27_eval.EvalArrays:
+    """hand_arrays plus observer correctness: at θ 0.5 q a stops at L2 (reader
+    wrong, last item right) and q c (unanswerable) stops at L3 (reader right,
+    last item wrong, direct right)."""
+    base = hand_arrays()
+    last_item = np.zeros_like(base.reader_correct)
+    last_item[0, 1] = True
+    direct = np.zeros_like(base.reader_correct)
+    direct[2, 2] = True
+    return v27_eval.EvalArrays(
+        base.question_ids,
+        base.group_ids,
+        base.attributes,
+        base.answerable,
+        base.reader_correct,
+        base.scores,
+        {v27_eval.LAST_ITEM: last_item, v27_eval.DIRECT: direct},
+    )
+
+
+def test_posthoc_method_uses_observer_answer_where_reader_differs() -> None:
+    arrays = posthoc_arrays()
+    reader = v27_eval.summarize(arrays, "P_min", 0.5)
+    observer = v27_eval.summarize(arrays, "P'_min", 0.5)
+    assert reader["answerable_acc"] == 0.0  # reader wrong at L2
+    assert observer["answerable_acc"] == 0.5  # last item right at L2
+    assert observer["mean_level_all"] == reader["mean_level_all"]  # same stop rule
+    assert observer["unanswerable_strict"] == reader["unanswerable_strict"] == 0.0
+    assert v27_eval.base_method("A1'") == "A1"
+    assert v27_eval.answer_source("P'_mean") == v27_eval.LAST_ITEM
+    assert v27_eval.answer_source("B1") == v27_eval.READER
+
+
+def test_posthoc_unified_credit_on_unanswerable_needs_observer_correct() -> None:
+    arrays = posthoc_arrays()
+    last_item = v27_eval.summarize(arrays, "P'_min", 0.5)
+    direct = v27_eval.summarize(arrays, "A1'", 0.5)
+    reader = v27_eval.summarize(arrays, "A1", 0.5)
+    assert last_item["unanswerable_unified"] == 0.0  # stopped, observer wrong
+    assert direct["unanswerable_unified"] == 1.0  # stopped, observer right
+    assert reader["unanswerable_unified"] == 1.0  # reader right at L3
+    assert direct["unanswerable_strict"] == 0.0  # strict: any stop is wrong
+    assert direct["balanced_unified"] == pytest.approx((0.0 + 1.0) / 2)
+
+
+def test_existing_methods_unchanged_by_observer_arrays() -> None:
+    plain, extended = hand_arrays(), posthoc_arrays()
+    grid = [0.0, 0.5, 0.8, 1.0]
+    before = v27_eval.sweep(plain, grid)
+    after = v27_eval.sweep(extended, grid)
+    pd.testing.assert_frame_equal(before, after)
+    assert list(before["method"].unique()) == list(v27_eval.METHODS)
+    full = v27_eval.sweep(extended, grid, v27_eval.ALL_METHODS)
+    assert list(full["method"].unique()) == list(v27_eval.ALL_METHODS)
+    pd.testing.assert_frame_equal(
+        full[full["method"].isin(v27_eval.METHODS)].reset_index(drop=True), before
+    )
+    with pytest.raises(StageError, match="last_item"):
+        v27_eval.summarize(plain, "P'_min", 0.5)  # no observer answers available
+
+
+def test_theta_star_unified_rule_and_posthoc_subset() -> None:
+    table = pd.DataFrame(
+        {
+            "method": ["B1"] * 3,
+            "theta": [0.1, 0.2, 0.3],
+            "balanced_strict": [0.5, 0.7, 0.6],
+            "balanced_unified": [0.8, 0.6, 0.8],
+        }
+    )
+    assert v27_eval.theta_star(table)["B1"] == 0.2
+    assert v27_eval.theta_star(table, "balanced_unified")["B1"] == 0.1
+    part = posthoc_arrays().subset(np.array([True, False, True]))
+    assert part.answer_correct[v27_eval.LAST_ITEM].shape == (2, 4)
+    assert part.answer_correct[v27_eval.DIRECT][1, 2]
+
+
+def test_arrays_from_table_reads_last_item_and_direct_answers() -> None:
+    rows = []
+    specs = {  # qid -> (n_items, item answers, dres answer, gt)
+        "q1": (2, ("yes", "red"), "blue", "red"),
+        "q2": (3, ("yes", "no", "Wood"), "wood", "wood"),
+        "q3": (0, (), None, "red"),
+    }
+    for qid, (n_items, items, dres, gt) in specs.items():
+        for level in (1, 2):
+            row = {
+                "question_id": qid,
+                "group_id": f"g{qid}",
+                "attribute": "color",
+                "level": level,
+                "label": v27_infer.ANSWERABLE,
+                "reader_correct": False,
+                "gt_answer": gt,
+                "n_items": n_items,
+                "dres_answer": dres,
+                **{c: 0.0 for c in v27_eval.METHODS.values()},
+            }
+            for i in range(1, 4):
+                row[f"item{i}_answer"] = items[i - 1] if i <= len(items) else None
+            rows.append(row)
+    arrays = v27_eval.arrays_from_table(pd.DataFrame(rows), 2)
+    assert arrays.answer_correct[v27_eval.LAST_ITEM][:, 0].tolist() == [
+        True,
+        True,
+        False,
+    ]
+    assert arrays.answer_correct[v27_eval.DIRECT][:, 1].tolist() == [
+        False,
+        True,
+        False,
+    ]
+
+
+def test_posthoc_stage_writes_only_eval_posthoc(v27_run) -> None:
+    ctx = v27_run["ctx"]
+    confirmatory = sorted(ctx.paths.out("eval").rglob("*"))
+    before = {p: p.read_bytes() for p in confirmatory if p.is_file()}
+    with pytest.raises(StageError, match="dev --posthoc first"):
+        v27_eval.evaluate_posthoc(ctx, "test", confirm_test=True)
+    dev = v27_eval.evaluate_posthoc(ctx, "dev")
+    with pytest.raises(StageError, match="confirm-test-eval"):
+        v27_eval.evaluate_posthoc(ctx, "test")
+    test = v27_eval.evaluate_posthoc(ctx, "test", confirm_test=True)
+    files = [p for p in sorted(ctx.paths.out("eval").rglob("*")) if p.is_file()]
+    assert {p: p.read_bytes() for p in files} == before
+    stars = read_json(ctx.paths.out("eval_posthoc/dev/theta_star.json"))
+    assert set(stars["theta_star"]) == set(v27_eval.SELECTIONS)
+    for sel in v27_eval.SELECTIONS:
+        assert set(stars["theta_star"][sel]) == set(v27_eval.ALL_METHODS)
+    assert all(dev["strict_theta_star_matches_confirmatory"].values())
+    for sel, thetas in stars["theta_star"].items():
+        for method, theta in thetas.items():
+            used = test["theta_star"][sel][method]
+            assert used == theta or (math.isnan(used) and math.isnan(theta))
+    sweep = pd.read_csv(ctx.paths.out("eval_posthoc/dev/sweep.csv"))
+    assert len(sweep) == (len(v27_eval.ALL_METHODS) - 1) * 21 + 1
+    assert set(sweep.loc[sweep["method"] == "A1'", "answer_source"]) == {"direct"}
+    at_star = pd.read_csv(ctx.paths.out("eval_posthoc/test/at_theta_star.csv"))
+    assert len(at_star) == 2 * len(v27_eval.ALL_METHODS)
+    pb = pd.read_csv(
+        ctx.paths.out("eval_posthoc/test/paired_bootstrap_at_theta_star.csv")
+    )
+    assert set(pb["pair"]) == {f"{a} - {b}" for a, b in v27_eval.POSTHOC_PAIRS}
+    assert len(pb) == 2 * len(v27_eval.POSTHOC_PAIRS) * len(v27_eval.POSTHOC_DIFF_KEYS)
+
+
+def test_cli_posthoc_flag_only_for_evaluate(v27_run) -> None:
+    from milestone1.gqa_stop import cli
+
+    args = cli.build_parser().parse_args(
+        ["v27-screen", "--config", "x.json", "--split", "dev", "--posthoc"]
+    )
+    with pytest.raises(StageError, match="posthoc"):
+        cli.dispatch_v27(v27_run["ctx"], args)
