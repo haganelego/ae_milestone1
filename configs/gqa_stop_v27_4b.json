@@ -1,0 +1,180 @@
+{
+  "spec_version": "§27 (v27 mixed answerable/unanswerable, robot-approach framing)",
+  "run_id": "visapp_gqa_v27_4b",
+  "seed": 20261008,
+  "paths": {
+    "repo_root": "/home/kanaoka/usr/github/milestone_1",
+    "gqa_questions": "/home/kanaoka/usr/dataset/gqa/val_balanced_questions.json",
+    "gqa_questions_test": "/home/kanaoka/usr/dataset/gqa/testdev_balanced_questions.json",
+    "gqa_images_root": "/home/kanaoka/usr/dataset/gqa/images",
+    "data_root": "data/processed/gqa_stop/visapp_gqa_v27_4b",
+    "selection_root": "data/processed/gqa_stop/visapp_gqa_v27_4b",
+    "output_root": "outputs/gqa_stop/visapp_gqa_v27_4b"
+  },
+  "dataset": {
+    "source": {
+      "dev": "gqa_val_balanced",
+      "test": "gqa_testdev_balanced"
+    },
+    "filter": {
+      "mode": "minimal",
+      "structural": "query",
+      "semantic_type": "attr",
+      "final_argument_in": [
+        "color",
+        "material",
+        "shape"
+      ]
+    },
+    "dev_questions": 300,
+    "dev_max_questions_per_image": 2,
+    "test_questions": "all",
+    "test_max_questions_per_image": null,
+    "order": "image groups (byte-identical duplicates merged) in SHA256(seed|group_id) order, questions within a group in SHA256(seed|question_id) order",
+    "note": "plan §27: no stratification, no textprobe, no negation / answer-word / question-text exclusions, no relation or operation caps"
+  },
+  "images": {
+    "levels": 20,
+    "scale_min": 0.05,
+    "scale_max": 1.0,
+    "scale_schedule": "geometric",
+    "base_max_side": 512,
+    "base_resize": "lanczos",
+    "degradation_resize": "bilinear",
+    "small_dimension_rounding": "floor_min_1",
+    "format": "PNG",
+    "transport_reencode": false
+  },
+  "model": {
+    "provider": "ollama",
+    "endpoint": "http://localhost:11434/api/chat",
+    "name": "qwen3.5:4b",
+    "digest": null,
+    "fallback_name": "qwen3.5:4b",
+    "fallback_digest": null,
+    "temperature": 0.0,
+    "seed": 20261008,
+    "think": false,
+    "format": "json",
+    "num_ctx": 8192,
+    "num_predict": {
+      "answer_only": 128,
+      "planner_v3": 1024,
+      "observer_v3": 256
+    },
+    "request_timeout_seconds": 300,
+    "transport_retries": 2,
+    "schema_repair_attempts": 1,
+    "decoding_options": {
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0,
+      "presence_penalty": 0.0,
+      "frequency_penalty": 0.0,
+      "repeat_penalty": 1.0,
+      "mirostat": 0
+    },
+    "decoding_note": "A13 (plan §20) clean decoding sent with every request; think=false; no fallback model (fallback = the main model, qwen3.5:4b; no path switches to 9b)"
+  },
+  "checklist": {
+    "min_items": 2,
+    "max_items": 3,
+    "question_only_planning": true,
+    "fixed_across_levels": true,
+    "all_items_required": true
+  },
+  "v27": {
+    "roles": {
+      "reader_lp": "answer_only prompt + top_logprobs 10 (namespace lp); common scorer and B1",
+      "reader_plain": "answer_only prompt without logprobs; identity check only",
+      "planner_v3": "planner_v3, one text-only call per question",
+      "observer_v3_lp": "observer_v3 per item per level + top_logprobs 10 (namespace lp)",
+      "direct_resolved": "observer_v3 prompt on the ORIGINAL question + top_logprobs 10 (namespace lp_direct)"
+    },
+    "methods": {
+      "B1": "reader_pans",
+      "P_min": "pans_min",
+      "P_mean": "pans_mean",
+      "A1": "dres_score",
+      "A2": "rawpans_min",
+      "A3": "all_resolved"
+    },
+    "primary_method": "P_min",
+    "bootstrap_pairs": [
+      [
+        "P_min",
+        "B1"
+      ],
+      [
+        "P_min",
+        "A1"
+      ]
+    ],
+    "theta_grid": {
+      "start": 0.0,
+      "stop": 1.0,
+      "step": 0.05
+    },
+    "confirmatory_rule": "theta* = argmax dev balanced accuracy (strict), ties -> smaller theta; test number = balanced accuracy at theta*",
+    "identity_check": {
+      "questions": 40,
+      "levels": [
+        1,
+        10,
+        20
+      ]
+    },
+    "chunk_seconds": 560
+  },
+  "evaluation": {
+    "normalization": [
+      "NFKC",
+      "lowercase",
+      "strip",
+      "collapse_whitespace"
+    ],
+    "match": "exact",
+    "bootstrap_unit": "image",
+    "bootstrap_repeats": 2000,
+    "bootstrap_seed": 20261008,
+    "confidence_interval": 0.95
+  },
+  "execution": {
+    "max_dev_prompt_revisions": 0,
+    "no_test_tuning": true,
+    "pause_on_consecutive_technical_errors": 10,
+    "pause_error_window": 100,
+    "pause_error_fraction": 0.05
+  },
+  "prompts": {
+    "roles": [
+      "answer_only",
+      "planner_v3",
+      "observer_v3"
+    ]
+  },
+  "logprobs": {
+    "top_logprobs": 10,
+    "namespace": "lp"
+  },
+  "determinism": {
+    "argmax_questions": 50,
+    "argmax_levels": [
+      1,
+      20
+    ],
+    "direct_resolved_questions": 10
+  },
+  "model_swap": {
+    "plan": "§27.13 (2026-10-15): model-swap replication of the v27 DEV run with qwen3.5:4b (dev only; no test)",
+    "reference_output_root": "outputs/gqa_stop/visapp_gqa_v27",
+    "reference_model": "qwen3.5:9b",
+    "sets_defined_by": "same v27 extraction (same source files, filter, hash order, seed, dev 300 / <=2 per image), re-extracted into this run's own data_root; labels re-screened by qwen3.5:4b (reader_lp at L20)",
+    "fallback_note": "fallback_name is qwen3.5:4b itself: no path switches to 9b",
+    "trailing_period_roles": [
+      "planner_v3",
+      "observer_v3"
+    ],
+    "trailing_period_note": "plan §26.1 (2026-10-11), same as configs/gqa_stop_v22_4b.json: qwen3.5:4b appends '.' after complete JSON; '.'/whitespace after a final '}' are removed for these roles only (rule trailing-period-v1, in their cache keys). observer_v3 covers observer_v3_lp and direct_resolved (same prompt role)."
+  }
+}
