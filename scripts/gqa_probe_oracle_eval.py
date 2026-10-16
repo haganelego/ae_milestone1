@@ -8,9 +8,14 @@ writes ``eval/`` in the probe_oracle run dir:
 - at_theta.csv: each method at the fixed θ list and at its in-sample θ*.
 - agreement.csv: per type, corr with A1 / P_min, stop-level divergence and
   win / loss counts against A1 and P_min at each fixed θ.
-- veto.json: object_absent rows, and stops the veto blocks (P_oracle_logic vs
-  P_oracle_logic_noveto), split by label.
-- per_question.csv: stop level and strict correctness per method at each fixed θ.
+- veto.json: per arm (oracle, v4) object_absent rows and the stops the veto
+  blocks (P_*_logic vs P_*_logic_noveto), split by label, with the outcome.
+- final_agreement.csv: per type and arm, corr with A1, share of rows where the
+  final group binds the logic score, and final answer == A1 answer.
+- per_question.csv: stop level and strict correctness per method at each fixed θ
+  and at each method's in-sample θ*.
+The planner_v4 methods (P_v4_*) are included when the level table holds the
+``v4_*`` columns (``oracle.v4_config`` set when the table was built).
 Usage: uv run python scripts/gqa_probe_oracle_eval.py --config configs/gqa_stop_probe_oracle.json
 """
 
@@ -37,18 +42,36 @@ from milestone1.gqa_stop.v27_eval import (
 )
 from milestone1.gqa_stop.v27_infer import ANSWERABLE
 
-METHODS: dict[str, str] = {
+BASE_METHODS: dict[str, str] = {
     "B1": "reader_pans",
     "A1": "dres_score",
-    "P_min": "pans_min",
+    "P_v3_min": "pans_min",
     "P_oracle_min": "oracle_min",
     "P_oracle_logic": "oracle_logic",
     "P_oracle_logic_noveto": "oracle_logic_noveto",
     "P_oracle_kleene": "oracle_kleene",
 }
-ORACLE_METHODS = ("P_oracle_min", "P_oracle_logic", "P_oracle_kleene")
-REFERENCES = ("A1", "P_min")
-VETO_PAIR = ("P_oracle_logic", "P_oracle_logic_noveto")
+V4_METHODS: dict[str, str] = {
+    "P_v4_min": "v4_min",
+    "P_v4_logic": "v4_logic",
+    "P_v4_logic_noveto": "v4_logic_noveto",
+    "P_v4_kleene": "v4_kleene",
+}
+METHODS: dict[str, str] = dict(BASE_METHODS)  # + V4_METHODS when present (main)
+COMPARED = [
+    "P_oracle_min",
+    "P_oracle_logic",
+    "P_oracle_kleene",
+    "P_v4_min",
+    "P_v4_logic",
+    "P_v4_kleene",
+]
+REFERENCES = ("A1", "P_v3_min")
+# arm -> (logic method, no-veto method, veto column, score prefix)
+ARMS = {
+    "oracle": ("P_oracle_logic", "P_oracle_logic_noveto", "object_absent", "oracle"),
+    "v4": ("P_v4_logic", "P_v4_logic_noveto", "v4_object_absent", "v4"),
+}
 ALL = "all"
 
 
@@ -84,10 +107,18 @@ def corr(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.corrcoef(x, y)[0, 1])
 
 
-def agreement(arrays: EvalArrays, thetas: Sequence[float]) -> pd.DataFrame:
+def compared() -> list[str]:
+    return [m for m in COMPARED if m in METHODS]
+
+
+def agreement(
+    arrays: EvalArrays, thetas: Sequence[float], stars: Mapping[str, float]
+) -> pd.DataFrame:
+    """Stop divergence vs A1 / P_v3_min at each fixed θ (same θ for both) and at
+    each method's own in-sample θ* ("star")."""
     rows = []
     for name, part in subsets(arrays):
-        for method in ORACLE_METHODS:
+        for method in compared():
             for ref in REFERENCES:
                 row: dict[str, Any] = {
                     "set": name,
@@ -96,24 +127,62 @@ def agreement(arrays: EvalArrays, thetas: Sequence[float]) -> pd.DataFrame:
                     "n_questions": len(part.question_ids),
                     "corr": corr(part.scores[method], part.scores[ref]),
                 }
-                for theta in thetas:
-                    a, b = outcomes(part, method, theta), outcomes(part, ref, theta)
+                settings = [(f"{t:.2f}", t, t) for t in thetas]
+                settings.append(("star", stars[method], stars[ref]))
+                for label, t_method, t_ref in settings:
+                    a, b = outcomes(part, method, t_method), outcomes(part, ref, t_ref)
                     differ = a["stop"] != b["stop"]
-                    row[f"stop_differs@{theta:.2f}"] = int(differ.sum())
-                    row[f"method_wins@{theta:.2f}"] = int(
+                    row[f"stop_differs@{label}"] = int(differ.sum())
+                    row[f"method_wins@{label}"] = int(
                         (a["strict"] & ~b["strict"]).sum()
                     )
-                    row[f"reference_wins@{theta:.2f}"] = int(
+                    row[f"reference_wins@{label}"] = int(
                         (~a["strict"] & b["strict"]).sum()
                     )
                 rows.append(row)
     return pd.DataFrame(rows)
 
 
+def normalized(values: pd.Series) -> pd.Series:
+    return values.fillna("").astype(str).str.strip().str.lower()
+
+
+def final_agreement(table: pd.DataFrame) -> pd.DataFrame:
+    """Per type and arm: corr(score, A1), final group binds the logic score
+    (F <= E), final answer == A1 (direct_resolved) answer; rows = question x level."""
+    rows = []
+    dres = normalized(table["dres_answer"])
+    for arm, (_, _, _, prefix) in ARMS.items():
+        if f"{prefix}_final" not in table:
+            continue
+        binds = table[f"{prefix}_final"] <= table[f"{prefix}_existence"]
+        same = normalized(table[f"{prefix}_final_answer"]) == dres
+        frame = table.assign(binds=binds, same=same)
+        for name, part in [(ALL, frame), *frame.groupby("attribute")]:
+            rows.append(
+                {
+                    "arm": arm,
+                    "set": name,
+                    "rows": len(part),
+                    "corr_logic_A1": corr(
+                        part[f"{prefix}_logic"].to_numpy(),
+                        part["dres_score"].to_numpy(),
+                    ),
+                    "corr_min_A1": corr(
+                        part[f"{prefix}_min"].to_numpy(), part["dres_score"].to_numpy()
+                    ),
+                    "final_binds": float(part["binds"].mean()),
+                    "final_answer_eq_A1": float(part["same"].mean()),
+                }
+            )
+    return pd.DataFrame(rows)
+
+
 def veto_stats(
-    table: pd.DataFrame, arrays: EvalArrays, thetas: Sequence[float]
+    table: pd.DataFrame, arrays: EvalArrays, thetas: Sequence[float], arm: str
 ) -> dict[str, Any]:
-    flags = table.assign(object_absent=table["object_absent"].astype(bool))
+    logic, noveto, column, _ = ARMS[arm]
+    flags = table.assign(object_absent=table[column].astype(bool))
     by_q = flags.groupby("question_id")["object_absent"].agg(["sum", "any"])
     meta = flags.groupby("question_id")[["attribute", "label"]].first()
     by_q = by_q.join(meta)
@@ -127,13 +196,26 @@ def veto_stats(
             .sum()
             .items()
         },
+        "veto_rows_by_label": {
+            str(lab): int(n)
+            for lab, n in flags.groupby("label")["object_absent"].sum().items()
+        },
         "veto_questions": {
-            q: {"levels": int(r["sum"]), "type": r["attribute"], "label": r["label"]}
+            q: {
+                "n_levels": int(r["sum"]),
+                "levels": sorted(
+                    int(v)
+                    for v in flags.loc[
+                        (flags["question_id"] == q) & flags["object_absent"], "level"
+                    ]
+                ),
+                "type": r["attribute"],
+                "label": r["label"],
+            }
             for q, r in by_q[by_q["any"]].iterrows()
         },
         "blocked": {},
     }
-    logic, noveto = VETO_PAIR
     for theta in thetas:
         a, b = outcomes(arrays, logic, theta), outcomes(arrays, noveto, theta)
         blocked = (b["stop"] != 0) & (a["stop"] != b["stop"])
@@ -144,6 +226,10 @@ def veto_stats(
             "blocked_answerable": int((blocked & ans).sum()),
             "unanswerable_now_correct": int((blocked & ~ans & a["strict"]).sum()),
             "answerable_lost": int((blocked & ans & b["strict"] & ~a["strict"]).sum()),
+            "blocked_stop_was_wrong": int((blocked & ~b["strict"]).sum()),
+            "blocked_stop_was_right": int((blocked & b["strict"]).sum()),
+            "outcome_wrong_to_right": int((blocked & ~b["strict"] & a["strict"]).sum()),
+            "outcome_right_to_wrong": int((blocked & b["strict"] & ~a["strict"]).sum()),
             "questions": [
                 q for q, hit in zip(arrays.question_ids, blocked, strict=True) if hit
             ],
@@ -151,7 +237,9 @@ def veto_stats(
     return report
 
 
-def per_question(arrays: EvalArrays, thetas: Sequence[float]) -> pd.DataFrame:
+def per_question(
+    arrays: EvalArrays, thetas: Sequence[float], stars: Mapping[str, float]
+) -> pd.DataFrame:
     frame = pd.DataFrame(
         {
             "question_id": arrays.question_ids,
@@ -164,6 +252,10 @@ def per_question(arrays: EvalArrays, thetas: Sequence[float]) -> pd.DataFrame:
             out = outcomes(arrays, method, theta)
             frame[f"{method}_stop@{theta:.2f}"] = out["stop"]
             frame[f"{method}_strict@{theta:.2f}"] = out["strict"]
+    for method in METHODS:
+        out = outcomes(arrays, method, stars[method])
+        frame[f"{method}_stop@star"] = out["stop"]
+        frame[f"{method}_strict@star"] = out["strict"]
     return frame
 
 
@@ -200,6 +292,8 @@ def main() -> None:
     out = args.out or paths.out("eval")
     out.mkdir(parents=True, exist_ok=True)
     table = pd.read_csv(table_path, dtype={"question_id": str, "group_id": str})
+    if "v4_min" in table:
+        METHODS.update(V4_METHODS)
     n_levels = int(cfg["images"]["levels"])
     arrays = arrays_from(table, n_levels)
     grid = theta_grid(cfg["v27"]["theta_grid"])
@@ -222,24 +316,23 @@ def main() -> None:
         },
     )
     at_thetas(arrays, fixed, stars).to_csv(out / "at_theta.csv", index=False)
-    agree = agreement(arrays, fixed)
+    agree = agreement(arrays, fixed, stars)
     agree.to_csv(out / "agreement.csv", index=False)
-    veto = veto_stats(table, arrays, [*fixed, stars["P_oracle_logic"]])
+    final_agreement(table).to_csv(out / "final_agreement.csv", index=False)
+    veto = {
+        arm: veto_stats(table, arrays, sorted({*fixed, stars[ARMS[arm][0]]}), arm)
+        for arm in ARMS
+        if ARMS[arm][0] in METHODS
+    }
     atomic_write_json(out / "veto.json", veto)
-    per_question(arrays, fixed).to_csv(out / "per_question.csv", index=False)
+    per_question(arrays, fixed, stars).to_csv(out / "per_question.csv", index=False)
     print("balanced accuracy (strict) by θ:")
     print(markdown_sweep(full))
     print("θ* strict (in-sample):", json.dumps(stars))
     print("θ* unified (in-sample):", json.dumps(stars_unified))
-    print(
-        "veto:",
-        json.dumps(
-            {
-                k: veto[k]
-                for k in ("rows_object_absent", "questions_with_veto", "blocked")
-            }
-        ),
-    )
+    for arm, stats in veto.items():
+        keys = ("rows_object_absent", "questions_with_veto", "blocked")
+        print(f"veto {arm}:", json.dumps({k: stats[k] for k in keys}))
     print(f"wrote {out}")
 
 

@@ -47,6 +47,7 @@ ROLE_DIRS = {
     "recompose": "recompose",
     "text_only": "text_only",
     "planner_v3": "plans_v3",
+    "planner_v4": "plans_v4",  # exploratory oracle probe (type-aware planner)
     "observer_v3": "observer_v3",
     "relevance_v4": "relevance_v4",
     "reader_informed": "reader_informed",  # exploratory probe

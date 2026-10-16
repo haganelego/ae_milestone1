@@ -14,7 +14,16 @@ Subcommands:
   infer   request the oracle items; --max-seconds (checked between levels,
           resumable from the cache); --dry-run prints the planned call count
   table   cache-only level table: B1 / A1 / P_min (planner_v3) from the
-          reference records + the oracle scores -> level_table_oracle.csv
+          reference records + the oracle scores (+ the planner_v4 arm scores
+          when ``oracle.v4_config`` is set) -> level_table_oracle.csv
+planner_v4 arm (run with --config configs/gqa_stop_probe_oracle_v4.json, its own
+run dir outputs/gqa_stop/probe_oracle_v4/):
+  v4-infer    planner_v4 (one text-only call per question, plans_v4/) and then
+              observer_v3 (namespace lp_v4) per v4 item per level; --dry-run,
+              --max-seconds as for ``infer``
+  v4-show     markdown: oracle, planner_v3 and planner_v4 plans per question
+  v4-quality  plan quality of v4 vs oracle -> plan_quality_v4.csv / .json
+  v4-audit    v27 record audit (timing, argmax) on plans_v4 + observer_v3_lp_v4
 Usage (repo root):
   C=configs/gqa_stop_probe_oracle.json
   uv run python scripts/gqa_probe_oracle_run.py plans --config $C
@@ -30,12 +39,13 @@ import json
 import sys
 import time
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
 
+from milestone1.gqa_stop.audit_v22 import audit_record
 from milestone1.gqa_stop.client import (
     ROLE_DIRS,
     RequestEngine,
@@ -59,6 +69,14 @@ from milestone1.gqa_stop.logprob_v4 import item_signals, observer_lp_spec
 from milestone1.gqa_stop.oracle_plan import RULES_VERSION, answer_leak, build_plans
 from milestone1.gqa_stop.oracle_score import score_level
 from milestone1.gqa_stop.planner import plan_from_record
+from milestone1.gqa_stop.planner_v4 import (
+    observer_v4_spec,
+    plan_quality,
+    plan_v4_items,
+    plan_v4_settings,
+    planner_v4_spec,
+    validate_plan_v4,
+)
 from milestone1.gqa_stop.sampled import (
     OBSERVER_ROLE,
     planner_v3_spec,
@@ -77,6 +95,10 @@ STATE_KEY = "oracle_infer"
 OBSERVER_DIR = f"{ROLE_DIRS[OBSERVER_ROLE]}_lp"
 CHECK_COLUMNS = ("reader_pans", "dres_score", "pans_min", "reader_answer")
 MAX_ORACLE_ITEMS = 4
+V4_STAGE = "v4_infer"
+V4_STATE_KEY = "v4_infer"
+V4_PREFIX = "v4"
+V4_OBSERVER_DIR = f"{OBSERVER_DIR}_v4"
 
 
 class NoCallTransport:
@@ -313,30 +335,97 @@ def cmd_infer(ctx: Context, max_seconds: float | None) -> None:
 
 
 # ---- level table ---------------------------------------------------------------------------
+def final_answer(items: Sequence[Mapping[str, Any]], signals: Mapping[str, Any]) -> str:
+    """Answer implied by the final group: the single final item's answer, or for
+    and/or operands "yes"/"no" by the logic ("" when an operand is undecided)."""
+    finals = [i for i in items if i["role"] == "final"]
+    if not finals:
+        return ""
+    answers = [str(signals[i["id"]]["answer"] or "").strip().lower() for i in finals]
+    logic = finals[0].get("logic")
+    if logic not in ("and", "or") or len(finals) == 1:
+        return answers[-1]
+    decisive = "yes" if logic == "or" else "no"
+    if decisive in answers:
+        return decisive
+    other = "no" if decisive == "yes" else "yes"
+    return other if all(a == other for a in answers) else ""
+
+
+def plan_columns(
+    items: Sequence[Mapping[str, Any]],
+    signals: Mapping[str, Mapping[str, Any]],
+    prefix: str,
+    item_prefix: str,
+) -> dict[str, Any]:
+    """Aggregated scores (``oracle_*`` keys renamed to ``<prefix>_*``) + items."""
+    scores = score_level(items, signals)
+    gated = scores.pop("gated", {})
+    absent = scores.pop("object_absent")
+    row: dict[str, Any] = {
+        f"{prefix}_{key.removeprefix('oracle_')}": value
+        for key, value in scores.items()
+    }
+    row[f"{prefix}_object_absent" if prefix != "oracle" else "object_absent"] = absent
+    row[f"{prefix}_final_answer"] = final_answer(items, signals) if items else ""
+    for k, item in enumerate(items, start=1):
+        sig = signals[item["id"]]
+        row |= {
+            f"{item_prefix}{k}_id": item["id"],
+            f"{item_prefix}{k}_role": item["role"],
+            f"{item_prefix}{k}_logic": item["logic"],
+            f"{item_prefix}{k}_question": item["question"],
+            f"{item_prefix}{k}_answer": sig["answer"],
+            f"{item_prefix}{k}_valid": sig["valid"],
+            f"{item_prefix}{k}_resolved": sig["resolved"] if sig["valid"] else False,
+            f"{item_prefix}{k}_pans": sig["pans"],
+            f"{item_prefix}{k}_gated": gated.get(item["id"], 0.0),
+        }
+    return row
+
+
 def oracle_columns(
     plan: Mapping[str, Any], signals: Mapping[str, Mapping[str, Any]]
 ) -> dict[str, Any]:
-    scores = score_level(plan["items"], signals)
-    gated = scores.pop("gated", {})
-    row: dict[str, Any] = {
-        **scores,
+    row = plan_columns(plan["items"], signals, "oracle", "oitem")
+    return row | {
         "oracle_n_items": len(plan["items"]),
         "oracle_sensible": bool(plan["sensible"]),
     }
-    for k, item in enumerate(plan["items"], start=1):
-        sig = signals[item["id"]]
-        row |= {
-            f"oitem{k}_id": item["id"],
-            f"oitem{k}_role": item["role"],
-            f"oitem{k}_logic": item["logic"],
-            f"oitem{k}_question": item["question"],
-            f"oitem{k}_answer": sig["answer"],
-            f"oitem{k}_valid": sig["valid"],
-            f"oitem{k}_resolved": sig["resolved"] if sig["valid"] else False,
-            f"oitem{k}_pans": sig["pans"],
-            f"oitem{k}_gated": gated.get(item["id"], 0.0),
+
+
+class V4Arm:
+    """Cache-only access to the planner_v4 arm (its own run dir)."""
+
+    def __init__(self, ctx: Context) -> None:
+        path = oracle_cfg(ctx).get("v4_config")
+        self.ctx = make_context(repo_path(ctx, str(path)), True) if path else None
+        if self.ctx is None:
+            return
+        state = self.ctx.state.get(V4_STATE_KEY) or {}
+        require(bool(state.get("complete")), "planner_v4 inference is not complete")
+        self.engine = cache_engine(self.ctx)
+        self.plans = {
+            q["question_id"]: plan_v4_items(cached(self.engine, planner_v4_spec(q)))
+            for q in load_manifest(self.ctx, SPLIT)
         }
-    return row
+        require(
+            state.get("plans_sha256") == v4_plans_hash(self.plans),
+            "planner_v4 plans differ from the inference state",
+        )
+
+    def columns(self, q: Mapping[str, Any], level: int, image: bytes) -> dict[str, Any]:
+        if self.ctx is None:
+            return {}
+        items = self.plans[q["question_id"]]
+        signals = {
+            i["id"]: item_signals(
+                cached(self.engine, observer_v4_spec(q, level, image, i)), None
+            )
+            for i in items
+        }
+        row = plan_columns(items, signals, V4_PREFIX, "v4item")
+        return row | {"v4_n_items": len(items), "v4_failed": not items}
 
 
 def cmd_table(ctx: Context) -> pd.DataFrame:
@@ -347,6 +436,7 @@ def cmd_table(ctx: Context) -> pd.DataFrame:
     ref = reference_context(ctx)
     ref_engine, own_engine = cache_engine(ref), cache_engine(ctx)
     series = readonly_series(ctx)
+    v4 = V4Arm(ctx)
     gt = load_gt(ctx, SPLIT)
     screening = {
         r["question_id"]: r
@@ -373,7 +463,9 @@ def cmd_table(ctx: Context) -> pd.DataFrame:
                 )
                 for i in oplan["items"]
             }
-            rows.append(row | oracle_columns(oplan, signals))
+            rows.append(
+                row | oracle_columns(oplan, signals) | v4.columns(q, level, image)
+            )
     table = pd.DataFrame(rows)
     table["reader_correct"] = [
         is_correct(None if pd.isna(a) else str(a), gt[qid])
@@ -408,10 +500,253 @@ def check_reference(ctx: Context, ref: Context, table: pd.DataFrame) -> None:
     ctx.log(f"reference check: {', '.join(CHECK_COLUMNS)} identical to probe_multi_rel")
 
 
+# ---- planner_v4 arm --------------------------------------------------------------------------
+def v4_plans_hash(plans: Mapping[str, Sequence[Mapping[str, Any]]]) -> str:
+    return sha256_text(json.dumps(plans, sort_keys=True))
+
+
+def v4_validator(ctx: Context) -> Any:
+    settings = plan_v4_settings(ctx.cfg)
+    return lambda obj: validate_plan_v4(obj, settings)
+
+
+def v4_dry_run(ctx: Context, digest: str) -> dict[str, Any]:
+    """Planner records present / observer calls planned from the cached plans."""
+    questions = load_manifest(ctx, SPLIT)
+    tag = record_tag(ctx.settings.name, digest)
+    plan_dir = ctx.paths.output_root / "plans_v4" / tag
+    obs_dir = ctx.paths.output_root / V4_OBSERVER_DIR / tag
+    counts: Counter[str] = Counter()
+    for q in questions:
+        qid = q["question_id"]
+        plan_path = plan_dir / f"{qid}.json"
+        if not plan_path.exists():
+            counts["planner_calls_remaining"] += 1
+            continue
+        items = plan_v4_items(read_json(plan_path))
+        counts["planned_items"] += len(items)
+        for level in range(1, ctx.n_levels + 1):
+            for item in items:
+                path = obs_dir / qid / f"{level:02d}_{item['id']}.json"
+                counts["observer_calls_planned"] += 1
+                counts["observer_records_present"] += int(path.exists())
+    return {"questions": len(questions), **counts}
+
+
+def cmd_v4_infer(ctx: Context, max_seconds: float | None) -> None:
+    ref_digest = reference_digest(ctx)
+    if ctx.dry_run:
+        print(f"[dry-run] planner_v4 infer: {json.dumps(v4_dry_run(ctx, ref_digest))}")
+        return
+    require_ready(ctx, ref_digest)
+    ctx.set_stage(V4_STAGE)
+    engine = ctx.engine()
+    series = readonly_series(ctx)
+    start, calls0, hits0 = time.monotonic(), engine.calls, engine.cache_hits
+    questions = load_manifest(ctx, SPLIT)
+    validator = v4_validator(ctx)
+    records = {
+        q["question_id"]: engine.run(planner_v4_spec(q), validator) for q in questions
+    }
+    plans = {qid: plan_v4_items(r) for qid, r in records.items()}
+    current_hash = v4_plans_hash(plans)
+    previous = (ctx.state.get(V4_STATE_KEY) or {}).get("plans_sha256")
+    require(
+        previous in (None, current_hash), "planner_v4 plans changed after inference"
+    )
+    done, stopped = 0, False
+    for q in questions:
+        for level in range(1, ctx.n_levels + 1):
+            if max_seconds is not None and time.monotonic() - start > max_seconds:
+                stopped = True
+                break
+            image = series.bytes_for(str(q["image_id"]), level)
+            for item in plans[q["question_id"]]:
+                engine.run(
+                    observer_v4_spec(q, level, image, item), validate_observation
+                )
+        if stopped:
+            break
+        done += 1
+    elapsed = time.monotonic() - start
+    new_calls = engine.calls - calls0
+    progress = {
+        "time": utc_now(),
+        "plans_sha256": current_hash,
+        "planner_failures": sorted(q for q, items in plans.items() if not items),
+        "planner_repaired": sorted(
+            q for q, r in records.items() if not r.get("initial_valid")
+        ),
+        "items_total": sum(len(items) for items in plans.values()),
+        "questions_done": done,
+        "questions_total": len(questions),
+        "new_calls": new_calls,
+        "cache_hits": engine.cache_hits - hits0,
+        "elapsed_s": round(elapsed, 1),
+        "s_per_call": round(elapsed / new_calls, 3) if new_calls else 0.0,
+        "complete": done == len(questions),
+    }
+    ctx.state.set(V4_STATE_KEY, progress)
+    log_path = ctx.paths.out("logs/v4_infer_progress.json")
+    history = read_json(log_path) if log_path.exists() else []
+    atomic_write_json(log_path, [*history, progress])
+    ctx.log(f"planner_v4 infer chunk: {progress}")
+
+
+def cmd_v4_audit(ctx: Context) -> None:
+    """The v27 per-record audit (non-generation time, argmax) on the v4 records."""
+    root = ctx.paths.output_root
+    qids = {q["question_id"] for q in load_manifest(ctx, SPLIT)}
+    plans = [p for p in sorted((root / "plans_v4").rglob("*.json")) if p.stem in qids]
+    observations = [
+        p
+        for p in sorted((root / V4_OBSERVER_DIR).rglob("*.json"))
+        if p.parent.name in qids
+    ]
+    counts: Counter[str] = Counter()
+    flagged, worst = [], 0.0
+    for path in [*plans, *observations]:
+        record = read_json(path)
+        result = audit_record(record)
+        role = path.relative_to(root).parts[0]
+        counts[f"{role}:records"] += 1
+        counts[f"{role}:valid"] += int(record.get("status") == "valid")
+        counts["argmax_positions"] += result["argmax_positions"]
+        counts["argmax_violations"] += result["argmax_violations"]
+        worst = max(worst, result["non_generation_s"])
+        if result["slow"] or result["argmax_violations"]:
+            flagged.append({"path": str(path.relative_to(root)), **result})
+    summary = {
+        "time": utc_now(),
+        "records": len(plans) + len(observations),
+        "max_non_generation_s": worst,
+        "counts": dict(sorted(counts.items())),
+        "flagged": flagged,
+    }
+    atomic_write_json(ctx.paths.out("logs/audit_v4.json"), summary)
+    brief = {k: v for k, v in summary.items() if k != "flagged"}
+    ctx.log(f"v4 audit: {json.dumps(brief)}, flagged {len(flagged)}")
+
+
+def item_line(item: Mapping[str, Any]) -> str:
+    tag = item.get("role", "")
+    tag += f"/{item['logic']}" if item.get("logic") else ""
+    req = f" req={item['required_answer']}" if item.get("required_answer") else ""
+    deps = ",".join(item["depends_on"])
+    return f"    {item['id']} [{deps}] {tag}{req}: {item['question']}"
+
+
+def v4_rows(ctx: Context) -> list[dict[str, Any]]:
+    """Per question: oracle plan, planner_v3 items, planner_v4 record + quality."""
+    oracle = load_plans(ctx)
+    ref_engine, own_engine = cache_engine(reference_context(ctx)), cache_engine(ctx)
+    selection = {
+        r["question_id"]: r
+        for r in read_jsonl(repo_path(ctx, oracle_cfg(ctx)["selection"]))
+    }
+    gt = load_gt(ctx, SPLIT)
+    rows = []
+    for q in load_manifest(ctx, SPLIT):
+        qid = q["question_id"]
+        record = cached(own_engine, planner_v4_spec(q))
+        items = plan_v4_items(record)
+        quality = plan_quality(items, oracle[qid], selection[qid]["semantic"])
+        rows.append(
+            {
+                "question": q,
+                "gt": gt[qid],
+                "oracle": oracle[qid],
+                "v3": plan_from_record(
+                    qid, cached(ref_engine, planner_v3_spec(q))
+                ).items,
+                "v4": items,
+                "v4_record": record,
+                "quality": quality,
+            }
+        )
+    return rows
+
+
+def cmd_v4_show(ctx: Context) -> None:
+    for row in v4_rows(ctx):
+        q, quality = row["question"], row["quality"]
+        print(f"{q['attribute']} {q['question_id']} {q['question']!r} -> {row['gt']}")
+        print("  oracle")
+        print("\n".join(item_line(i) for i in row["oracle"]["items"]))
+        print("  planner_v3")
+        print("\n".join(item_line(i) for i in row["v3"]))
+        defaults = (row["v4_record"].get("parsed") or {}).get("defaults_applied") or []
+        extra = f" defaults={defaults}" if defaults else ""
+        print(
+            f"  planner_v4 (final type {quality['v4_final_type']} vs oracle "
+            f"{quality['oracle_final_type']}; objects {quality['objects_covered']}/"
+            f"{quality['objects']}; relation checks {quality['relation_checks_covered']}/"
+            f"{quality['relation_checks']}; operands {quality['operands_covered']}/"
+            f"{quality['operands']}{extra})"
+        )
+        print("\n".join(item_line(i) for i in row["v4"]) or "    (planner failure)")
+
+
+def cmd_v4_quality(ctx: Context) -> None:
+    frame = pd.DataFrame(
+        [
+            {
+                "question_id": r["question"]["question_id"],
+                "type": r["question"]["attribute"],
+                "initial_valid": bool(r["v4_record"].get("initial_valid")),
+                **r["quality"],
+            }
+            for r in v4_rows(ctx)
+        ]
+    )
+    frame.to_csv(ctx.paths.out("plan_quality_v4.csv"), index=False)
+    sums = [
+        "v4_items",
+        "oracle_items",
+        "v4_existence",
+        "oracle_existence",
+        "objects",
+        "objects_covered",
+        "relation_checks",
+        "relation_checks_covered",
+        "operands",
+        "operands_covered",
+        "extra_existence",
+        "final_type_preserved",
+        "v4_failed",
+    ]
+    by_type = frame.groupby("type")[sums].sum()
+    by_type.loc["all"] = frame[sums].sum()
+    by_type["n"] = [*frame.groupby("type").size(), len(frame)]
+    by_type["count_equal_oracle"] = [
+        *frame.assign(eq=frame["v4_items"] == frame["oracle_items"])
+        .groupby("type")["eq"]
+        .sum(),
+        int((frame["v4_items"] == frame["oracle_items"]).sum()),
+    ]
+    atomic_write_json(
+        ctx.paths.out("plan_quality_v4.json"),
+        {"time": utc_now(), "by_type": by_type.astype(int).to_dict(orient="index")},
+    )
+    print(by_type.astype(int).to_string())
+
+
 # ---- main ----------------------------------------------------------------------------------
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="gqa_probe_oracle_run")
-    parser.add_argument("command", choices=("plans", "show", "infer", "table"))
+    parser.add_argument(
+        "command",
+        choices=(
+            "plans",
+            "show",
+            "infer",
+            "table",
+            "v4-infer",
+            "v4-show",
+            "v4-quality",
+            "v4-audit",
+        ),
+    )
     parser.add_argument("--config", type=Path, required=True)
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--max-seconds", type=float, default=None)
@@ -425,6 +760,14 @@ def main(argv: list[str] | None = None) -> int:
             cmd_show(ctx)
         elif args.command == "infer":
             cmd_infer(ctx, args.max_seconds)
+        elif args.command == "v4-infer":
+            cmd_v4_infer(ctx, args.max_seconds)
+        elif args.command == "v4-show":
+            cmd_v4_show(ctx)
+        elif args.command == "v4-quality":
+            cmd_v4_quality(ctx)
+        elif args.command == "v4-audit":
+            cmd_v4_audit(ctx)
         else:
             cmd_table(ctx)
     except StageError as exc:
