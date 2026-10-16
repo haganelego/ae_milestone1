@@ -1,0 +1,1151 @@
+{
+ "rules_version": "oracle-v1",
+ "source": "outputs/gqa_stop/probe_multi_rel/selection.jsonl",
+ "note": "built from the GQA semantic program only; GT answer used only for the leak check (no item contains a GT word absent from the question)",
+ "plans": [
+  {
+   "question_id": "19404920",
+   "type": "a_relO",
+   "question": "What is the man wearing?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a man in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the man wearing something?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is the man wearing?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "16403783",
+   "type": "a_relO",
+   "question": "Where are the trees?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Are there trees in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Are the trees in some place?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Where are the trees?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: place"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "19687543",
+   "type": "a_relO",
+   "question": "What is the woman holding?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a woman in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the woman holding something?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is the woman holding?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "09212473",
+   "type": "a_relO",
+   "question": "The crowd is watching who?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a crowd in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the crowd watching someone?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Who is the crowd watching?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: person"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "00259214",
+   "type": "a_relO",
+   "question": "What is the sign hanging off of?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a sign in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the sign hanging off something?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is the sign hanging off?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "14863272",
+   "type": "b_relS",
+   "question": "What is full of donuts?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Are there donuts in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there something full of the donuts?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is full of the donuts?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "13365742",
+   "type": "b_relS",
+   "question": "What's on the wire?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a wire in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there something on the wire?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is on the wire?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "06943437",
+   "type": "b_relS",
+   "question": "What's on the oven?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there an oven in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there something on the oven?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is on the oven?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "08900610",
+   "type": "b_relS",
+   "question": "What is on the ski on the left?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a ski on the left in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there something on the ski on the left?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o3",
+     "question": "What is on the ski on the left?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 3
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "11464769",
+   "type": "b_relS",
+   "question": "What is in front of the green building?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a green building in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there something in front of the green building?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o3",
+     "question": "What is in front of the green building?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 3
+    }
+   ],
+   "flags": [
+    "generic target: _"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "02584384",
+   "type": "c_choose_rel",
+   "question": "Is the counter above or below the cabinet the microwave is to the left of?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a microwave in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the microwave to the left of a cabinet?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Is there a counter in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o4",
+     "question": "Is the counter above or below the cabinet that the microwave is to the left of?",
+     "depends_on": [
+      "o2",
+      "o3"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "19419643",
+   "type": "c_choose_rel",
+   "question": "Are the ripe oranges to the left or to the right of the bag made of plastic?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a plastic bag in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Are there oranges in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o3",
+     "question": "Are the oranges to the left or to the right of the plastic bag?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "19151786",
+   "type": "c_choose_rel",
+   "question": "Is the bench to the right or to the left of the blue vehicle?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a blue vehicle in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there a bench in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o3",
+     "question": "Is the bench to the right or to the left of the blue vehicle?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "05480434",
+   "type": "c_choose_rel",
+   "question": "Is the elephant to the left or to the right of the car?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a car in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there an elephant in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Is the elephant to the left or to the right of the car?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 1
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "16880810",
+   "type": "c_choose_rel",
+   "question": "Is the pillow to the left or to the right of the woman on the right?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a woman on the right in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there a pillow in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 2
+    },
+    {
+     "id": "o3",
+     "question": "Is the pillow to the left or to the right of the woman on the right?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "16654472",
+   "type": "d_verify_rel",
+   "question": "Is the ottoman to the left of a bed?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there an ottoman in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the ottoman to the left of a bed?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 1
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "13877235",
+   "type": "d_verify_rel",
+   "question": "Are there any books on the floor?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a floor in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Are there books on the floor?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "00777462",
+   "type": "d_verify_rel",
+   "question": "Is the bird on the rock watching a boar?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a rock in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a bird on the rock?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Is the bird on the rock watching a boar?",
+     "depends_on": [
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "07883808",
+   "type": "d_verify_rel",
+   "question": "Is the knife on a cutting board?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a knife in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the knife on a cutting board?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 1
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "09249815",
+   "type": "d_verify_rel",
+   "question": "Is he carrying a surfboard?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a man in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is the man carrying a surfboard?",
+     "depends_on": [
+      "o1"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 1
+    }
+   ],
+   "flags": [
+    "pronoun: he"
+   ],
+   "sensible": true
+  },
+  {
+   "question_id": "121053010",
+   "type": "e_logical",
+   "question": "Do you see any doors or cars that are white?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a white door in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 2
+    },
+    {
+     "id": "o2",
+     "question": "Is there a white car in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 5
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "03848528",
+   "type": "e_logical",
+   "question": "Are there any hairbrushes or bottle caps?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a hairbrush in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there a bottle cap in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 3
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "0598390",
+   "type": "e_logical",
+   "question": "Are there either pillows or trays?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a pillow in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Is there a tray in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 3
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "08206123",
+   "type": "e_logical",
+   "question": "Are there any glasses or stoves in the scene?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a stove in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 1
+    },
+    {
+     "id": "o2",
+     "question": "Are there glasses in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 3
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "061043477",
+   "type": "e_logical",
+   "question": "Are there unpeeled bananas or apples?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there an unpeeled banana in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 2
+    },
+    {
+     "id": "o2",
+     "question": "Is there an unpeeled apple in the image?",
+     "depends_on": [],
+     "role": "final",
+     "required_answer": null,
+     "logic": "or",
+     "source_op": 5
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "00768430",
+   "type": "f_compare",
+   "question": "Do the van and the hydrant have the same color?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a fire hydrant in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a van in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Do the fire hydrant and the van have the same color?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "04727485",
+   "type": "f_compare",
+   "question": "Are the barrier and the pole made of the same material?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a barrier in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a pole in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Are the barrier and the pole made of the same material?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "13831520",
+   "type": "f_compare",
+   "question": "Is the color of the scarf different than the roof?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a scarf in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a roof in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Do the scarf and the roof have different colors?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "17401329",
+   "type": "f_compare",
+   "question": "What is common to the umbrella and the scarf?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there an umbrella in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a scarf in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "What is common to the umbrella and the scarf?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  },
+  {
+   "question_id": "1129358",
+   "type": "f_compare",
+   "question": "Is the frame made out of the same material as the bookcase?",
+   "rules_version": "oracle-v1",
+   "items": [
+    {
+     "id": "o1",
+     "question": "Is there a frame in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 0
+    },
+    {
+     "id": "o2",
+     "question": "Is there a bookcase in the image?",
+     "depends_on": [],
+     "role": "existence",
+     "required_answer": "yes",
+     "logic": null,
+     "source_op": 1
+    },
+    {
+     "id": "o3",
+     "question": "Are the frame and the bookcase made of the same material?",
+     "depends_on": [
+      "o1",
+      "o2"
+     ],
+     "role": "final",
+     "required_answer": null,
+     "logic": null,
+     "source_op": 2
+    }
+   ],
+   "flags": [],
+   "sensible": true
+  }
+ ]
+}
