@@ -9,6 +9,14 @@ Claude Code (Orchestrator) ─┬─ Codex CLI (Planning & Complex Code)
                              └─ Opus Subagents (Research, Analysis, Implementation)
 ```
 
+## Research experiments in this repository
+
+The VISAPP 2027 GQA early-stopping experiment lives in `src/milestone1/gqa_stop/`.
+Its datasets, level images and request caches are not in git. To reproduce it or
+continue it on another machine, see [docs/GQA_STOP_SETUP.md](docs/GQA_STOP_SETUP.md).
+That guide covers ollama setup, the GQA download, copying the run directories and
+the run sequence. Milestone 1 (EGTR on Visual Genome) is documented in [MILESTONE1.md](MILESTONE1.md).
+
 ## Quick Start
 
 Run in the root of your existing project (ensure Codex is installed and logged in first):
